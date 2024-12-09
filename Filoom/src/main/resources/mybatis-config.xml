@@ -25,7 +25,7 @@
 			아무리 mapper 파일이 있더라도 
 			namespace 를 등록하지 않은 상태라면 오류가 난다!! 
 		-->
-<!-- 		<mapper resource="/mappers/board-mapper.xml" /> -->
+		<!--<mapper resource="/mappers/board-mapper.xml" /> -->
 	</mappers>
 	
 </configuration>
