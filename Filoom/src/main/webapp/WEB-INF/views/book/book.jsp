@@ -432,16 +432,22 @@
         generateSeats("right_table", 5, 2, "R", reservedSeats.right);
 
 
+        
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////
         $(function(){
-                //화면이 로드된후 캘린더 보여주기
-                showCalendar(currentYear,currentMonth);
+        	//화면이 로드된후 캘린더 보여주기
+        	showCalendar(currentYear,currentMonth);
 
-            });
+        });
 
-            //현재날짜
+
+
+        
+        
+        //현재날짜
             const today = new Date(); 
 
-            console.log(today);
+            //console.log(today);
             
             //현재년월
             let currentYear = today.getFullYear();
@@ -479,7 +485,7 @@
             //영화를 선택했을때 해당하는 달의 영화정보를 json객체 형식으로 변수에 담기
 
 
-
+            
             //달력만들어주기
             function showCalendar(year,month){
                 let firstDay = new Date(year, month, 1).getDay(); //요일 일:0~토:6
@@ -487,8 +493,9 @@
                 tbody.html("");
 
                 //상단에 년,월
-                yearAndMonthDiv.text(`${year}-${months[month]}`);
-
+				yearAndMonthDiv.text(year+" - "+month);
+                
+                
                 let date = 1;
                 let totalDays = daysInMonth(year,month);
 
@@ -496,18 +503,25 @@
 
                     // let row = document.createElement("tr");
                     let row = $("<tr></tr>");
+                    //console.log(row);
                     for(let j=0;j<7;j++){
                         //let cell = document.createElement("td");
                         let cell = $("<td></td>"); 
                         if(( (i==0) && (j<firstDay) )|| (date>totalDays)) {
                             row.append(cell);
+                           
                         }else{
                             cell.text(date);
                             if( date==today.getDate() && year == today.getFullYear() && month === today.getMonth()){
                                 cell.css("color","red");  //오늘날짜인경우 
+                                
                             }
-
+                             
+                            
                             let fullDate = formatDate(new Date(year, month, date));
+                            
+                            
+                           
                             
                             if(movieData.some(movie=>movie.playTime.includes(fullDate))){   //선택한 날짜에 상영하는 영화가 있는지
                                 cell.addClass('has-movie');  //클래스속성추가 (달력에 영화가 있는날 표시)
@@ -522,6 +536,7 @@
                                 showMovieInfo(selectDate);
                             });
 
+                            
                             row.append(cell);
                             date++;
                         }
@@ -537,50 +552,65 @@
 
             }
             
+            
+            
 
             // 선택한 월이 총 몇일인지 구하는 메소드
             function daysInMonth(year,month){
                 return new Date(year,month+1,0).getDate(); // 0-> 전월의 마지막 일
-            }
-
+            }      
+            
+            
+            
             // Date 를 yyyy-mm-dd 형식으로 변환
             function formatDate(date){
                 let yyyy = date.getFullYear();
                 let mm = String(date.getMonth()+1).padStart(2,'0');
                 let dd = String(date.getDate()).padStart(2,'0');
-                return `${yyyy}-${mm}-${dd}`;
+                
+                return yyyy+"-"+mm+"-"+dd;
             }
-
-
+            
+            
             //날짜를 클릭했을경우 상영정보 띄어주는 메소드
             function showMovieInfo(date){
                 $("#time").html("");
                 const selectDate = formatDate(date);
-                for(let i=0;i<movieData.length;i++){ 
-                    if(movieData[i].playTime.includes(selectDate)){ //해당날짜에 상영되는 영화가 있다면
-                        
-                        let startEndTime = calculationTime(movieData[i].playTime, movieData[i].runTime);
-                        //상영 시작시간 , 상영 끝나는 시간 구하기
-                        
+                
+                let movieInfo ="";
+                
+				for(let i=0;i<movieData.length;i++){ 
+					if(movieData[i].playTime.includes(selectDate)){ //해당날짜에 상영되는 영화가 있다면
+				    	    
+				        let startEndTime = calculationTime(movieData[i].playTime, movieData[i].runTime);
+				    
+				        //상영 시작시간 , 상영 끝나는 시간 구하기
+				        
+				
+				        //상영목록에 정보 뿌려주기
+				        //선택시 영화상영번호
+				        
+				       
+				        let playingNo = movieData[i].playingNo;
+				   
+				        
+				        //  <label>12:30 ~ 14:40 1관 40/60</label>
+				        //  <input type="radio" id="input11" name="playingNo" value="영화상영번호" hidden">
+				        movieInfo += "<div onclick='movieInfoClick()'>"+
+				        					"<label for='input"+i+"'>"+startEndTime[0]+" ~ "+startEndTime[1]+" "+movieData[i].screenNo+"관 "+ String(movieData[i].seatCount).padStart(2,'0') +"/"+ movieData[i].totalCount +"</label>"+
+				        					"<input type='radio' id='input" + i + "' name='playingNo' value='"+playingNo+"'hidden>"+
+				        			"</div>";
+				        						        
+				    }
+				}
+				console.log(movieInfo);
+				$("#time").append(movieInfo);
+				$("#movie-date").text(selectDate); 
 
-                        //상영목록에 정보 뿌려주기
-                        //선택시 영화상영번호 
-
-                        let playingNo = movieData[i].playingNo;
-                        let movieInfo = `<div onclick="movieInfoClick()">
-                                            <label for="input${i}"> ${startEndTime[0]} ~ ${startEndTime[1]} ${movieData[i].screenNo}관 (${String(movieData[i].seatCount).padStart(2,"0")}/${movieData[i].totalCount}) </label>
-                                            <input type="radio" id="input${i}" name="playingNo" value="${playingNo}" >    
-                                        </div>`;
-
-                        $("#time").append(movieInfo);
-                    }
-
-                }
-
-                $("#movie-date").text(selectDate);
-
+				
             }
-
+            
+            
             //상영시간 + 러닝타임 계산해주는 메소드 (24시간형식)
             function calculationTime (playTime,runTime){
 
@@ -592,12 +622,14 @@
                 minutes %= 60;
                 hours %= 24;
 
-                let endTime = `${String(hours).padStart(2,"0")}:${String(minutes).padStart(2,"0")}`;
-
+                
+                
+				let endTime = String(hours).padStart(2,'0')+":"+String(minutes).padStart(2,'0');
+                
+                
                 return [startTime,endTime];
             }
-
-
+                   
             //상영시간을 클릭했을때 실행할 메소드 : 영화상영번호 넘기기~
             function clickTime(playingNo){
                 alert("클릭됨! 영화상영번호"+playingNo);

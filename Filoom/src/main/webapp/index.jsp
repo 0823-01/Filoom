@@ -10,6 +10,9 @@
 	<a href = "${ pageContext.request.contextPath }/book.do">아</a>
 	<a href = "WEB-INF/views/book/book.jsp">아dk</a>
 	
+	
+	<jsp:forward page="WEB-INF/views/main.jsp" />
+	
 </body>
 </html>
 <!-- 이거 book용 -->
