@@ -369,71 +369,66 @@ document.querySelectorAll("#past").forEach((btn) => {
 
 
     // 임시 예약 상태: 예약된 좌석
-	const reservedSeats = {
-	    left: ["L1-1", "L2-2"],
-	    middle: ["M3-3", "M4-5"],
-	    right: ["R5-1"]
-	};
-	
-	// 좌석 생성 함수
-	function generateSeats(tableId, rows, cols, prefix, reserved) {
-	    const table = document.getElementById(tableId);
-	    for (let i = 1; i <= rows; i++) {
-	        const row = document.createElement("tr");
-	        for (let j = 1; j <= cols; j++) {
-	            const seatId = prefix + i + '-' + j;
-	            const cell = document.createElement("td");
-	            const button = document.createElement("button");
-	            button.textContent = seatId;
-	            button.dataset.id = seatId;
-	
-	            // 예약 상태 적용
-	            if (reserved.includes(seatId)) {
-	                button.classList.add("reserved");
-	                button.disabled = true;
-	            }
-	
-	            // 클릭 이벤트 추가
-	            button.onclick = function() {
-	                handleSeatClick(button);
-	            };
-	            cell.appendChild(button);
-	            row.appendChild(cell);
-	        }
-	        table.appendChild(row);
-	    }
-	}
-	
-	// 좌석 클릭 이벤트 처리 함수
-	function handleSeatClick(button) {
-	    const inputField = document.getElementById("movieSeat");
-	    const seatId = button.dataset.id;
-	
-	    if (button.classList.contains("selected")) {
-	        // 선택 해제
-	        button.classList.remove("selected");
-	        inputField.value = inputField.value
-	            .split(", ")
-	            .filter(function(id) {
-	                return id !== seatId;
-	            })
-	            .join(", ");
-	    } else {
-	        // 선택
-	        button.classList.add("selected");
-	        inputField.value = inputField.value
-	            ? inputField.value + ", " + seatId
-	            : seatId;
-	    }
-	}
-	
-	// 좌석 생성 실행
-	generateSeats("left_table", 5, 2, "L", reservedSeats.left);
-	generateSeats("middle_table", 5, 8, "M", reservedSeats.middle);
-	generateSeats("right_table", 5, 2, "R", reservedSeats.right);
-	
+    const reservedSeats = {
+        left: ["L1-1", "L2-2"],
+        middle: ["M3-3", "M4-5"],
+        right: ["R5-1"]
+    };
 
-    
+    // 좌석 생성 함수
+    function generateSeats(tableId, rows, cols, prefix, reserved) {
+    const table = document.getElementById(tableId);
+    for (let i = 1; i <= rows; i++) {
+        const row = document.createElement("tr");
+        for (let j = 1; j <= cols; j++) {
+            const seatId = `${prefix}${i}-${j}`;
+            const cell = document.createElement("td");
+            const button = document.createElement("button");
+            button.textContent = seatId;
+            button.dataset.id = seatId;
+
+            // 예약 상태 적용
+            if (reserved.includes(seatId)) {
+                button.classList.add("reserved");
+                button.disabled = true;
+            }
+
+            // 클릭 이벤트 추가
+            button.onclick = () => handleSeatClick(button);
+            cell.appendChild(button);
+            row.appendChild(cell);
+        }
+        table.appendChild(row);
+    }
+}
+
+    // 좌석 클릭 이벤트 처리 함수
+    function handleSeatClick(button) {
+        const inputField = document.getElementById("movieSeat");
+        const seatId = button.dataset.id;
+
+        if (button.classList.contains("selected")) {
+            // 선택 해제
+            button.classList.remove("selected");
+            inputField.value = inputField.value
+                .split(", ")
+                .filter(id => id !== seatId)
+                .join(", ");
+        } else {
+            // 선택
+            button.classList.add("selected");
+            inputField.value = inputField.value
+                ? `${inputField.value}, ${seatId}`
+                : seatId;
+        }
+    }
+
+    // 좌석 생성 실행
+    generateSeats("left_table", 5, 2, "L", reservedSeats.left);
+    generateSeats("middle_table", 5, 8, "M", reservedSeats.middle);
+    generateSeats("right_table", 5, 2, "R", reservedSeats.right);
+
+
     
 
     </script>

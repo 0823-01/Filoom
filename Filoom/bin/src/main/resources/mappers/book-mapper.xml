@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd" >
+<mapper namespace="bookMapper">
+
+	<!-- 
+		Reply 테이블로부터 조회된 ResultSet을
+		Reply VO 타입으로 옮겨주는 ResultMap
+	-->
+	
+	<resultMap id="ReplyResultSet" type="reply">
+		<id column="REPLY_NO" property="replyNo"/>
+		<result column="REPLY_WRITER" property="replyWriter"/>
+		<result column="REPLY_CONTENT" property="replyContent"/>
+		<result column="CREATE_DATE" property="createDate"/>
+	</resultMap>
+
+
+</mapper>
