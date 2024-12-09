@@ -19,6 +19,7 @@
 	<typeAliases>
 		<!-- <typeAlias type="com.kh.spring.board.model.vo.Reply" alias="reply" /> -->
 		<typeAlias type="com.kh.filoom.movie.model.vo.Movie" alias="movie"/>
+		<typeAlias type = "com.kh.filoom.book.model.vo.Booking" alias="booking"/>
 	</typeAliases>
 	
 	<mappers>
@@ -28,6 +29,7 @@
 		-->
 		<!--<mapper resource="/mappers/board-mapper.xml" /> -->
 		<mapper resource = "/mappers/movie-mapper.xml"/>
+		<mapper resource = "/mappers/book-mapper.xml"/>
 	
 	</mappers>
 	

@@ -64,8 +64,9 @@
             const calendarBody = $("#calendar_body");
             calendarBody.empty();
 
-            $("#yearAndMonth").text(`${year}-${String(month + 1).padStart(2, "0")}`);
-
+            const yearMonthText = ${year}-${String(month + 1).padStart(2, "0")}`;
+            $("#yearAndMonth").text(yearMonthText);
+            
             let date = 1;
             for (let i = 0; i < 6; i++) {
                 const row = $("<tr></tr>");
