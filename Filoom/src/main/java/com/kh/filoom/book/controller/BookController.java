@@ -21,5 +21,12 @@ public class BookController {
 	}
 	
 	
+	@GetMapping("book.ao")
+	public String Test() {
+		
+		return "book/calender";
+		
+	}
+	
 	
 }
