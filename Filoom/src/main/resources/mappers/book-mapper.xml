@@ -16,6 +16,42 @@
 		<result column="MODIFY_DATE" property="modifyDate"/>
 		<result column="USER_NO" property="userNo"/>
 	</resultMap>
+	
+	<resultMap id = "PlayingResultSet" type="playing">
+		<id column="PLAYING_NO" property="playingNo"/>
+		<result column="PLAYTIME" property="playTime"/>
+		<result column="STATUS" property="status"/>
+		<result column="MOVIE_NO" property="movieNo"/>
+		<result column="SCREEN_NO" property="screenNo"/>
+	</resultMap>
+	
+	<resultMap id = "ScreenResultSet" type="screen">
+		<id column="SCREEN_NO" property="screenNo"/>
+		<result column="SCREEN_NAME" property="screenName"/>
+		<result column="SCREEN_CAPACITY" property="screenCapacity"/>
+		<result column="SCREEN_INFO" property="screenInfo"/>
+	</resultMap>
+	
+	<resultMap id = "SeatResultSet" type="seat">
+		<id column="SEAT_NO" property="seatNo"/>
+		<result column="PLATING_NO" property="playingNo"/>
+		<result column="SSEAT_NO" property="sseatNo"/>		
+	</resultMap>
+
+	
+	<resultMap id = "ScreenSeatResultSet" type="screenseat">
+		<id column="SSEAT_NO" property="sseatNo"/>
+		<result column="SEAT_NO" property="seatNo"/>
+		<result column="SCREEN_NO" property="screenNo"/>		
+	</resultMap>
+	
+	<resultMap id = "BookingSeatResultSet" type="bookingseat">
+		<id column="STATUS" property="status"/>
+		<result column="TIMELIMIT" property="timeLimit"/>
+		<result column="SEAT_NO" property="seatNo"/>		
+	</resultMap>
+	
+	
 
 
 </mapper>

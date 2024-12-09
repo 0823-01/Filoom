@@ -7,7 +7,7 @@
 		Reply VO 타입으로 옮겨주는 ResultMap
 	-->
 	
-	<resultMap id="memberResultSet" type="movie">
+	<resultMap id="movieResultSet" type="movie">
 		<id column="MOVIE_NO" property="movieNo" />
 		<result column="MOVIE_TITLE" property="movieTitle" />
 		<result column="PREMIERE" property="premiere" />
@@ -22,7 +22,21 @@
 		<result column="STATUS" property="status" />
 	</resultMap>
 	
-
+	<select id ="selectList" resultMap="movieResultSet">
+		SELECT MOVIE_NO
+			, MOVIE_TITLE
+			, PREMIERE
+			, OPEN_DATE
+			, DIRECTOR
+			, GENRE
+			, RUNTIME
+			, SCREEN_TYPE
+			, FILM_RATE
+			, DESCRIPTION
+			, STARRING
+			, STATUS
+		FROM MOVIE
+	</select>
 
 
 </mapper>
