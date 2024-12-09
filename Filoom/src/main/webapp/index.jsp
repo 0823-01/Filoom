@@ -7,6 +7,7 @@
 <title>Insert title here</title>
 </head>
 <body>
-	
+	<a href = "${ pageContext.request.contextPath }/book.do">아</a>
 </body>
 </html>
+<!-- 이거 book용 -->

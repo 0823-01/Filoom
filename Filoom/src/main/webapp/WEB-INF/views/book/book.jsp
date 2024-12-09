@@ -7,9 +7,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-    <link rel = "stylesheet" href="aaa.css"/>
-    <link rel = "stylesheet" href="cinema_list.css"/>
-    <link rel = "stylesheet" href="caa.css"/>
+    <link rel = "stylesheet" href="../../resources/css/aaa.css"/>
+    <link rel = "stylesheet" href="../../resources/css/cinema_list.css"/>
+    <link rel = "stylesheet" href="../../resources/css/caa.css"/>
     <style>
 
         #detail_1, #detail_2, #detail_3,
