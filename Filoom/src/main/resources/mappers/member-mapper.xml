@@ -2,5 +2,18 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd" >
 <mapper namespace="memberMapper">
 
-	<select></select>
+	<resultMap id="memberResultSet" type="member">
+		<id column="USER_NO" property="userNo" />
+		<result column="USER_ID" property="userId" />
+		<result column="USER_PWD" property="userPwd" />
+		<result column="USER_NAME" property="userName" />
+		<result column="GENDER" property="gender" />
+		<result column="BIRTH" property="birth" />
+		<result column="EMAIL" property="email" />
+		<result column="PHONE" property="phone" />
+		<result column="MARKETING" property="marketing" />
+		<result column="ENROLL_DATE" property="enrollDate" />
+		<result column="STATUS" property="status" />
+	</resultMap>
+	
 </mapper>
