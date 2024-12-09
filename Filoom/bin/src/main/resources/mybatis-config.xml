@@ -18,9 +18,7 @@
 	
 	<typeAliases>
 		<!-- <typeAlias type="com.kh.spring.board.model.vo.Reply" alias="reply" /> -->
-		<typeAlias type = "com.kh.filoom.member.model.vo.Member" alias="member"/>
-		<typeAlias type = "com.kh.filoom.movie.model.vo.Movie" alias="movie"/>
-		<typeAlias type = "com.kh.filoom.book.model.vo.Booking" alias="booking"/>
+		<typeAlias type="com.kh.filoom.movie.model.vo.Movie" alias="movie"/>
 	</typeAliases>
 	
 	<mappers>
@@ -29,9 +27,7 @@
 			namespace 를 등록하지 않은 상태라면 오류가 난다!! 
 		-->
 		<!--<mapper resource="/mappers/board-mapper.xml" /> -->
-		<mapper resource = "/mappers/member-mapper.xml"/>
 		<mapper resource = "/mappers/movie-mapper.xml"/>
-		<mapper resource = "/mappers/book-mapper.xml"/>
 	
 	</mappers>
 	
