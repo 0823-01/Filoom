@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -112,6 +113,7 @@
                             </div>
                         </div>
                     </div>
+                    
                     <div id = "selectMovie_subImg">
 
                         <div id = "subImg">
@@ -207,20 +209,66 @@
             <div id = "detail_1">
                 
                 <div id = "detail_content">
+                
+                 <c:forEach var="b" items="${ requestScope.list }">
+                 
+				    <form action="movieDetail" method="get">
+				    
+				        <div id="movie_selection" onclick="this.parentNode.submit()">
+				            
+				            <input type="hidden" name="movieNo" value="${b.movieNo}">
+				           
+				            <div id="selection_img">
+				            
+				                <img src="" alt="${b.movieTitle}">
+				           
+				            </div>
+				            
+				            <div id="selection_detail">
+				           
+				                <h2>${b.movieTitle}</h2>
+				                <a>${b.filmRate}</a>
+				                <a>${b.openDate} 개봉</a><br>
+				                <a>${b.runtime} 분</a>
+				           
+				            </div>
+				       
+				        </div>
+				  
+				    </form>
+				    
+				</c:forEach>
                    
-                    <div id ="movie_selection">
-                        <div id = "selection_img">
-                            <img src="">
-                        </div>
-                        <div id = "selection_detail">
-
-                        </div>
-                    </div>
-                    
 
                 </div>
 
             </div>
+            
+            <script>
+	            function loadMovieDetail(movieNo) {
+	                // AJAX 호출
+	                fetch(`/getMovieDetail?movieNo=${movieNo}`)
+	                    .then(response => response.json())
+	                    .then(data => {
+	                        // 데이터를 받아와 DOM 업데이트
+	                        document.querySelector('#thumbnail_img img').src = data.moviePoster;
+	                        document.querySelector('#selectMovie_title a').textContent = data.movieTitle;
+	                        document.querySelector('#selectMovie_summary a').textContent = data.summary;
+	
+	                        // 추가 이미지 처리
+	                        const subImgContainer = document.querySelectorAll('#subImg');
+	                        subImgContainer.forEach((element, index) => {
+	                            if (data.subImages[index]) {
+	                                element.innerHTML = `<img src="${data.subImages[index]}" alt="sub image">`;
+	                            } else {
+	                                element.innerHTML = ''; // 이미지가 없는 경우 비워둠
+	                            }
+	                        });
+	                    })
+	                    .catch(error => console.error('Error fetching movie detail:', error));
+	            }
+            
+            </script>
 
             
             <div id = "buttonArea_1">
@@ -281,157 +329,157 @@
     <script>
     let currentStep = 0;
 
-// 단계별 매핑
-const steps = [
-    { detailId: "detail_1", seatId: "seat_1", buttonAreaId: "buttonArea_1", nextButtonId: "booking_1" },
-    { detailId: "detail_2", seatId: "date", buttonAreaId: "buttonArea_2", nextButtonId: "booking_2" },
-    { detailId: "detail_3", seatId: "seat_2", buttonAreaId: "buttonArea_3", nextButtonId: "booking_3" },
-];
-function updateStepIndicator() {
-    const steps = ["movieSelect", "dateSelect", "seatSelect"];
-    steps.forEach((stepId, index) => {
-        const stepElement = document.getElementById(stepId);
-        if (index === currentStep) {
-            stepElement.classList.add("active"); // 현재 단계
-            stepElement.classList.remove("completed");
-        } else if (index < currentStep) {
-            stepElement.classList.add("completed"); // 완료된 단계
-            stepElement.classList.remove("active");
-        } else {
-            stepElement.classList.remove("active", "completed"); // 나머지 단계
-        }
-    });
-}
-
-// 단계 초기화 시 호출
-function initializeSteps() {
-    steps.forEach((step, index) => {
-        document.getElementById(step.detailId).style.display = index === currentStep ? "block" : "none";
-        document.getElementById(step.seatId).style.display = index === currentStep ? "block" : "none";
-        document.getElementById(step.buttonAreaId).style.display = index === currentStep ? "block" : "none";
-    });
-    updateStepIndicator();
-}
-
-// 이전/다음 버튼 클릭 시 호출
-steps.forEach((step, index) => {
-    document.getElementById(step.nextButtonId).addEventListener("click", function () {
-        if (currentStep < steps.length - 1) {
-            document.getElementById(steps[currentStep].detailId).style.display = "none";
-            document.getElementById(steps[currentStep].seatId).style.display = "none";
-            document.getElementById(steps[currentStep].buttonAreaId).style.display = "none";
-
-            currentStep++;
-            document.getElementById(steps[currentStep].detailId).style.display = "block";
-            document.getElementById(steps[currentStep].seatId).style.display = "block";
-            document.getElementById(steps[currentStep].buttonAreaId).style.display = "block";
-            
-            updateStepIndicator(); // 단계 업데이트
-        }
-    });
-});
-
-document.querySelectorAll("#past").forEach((btn) => {
-    btn.addEventListener("click", function () {
-        if (currentStep > 0) {
-            document.getElementById(steps[currentStep].detailId).style.display = "none";
-            document.getElementById(steps[currentStep].seatId).style.display = "none";
-            document.getElementById(steps[currentStep].buttonAreaId).style.display = "none";
-
-            currentStep--;
-            document.getElementById(steps[currentStep].detailId).style.display = "block";
-            document.getElementById(steps[currentStep].seatId).style.display = "block";
-            document.getElementById(steps[currentStep].buttonAreaId).style.display = "block";
-            
-            updateStepIndicator(); // 단계 업데이트
-        }
-    });
-});
-/////////////////
-
-        document.addEventListener("DOMContentLoaded", function () {
-        const movieSelections = document.querySelectorAll("#movie_selection");
-
-        movieSelections.forEach((selection) => {
-            selection.addEventListener("click", () => {
-                // 선택된 div 초기화
-                movieSelections.forEach((s) => s.classList.remove("selected"));
-                // 선택된 div만 selected 클래스 추가
-                selection.classList.add("selected");
-            });
-        });
-    });
-
-
-
-
-
-
-
-    // 임시 예약 상태: 예약된 좌석
-	const reservedSeats = {
-	    left: ["L1-1", "L2-2"],
-	    middle: ["M3-3", "M4-5"],
-	    right: ["R5-1"]
-	};
-	
-	// 좌석 생성 함수
-	function generateSeats(tableId, rows, cols, prefix, reserved) {
-	    const table = document.getElementById(tableId);
-	    for (let i = 1; i <= rows; i++) {
-	        const row = document.createElement("tr");
-	        for (let j = 1; j <= cols; j++) {
-	            const seatId = prefix + i + '-' + j;
-	            const cell = document.createElement("td");
-	            const button = document.createElement("button");
-	            button.textContent = seatId;
-	            button.dataset.id = seatId;
-	
-	            // 예약 상태 적용
-	            if (reserved.includes(seatId)) {
-	                button.classList.add("reserved");
-	                button.disabled = true;
-	            }
-	
-	            // 클릭 이벤트 추가
-	            button.onclick = function() {
-	                handleSeatClick(button);
-	            };
-	            cell.appendChild(button);
-	            row.appendChild(cell);
+	// 단계별 매핑
+	const steps = [
+	    { detailId: "detail_1", seatId: "seat_1", buttonAreaId: "buttonArea_1", nextButtonId: "booking_1" },
+	    { detailId: "detail_2", seatId: "date", buttonAreaId: "buttonArea_2", nextButtonId: "booking_2" },
+	    { detailId: "detail_3", seatId: "seat_2", buttonAreaId: "buttonArea_3", nextButtonId: "booking_3" },
+	];
+	function updateStepIndicator() {
+	    const steps = ["movieSelect", "dateSelect", "seatSelect"];
+	    steps.forEach((stepId, index) => {
+	        const stepElement = document.getElementById(stepId);
+	        if (index === currentStep) {
+	            stepElement.classList.add("active"); // 현재 단계
+	            stepElement.classList.remove("completed");
+	        } else if (index < currentStep) {
+	            stepElement.classList.add("completed"); // 완료된 단계
+	            stepElement.classList.remove("active");
+	        } else {
+	            stepElement.classList.remove("active", "completed"); // 나머지 단계
 	        }
-	        table.appendChild(row);
-	    }
+	    });
 	}
 	
-	// 좌석 클릭 이벤트 처리 함수
-	function handleSeatClick(button) {
-	    const inputField = document.getElementById("movieSeat");
-	    const seatId = button.dataset.id;
-	
-	    if (button.classList.contains("selected")) {
-	        // 선택 해제
-	        button.classList.remove("selected");
-	        inputField.value = inputField.value
-	            .split(", ")
-	            .filter(function(id) {
-	                return id !== seatId;
-	            })
-	            .join(", ");
-	    } else {
-	        // 선택
-	        button.classList.add("selected");
-	        inputField.value = inputField.value
-	            ? inputField.value + ", " + seatId
-	            : seatId;
-	    }
+	// 단계 초기화 시 호출
+	function initializeSteps() {
+	    steps.forEach((step, index) => {
+	        document.getElementById(step.detailId).style.display = index === currentStep ? "block" : "none";
+	        document.getElementById(step.seatId).style.display = index === currentStep ? "block" : "none";
+	        document.getElementById(step.buttonAreaId).style.display = index === currentStep ? "block" : "none";
+	    });
+	    updateStepIndicator();
 	}
 	
-	// 좌석 생성 실행
-	generateSeats("left_table", 5, 2, "L", reservedSeats.left);
-	generateSeats("middle_table", 5, 8, "M", reservedSeats.middle);
-	generateSeats("right_table", 5, 2, "R", reservedSeats.right);
+	// 이전/다음 버튼 클릭 시 호출
+	steps.forEach((step, index) => {
+	    document.getElementById(step.nextButtonId).addEventListener("click", function () {
+	        if (currentStep < steps.length - 1) {
+	            document.getElementById(steps[currentStep].detailId).style.display = "none";
+	            document.getElementById(steps[currentStep].seatId).style.display = "none";
+	            document.getElementById(steps[currentStep].buttonAreaId).style.display = "none";
 	
+	            currentStep++;
+	            document.getElementById(steps[currentStep].detailId).style.display = "block";
+	            document.getElementById(steps[currentStep].seatId).style.display = "block";
+	            document.getElementById(steps[currentStep].buttonAreaId).style.display = "block";
+	            
+	            updateStepIndicator(); // 단계 업데이트
+	        }
+	    });
+	});
+	
+	document.querySelectorAll("#past").forEach((btn) => {
+	    btn.addEventListener("click", function () {
+	        if (currentStep > 0) {
+	            document.getElementById(steps[currentStep].detailId).style.display = "none";
+	            document.getElementById(steps[currentStep].seatId).style.display = "none";
+	            document.getElementById(steps[currentStep].buttonAreaId).style.display = "none";
+	
+	            currentStep--;
+	            document.getElementById(steps[currentStep].detailId).style.display = "block";
+	            document.getElementById(steps[currentStep].seatId).style.display = "block";
+	            document.getElementById(steps[currentStep].buttonAreaId).style.display = "block";
+	            
+	            updateStepIndicator(); // 단계 업데이트
+	        }
+	    });
+	});
+	/////////////////
+	
+	        document.addEventListener("DOMContentLoaded", function () {
+	        const movieSelections = document.querySelectorAll("#movie_selection");
+	
+	        movieSelections.forEach((selection) => {
+	            selection.addEventListener("click", () => {
+	                // 선택된 div 초기화
+	                movieSelections.forEach((s) => s.classList.remove("selected"));
+	                // 선택된 div만 selected 클래스 추가
+	                selection.classList.add("selected");
+	            });
+	        });
+	    });
+	
+	
+	
+	
+	
+	
+	
+	    // 임시 예약 상태: 예약된 좌석
+		const reservedSeats = {
+		    left: ["L1-1", "L2-2"],
+		    middle: ["M3-3", "M4-5"],
+		    right: ["R5-1"]
+		};
+		
+		// 좌석 생성 함수
+		function generateSeats(tableId, rows, cols, prefix, reserved) {
+		    const table = document.getElementById(tableId);
+		    for (let i = 1; i <= rows; i++) {
+		        const row = document.createElement("tr");
+		        for (let j = 1; j <= cols; j++) {
+		            const seatId = prefix + i + '-' + j;
+		            const cell = document.createElement("td");
+		            const button = document.createElement("button");
+		            button.textContent = seatId;
+		            button.dataset.id = seatId;
+		
+		            // 예약 상태 적용
+		            if (reserved.includes(seatId)) {
+		                button.classList.add("reserved");
+		                button.disabled = true;
+		            }
+		
+		            // 클릭 이벤트 추가
+		            button.onclick = function() {
+		                handleSeatClick(button);
+		            };
+		            cell.appendChild(button);
+		            row.appendChild(cell);
+		        }
+		        table.appendChild(row);
+		    }
+		}
+		
+		// 좌석 클릭 이벤트 처리 함수
+		function handleSeatClick(button) {
+		    const inputField = document.getElementById("movieSeat");
+		    const seatId = button.dataset.id;
+		
+		    if (button.classList.contains("selected")) {
+		        // 선택 해제
+		        button.classList.remove("selected");
+		        inputField.value = inputField.value
+		            .split(", ")
+		            .filter(function(id) {
+		                return id !== seatId;
+		            })
+		            .join(", ");
+		    } else {
+		        // 선택
+		        button.classList.add("selected");
+		        inputField.value = inputField.value
+		            ? inputField.value + ", " + seatId
+		            : seatId;
+		    }
+		}
+		
+		// 좌석 생성 실행
+		generateSeats("left_table", 5, 2, "L", reservedSeats.left);
+		generateSeats("middle_table", 5, 8, "M", reservedSeats.middle);
+		generateSeats("right_table", 5, 2, "R", reservedSeats.right);
+		
 
 
 	$(function(){

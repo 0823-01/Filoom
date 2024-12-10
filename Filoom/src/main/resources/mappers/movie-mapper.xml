@@ -22,13 +22,12 @@
 		<result column="STATUS" property="status" />
 	</resultMap>
 	
+	<!-- 이거 영화 예매 페이지 첫페이지 정보 가져오기 -->
 	<select id ="selectList" resultMap="movieResultSet">
 		SELECT MOVIE_NO
 			, MOVIE_TITLE
 			, PREMIERE
 			, OPEN_DATE
-			, DIRECTOR
-			, GENRE
 			, RUNTIME
 			, SCREEN_TYPE
 			, FILM_RATE
@@ -36,6 +35,14 @@
 			, STARRING
 			, STATUS
 		FROM MOVIE
+	</select>
+	
+	<!-- 이거 영화 예매 페이지 첫페이지 상세정보 가져오기 -->
+	<select id = "selectMovie" resultMap="">
+	
+		SELECT MOVIE TITLE
+			, 
+	
 	</select>
 
 

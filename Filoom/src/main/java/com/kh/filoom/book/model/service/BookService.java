@@ -25,5 +25,6 @@ public interface BookService {
 	
 	// 좌석 클릭시 ajax로 실시간 잠그기
 	int bookMovieSeat(int seatNo);
+
 	
 }

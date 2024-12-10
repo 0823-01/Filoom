@@ -15,4 +15,8 @@ public class BookDao {
 		return (ArrayList)sqlSession.selectList("movieMapper.selectList");
 	}
 
+	public Movie selectMovie(SqlSessionTemplate sqlSession, int movieNo) {
+		return sqlSession.selectMovie("movieMapper.selectMovie");
+	}
+
 }
