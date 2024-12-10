@@ -7,6 +7,12 @@
 <title>Insert title here</title>
 </head>
 <body>
-	<jsp:include page="../../index.jsp">
+	<jsp:include page="common/header.jsp" />	
+	
+	
+	이곳은 메인페이지 입니다. 
+		
+	
+	<jsp:include page="common/footer.jsp" />
 </body>
 </html>
