@@ -6,8 +6,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+<<<<<<< Updated upstream
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+=======
+import org.springframework.web.bind.annotation.PostMapping;
+>>>>>>> Stashed changes
 
 import com.google.gson.Gson;
 import com.kh.filoom.book.model.service.BookService;
@@ -62,4 +66,27 @@ public class BookController {
 	}
 	
 	
+	
+	
+	//결제 테스트
+	@GetMapping("test.pm")
+	public String PaymentTest() {
+		
+		System.out.println("잘되나 ?");
+		return "book/payRequest_utf";
+
+	}
+	
+
+
+	///filoom/Resulttest.pm
+	//결제후 화면 테스트
+	@PostMapping("ResultTest.pm")
+	public String PaymentResultTest(String Amt) {
+		
+		System.out.println("잘되나 ? 결제휴");
+		System.out.println(Amt);
+		return "book/paymentResult";
+
+	}
 }
