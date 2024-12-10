@@ -34,4 +34,9 @@ public class Movie {
 	private String starring;
 //	STATUS	CHAR(1 BYTE)
 	private String status;
+	
+    private String imagePath;
+    
+    private String fileCodename;
+
 }
