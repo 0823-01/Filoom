@@ -22,20 +22,21 @@
 		<result column="STATUS" property="status" />
 	</resultMap>
 	
+	<!-- ※ 이하의 쿼리들은 확정된 것이 아님 -->
 	<select id ="selectList" resultMap="movieResultSet">
-		SELECT MOVIE_NO
-			, MOVIE_TITLE
-			, PREMIERE
-			, OPEN_DATE
-			, DIRECTOR
-			, GENRE
-			, RUNTIME
-			, SCREEN_TYPE
-			, FILM_RATE
-			, DESCRIPTION
-			, STARRING
-			, STATUS
+		SELECT /*POSTER*/, MOVIE_NO, MOVIE_TITLE, PREMIERE, OPEN_DATE, FILM_RATE
 		FROM MOVIE
+		WHERE /*PREMIERE = 'Y'*/ AND STATUS = 'Y'
+		<!-- 가나다순 정렬시 : ORDER BY MOVIE_TITLE
+			개봉순 정렬시 : ORDER BY OPEN_DATE
+			에 더해 PREMIERE = 'Y' 조건 활성화 -->
+	</select>
+	
+	<select id="selectByCritics" resultMap="movieResultSet">
+		SELECT /*POSTER*/, MOVIE_NO, MOVIE_TITLE,
+			PREMIERE, OPEN_DATE, FILM_RATE, SCORE
+		FROM MOVIE JOIN REVIEW USING (MOVIE_NO)
+		WHERE PREMIERE = 'Y' AND STATUS = 'Y'
 	</select>
 
 
