@@ -16,6 +16,11 @@ public class Playing {
 	private String status;
 	private int movieNo;
 	private int screenNo;
+	private int runtime;
+	private int screenCapacity;
+	private int occupiedSeats;
+	
+	
 	
 	
 }

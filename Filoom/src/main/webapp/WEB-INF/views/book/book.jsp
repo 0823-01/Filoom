@@ -99,18 +99,19 @@
             <div id = "seat_1">
                 
                 <div id = "thumbnail_img">
-                    <img src ="./조커2.jpg">
+                    <img src ="${movie.imagePath}/${movie.fileCodename}">
                 </div>
                 
                 <div id = "selectMovie">
                     <div id = "selectMovie_detail">
                         <div id ="selectMovie_a">
                             <div id = "selectMovie_title">
-                                <a>조커</a>
+                                <a>${ movie.movieTitle }</a>
                             </div>
                             <div id = "selectMovie_summary">
-                                <a>아아</a>
+                                <a>${ movie.description }</a>
                             </div>
+                            <input type="hidden" name="movieDetailNo" value="${ movie.movieNo}">
                         </div>
                     </div>
                     
@@ -214,7 +215,7 @@
                  
 				    <form action="movieDetail" method="get">
 				    
-				        <div id="movie_selection" onclick="this.parentNode.submit()">
+				        <div id="movie_selection" onclick="this.parentNode.submit()" class="movie_selection">
 				            
 				            <input type="hidden" name="movieNo" value="${b.movieNo}">
 				           
@@ -246,22 +247,22 @@
             
             <script>
 	            function loadMovieDetail(movieNo) {
-	                // AJAX 호출
+	               
 	                fetch(`/getMovieDetail?movieNo=${movieNo}`)
 	                    .then(response => response.json())
 	                    .then(data => {
-	                        // 데이터를 받아와 DOM 업데이트
+	                        
 	                        document.querySelector('#thumbnail_img img').src = data.moviePoster;
 	                        document.querySelector('#selectMovie_title a').textContent = data.movieTitle;
 	                        document.querySelector('#selectMovie_summary a').textContent = data.summary;
 	
-	                        // 추가 이미지 처리
+	                        
 	                        const subImgContainer = document.querySelectorAll('#subImg');
 	                        subImgContainer.forEach((element, index) => {
 	                            if (data.subImages[index]) {
 	                                element.innerHTML = `<img src="${data.subImages[index]}" alt="sub image">`;
 	                            } else {
-	                                element.innerHTML = ''; // 이미지가 없는 경우 비워둠
+	                                element.innerHTML = '';
 	                            }
 	                        });
 	                    })
@@ -273,9 +274,227 @@
             
             <div id = "buttonArea_1">
 
-                <button id = "booking_1">영화 선택</button> <br>
+                <button id = "booking_1" class="booking-btn" data-movie-no="${movie.movieNo}">영화 선택</button> <br>
                 
             </div>
+            
+            <script>
+	            function renderCalendar() {
+	                showCalendar(currentYear, currentMonth);
+	            }
+
+            
+	            let movieData = [ //샘플데이터
+	               
+	                
+	            ];
+            
+	            document.querySelectorAll(".booking-btn").forEach((button) => {
+	                button.addEventListener("click", function () {
+	                   
+	                    let movieNum = this.getAttribute("data-movie-no");
+	                    console.log("Selected movieNo:", movieNum);
+	
+	                    	$.ajax({
+	                    		url : "book.ca",
+	                    		type : "get",
+	                    		data :{
+	                    			
+	                    			movieNum : movieNum
+	                    			
+	                    		},
+	                    		success : function(result){
+	                    			
+	                    	
+	                    			let newMovies = result.map(item => ({
+	                                    playingNo: item.playingNo,
+	                                    playTime: item.playTime,
+	                                    movieNo: item.movieNo,
+	                                    screenNo: item.screenNo,
+	                                    status: item.status,
+	                                    runTime: item.runtime,
+	                                    seatCount: item.occupiedSeats,
+	                                    totalCount: item.screenCapacity
+	                                }));
+
+	                                // 기존 movieData 배열에 새 데이터 추가
+	                                movieData.push(...newMovies);
+	                                console.log(movieData);
+	                                
+	                                renderCalendar();
+	                                
+	                    
+	                    		
+	                    		},
+	                    		error:function(){
+	                    			console.log("실패");
+	                    		},
+	                    		complete:function(){
+	                    			console.log("ajax 연결");
+	                    		}
+	                    		
+	                    	})
+	                    
+	                    
+	                    
+	                });
+	            });
+	            
+	            $(function(){
+	            	//화면이 로드된후 캘린더 보여주기
+	            	showCalendar(currentYear,currentMonth);
+	            });
+	            //현재날짜
+	            
+	            
+	                const today = new Date();
+	                //console.log(today);
+	                //현재년월
+	                let currentYear = today.getFullYear();
+	                let currentMonth = today.getMonth(); // -1
+	                //월 배열
+	                const months = ["01", "02", "03", "04", "05", "06",
+	                                "07", "08", "09", "10", "11", "12"]; // months[현재월인덱스] =>
+	                //년-월을 나타낼 div요소
+	                let yearAndMonthDiv = $("#yearAndMonth");
+	                //영화를 선택한경우, 현재 달의 상영정보를 변수에 저장
+	                //상영정보 클래스에  (RUNTIME + 예약된 좌석수 + 전체좌석수) 추가하면 좋을듯
+	            
+	                //영화를 선택했을때 해당하는 달의 영화정보를 json객체 형식으로 변수에 담기
+	                //달력만들어주기
+	                function showCalendar(year,month){
+	                    let firstDay = new Date(year, month, 1).getDay(); //요일 일:0~토:6
+	                    let tbody = $("#calendar_body");
+	                    tbody.html("");
+	                    //상단에 년,월
+	        			yearAndMonthDiv.text(year+" - "+month);
+	                    let date = 1;
+	                    let totalDays = daysInMonth(year,month);
+	                    for(let i=0;i<6; i++){
+	                        // let row = document.createElement("tr");
+	                        let row = $("<tr></tr>");
+	                        //console.log(row);
+	                        for(let j=0;j<7;j++){
+	                            //let cell = document.createElement("td");
+	                            let cell = $("<td></td>");
+	                            if(( (i==0) && (j<firstDay) )|| (date>totalDays)) {
+	                                row.append(cell);
+	                            }else{
+	                                cell.text(date);
+	                                if( date==today.getDate() && year == today.getFullYear() && month === today.getMonth()){
+	                                    cell.css("color","red");  //오늘날짜인경우
+	                                }
+	                                let fullDate = formatDate(new Date(year, month, date));
+	                                if(movieData.some(movie=>movie.playTime.includes(fullDate))){   //선택한 날짜에 상영하는 영화가 있는지
+	                                    cell.addClass('has_movie');  //클래스속성추가 (달력에 영화가 있는날 표시)
+	                                }else{
+	                                    cell.addClass('no_movie');  //클래스속성추가 (달력에 영화가 있는날 표시)
+	                                }
+	                                let currentDate = date;
+	                                let cellYear = year;
+	                                let cellMonth = month;
+	                                cell.on('click',function(){
+	                                    let selectDate = new Date(cellYear,cellMonth,currentDate);
+	                                    showMovieInfo(selectDate);
+	                                });
+	                                row.append(cell);
+	                                date++;
+	                            }
+	                        }
+	                        $("#calendar_body").append(row);
+	                        if(date>totalDays){
+	                            break;
+	                        }
+	                    }
+	                }
+	                // 선택한 월이 총 몇일인지 구하는 메소드
+	                function daysInMonth(year,month){
+	                    return new Date(year,month+1,0).getDate(); // 0-> 전월의 마지막 일
+	                }
+	                // Date 를 yyyy-mm-dd 형식으로 변환
+	                function formatDate(date){
+	                    let yyyy = date.getFullYear();
+	                    let mm = String(date.getMonth()+1).padStart(2,'0');
+	                    let dd = String(date.getDate()).padStart(2,'0');
+	                    return yyyy+"-"+mm+"-"+dd;
+	                }
+	                //날짜를 클릭했을경우 상영정보 띄어주는 메소드
+	                function showMovieInfo(date){
+	                    $("#time").html("");
+	                    const selectDate = formatDate(date);
+	                    let movieInfo ="";
+	        			for(let i=0;i<movieData.length;i++){
+	        				if(movieData[i].playTime.includes(selectDate)){ //해당날짜에 상영되는 영화가 있다면
+	        			    	   
+	        			        let startEndTime = calculationTime(movieData[i].playTime, movieData[i].runTime);
+	        			   
+	        			        //상영 시작시간 , 상영 끝나는 시간 구하기
+	        			       
+	        			
+	        			        //상영목록에 정보 뿌려주기
+	        			        //선택시 영화상영번호
+	        			       
+	        			      
+	        			        let playingNo = movieData[i].playingNo;
+	        			  
+	        			       
+	        			        //  <label>12:30 ~ 14:40 1관 40/60</label>
+	        			        //  <input type="radio" id="input11" name="playingNo" value="영화상영번호" hidden">
+	        			        movieInfo += "<div onclick='movieInfoClick()'>"+
+	        			        					"<label for='input"+i+"'>"+startEndTime[0]+" ~ "+startEndTime[1]+" "+movieData[i].screenNo+"관 "+ String(movieData[i].seatCount).padStart(2,'0') +"/"+ movieData[i].totalCount +"</label>"+
+	        			        					"<input type='radio' id='input" + i + "' name='playingNo' value='"+playingNo+"'hidden>"+
+	        			        			"</div>";
+	        			        						       
+	        			    }
+	        			}
+	        			console.log(movieInfo);
+	        			$("#time").append(movieInfo);
+	        			$("#movie_date").text(selectDate);
+	        			
+	                }
+	                //상영시간 + 러닝타임 계산해주는 메소드 (24시간형식)
+	                function calculationTime (playTime,runTime){
+	                    let startTime = playTime.substring(11,16);
+	                    let [hours, minutes] = startTime.split(":").map(Number);
+	                    minutes += runTime;
+	                    hours += Math.floor(minutes/60);
+	                    minutes %= 60;
+	                    hours %= 24;
+	        			let endTime = String(hours).padStart(2,'0')+":"+String(minutes).padStart(2,'0');
+	                    return [startTime,endTime];
+	                }
+	                //상영시간을 클릭했을때 실행할 메소드 : 영화상영번호 넘기기~
+	                function clickTime(playingNo){
+	                    alert("클릭됨! 영화상영번호"+playingNo);
+	                    //$(this) 로 div 요소 선택해서 #selectTime 아이디값 부여하고 싶은데 안되네 (선택된 상영정보만 선택,나머지는 해제)
+	                }
+	                //다음달
+	                function next(){
+	                    currentYear=currentMonth===11?currentYear + 1:currentYear;
+	                    currentMonth=(currentMonth+1)%12;
+	                    showCalendar(currentYear,currentMonth);
+	                }
+	                //이전달
+	                function previous(){
+	                    ///////////////////////////////////////////////////////////////////////////
+	                    //현재달보다 이전달은 넘어갈수 없게 하기
+	                    currentYear=currentMonth===0?currentYear -1:currentYear;
+	                    currentMonth=currentMonth===0? 11 : currentMonth-1;
+	                    showCalendar(currentYear,currentMonth);
+	                }
+	                function movieInfoClick(){
+	                    let input = $("#time>div>input");
+	                    input.each(function(){
+	                        if($(this).prop("checked")){
+	                            $(this).parent().attr("id","selectTime");
+	                        }else{
+	                            $(this).parent().attr("id","");
+	                        }
+	                    });
+	                }
+	            
+	            
+            </script>
         
             <div id = "detail_2">
                 
@@ -398,17 +617,19 @@
 	/////////////////
 	
 	        document.addEventListener("DOMContentLoaded", function () {
-	        const movieSelections = document.querySelectorAll("#movie_selection");
-	
-	        movieSelections.forEach((selection) => {
-	            selection.addEventListener("click", () => {
-	                // 선택된 div 초기화
-	                movieSelections.forEach((s) => s.classList.remove("selected"));
-	                // 선택된 div만 selected 클래스 추가
-	                selection.classList.add("selected");
-	            });
-	        });
-	    });
+	        
+	        	const movieSelections = document.querySelectorAll("#movie_selection");
+		
+		        movieSelections.forEach((selection) => {
+		            selection.addEventListener("click", () => {
+		               
+		                movieSelections.forEach((s) => s.classList.remove("selected"));
+		               
+		                selection.classList.add("selected");
+		                
+		            });
+		        });
+		    });
 	
 	
 	
@@ -482,170 +703,7 @@
 		
 
 
-	$(function(){
-    	//화면이 로드된후 캘린더 보여주기
-    	showCalendar(currentYear,currentMonth);
-    });
-    //현재날짜
-        const today = new Date();
-        //console.log(today);
-        //현재년월
-        let currentYear = today.getFullYear();
-        let currentMonth = today.getMonth(); // -1
-        //월 배열
-        const months = ["01", "02", "03", "04", "05", "06",
-                        "07", "08", "09", "10", "11", "12"]; // months[현재월인덱스] =>
-        //년-월을 나타낼 div요소
-        let yearAndMonthDiv = $("#yearAndMonth");
-        //영화를 선택한경우, 현재 달의 상영정보를 변수에 저장
-        //상영정보 클래스에  (RUNTIME + 예약된 좌석수 + 전체좌석수) 추가하면 좋을듯
-        let movieData = [ //샘플데이터
-            {playingNo:1,playTime:"2024-12-07 14:30:00", movieNo:1, screenNo:1,status:"Y",  runTime:130, seatCount:40, totalCount:60},
-            {playingNo:2,playTime:"2024-12-07 17:30:00", movieNo:1, screenNo:2,status:"Y",  runTime:130, seatCount:50, totalCount:50},
-            {playingNo:3,playTime:"2024-12-07 19:30:00", movieNo:1, screenNo:3,status:"Y",  runTime:130, seatCount:2, totalCount:40},
-            {playingNo:4,playTime:"2024-12-08 14:30:00", movieNo:1, screenNo:1,status:"Y",  runTime:130, seatCount:60, totalCount:60},
-            {playingNo:5,playTime:"2024-12-08 17:30:00", movieNo:1, screenNo:2,status:"Y",  runTime:130, seatCount:0, totalCount:50},
-            {playingNo:6,playTime:"2024-12-09 19:30:00", movieNo:1, screenNo:1,status:"Y",  runTime:130, seatCount:40, totalCount:60},
-            {playingNo:7,playTime:"2024-12-10 23:30:00", movieNo:1, screenNo:1,status:"Y",  runTime:130, seatCount:51, totalCount:60},
-            {playingNo:8,playTime:"2024-12-11 17:30:00", movieNo:1, screenNo:2,status:"Y",  runTime:130, seatCount:51, totalCount:50},
-            {playingNo:9,playTime:"2024-12-11 23:30:00", movieNo:1, screenNo:3,status:"Y",  runTime:130, seatCount:51, totalCount:40},
-            {playingNo:10,playTime:"2024-12-12 11:30:00", movieNo:1, screenNo:1,status:"Y",  runTime:130, seatCount:51, totalCount:60},
-            {playingNo:11,playTime:"2024-12-12 15:30:00", movieNo:1, screenNo:2,status:"Y",  runTime:130, seatCount:51, totalCount:50},
-            {playingNo:12,playTime:"2024-12-13 12:30:00", movieNo:1, screenNo:2,status:"Y",  runTime:130, seatCount:51, totalCount:50},
-            {playingNo:13,playTime:"2024-12-13 16:30:00", movieNo:1, screenNo:3,status:"Y",  runTime:130, seatCount:51, totalCount:40},
-        ];
-        //영화를 선택했을때 해당하는 달의 영화정보를 json객체 형식으로 변수에 담기
-        //달력만들어주기
-        function showCalendar(year,month){
-            let firstDay = new Date(year, month, 1).getDay(); //요일 일:0~토:6
-            let tbody = $("#calendar_body");
-            tbody.html("");
-            //상단에 년,월
-			yearAndMonthDiv.text(year+" - "+month);
-            let date = 1;
-            let totalDays = daysInMonth(year,month);
-            for(let i=0;i<6; i++){
-                // let row = document.createElement("tr");
-                let row = $("<tr></tr>");
-                //console.log(row);
-                for(let j=0;j<7;j++){
-                    //let cell = document.createElement("td");
-                    let cell = $("<td></td>");
-                    if(( (i==0) && (j<firstDay) )|| (date>totalDays)) {
-                        row.append(cell);
-                    }else{
-                        cell.text(date);
-                        if( date==today.getDate() && year == today.getFullYear() && month === today.getMonth()){
-                            cell.css("color","red");  //오늘날짜인경우
-                        }
-                        let fullDate = formatDate(new Date(year, month, date));
-                        if(movieData.some(movie=>movie.playTime.includes(fullDate))){   //선택한 날짜에 상영하는 영화가 있는지
-                            cell.addClass('has_movie');  //클래스속성추가 (달력에 영화가 있는날 표시)
-                        }else{
-                            cell.addClass('no_movie');  //클래스속성추가 (달력에 영화가 있는날 표시)
-                        }
-                        let currentDate = date;
-                        let cellYear = year;
-                        let cellMonth = month;
-                        cell.on('click',function(){
-                            let selectDate = new Date(cellYear,cellMonth,currentDate);
-                            showMovieInfo(selectDate);
-                        });
-                        row.append(cell);
-                        date++;
-                    }
-                }
-                $("#calendar_body").append(row);
-                if(date>totalDays){
-                    break;
-                }
-            }
-        }
-        // 선택한 월이 총 몇일인지 구하는 메소드
-        function daysInMonth(year,month){
-            return new Date(year,month+1,0).getDate(); // 0-> 전월의 마지막 일
-        }
-        // Date 를 yyyy-mm-dd 형식으로 변환
-        function formatDate(date){
-            let yyyy = date.getFullYear();
-            let mm = String(date.getMonth()+1).padStart(2,'0');
-            let dd = String(date.getDate()).padStart(2,'0');
-            return yyyy+"-"+mm+"-"+dd;
-        }
-        //날짜를 클릭했을경우 상영정보 띄어주는 메소드
-        function showMovieInfo(date){
-            $("#time").html("");
-            const selectDate = formatDate(date);
-            let movieInfo ="";
-			for(let i=0;i<movieData.length;i++){
-				if(movieData[i].playTime.includes(selectDate)){ //해당날짜에 상영되는 영화가 있다면
-			    	   
-			        let startEndTime = calculationTime(movieData[i].playTime, movieData[i].runTime);
-			   
-			        //상영 시작시간 , 상영 끝나는 시간 구하기
-			       
-			
-			        //상영목록에 정보 뿌려주기
-			        //선택시 영화상영번호
-			       
-			      
-			        let playingNo = movieData[i].playingNo;
-			  
-			       
-			        //  <label>12:30 ~ 14:40 1관 40/60</label>
-			        //  <input type="radio" id="input11" name="playingNo" value="영화상영번호" hidden">
-			        movieInfo += "<div onclick='movieInfoClick()'>"+
-			        					"<label for='input"+i+"'>"+startEndTime[0]+" ~ "+startEndTime[1]+" "+movieData[i].screenNo+"관 "+ String(movieData[i].seatCount).padStart(2,'0') +"/"+ movieData[i].totalCount +"</label>"+
-			        					"<input type='radio' id='input" + i + "' name='playingNo' value='"+playingNo+"'hidden>"+
-			        			"</div>";
-			        						       
-			    }
-			}
-			console.log(movieInfo);
-			$("#time").append(movieInfo);
-			$("#movie_date").text(selectDate);
-			
-        }
-        //상영시간 + 러닝타임 계산해주는 메소드 (24시간형식)
-        function calculationTime (playTime,runTime){
-            let startTime = playTime.substring(11,16);
-            let [hours, minutes] = startTime.split(":").map(Number);
-            minutes += runTime;
-            hours += Math.floor(minutes/60);
-            minutes %= 60;
-            hours %= 24;
-			let endTime = String(hours).padStart(2,'0')+":"+String(minutes).padStart(2,'0');
-            return [startTime,endTime];
-        }
-        //상영시간을 클릭했을때 실행할 메소드 : 영화상영번호 넘기기~
-        function clickTime(playingNo){
-            alert("클릭됨! 영화상영번호"+playingNo);
-            //$(this) 로 div 요소 선택해서 #selectTime 아이디값 부여하고 싶은데 안되네 (선택된 상영정보만 선택,나머지는 해제)
-        }
-        //다음달
-        function next(){
-            currentYear=currentMonth===11?currentYear + 1:currentYear;
-            currentMonth=(currentMonth+1)%12;
-            showCalendar(currentYear,currentMonth);
-        }
-        //이전달
-        function previous(){
-            ///////////////////////////////////////////////////////////////////////////
-            //현재달보다 이전달은 넘어갈수 없게 하기
-            currentYear=currentMonth===0?currentYear -1:currentYear;
-            currentMonth=currentMonth===0? 11 : currentMonth-1;
-            showCalendar(currentYear,currentMonth);
-        }
-        function movieInfoClick(){
-            let input = $("#time>div>input");
-            input.each(function(){
-                if($(this).prop("checked")){
-                    $(this).parent().attr("id","selectTime");
-                }else{
-                    $(this).parent().attr("id","");
-                }
-            });
-        }
+	
 
 
     

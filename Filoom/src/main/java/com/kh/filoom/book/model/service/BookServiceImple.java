@@ -7,7 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.kh.filoom.book.model.dao.BookDao;
+import com.kh.filoom.book.model.vo.Playing;
 import com.kh.filoom.movie.model.vo.Movie;
+import com.kh.filoom.movie.model.vo.MovieWithPoster;
 
 @Service
 public class BookServiceImple implements BookService {
@@ -30,9 +32,9 @@ public class BookServiceImple implements BookService {
 	}
 
 	@Override
-	public int selectMovieDate(int movieNo) {
+	public ArrayList<Playing> selectMovieDate(int movieNo) {
 		// TODO Auto-generated method stub
-		return 0;
+		return bookDao.selectMovieDate(sqlSession, movieNo);
 	}
 
 	@Override
