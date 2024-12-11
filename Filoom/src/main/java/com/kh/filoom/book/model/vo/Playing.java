@@ -16,6 +16,8 @@ public class Playing {
 	private String status;
 	private int movieNo;
 	private int screenNo;
+	
+	//추가	
 	private int runtime;
 	private int screenCapacity;
 	private int occupiedSeats;

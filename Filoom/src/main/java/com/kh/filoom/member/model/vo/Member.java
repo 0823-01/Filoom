@@ -28,7 +28,7 @@ public class Member {
 	private String userId;
 	private String userPwd;
 	private String userName;
-	private String gneder;
+	private String gender;
 	private String birth;
 	private String email;
 	private String phone;
