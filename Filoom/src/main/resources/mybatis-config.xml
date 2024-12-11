@@ -27,8 +27,7 @@
 		<typeAlias type = "com.kh.filoom.book.model.vo.Seat" alias="seat"/>
 		
 		<typeAlias type = "com.kh.filoom.movie.model.vo.Movie" alias="movie"/>
-		<!-- <typeAlias type = "com.kh.filoom.movie.model.vo.Poster" alias="poster"/>		
-		 -->
+		<typeAlias type = "com.kh.filoom.movie.model.vo.Poster" alias="poster"/>
 		
 		
 	</typeAliases>
