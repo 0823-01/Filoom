@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+    <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -10,6 +11,13 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    
+    <!-- fontawesome 연동 - 검색 아이콘 넣을 용도 -->
+    <!-- ※ 계정을 파야 embed code를 제공해주던데
+     혹시 다른 분들 자리에서도 검색 아이콘 뜨는지 확인바람
+     참고로 이거 무료는 한 달에 1만 번 로드 횟수 제한 있으니까 테스트할 때는 비활성화 필요함
+     Ctrl+Q,S로 여는 프리뷰 창도 카운트 되는 것으로 알고 있음 -->
+    <script src="https://kit.fontawesome.com/4c4be5559b.js" crossorigin="anonymous"></script>
 
     <style>
         /* === Overall Font === */
@@ -120,6 +128,39 @@
                 <!-- align=right로
                  검색창을 넣음 -->
             </div>
+            
+            <hr style="width:95%;">
+
+            <div style="display:flex; justify-content:space-between;">
+                <div class="left" style="padding-left:30px;">
+                    <label for="openedOnly">상영중인 영화만 표시</label>    
+                        <label class="switch">
+                            <input id="openedOnly" type="checkbox">
+                            <span class="slider round"></span>
+                        </label>
+                </div>
+
+                <!-- ※ 상세 정렬 기준
+                 default : MOVIE_NO 역순 (관리자 측 영화 목록과 동일)
+                 개봉순 : "현재 상영작" 중 개봉이 빠른 순.
+                 평점순 : "현재 상영작" 중 리뷰 평점 높은 순, 같을 경우 개봉이 빠른 순
+                    ※ 재개봉작의 개봉일자는 마지막 재개봉 날짜로 간주
+                 ※ 위 두 정렬 기준 사용 중에는 switch#openedOnly가 ON으로 고정
+                 이름순 = 한글 제목을 기준으로 ㄱ-ㅎ, 0-9 순
+                  -->
+                <div class="middle">
+                    <!-- <p>정렬 기준 |</p> -->
+                    정렬 기준 |
+                    <a href="#">개봉순</a>
+                    <a href="#">평점순</a>
+                    <a href="#">이름순</a>
+                </div>
+                <div class="right" style="padding-right:30px;">
+                    <input type="search" class="search-bar" placeholder="제목으로 검색...">
+                    <!-- <i class="fa-solid fa-magnifying-glass" onclick="window.alert('검색 기능은 준비중입니다.')"></i> -->
+                    <!-- ↑ 이게 검색 아이콘인데 횟수 절약을 위해 잠시 비활성화 처리하였음 -->
+                </div>
+            </div>
     
     
             <br>
@@ -138,6 +179,23 @@
              (2/3 정도로 줄이는 게 적합하다는 의견)
              전체적으로 2/3으로 width 240px에 marin 30px 10px가 나을 듯
              영화  -->
+             
+             
+<%--             <c:forEach var="" items=""> --%>
+<!--             	<div class="movie"> -->
+<!-- 	                <img src="sauce/moana.jpg" class="poster"> -->
+<!-- 	                <table class="movie-info"> -->
+<!-- 	                    <tr> -->
+<!-- 	                        <td id="filmrate"><img src="sauce/all.svg" class="filmrate"></td> -->
+<!-- 	                        <td><b>모아나 2</b><br></td> -->
+<!-- 	                    </tr> -->
+<!-- 	                    <tr> -->
+<!-- 	                        <td colspan="2">2024.11.27 개봉예정</td> -->
+<!-- 	                        <td> | 99분</td> ← 만약 넣으면 제목 쪽의 colspan='2'로 조정 -->
+<!-- 	                    </tr> -->
+<!-- 	                </table> -->
+<!--             	</div> -->
+<%--             </c:forEach> --%>
             
             <div class="movie">
                 <img src="sauce/moana.jpg" class="poster">
@@ -365,23 +423,28 @@
         <div class="pagingbar" align="center">
             <!-- 나중에 currentPage에 대해서만 볼드 & btn disabled 적용할 예정 -->
             <!-- if i > 1 -->
-                <button>&lt;&lt;</button> <!-- to Page1 -->
-                <button>&lt;</button> <!-- prev -->
+            <c:if test="${ requestScope.pi.currentPage gt 1 }">
+                <button onclick="location.href = 'boxoffice.mo?page=1';">&lt;&lt;</button> <!-- to Page1 -->
+                <button onclick="location.href = 'boxoffice.mo?page=${p-1}';">&lt;</button> <!-- prev -->
+            </c:if>
+            
             <!-- if 3 ≤ i ≤ maxPage-2, for i in range (currentPage -2 ~ +2) -->
-            <button onclick="location.href = '#';">1</button>
-            <button onclick="location.href = '#';">2</button>
-            <button onclick="location.href = '#';">3</button>
-            <button onclick="location.href = '#';">4</button>
-            <button onclick="location.href = '#';">5</button>
-            <button onclick="location.href = '#';">6</button>
-            <button onclick="location.href = '#';">7</button>
-            <button onclick="location.href = '#';">8</button>
-            <button onclick="location.href = '#';">9</button>
-            <button onclick="location.href = '#';">10</button>
+            <c:forEach var="p" begin="${requestScope.pi.startPage }" end="${requestScope.pi.endPage }" step="1">
+            	<c:choose>
+            		<c:when test=""> <!-- button refers to currentPage -->
+            			<button class="currentPage" disabled>${p}</button>
+            		</c:when>
+            		<c:otherwise>
+            			<button onclick="location.href = 'boxoffice.mo?page=${p}';">${p}</button>
+            		</c:otherwise>
+            	</c:choose>
+            </c:forEach>
 
             <!--  if i < maxPage -->
-                <button>&gt;</button> <!-- next -->    
-                <button>&gt;&gt;</button> <!-- to LastPage -->
+            <c:if test="${ requestScope.pi.currentPage lt requestScope.pi.maxPage }">
+                <button onclick="location.href = 'boxoffice.mo?page=${p+1}';">&gt;</button> <!-- next -->    
+                <button onclick="location.href = 'boxoffice.mo?page=${requestScope.pi.maxPage}';">&gt;&gt;</button> <!-- to LastPage -->
+			</c:if>
         </div>
 
         
