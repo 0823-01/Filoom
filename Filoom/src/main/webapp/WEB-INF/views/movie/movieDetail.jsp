@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+    <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -267,39 +268,6 @@
 <body>
     
     <%@ jsp:include file="../common/header.jsp" %>
-    <div id = "header">
-        <div id = "header_top">
-
-            <ul>
-                
-                <li>공지사항</li>
-                <li>문의</li>
-
-            </ul>
-
-
-
-            <a>Filoom</a>
-
-            <ul>
- 
-                <li>로그인</li> &nbsp;&nbsp;&nbsp;&nbsp;
-                <li>회원가입</li>
-              
-            </ul>
-
-        </div>
-        <hr >
-        <div id = "header_bottom">
-            <ul>
-                <li>영화</li>
-                <li>예매</li>
-                <li>이벤트</li>
-
-            </ul>
-        </div>
-        <hr>
-    </div>
     
     <!-- 예시 : 위키드 -->
     <div class="backStage" align="center">
@@ -511,11 +479,6 @@
                                 </td>
                             </tr>
                         </table>
-                        <!-- <div class="graph">1</div>
-                        <div class="graph">2</div>
-                        <div class="graph">3</div>
-                        <div class="graph">4</div>
-                        <div class="graph">5</div> -->
                     </div>
                 </div>
             </div>
@@ -651,27 +614,34 @@
 
 
                 <!-- Paging Bar -->
-                <div class="pagingbar" align="center">
-                    <!-- 나중에 currentPage에 대해서만 볼드 & btn disabled 적용할 예정 -->
-                        <!-- if i > 1 -->
-                        <button>&lt;&lt;</button> <!-- to Page1 -->
-                        <button>&lt;</button> <!-- prev -->
-                    <!-- if 3 ≤ i ≤ maxPage-2, for i in range (currentPage -2 ~ +2) -->
-                    <button onclick="location.href = '#';">1</button>
-                    <button onclick="location.href = '#';">2</button>
-                    <button onclick="location.href = '#';">3</button>
-                    <button onclick="location.href = '#';">4</button>
-                    <button onclick="location.href = '#';">5</button>
-                    <button onclick="location.href = '#';">6</button>
-                    <button onclick="location.href = '#';">7</button>
-                    <button onclick="location.href = '#';">8</button>
-                    <button onclick="location.href = '#';">9</button>
-                    <button onclick="location.href = '#';">10</button>
-
-                    <!--  if i < maxPage -->
-                        <button>&gt;</button> <!-- next -->    
-                        <button>&gt;&gt;</button> <!-- to LastPage -->
-                </div>
+				<div class="pagingbar" align="center">
+		            <!-- 나중에 currentPage에 대해서만 볼드 & btn disabled 적용할 예정 -->
+		            <!-- if i > 1 -->
+		            <c:if test="${ requestScope.pi.currentPage gt 1 }">
+		                <button onclick="location.href = 'boxoffice.mo?page=1';">&lt;&lt;</button> <!-- to Page1 -->
+		                <button onclick="location.href = 'boxoffice.mo?page=${p-1}';">&lt;</button> <!-- prev -->
+		            </c:if>
+		            
+		            <!-- if 3 ≤ i ≤ maxPage-2, for i in range (currentPage -2 ~ +2) -->
+		            <c:forEach var="p" begin="${requestScope.pi.startPage }" end="${requestScope.pi.endPage }" step="1">
+		            	<c:choose>
+		            		<c:when test=""> <!-- button refers to currentPage -->
+		            			<button class="currentPage" disabled>${p}</button>
+		            		</c:when>
+		            		<c:otherwise>
+		            			<button onclick="location.href = 'boxoffice.mo?page=${p}';">${p}</button>
+		            		</c:otherwise>
+		            	</c:choose>
+		            </c:forEach>
+		
+		            <!--  if i < maxPage -->
+		            <c:if test="${ requestScope.pi.currentPage lt requestScope.pi.maxPage }">
+		                <button onclick="location.href = 'boxoffice.mo?page=${p+1}';">&gt;</button> <!-- next -->    
+		                <button onclick="location.href = 'boxoffice.mo?page=${requestScope.pi.maxPage}';">&gt;&gt;</button> <!-- to LastPage -->
+					</c:if>
+		        </div>
+                
+                
             </div>
         </div>
     </div>

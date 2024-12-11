@@ -75,7 +75,7 @@
 	</select>
 	
 	<select id="selectByCritics" resultMap="movieResultSet">
-		SELECT /*POSTER*/, MOVIE_NO, MOVIE_TITLE,
+		SELECT /*POSTER*/, M.MOVIE_NO, MOVIE_TITLE,
 			PREMIERE, OPEN_DATE, FILM_RATE, SCORE
 		FROM MOVIE JOIN REVIEW USING (MOVIE_NO)
 		WHERE PREMIERE = 'Y' AND STATUS = 'Y'
