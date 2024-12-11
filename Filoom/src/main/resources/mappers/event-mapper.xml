@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd" >
+<mapper namespace="eventMapper">
+
+<!-- 241211 한혜원, 이벤트 게시글 등록 -->
+<insert id="insertEvent" parameterType="event">
+	INSERT INTO EVENT(EVENT_NO, EVENT_TITLE, START_DATE, END_DATE, EVENT_CONTENT, EVENT_TYPE, EVENT_STATUS)
+	VALUES(SEQ_ENO.NEXTVAL, #{eventTitle}, #{startDate}, #{endDate}, #{eventContent}, #{eventType}, #{eventStatus})
+</insert>
+
+<!-- 241211 한혜원, 이벤트 게시글 첨부파일 등록 -->
+<insert id="insertEventAttachment" parameterType="eventAttachment">
+	INSERT INTO EVENT_ATTACHMENT(EVENT_FILE_NO, REF_ENO, ORIGIN_NAME, CHANGE_NAME, FILE_PATH, FILE_LEVEL)
+	VALUES(SEQ_EFNO.NEXTVAL, SEQ_ENO.CURRVAL, #{originName}, #{changeName}, #{filePath}, #{fileLevel})
+</insert>
+
+</mapper>
