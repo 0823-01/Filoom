@@ -11,8 +11,13 @@ import lombok.ToString;
 @ToString
 public class BookingSeat {
 
+	private int bookingSeatNo;
 	private String status;
 	private String timeLimit;
+	private int bookNo;
 	private int seatNo;
+	private int playingNo;
+	
+	
 	
 }
