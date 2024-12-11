@@ -21,6 +21,6 @@ public class NoticeController {
 	
 	@GetMapping("enrollForm.no")
 	public String enrollForm() {
-		return "admin/notice/noticeEnrollForm";
+		return "admin/notice/adminNoticeEnrollForm";
 	}
 }
