@@ -19,13 +19,18 @@
 	<typeAliases>
 		<!-- <typeAlias type="com.kh.spring.board.model.vo.Reply" alias="reply" /> -->
 		<typeAlias type = "com.kh.filoom.member.model.vo.Member" alias="member"/>
-		<typeAlias type = "com.kh.filoom.movie.model.vo.Movie" alias="movie"/>
 		<typeAlias type = "com.kh.filoom.book.model.vo.Booking" alias="booking"/>
 		<typeAlias type = "com.kh.filoom.book.model.vo.BookingSeat" alias="bookingseat"/>
 		<typeAlias type = "com.kh.filoom.book.model.vo.Playing" alias="playing"/>
 		<typeAlias type = "com.kh.filoom.book.model.vo.Screen" alias="screen"/>
 		<typeAlias type = "com.kh.filoom.book.model.vo.ScreenSeat" alias="screenseat"/>
 		<typeAlias type = "com.kh.filoom.book.model.vo.Seat" alias="seat"/>
+		
+		<typeAlias type = "com.kh.filoom.movie.model.vo.Movie" alias="movie"/>
+		<!-- <typeAlias type = "com.kh.filoom.movie.model.vo.Poster" alias="poster"/>		
+		 -->
+		
+		
 	</typeAliases>
 	
 	<mappers>
