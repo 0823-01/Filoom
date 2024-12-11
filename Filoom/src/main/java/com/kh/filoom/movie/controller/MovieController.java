@@ -2,14 +2,17 @@ package com.kh.filoom.movie.controller;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.servlet.ModelAndView;
 
 public class MovieController {
+	
+	// private MovieServiceImpl msi;
 	
 	// == 사용자 페이지 ==
 	// 목록, 페이징 처리 필요
 	@GetMapping("boxoffice.mo")
-	public String viewBoxOffice() {
-		return "movie/boxoffice";
+	public String viewBoxOffice(ModelAndView mv) {		
+		return "movie/boxOffice";
 	}
 	
 	// 상영 중만 보기
@@ -38,6 +41,7 @@ public class MovieController {
 	}
 	
 	// 영화 상세 페이지
+	// specific.mo?movieNo=XXX
 	public void selectMovie() {
 		
 	}
@@ -76,13 +80,20 @@ public class MovieController {
 	
 	
 	// === 관리자 메뉴 === : admin 폴더를 따로 만들 경우 그쪽으로 옮길 예정
-	// 영화 추가 화면으로 이동
-	public void insertMovieForm() {
+	// "admin/movielist.mo"
+	public void selectMovieList() {
 		
 	}
 	
+	// 영화 추가 화면으로 이동
+	@GetMapping("newmovie.mo")
+	public String addMovieForm() {
+		System.out.println("NOW LOADING >>>");
+		return "admin/movie/addMovie";
+	}
+	
 	// 영화 추가 / 도메인 미확정
-	@PostMapping("admin.newmovie.mo")
+	@PostMapping("admin.insertmovie.mo")
 	public void addMovie() {
 		
 	}

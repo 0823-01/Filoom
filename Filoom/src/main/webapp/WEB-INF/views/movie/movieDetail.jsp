@@ -336,11 +336,7 @@
             </div>
 
             <br>
-            <!-- <div class="linkTable"><a href="#reviewList">평점 <b>4.55</b></a></div>
-            <div class="linkTable"><a href="">예매하기</a></div>
-            <div class="linkTable"><a href="">좋아요</a></div> -->
-
-            
+           
             <div class="linkTable" style="float:left; margin-left:10px;">
                 <!-- 평점은 소수 셋째 자리에서 반올림 (= 소수 둘째 자리까지 표기) -->
 
@@ -607,9 +603,11 @@
                 </div>
 
                 <!-- if user is logged in -->
+                <!-- <c:if test="${ne sessionScope.loginUser}"> -->
                     <!-- <button style="float:right;">작성</button> -->
                     <a href="" id="newReview">작성</a>
                     <!-- link to 'give_a_star.html' -->
+                <!-- </c:if> -->
                 <br><br>
 
 

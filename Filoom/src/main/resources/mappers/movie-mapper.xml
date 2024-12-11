@@ -80,6 +80,11 @@
 		FROM MOVIE JOIN REVIEW USING (MOVIE_NO)
 		WHERE PREMIERE = 'Y' AND STATUS = 'Y'
 	</select>
+	
+	<select id="showDetail" resultMap="movieResultSet">
+		SELECT * FROM MOVIE
+		WHERE MOVIE_NO = #{movieNo}
+	</select>
 
 
 </mapper>
