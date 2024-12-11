@@ -7,7 +7,7 @@
 		Reply VO 타입으로 옮겨주는 ResultMap
 	-->
 	
-	<resultMap id="ReplyResultSet" type="booking">
+	<resultMap id="replyResultSet" type="booking">
 		<id column="BOOK_NO" property="bookNo"/>
 		<result column="BOOK_DATE" property="bookDate"/>
 		<result column="BOOK_COST" property="bookCost"/>
@@ -17,7 +17,7 @@
 		<result column="USER_NO" property="userNo"/>
 	</resultMap>
 	
-	<resultMap id = "PlayingResultSet" type="playing">
+	<resultMap id = "playingResultSet" type="playing">
 		<id column="PLAYING_NO" property="playingNo"/>
 		<result column="PLAYTIME" property="playTime"/>
 		<result column="STATUS" property="status"/>
@@ -25,31 +25,71 @@
 		<result column="SCREEN_NO" property="screenNo"/>
 	</resultMap>
 	
-	<resultMap id = "ScreenResultSet" type="screen">
+	<resultMap id = "screenResultSet" type="screen">
 		<id column="SCREEN_NO" property="screenNo"/>
 		<result column="SCREEN_NAME" property="screenName"/>
 		<result column="SCREEN_CAPACITY" property="screenCapacity"/>
 		<result column="SCREEN_INFO" property="screenInfo"/>
 	</resultMap>
 	
-	<resultMap id = "SeatResultSet" type="seat">
+	<resultMap id = "seatResultSet" type="seat">
 		<id column="SEAT_NO" property="seatNo"/>
 		<result column="PLATING_NO" property="playingNo"/>
 		<result column="SSEAT_NO" property="sseatNo"/>		
 	</resultMap>
 
 	
-	<resultMap id = "ScreenSeatResultSet" type="screenseat">
+	<resultMap id = "screenSeatResultSet" type="screenseat">
 		<id column="SSEAT_NO" property="sseatNo"/>
 		<result column="SEAT_NO" property="seatNo"/>
 		<result column="SCREEN_NO" property="screenNo"/>		
 	</resultMap>
 	
-	<resultMap id = "BookingSeatResultSet" type="bookingseat">
+	<resultMap id = "bookingSeatResultSet" type="bookingseat">
 		<id column="STATUS" property="status"/>
 		<result column="TIMELIMIT" property="timeLimit"/>
 		<result column="SEAT_NO" property="seatNo"/>		
 	</resultMap>
+	
+	<resultMap id = "selectMovieDateDetail" type="playing">
+		<id column="PLAYING_NO" property="playingNo"/>
+		<result column="PLAYTIME" property="playTime"/>
+		<result column="STATUS" property="status"/>
+		<result column="MOVIE_NO" property="movieNo"/>
+		<result column="SCREEN_NO" property="screenNo"/>
+		<result column="RUNTIME" property="runtime"/>
+		<result column="SCREEN_CAPACITY" property="screenCapacity"/>
+		<result column="OCCUPIED_SEATS" property="occupiedSeats"/>
+	</resultMap>
+	
+	<select id = "selectMovieDate" parameterType="_int" resultMap="selectMovieDateDetail">
+		SELECT 
+		    P.PLAYING_NO,
+		    P.PLAYTIME,
+		    P.STATUS,
+		    P.MOVIE_NO,
+		    P.SCREEN_NO,
+		    M.RUNTIME,
+		    S.SCREEN_CAPACITY,
+		    (SELECT COUNT(*) 
+		     FROM SEAT 
+		     WHERE PLAYING_NO = P.PLAYING_NO 
+		       AND STATUS = 'X' 
+		       OR TIMELIMIT >= SYSDATE - INTERVAL '10' MINUTE) AS OCCUPIED_SEATS
+		FROM 
+		    PLAYING P
+		JOIN
+		    MOVIE M
+		ON
+		    P.MOVIE_NO = M.MOVIE_NO
+		JOIN
+		    SCREEN S
+		ON
+		    P.SCREEN_NO = S.SCREEN_NO
+		WHERE 
+		    P.STATUS = 'Y'
+		    AND P.MOVIE_NO = #{movieNo}
+	</select>
 	
 	
 
