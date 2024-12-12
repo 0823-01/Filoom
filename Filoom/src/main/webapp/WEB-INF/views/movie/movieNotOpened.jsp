@@ -11,18 +11,22 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
-    
+
     <!-- fontawesome 연동 - 검색 아이콘 넣을 용도 -->
     <!-- ※ 계정을 파야 embed code를 제공해주던데
      혹시 다른 분들 자리에서도 검색 아이콘 뜨는지 확인바람
      참고로 이거 무료는 한 달에 1만 번 로드 횟수 제한 있으니까 테스트할 때는 비활성화 필요함
      Ctrl+Q,S로 여는 프리뷰 창도 카운트 되는 것으로 알고 있음 -->
-    <script src="https://kit.fontawesome.com/4c4be5559b.js" crossorigin="anonymous"></script>
-
+     <!-- <script src="https://kit.fontawesome.com/4c4be5559b.js" crossorigin="anonymous"></script> -->
+    
     <style>
         /* === Overall Font === */
         * {
             font-family: "Poppins", sans-serif;
+        }
+
+        body {
+            background-color: #151515;
         }
         
         /* === 내부 div === */
@@ -39,15 +43,90 @@
         }
 
         .backStage h1 {
-            font-size:50px;
+            font-size:45px;
             padding-left:40px;
             margin-top:20px;
         }
 
-        #showMore {
+        /* #showMore {
             text-align:right;
             padding-right:120px;
             font-size:30px;
+        } */
+
+        /* === 영화 목록 바로 위 설정란 === */
+        /* === Toggle Switch === */
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 40px;
+            height: 22px;
+            vertical-align:middle;
+        }
+
+        /* Hide default HTML checkbox */
+        .switch input {display:none;}
+
+        /* The slider */
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #939393;
+            -webkit-transition: .4s;
+            transition: .4s;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 2px;
+            bottom: 2px;
+            background-color: white;
+            -webkit-transition: .4s;
+            transition: .4s;
+        }
+
+        input:checked + .slider {
+            background-color: #AB886D;
+        }
+
+        input:focus + .slider {
+            box-shadow: 0 0 1px #67503F;
+        }
+
+        input:checked + .slider:before {
+            -webkit-transform: translateX(18px);
+            -ms-transform: translateX(18px);
+            transform: translateX(18px);
+        }
+
+        /* Rounded sliders */
+        .slider.round {
+            border-radius: 34px;
+        }
+
+        .slider.round:before {
+            border-radius: 50%;
+        }
+
+        /* === Toggle Switch END === */
+
+        .middle>a {
+            text-decoration: none;
+            color:white;
+        }
+        .middle>a:hover {
+            color:black;
+        }
+
+        .search-bar {
+            font-style:italic;
         }
 
         .poster {
@@ -97,7 +176,7 @@
             font-weight:lighter;
         }
 
-        .pagingbar button:hover {
+        .pagingbar button:hover/*, .currentPage */ {
             transform: scale(1.1);
             font-weight: normal;
         }
@@ -112,39 +191,25 @@
         
         <div class="movie-pool" align="center">
             <div id="title" align="left">
-                <h1>박스 오피스</h1>
+                <h1>개봉 예정작</h1>
             </div>
-            
             <hr style="width:95%;">
 
             <div style="display:flex; justify-content:space-between;">
-                <div class="left" style="padding-left:30px;">
-                    <label for="openedOnly">상영중인 영화만 표시</label>    
-                        <label class="switch">
-                            <input id="openedOnly" type="checkbox">
-                            <span class="slider round"></span>
-                        </label>
-                </div>
-
                 <!-- ※ 상세 정렬 기준
                  default : MOVIE_NO 역순 (관리자 측 영화 목록과 동일)
-                 개봉순 : "현재 상영작" 중 개봉이 빠른 순.
-                 평점순 : "현재 상영작" 중 리뷰 평점 높은 순, 같을 경우 개봉이 빠른 순
-                    ※ 재개봉작의 개봉일자는 마지막 재개봉 날짜로 간주
-                 ※ 위 두 정렬 기준 사용 중에는 switch#openedOnly가 ON으로 고정
+                 개봉순 : 개봉 예정일이 빠른 순.
                  이름순 = 한글 제목을 기준으로 ㄱ-ㅎ, 0-9 순
                   -->
-                <div class="middle">
+                <div class="middle" style="padding-left:30px;">
                     <!-- <p>정렬 기준 |</p> -->
                     정렬 기준 |
                     <a href="#">개봉순</a>
-                    <a href="#">평점순</a>
                     <a href="#">이름순</a>
                 </div>
                 <div class="right" style="padding-right:30px;">
                     <input type="search" class="search-bar" placeholder="제목으로 검색...">
                     <!-- <i class="fa-solid fa-magnifying-glass" onclick="window.alert('검색 기능은 준비중입니다.')"></i> -->
-                    <!-- ↑ 이게 검색 아이콘인데 횟수 절약을 위해 잠시 비활성화 처리하였음 -->
                 </div>
             </div>
     
@@ -163,36 +228,18 @@
              당장 한 줄에 영화 4개 들어가면 margin 포함 1800px인데
              뒷판떼기의 width 초안이 1900px이고 이 마저도 꽉차 보인단 피드백 있었음
              (2/3 정도로 줄이는 게 적합하다는 의견)
-             전체적으로 2/3으로 width 240px에 marin 30px 10px가 나을 듯
-             영화  -->
-             
-             
-<%--             <c:forEach var="" items=""> --%>
-<!--             	<div class="movie"> -->
-<!-- 	                <img src="sauce/moana.jpg" class="poster"> -->
-<!-- 	                <table class="movie-info"> -->
-<!-- 	                    <tr> -->
-<!-- 	                        <td id="filmrate"><img src="sauce/all.svg" class="filmrate"></td> -->
-<!-- 	                        <td><b>모아나 2</b><br></td> -->
-<!-- 	                    </tr> -->
-<!-- 	                    <tr> -->
-<!-- 	                        <td colspan="2">2024.11.27 개봉예정</td> -->
-<!-- 	                        <td> | 99분</td> ← 만약 넣으면 제목 쪽의 colspan='2'로 조정 -->
-<!-- 	                    </tr> -->
-<!-- 	                </table> -->
-<!--             	</div> -->
-<%--             </c:forEach> --%>
+             전체적으로 2/3으로 width 240px에 margin 30px 10px가 나을 듯
+              -->
             
             <div class="movie">
-                <img src="sauce/moana.jpg" class="poster">
+                <img src="sauce/harbin.jpg" class="poster">
                 <table class="movie-info">
                     <tr>
-                        <td id="filmrate"><img src="sauce/all.svg" class="filmrate"></td>
-                        <td><b>모아나 2</b><br></td>
+                        <td id="filmrate"><img src="sauce/15.svg" class="filmrate"></td>
+                        <td><b>하얼빈</b><br></td>
                     </tr>
                     <tr>
-                        <td colspan="2">2024.11.27 개봉예정</td>
-                        <!-- <td> | 99분</td> ← 만약 넣으면 제목 쪽의 colspan='2'로 조정-->
+                        <td colspan="2">2024.12.24 개봉예정</td>
                     </tr>
                 </table>
             </div>
@@ -200,95 +247,95 @@
             row margin은 확인해보고 결정
             참고로 현재 column margin은 45px -->
 
-            <div class="movie">
-                <img src="sauce/wicked2.jpg" class="poster"><br>
+            <!-- 극장판 짱구는 못말려 : 우리들의 공룡일기 -->
+            <div class="movie" onclick="location.href='movie_specific.html';">
+                <img src="sauce/dinosinzzang.jpg" class="poster"><br>
                 <table class="movie-info">
                     <tr>
                         <td id="filmrate"><img src="sauce/all.svg" class="filmrate"></td>
-                        <td><b>위키드</b><br></td>
+                        <td><b>극장판 짱구는 못말..</b><br></td>
                     </tr>
                     <tr>
-                        <td colspan="2">2024.11.20 개봉</td>
+                        <td colspan="2">2024.12.18 개봉예정</td>
                     </tr>
                 </table>
             </div>
 
             <div class="movie">
-                <img src="sauce/1win.jpg" class="poster"><br>
+                <img src="sauce/mufasa.jpg" class="poster"><br>
                 <table class="movie-info">
                         <tr>
-                            <td id="filmrate"><img src="sauce/12.svg" class="filmrate"></td>
-                            <td><b>1승</b><br></td>
+                            <td id="filmrate"><img src="sauce/all.svg" class="filmrate"></td>
+                            <td><b>무파사: 라이온 킹</b><br></td>
                         </tr>
                         <tr>
-                            <td colspan="2">2024.12.4 개봉예정</td>
+                            <td colspan="2">2024.12.18 개봉예정</td>
                         </tr>
                 </table>
             </div>
 
             <div class="movie">
-                <img src="sauce/hiddenface.jpg" class="poster"><br>
+                <img src="sauce/civilwar.jpg" class="poster"><br>
                 <table class="movie-info">
                     <tr>
-                        <td id="filmrate"><img src="sauce/19.svg" class="filmrate"></td>
-                        <td><b>히든페이스</b><br></td>
+                        <td id="filmrate"><img src="sauce/15.svg" class="filmrate"></td>
+                        <td><b>시빌 워: 분열의 시대</b><br></td>
                     </tr>
                     <tr>
-                        <td colspan="2">2024.11.20 개봉</td>
+                        <td colspan="2">2024.12.31 개봉</td>
                     </tr>
                 </table>
             </div>
 
             
             <div class="movie">
-                <img src="sauce/firefighter.jpg" class="poster"><br>
+                <img src="sauce/houria.jpg" class="poster"><br>
                 <table class="movie-info">
                     <tr>
                         <td id="filmrate"><img src="sauce/12.svg" class="filmrate"></td>
-                        <td><b>소방관</b><br></td>
+                        <td><b>호리아</b><br></td>
                     </tr>
                     <tr>
-                        <td colspan="2">2024.12.4 개봉예정</td>
+                        <td colspan="2">2024.12.26 개봉예정</td>
                     </tr>
                 </table>
             </div>
 
             <div class="movie">
-                <img src="sauce/rm.jpg" class="poster"><br>
-                <!-- 알엠 : 라이트 피플, 롱 플레이스 (RM : Right People, Wrong Place) -->
-                <table class="movie-info">
-                    <tr>
-                        <td id="filmrate"><img src="sauce/12.svg" class="filmrate"></td>
-                        <td><b>알엠 : 라이트...</b><br></td>
-                    </tr>
-                    <tr>
-                        <td colspan="2">2024.12.5 개봉예정</td>
-                    </tr>
-                </table>
-            </div>
-
-            <div class="movie">
-                <img src="sauce/1jungbilla.jpg" class="poster"><br>
-                <table class="movie-info">
-                    <tr>
-                        <td id="filmrate"><img src="sauce/15.svg" class="filmrate"></td>
-                        <td><b>원정빌라</b></td>
-                    </tr>
-                    <tr>
-                        <td colspan="2">2024.12.4 개봉예정</td>
-                    </tr>
-                </table>
-            </div>
-
-            <div class="movie">
-                <img src="sauce/chungsul.jpg" class="poster"><br>
+                <img src="sauce/sonic3.jpg" class="poster"><br>
                 <table class="movie-info">
                     <tr>
                         <td id="filmrate"><img src="sauce/all.svg" class="filmrate"></td>
-                        <td><b>청설</b></td>
+                        <td><b>수퍼 소닉3</b><br></td>
                     </tr>
                     <tr>
-                        <td colspan="2">2024.11.6 개봉</td>
+                        <td colspan="2">2025.1.1 개봉예정</td>
+                    </tr>
+                </table>
+            </div>
+
+            <div class="movie">
+                <img src="sauce/him.jpg" class="poster"><br>
+                <table class="movie-info">
+                    <tr>
+                        <td id="filmrate"><img src="sauce/12.svg" class="filmrate"></td>
+                        <td><b>힘을 낼 시간</b></td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">2024.12.18 개봉예정</td>
+                    </tr>
+                </table>
+            </div>
+
+            <div class="movie">
+                <img src="sauce/bogota.jpg" class="poster"><br>
+                <table class="movie-info">
+                    <tr>
+                        <td id="filmrate"><img src="sauce/15.svg" class="filmrate"></td>
+                        <td><b>보고타</b></td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">2024.12.31 개봉예정</td>
                     </tr>
                 </table>
             </div>
@@ -308,7 +355,6 @@
 
             <div class="movie">
                 <img src="sauce/morningseagull.jpg" class="poster"><br>
-                <!-- 아침바다 갈매기는 -->
                 <table class="movie-info">
                     <tr>
                         <td id="filmrate"><img src="sauce/12.svg" class="filmrate"></td>
@@ -322,7 +368,6 @@
 
             <div class="movie">
                 <img src="sauce/lemongrass.jpg" class="poster"><br>
-                <!-- 여름날의 레몬그라스 -->
                 <table class="movie-info">
                     <tr>
                         <td id="filmrate"><img src="sauce/12.svg" class="filmrate"></td>
@@ -438,7 +483,6 @@
 
     <br><br>
 
-    <%@ jsp:include file="../common/footer.jsp" %>
-
+    <%@ jsp:include file="../footer.jsp"%>
 </body>
 </html>

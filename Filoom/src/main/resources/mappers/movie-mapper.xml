@@ -7,6 +7,7 @@
 		Reply VO 타입으로 옮겨주는 ResultMap
 	-->
 	
+	<!-- 깨지면 type을 'movie2'로 변경 -->
 	<resultMap id="movieResultSet" type="movie">
 		<id column="MOVIE_NO" property="movieNo" />
 		<result column="MOVIE_TITLE" property="movieTitle" />
@@ -85,6 +86,21 @@
 		SELECT * FROM MOVIE
 		WHERE MOVIE_NO = #{movieNo}
 	</select>
+	
+	<!-- ↓ type="com.kh.filoom.movie.model.vo.Review", typeAlias="review" -->
+	<insert id="writeReview">
+		INSERT INTO REVIEW(
+    		REVIEW_ID, USER_NO, MOVIE_NO, REVIEW_TITLE,
+    		REVIEW_DATE, SCORE, IS_WATCHED, REVIEW_CONTENT
+		) VALUES(
+    		SEQ_REV.NEXTVAL, #{userNo} #{movieNo},
+    		#{reviewDate}, SYSDATE, #{SCORE}
+    		#{isWatched}, #{reviewContent} )
+	</insert>
 
-
+	<update id="deleteReview">
+		UPDATE REVIEW
+		SET IS_DELETED = 'Y'
+		WHERE REVIEW_ID = #{reviewId}
+	</update>
 </mapper>
