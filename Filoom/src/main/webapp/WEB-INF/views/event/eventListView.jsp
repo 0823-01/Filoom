@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -218,7 +219,7 @@
         <div class="recommendEventArea">
             <div class="recommendCard">
                 <a href="#" style="text-decoration: none;">
-                    <img src="" alt="추천 이벤트1"  style="width : 100%; height : 200px;">
+                    <img src="${pageContext.request.contextPath}/resources/eventUploadFiles/2024121214211983175.png" alt="추천이미지" style="width : 100%; height : 200px;">
                     <div class="recommend-card-info" >
                         <div id="recommend-card-title">[필룸] 수험생 특별 할인 이벤트!</div>
                         <div id="recommend-card-date">2024.12.12 ~ 2024.12.31</div>
@@ -228,7 +229,7 @@
 
             <div class="recommendCard">
                 <a href="#" style="text-decoration: none;">
-                    <img src="${pageContext.request.contextPath}/resources/event_images/itmd.jpg" alt="추천 이벤트2"  style="width : 100%; height : 200px;">
+                    <img src="${pageContext.request.contextPath}/resources/eventUploadFiles/2024121214211983175.png" alt="추천이미지" style="width : 100%; height : 200px;">
                     <div class="recommend-card-info">
                         <div id="recommend-card-title">[필룸] 수험생 특별 할인 이벤트!</div>
                         <div id="recommend-card-date">항시 진행</div>
@@ -238,7 +239,8 @@
 
             <div class="recommendCard">
                 <a href="#" style="text-decoration: none;">
-                    <img src="../../resources/event_images/추천이벤트.jpg" alt="추천 이벤트3"  style="width : 100%; height : 200px;">
+                    <!--  <img src="${pageContext.request.contextPath}/resources/event_images/itmd.jpg" alt="추천 이벤트2"  style="width : 100%; height : 200px;">-->
+                    <img src="${pageContext.request.contextPath}/resources/eventUploadFiles/2024121214211983175.png" alt="추천이미지" style="width : 100%; height : 200px;">
                     <div class="recommend-card-info" >
                         <div id="recommend-card-title">[필룸] 수험생 특별 할인 이벤트!</div>
                         <div id="recommend-card-date">~ 2024.12.31</div>
@@ -254,16 +256,19 @@
             <!--div id="more"><a href="#" style="text-decoration: none;">더보기 ></a></!--div-->
         </div>
         <div class="card">
-            <div class="event-card">
-                <a href="#" style="text-decoration: none;">
-                    <img src="../../resources/event_images/1tmd.jpg" style="width : 100%; height : 350px;">
-                    <div class="event-card-info" >
-                        <div id="event-card-title">[위키드] 위키드 무대인사</div>
-                        <div id="event-card-date">2024.12.03~2024.12.09. <b style="color : red;">D-2</b></div>
-                    </div>
-                </a>
-            </div>
-
+	        <c:forEach var="event" items="${requestScope.list}">
+	            <div class="event-card">
+	            	<a href="#" style="text-decoration: none;">
+	                    <img src="${pageContext.request.contextPath}/resources/eventUploadFiles/2024121214211983175.png" alt="추천이미지" style="width : 100%; height : 350px;">
+	                    <div class="event-card-info" >
+	                        <div id="event-card-title">${event.eventTitle }</div>
+	                        <div id="event-card-date">${event.startDate }~${event.endDate } <b style="color : red;">D-2</b></div>
+	                    </div>
+                   </a>
+	            </div>
+            </c:forEach>
+            
+<!-- 
             <div class="event-card">
                 <a href="#" style="text-decoration: none;">
                     <img src="../../resources/event_images/dnlzlem.jpg" style="width : 100%; height : 350px;">
@@ -376,7 +381,7 @@
                         <div id="event-card-date">~ 2024.12.31. <b style="color : red;">D-2</b></div>
                     </div>
                 </a>
-            </div>
+            </div> -->
         </div>
 
         <!--더보기 버튼 -->
