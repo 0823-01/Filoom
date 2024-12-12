@@ -22,9 +22,5 @@ public class BookingSeat {
 	private int bookNo;
 	private int seatNo;
 	private int playingNo;
-	
-
-	
-	
 
 }

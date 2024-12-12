@@ -29,6 +29,7 @@ public class BookDao {
 		return (ArrayList)sqlSession.selectList("bookMapper.selectMovieDate", movieNo);
 	}
 
+
 	public ArrayList<BookingSeat> selectMovieSeat(SqlSessionTemplate sqlSession, int playingNo) {
 		// TODO Auto-generated method stub
 		return (ArrayList)sqlSession.selectList("bookMapper.selectMovieSeat", playingNo);
@@ -43,5 +44,25 @@ public class BookDao {
 		// TODO Auto-generated method stub
 		return sqlSession.delete("bookMapper.insertBookingSeat", bk);
 	}
+
+
+
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	//결제===========================================================================
+	
+
+
 
 }
