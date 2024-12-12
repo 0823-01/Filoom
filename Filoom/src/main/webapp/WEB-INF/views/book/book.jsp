@@ -211,35 +211,71 @@
                 
                 <div id = "detail_content">
                 
-                 <c:forEach var="b" items="${ requestScope.list }">
-                 
-				    <form action="movieDetail" method="get">
-				    
-				        <div id="movie_selection" onclick="this.parentNode.submit()" class="movie_selection">
-				            
+                <c:forEach var="b" items="${ requestScope.list }">
+				    <div id="movie_selection_${b.movieNo}" class="movie_selection" data-movie-no="${b.movieNo}">
 				            <input type="hidden" name="movieNo" value="${b.movieNo}">
-				           
 				            <div id="selection_img">
-				            
-				                <img src="" alt="${b.movieTitle}">
-				           
+				                <img src="" alt="">
 				            </div>
-				            
 				            <div id="selection_detail">
-				           
 				                <h2>${b.movieTitle}</h2>
 				                <a>${b.filmRate}</a>
 				                <a>${b.openDate} 개봉</a><br>
 				                <a>${b.runtime} 분</a>
-				           
 				            </div>
-				       
-				        </div>
-				  
-				    </form>
-				    
+				   </div>
 				</c:forEach>
                    
+				<script>
+					
+					$(document).ready(function () {
+					    $(".movie_selection").on("click", function () {
+					        const movieNo = $(this).data("movie-no"); // data-movie-no 값 가져오기
+					        if (movieNo) {
+					            fetchMovieDetails(movieNo);
+					        } else {
+					            console.error("에러");
+					        }
+					    });
+					});
+	
+					function fetchMovieDetails(movieNo) {
+					    $.ajax({
+					        url: "movie.de", // 요청할 URL
+					        type: "GET",           // HTTP 메서드
+					        data: { movieNo: movieNo }, // 요청 파라미터
+					        success: function (data) {
+					            
+					        	//console.log(data);
+
+					            // 이미지 업데이트
+					            $("#thumbnail_img img").attr("src", `${data.imagePath}/${data.fileCodename}`);
+
+					            // 영화 제목과 설명 업데이트
+					            $("#selectMovie_title a").text(data.movieTitle);
+					            $("#selectMovie_summary a").text(data.description);
+	
+					   
+					            
+					            // 숨겨진 영화 번호 값 업데이트
+					            $("input[name='movieDetailNo']").val(data.movieNo);
+
+					            // 서브 이미지 업데이트
+					            const subImgContainer = $("#selectMovie_subImg #subImg");
+					            subImgContainer.empty(); // 기존 이미지 제거
+
+					            if (data.subImages && data.subImages.length > 0) {
+					                data.subImages.forEach(function (imgUrl) {
+					                    subImgContainer.append(`<img src="${imgUrl}" alt="sub image">`);
+					                });
+					            } else {
+					                subImgContainer.append("<p>서브 이미지가 없습니다.</p>");
+					            }
+					        }
+					    });
+					}
+						
+				</script>
 
                 </div>
 
@@ -274,8 +310,8 @@
             
             <div id = "buttonArea_1">
 
-                <button id = "booking_1" class="booking-btn" data-movie-no="${movie.movieNo}">영화 선택</button> <br>
-                
+                <button id = "booking_1" class="booking-btn" data-movie-no="${b.movieNo}">영화 선택</button> <br>
+               
             </div>
             
             <script>
@@ -288,57 +324,64 @@
 	               
 	                
 	            ];
-            
-	            document.querySelectorAll(".booking-btn").forEach((button) => {
-	                button.addEventListener("click", function () {
-	                   
-	                    let movieNum = this.getAttribute("data-movie-no");
-	                    console.log("Selected movieNo:", movieNum);
-	
-	                    	$.ajax({
-	                    		url : "book.ca",
-	                    		type : "get",
-	                    		data :{
-	                    			
-	                    			movieNum : movieNum
-	                    			
-	                    		},
-	                    		success : function(result){
-	                    			
-	                    	
-	                    			let newMovies = result.map(item => ({
-	                                    playingNo: item.playingNo,
-	                                    playTime: item.playTime,
-	                                    movieNo: item.movieNo,
-	                                    screenNo: item.screenNo,
-	                                    status: item.status,
-	                                    runTime: item.runtime,
-	                                    seatCount: item.occupiedSeats,
-	                                    totalCount: item.screenCapacity
-	                                }));
 
-	                                // 기존 movieData 배열에 새 데이터 추가
-	                                movieData.push(...newMovies);
-	                                console.log(movieData);
-	                                
-	                                renderCalendar();
-	                                
-	                    
-	                    		
-	                    		},
-	                    		error:function(){
-	                    			console.log("실패");
-	                    		},
-	                    		complete:function(){
-	                    			console.log("ajax 연결");
-	                    		}
-	                    		
-	                    	})
-	                    
-	                    
-	                    
-	                });
-	            });
+
+	         // 각 movie_selection 클릭 이벤트 처리
+	         $(document).on("click", ".movie_selection", function () {
+	             selectedMovieNo = $(this).data("movie-no"); // 클릭된 div의 movie-no 값 저장
+	             // console.log("Selected Movie Number:", selectedMovieNo);
+
+	             // 선택된 영화 스타일 업데이트 (선택된 상태 표시)
+	             $(".movie_selection").removeClass("selected"); // 이전 선택 제거
+	             $(this).addClass("selected"); // 현재 선택 추가
+	         });
+
+	         // 버튼 클릭 이벤트 처리
+	         $(document).on("click", ".booking-btn", function () {
+	             if (!selectedMovieNo) {
+	                 alert("영화를 먼저 선택해주세요!"); // 선택되지 않았을 경우 경고
+	                 return;
+	             }
+
+	             console.log("Button clicked with selected movieNo:", selectedMovieNo);
+
+	             // AJAX 요청
+	             $.ajax({
+	                 url: "book.ca",
+	                 type: "GET",
+	                 data: { movieNum: selectedMovieNo }, // 저장된 selectedMovieNo 사용
+	                 success: function (result) {
+	                     console.log("AJAX Success:", result);
+
+	                     movieData.length = 0;	
+	                     
+	                     // 서버에서 받은 데이터를 가공
+	                     let newMovies = result.map(item => ({
+	                         playingNo: item.playingNo,
+	                         playTime: item.playTime,
+	                         movieNo: item.movieNo,
+	                         screenNo: item.screenNo,
+	                         status: item.status,
+	                         runTime: item.runtime,
+	                         seatCount: item.occupiedSeats,
+	                         totalCount: item.screenCapacity
+	                     }));
+
+	                     // 기존 movieData 배열에 새 데이터 추가
+	                     movieData.push(...newMovies);
+
+	                     // 캘린더 렌더링
+	                     renderCalendar();
+	                 },
+	                 error: function () {
+	                     console.error("AJAX Error");
+	                 },
+	                 complete: function () {
+	                     console.log("AJAX 연결 완료");
+	                 }
+	             });
+	         });
+
 	            
 	            $(function(){
 	            	//화면이 로드된후 캘린더 보여주기
@@ -447,7 +490,7 @@
 	        			        						       
 	        			    }
 	        			}
-	        			console.log(movieInfo);
+	        			//console.log(movieInfo);
 	        			$("#time").append(movieInfo);
 	        			$("#movie_date").text(selectDate);
 	        			
@@ -519,6 +562,299 @@
                 
             </div>
           
+          
+          
+          	<script>
+          	
+          	 // 임시 예약 상태: 예약된 좌석
+    		const reservedSeats = {
+    		    left: ["L1-1", "L2-2"],
+    		    middle: ["M3-3", "M4-5"],
+    		    right: ["R5-1"]
+    		};
+    		
+    		// 좌석 생성 함수
+    		function generateSeats(tableId, rows, cols, prefix, reserved) {
+    		    const table = document.getElementById(tableId);
+    		    for (let i = 1; i <= rows; i++) {
+    		        const row = document.createElement("tr");
+    		        for (let j = 1; j <= cols; j++) {
+    		            const seatId = prefix + i + '-' + j;
+    		            const cell = document.createElement("td");
+    		            const button = document.createElement("button");
+    		            button.textContent = seatId;
+    		            button.dataset.id = seatId;
+    		
+    		            // 예약 상태 적용
+    		            if (reserved.includes(seatId)) {
+    		                button.classList.add("reserved");
+    		                button.disabled = true;
+    		            }
+    		
+    		            // 클릭 이벤트 추가
+    		            button.onclick = function() {
+    		                handleSeatClick(button);
+    		            };
+    		            cell.appendChild(button);
+    		            row.appendChild(cell);
+    		        }
+    		        table.appendChild(row);
+    		    }
+    		}
+    		
+    		function updateReservedSeats(seatData) {
+    		    seatData.forEach(function (seat) {
+    		        const seatNo = seat.seatNo;
+
+    		        // 좌석 번호에 따라 해당 영역에 추가
+    		        if (seatNo.startsWith("L")) {
+    		            if (!reservedSeats.left.includes(seatNo)) {
+    		                reservedSeats.left.push(seatNo);
+    		            }
+    		        } else if (seatNo.startsWith("M")) {
+    		            if (!reservedSeats.middle.includes(seatNo)) {
+    		                reservedSeats.middle.push(seatNo);
+    		            }
+    		        } else if (seatNo.startsWith("R")) {
+    		            if (!reservedSeats.right.includes(seatNo)) {
+    		                reservedSeats.right.push(seatNo);
+    		            }
+    		        }
+    		    });
+
+    		    console.log("Updated reservedSeats:", reservedSeats);
+    		}
+    		
+    		// 좌석 클릭 이벤트 처리 함수
+    		/*
+    		function handleSeatClick(button) {
+    		    const inputField = document.getElementById("movieSeat");
+    		    const seatId = button.dataset.id;
+    		
+    		    if (button.classList.contains("selected")) {
+    		        // 선택 해제
+    		        button.classList.remove("selected");
+    		        inputField.value = inputField.value
+    		            .split(", ")
+    		            .filter(function(id) {
+    		                return id !== seatId;
+    		            })
+    		            .join(", ");
+    		    } else {
+    		        // 선택
+    		        button.classList.add("selected");
+    		        inputField.value = inputField.value
+    		            ? inputField.value + ", " + seatId
+    		            : seatId;
+    		    }
+    		}
+    		*/
+    		
+    		function handleSeatClick(button) {
+    		    const inputField = document.getElementById("movieSeat");
+    		    const seatId = button.dataset.id;
+    		    
+    		    let selectedValue = $("#time input[name='playingNo']:checked").val();
+    		    
+    		    if (button.classList.contains("selected")) {
+    		        // 선택 해제
+    		        button.classList.remove("selected");
+    		        inputField.value = inputField.value
+    		            .split(", ")
+    		            .filter(function (id) {
+    		                return id !== seatId; // 선택 해제된 좌석 제거
+    		            })
+    		            .join(", ");
+    		        $.ajax({
+      	                url: "book.fb",         
+      	                type: "GET",            
+      	                data: { seatId: seatId,
+      	                	playingNo: selectedValue
+      	                }, 
+      	                success: function (response) {
+      	                	
+      	                },error:{
+      	                	
+      	                },complete:{
+      	                	
+      	                }
+      	                
+    		        });
+      	                
+      	                
+    		        
+    		    } else {
+    		        // 선택
+    		        button.classList.add("selected");
+    		        inputField.value = inputField.value
+    		            ? inputField.value + ", " + seatId
+    		            : seatId; // 선택된 좌석 추가
+    		        $.ajax({
+      	                url: "book.fd",         
+      	                type: "GET",            
+      	                data: { seatId: seatId,
+      	                	playingNo: selectedValue
+      	                }, 
+      	                success: function (response) {
+      	                	
+      	                	
+      	                },error:{
+      	                	
+      	                	
+      	                },complete:{
+      	                	
+      	                	
+      	                }
+      	            });
+    		    }
+
+    		    // inputField의 value 업데이트
+    		    inputField.setAttribute("value", inputField.value);
+    		}
+    		
+    		function refreshSeats(a) {
+    		    // 좌석 테이블 초기화
+    		    document.getElementById("left_table").innerHTML = "";
+    		    document.getElementById("middle_table").innerHTML = "";
+    		    document.getElementById("right_table").innerHTML = "";
+
+				if(a == 1){	    		    
+	    		    // 좌석 다시 생성
+	    		    generateSeats("left_table", 5, 2, "L", reservedSeats.left);
+	    		    generateSeats("middle_table", 5, 8, "M", reservedSeats.middle);
+	    		    generateSeats("right_table", 5, 2, "R", reservedSeats.right);
+				}
+				if(a==2){
+				
+	    		    // 좌석 다시 생성
+	    		    generateSeats("left_table", 4, 2, "L", reservedSeats.left);
+	    		    generateSeats("middle_table", 4, 8, "M", reservedSeats.middle);
+	    		    generateSeats("right_table", 4, 2, "R", reservedSeats.right);
+				}
+				
+			}
+    		
+          	
+          	
+          	$(document).ready(function () {
+          		
+          		 
+          		
+          	    $("#booking_2").click(function () {
+          	        // 선택된 라디오 버튼 값 가져오기
+          	        let selectedValue = $("#time input[name='playingNo']:checked").val();
+          	     	
+          	        const inputField2 = document.getElementById("movieTitle");
+          	   		const inputField3 = document.getElementById("movieDate");
+          	   		
+          	   		inputField2.setAttribute("value", inputField2.value); 
+          	        
+          	   		if (selectedValue) {
+          	            // AJAX 요청
+          	            $.ajax({
+          	                url: "book.se",         
+          	                type: "GET",            
+          	                data: { playingNo: selectedValue }, 
+          	                success: function (response) {
+          	                   
+          	                	console.log("Response received:", response);
+								
+          	                	const movieTitle = response[0] && response[0].movieTitle ? response[0].movieTitle : "제목 없음";
+          	                    inputField2.value = movieTitle; // input value 설정
+          	                    inputField2.setAttribute("value", movieTitle);
+          	                    
+          	                    
+          	                    console.log(movieTitle);
+	          	                    
+          	                    const playTime = response[0] && response[0].playTime ? response[0].playTime : "00:00:00.0";
+                                const runtime = response[0] && response[0].runtime ? response[0].runtime : 0;
+
+                                // playTime에서 시작 시간 추출 (HH:mm 형식)
+                                const startTime = playTime.substring(11, 16); // "HH:mm"
+                                const startHours = parseInt(startTime.split(":")[0], 10);
+                                const startMinutes = parseInt(startTime.split(":")[1], 10);
+                              
+	                            console.log(startTime);
+	                            
+	                            let endHours = startHours;
+	                            let endMinutes = startMinutes + runtime;
+
+	                            if (endMinutes >= 60) {
+	                                endHours += Math.floor(endMinutes / 60);
+	                                endMinutes = endMinutes % 60;
+	                            }
+	                            
+	                            console.log(endHours);
+	                            console.log(endMinutes);
+	                            
+	                            const endTime = (endHours < 10 ? "0" + endHours : endHours) + ":" + (endMinutes < 10 ? "0" + endMinutes : endMinutes);
+
+	                            // movieDate 설정 (20xx-xx-xx HH:mm~HH:mm 형식)
+	                            const movieDate = playTime.substring(0, 10) + " " + startTime + "~" + endTime;
+	                            inputField3.value = movieDate; // input value 설정
+	                            
+	                            console.log(movieDate);
+	                            
+	                            inputField3.setAttribute("value", movieDate);
+          	                	
+          	                    // 기존 reservedSeats 배열 초기화
+          	                	reservedSeats.left = [];
+          	                    reservedSeats.middle = [];
+          	                    reservedSeats.right = [];
+
+          	                    if (Array.isArray(response)) {
+          	                        response.forEach(function (seat) {
+          	                          	const seatNo = seat.seatNo;
+
+          	                            if (seatNo) {
+          	                                if (seatNo.startsWith("L")) {
+          	                                    if (!reservedSeats.left.includes(seatNo)) {
+          	                                        reservedSeats.left.push(seatNo);
+          	                                    }
+          	                                } else if (seatNo.startsWith("M")) {
+          	                                    if (!reservedSeats.middle.includes(seatNo)) {
+          	                                        reservedSeats.middle.push(seatNo);
+          	                                    }
+          	                                } else if (seatNo.startsWith("R")) {
+          	                                    if (!reservedSeats.right.includes(seatNo)) {
+          	                                        reservedSeats.right.push(seatNo);
+          	                                    }
+          	                                }
+          	                            }
+          	                        });
+          	                    }
+
+          	                    // 좌석 상태를 새로 렌더링
+          	                    const screenNo = response[0]?.screenNo;
+          	                     if (screenNo === 1) {
+			                        refreshSeats(1);
+			                  
+          	                     } else if (screenNo === 2) {
+			                     
+          	                    	refreshSeats(2);
+		                     	 } else {
+		                    
+		                    	 	console.error("Unknown screenNo:", screenNo);
+		                    
+		                     	 }  
+          	                     
+          	                   $("#movieSeat").val(""); // movieSeat 초기화
+          	                     
+          	               
+          	                },
+          	                error: function (xhr, status, error) {
+          	                   
+          	                    alert("예약 요청 실패: " + error);
+          	                
+          	                }
+          	            });
+          	        } else {
+          	            alert("시간을 선택해주세요!");
+          	        }
+          	    });
+          	});	
+          	
+          	</script>
             
             <div id = "detail_3" >
                 
@@ -526,7 +862,7 @@
                 
                     <input type ="text" id ="movieTitle"><br>
                     <input type ="text" id ="movieDate"><br>
-                    <input type ="text" id ="movieSeat">
+                    <input type ="text" id ="movieSeat" >
 
                 </div>
 
@@ -535,11 +871,17 @@
             
             <div id = "buttonArea_3">
 
-                <button id = "booking_3">결제 진행</button> <br>
-                <button id = "past">이전</button>
+                <button id = "booking_3" >결제 진행</button> <br>
+                <button id = "past" class="past-button">이전</button>
                 
             </div>
-            
+
+			
+
+			<script>
+			
+					
+			</script>            
 
         </div>
 
@@ -616,91 +958,28 @@
 	});
 	/////////////////
 	
-	        document.addEventListener("DOMContentLoaded", function () {
-	        
-	        	const movieSelections = document.querySelectorAll("#movie_selection");
-		
-		        movieSelections.forEach((selection) => {
-		            selection.addEventListener("click", () => {
-		               
-		                movieSelections.forEach((s) => s.classList.remove("selected"));
-		               
-		                selection.classList.add("selected");
-		                
-		            });
-		        });
-		    });
+        document.addEventListener("DOMContentLoaded", function () {
+        
+        	const movieSelections = document.querySelectorAll("#movie_selection");
+	
+	        movieSelections.forEach((selection) => {
+	            selection.addEventListener("click", () => {
+	               
+	                movieSelections.forEach((s) => s.classList.remove("selected"));
+	               
+	                selection.classList.add("selected");
+	                
+	            });
+	        });
+	    });
+
+
 	
 	
 	
 	
 	
-	
-	
-	    // 임시 예약 상태: 예약된 좌석
-		const reservedSeats = {
-		    left: ["L1-1", "L2-2"],
-		    middle: ["M3-3", "M4-5"],
-		    right: ["R5-1"]
-		};
-		
-		// 좌석 생성 함수
-		function generateSeats(tableId, rows, cols, prefix, reserved) {
-		    const table = document.getElementById(tableId);
-		    for (let i = 1; i <= rows; i++) {
-		        const row = document.createElement("tr");
-		        for (let j = 1; j <= cols; j++) {
-		            const seatId = prefix + i + '-' + j;
-		            const cell = document.createElement("td");
-		            const button = document.createElement("button");
-		            button.textContent = seatId;
-		            button.dataset.id = seatId;
-		
-		            // 예약 상태 적용
-		            if (reserved.includes(seatId)) {
-		                button.classList.add("reserved");
-		                button.disabled = true;
-		            }
-		
-		            // 클릭 이벤트 추가
-		            button.onclick = function() {
-		                handleSeatClick(button);
-		            };
-		            cell.appendChild(button);
-		            row.appendChild(cell);
-		        }
-		        table.appendChild(row);
-		    }
-		}
-		
-		// 좌석 클릭 이벤트 처리 함수
-		function handleSeatClick(button) {
-		    const inputField = document.getElementById("movieSeat");
-		    const seatId = button.dataset.id;
-		
-		    if (button.classList.contains("selected")) {
-		        // 선택 해제
-		        button.classList.remove("selected");
-		        inputField.value = inputField.value
-		            .split(", ")
-		            .filter(function(id) {
-		                return id !== seatId;
-		            })
-		            .join(", ");
-		    } else {
-		        // 선택
-		        button.classList.add("selected");
-		        inputField.value = inputField.value
-		            ? inputField.value + ", " + seatId
-		            : seatId;
-		    }
-		}
-		
-		// 좌석 생성 실행
-		generateSeats("left_table", 5, 2, "L", reservedSeats.left);
-		generateSeats("middle_table", 5, 8, "M", reservedSeats.middle);
-		generateSeats("right_table", 5, 2, "R", reservedSeats.right);
-		
+	   
 
 
 	

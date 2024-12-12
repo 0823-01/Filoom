@@ -1,5 +1,7 @@
 package com.kh.filoom.book.model.vo;
 
+import java.sql.Date;
+
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -21,6 +23,12 @@ public class Playing {
 	private int runtime;
 	private int screenCapacity;
 	private int occupiedSeats;
+	
+	private String screenName;
+	private int sseatNo;
+	private String seatNo;
+	private Date timeLimit;
+	private String movieTitle;
 	
 	
 	

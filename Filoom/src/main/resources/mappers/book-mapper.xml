@@ -56,10 +56,24 @@
 		<result column="PLAYTIME" property="playTime"/>
 		<result column="STATUS" property="status"/>
 		<result column="MOVIE_NO" property="movieNo"/>
+		<result column="MOVIE_TITLE" property="movieTitle"/>
 		<result column="SCREEN_NO" property="screenNo"/>
 		<result column="RUNTIME" property="runtime"/>
 		<result column="SCREEN_CAPACITY" property="screenCapacity"/>
 		<result column="OCCUPIED_SEATS" property="occupiedSeats"/>
+	</resultMap>
+	
+	<resultMap id="selectMovieSeat" type="playing">
+		<id column="PLAYING_NO" property="playingNo"/>
+		<result column="PLAYTIME" property="playTime"/>
+		<result column="SCREEN_NO" property="screenNo"/>
+		<result column="SCREEN_NAME" property="screenName"/>
+		<result column="SSEAT_NO" property="sseatNo"/>
+		<result column="TIMELIMIT" property="timeLimit"/>
+		<result column="SEAT_NO" property="seatNo"/>
+		<result column="MOVIE_TITLE" property="movieTitle"/>
+		<result column="RUNTIME" property="runtime"/>
+	
 	</resultMap>
 	
 	<select id = "selectMovieDate" parameterType="_int" resultMap="selectMovieDateDetail">
@@ -68,14 +82,14 @@
 		    P.PLAYTIME,
 		    P.STATUS,
 		    P.MOVIE_NO,
-		    P.SCREEN_NO,
+		    S.SCREEN_NO,
 		    M.RUNTIME,
+		    M.MOVIE_TITLE,
 		    S.SCREEN_CAPACITY,
 		    (SELECT COUNT(*) 
-		     FROM SEAT 
+		     FROM BOOKING_SEAT 
 		     WHERE PLAYING_NO = P.PLAYING_NO 
-		       AND STATUS = 'X' 
-		       OR TIMELIMIT >= SYSDATE - INTERVAL '10' MINUTE) AS OCCUPIED_SEATS
+		       AND TIMELIMIT >= SYSDATE - INTERVAL '10' MINUTE) AS OCCUPIED_SEATS
 		FROM 
 		    PLAYING P
 		JOIN
@@ -89,6 +103,39 @@
 		WHERE 
 		    P.STATUS = 'Y'
 		    AND P.MOVIE_NO = #{movieNo}
+	</select>
+	
+	<select id = "selectMovieSeat" parameterType="_int" resultMap="selectMovieSeat">
+		SELECT 
+		    P.PLAYING_NO,
+		    P.PLAYTIME,
+		    P.SCREEN_NO,
+		    S.SCREEN_NAME,
+		    BS.SSEAT_NO,
+		    BS.TIMELIMIT,
+		    SS.SEAT_NO,
+		    M.MOVIE_TITLE,
+		    M.RUNTIME
+		FROM 
+		    PLAYING P
+		JOIN 
+		    SCREEN S
+		ON 
+		    P.SCREEN_NO = S.SCREEN_NO
+		LEFT JOIN 
+		    BOOKING_SEAT BS
+		ON 
+		    P.PLAYING_NO = BS.PLAYING_NO
+		LEFT JOIN 
+		    SCREEN_SEAT SS
+		ON 
+		    BS.SSEAT_NO = SS.SSEAT_NO
+		JOIN 
+		    MOVIE M
+		ON 
+		    P.MOVIE_NO = M.MOVIE_NO
+		WHERE  
+		    P.PLAYING_NO = #{playingNo}
 	</select>
 	
 	
