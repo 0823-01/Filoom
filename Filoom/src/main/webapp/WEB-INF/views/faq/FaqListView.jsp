@@ -336,7 +336,7 @@
             { category: "결제수단/관람권", question: "결제 후 카드 정보를 변경할 수 있나요?", answer: "결제 후에는 카드 정보를 변경할 수 없습니다." }
         ];
 
-        // 페이지 관련 변수
+     	// 페이지 관련 변수
         let currentPage = 1; // 현재 페이지
         const itemsPerPage = 10; // 페이지당 항목 수
         let currentCategory = ''; // 현재 카테고리 (필터 상태)
@@ -400,17 +400,27 @@
                 tbody.appendChild(tr);
                 tbody.appendChild(answerRow);
 
+             	// 각 화살표 클릭 시 답변 열기/닫기
                 arrowCell.addEventListener("click", () => {
-                    // 모든 답변 행을 닫기
+                    // 모든 답변 행을 닫고 화살표를 원 상태로 되돌림
                     const allAnswerRows = document.querySelectorAll(".faq-a");
                     const allArrowCells = document.querySelectorAll(".arrow");
-                    allAnswerRows.forEach(row => row.style.display = "none");
-                    allArrowCells.forEach(cell => (cell.textContent = "﹀")); // 모든 화살표 초기화
 
-                    // 현재 클릭한 답변 창 토글
-                    const isCurrentlyVisible = answerRow.style.display === "table-row";
-                    answerRow.style.display = isCurrentlyVisible ? "none" : "table-row";
-                    arrowCell.textContent = isCurrentlyVisible ? "﹀" : "︿"; // 화살표 방향 변경
+                    // 현재 클릭한 답변 행
+                    const isCurrentlyVisible = answerRow.style.display === "table-row"; 
+
+                    // 다른 모든 답변을 닫음
+                    allAnswerRows.forEach(row => row.style.display = "none");
+                    allArrowCells.forEach(cell => (cell.textContent = "﹀")); // 화살표 초기화
+
+                    // 현재 클릭한 답변을 열거나 닫음
+                    if (isCurrentlyVisible) {
+                        answerRow.style.display = "none";
+                        arrowCell.textContent = "﹀";  // 화살표를 내려놓은 상태로 표시
+                    } else {
+                        answerRow.style.display = "table-row";  // 답변 열기
+                        arrowCell.textContent = "︿";  // 화살표를 위로 표시
+                    }
                 });
             });
 
@@ -489,7 +499,6 @@
 
             // 초기 데이터 로드 (전체 FAQ)
             generateFAQ();
-
     </script>
     
     <jsp:include page="../common/footer.jsp"/>

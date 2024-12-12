@@ -286,6 +286,7 @@ body{
             outline: none;
             margin-bottom : 5px;
             background-color: white;
+            cursor : pointer
             
      }
 	
@@ -328,7 +329,13 @@ body{
     #type-method>input, #eventStatus>input {
         width: 12px;
         height : 12px;
+        cursor : pointer;
     }
+    
+    /* 브라우저 기본 스타일 초기화 */
+	input[type="file"] {
+	    display : none;
+	}
 
     /*버튼*/
     .btn {
@@ -352,11 +359,11 @@ body{
     }
 
     button:hover {
-        transform: scale(1.1em);
+        transform: scale(1.1em); !important;
     }
 
     button:active {
-        background-color: #AB886D;
+        background-color: #AB886D; !important;
     }
 
 </style>
@@ -426,95 +433,39 @@ body{
                         <div class="fileArea">
                             <label for="fileInput" id="file">사진<br>첨부<b style="color : red;">*</b></label>
                             
-                            <img id="contentImg1" src="" alt="Preview Image 1" data-target="file1" />
-                            <img id="contentImg2" src="" alt="Preview Image 2" data-target="file2" />
-                            <img id="contentImg3" src="" alt="Preview Image 3" data-target="file3"/>
-                            <img id="contentImg4" src="" alt="Preview Image 4" data-target="file4"/>
+                            <img id="contentImg1" src="#" alt="Preview Image 1" data-target="file1" />
+							<img id="contentImg2" src="#" alt="Preview Image 2" data-target="file2" />
+							<img id="contentImg3" src="#" alt="Preview Image 3" data-target="file3" />
+							<img id="contentImg4" src="#" alt="Preview Image 4" data-target="file4" />
                             
                             <!-- 파일 입력받는 요소  -->
                             <div id="file-area" style="display : none;">
 	                            <!-- 썸네일은 필수입력사항으로 지정 -->
-	                            <input type="file" id="file1" name="upfiles" onchange="loadImg(this, 1);" multiple>
-	                            
-	                            <!-- 기본이미지 -->
-	                            <input type="file" id="file2" name="upfiles" onchange="loadImg(this, 2);" multiple>
-	                            <input type="file" id="file3" name="upfiles" onchange="loadImg(this, 3);" multiple>
-	                            <input type="file" id="file4" name="upfiles" onchange="loadImg(this, 4);" multiple>
+	                            <input type="file" id="file1" name="upfiles" data-index="1" onchange="loadImg(this);" multiple required>
+								<input type="file" id="file2" name="upfiles" data-index="2" onchange="loadImg(this);" multiple>
+								<input type="file" id="file3" name="upfiles" data-index="3" onchange="loadImg(this);" multiple>
+								<input type="file" id="file4" name="upfiles" data-index="4" onchange="loadImg(this);" multiple>
                             </div>
                             
-                            <!-- 이미지 클릭 시 파일 탐색기 열리기 -->
-                            <script>
-	                            document.addEventListener("DOMContentLoaded", function() {
-	                                const container = document.querySelector(".fileArea");
-	
-	                                // 이미지 클릭 시 해당 파일 선택을 위한 이벤트 리스너
-	                                container.addEventListener("click", function(e) {
-	                                    const targetImg = e.target.closest("img[data-target]");
-	                                    if (targetImg) {
-	                                        const fileInputId = targetImg.getAttribute("data-target");
-	                                        const fileInput = document.getElementById(fileInputId);
-	                                        if (fileInput) fileInput.click();
-	                                    }
-	                                });
-	
-	                                // 이미지 파일 선택 후 미리보기 업데이트
-	                                function handleFileChange(input, index) {
-	                                    const previewImg = document.getElementById(`contentImg${index}`);
-	                                    const file = input.files[0];
-	
-	                                    if (file) {
-	                                        const reader = new FileReader();
-	                                        reader.onload = function(e) {
-	                                            previewImg.src = e.target.result; // 파일 읽기 후 미리보기 이미지에 설정
-	                                        };
-	                                        reader.readAsDataURL(file);
-	                                    }
-	                                }
-	
-	                                // 각 input의 onchange 이벤트에 handleFileChange 함수 연결
-	                                const fileInputs = document.querySelectorAll('input[name="upfiles"]');
-	                                fileInputs.forEach((input, index) => {
-	                                    input.addEventListener("change", () => handleFileChange(input, index + 1));
-	                                });
-	
-	                                // 미리보기 이미지 클릭 시 파일 선택을 연결할 때, 각 이미지에 data-target을 설정
-	                                const previewImgs = document.querySelectorAll('img[id^="contentImg"]');
-	                                previewImgs.forEach((img, index) => {
-	                                    img.setAttribute("data-target", `file${index + 1}`);
-	                                });
-	                            });
-                        	</script>
                             
                             <div class="comment" style="padding : 10px;">
-                                <button class="btn" id="fileButton" style="width : 140px; text-align: center;">파일첨부</button>
-                                <input type="file" id="fileInput" style="display:none;">
+                                <!--button type="button" class="btn" id="fileButton" style="width : 140px; text-align: center;">파일첨부</button>
+                                <!--input type="file" id="fileInput" style="display:none;"> -->
+                                <!-- 썸네일은 필수입력사항으로 지정 
+	                            <input type="file" id="file1" name="upfiles" onchange="loadImg(this, 1);" multiple style="display:none;">
+	                            
+	                            <!-- 기본이미지 --
+	                            <input type="file" id="file2" name="upfiles" onchange="loadImg(this, 2);" multiple style="display:none;">
+	                            <input type="file" id="file3" name="upfiles" onchange="loadImg(this, 3);" multiple style="display:none;">
+	                            <input type="file" id="file4" name="upfiles" onchange="loadImg(this, 4);" multiple style="display:none;"> -->
+                                
                                 <div style="color : #493628; font-size: 16px; font-weight : bold; margin-top: 10px;">
-                                    * JPEG, PNG 형식의 5M 이하의 파일만 첨부 가능합니다.(최대 4개)<br><br>
+                                    * JPEG, PNG 형식의 10M 이하의 파일만 첨부 가능합니다.(최대 4개)<br><br>
                                     * 개인정보가 포함된 이미지 등록은 자제하여 주시기 바랍니다. 
                                 </div>
                             </div>
                         </div>
                         
-                        <!-- 파일첨부 버튼 스크립트 -->
-                        <script>
-	                        document.addEventListener("DOMContentLoaded", function () {
-	                            const fileButton = document.getElementById("fileButton");
-	                            const fileInput = document.getElementById("fileInput");
-	
-	                            // 버튼 클릭 시 숨겨진 파일 입력 필드 클릭
-	                            fileButton.addEventListener("click", function () {
-	                                fileInput.click();
-	                            });
-	
-	                            // 파일 선택 시 파일 이름 로그 확인 (옵션)
-	                            fileInput.addEventListener("change", function () {
-	                                if (fileInput.files.length > 0) {
-	                                    console.log("선택된 파일:", fileInput.files[0].name);
-	                                }
-	                            });
-	                        });
-                        </script>
-
 
                         <!--이벤트 종류 / 종료 여부 / 버튼-->
                         <div class="type-status-btn">
@@ -531,7 +482,7 @@ body{
                                 <div style="margin-top: 2px;">이벤트 종료 여부<b style="color : red;">*</b></div>
                                 <div id="eventStatus">
                                     진행중인 이벤트<input type="radio" name="eventStatus" value="Y">
-                                    종료된 이벤트<input type="radio" name="eventStatus" value="N">
+                                    종료된 이벤트<input type="radio" name="eventStatus" value="N" disabled>
                                 </div>
                             </div>
                         
@@ -564,6 +515,66 @@ body{
             });
         });
     });
+    
+    document.addEventListener("DOMContentLoaded", function() {
+	    	const images = document.querySelectorAll("img[data-target]");
+	
+	        images.forEach(img => {
+	            img.addEventListener("click", function() {
+	                const fileInputId = img.getAttribute("data-target");
+	                const fileInput = document.getElementById(fileInputId);
+	                if (fileInput) fileInput.click();  // 파일 입력창 열기
+	            });
+	        });
+        });
+
+        // 이미지 파일 선택 후 미리보기 업데이트
+        function loadImg(input) {
+        	// index를 data-index 속성에서 가져옵니다. 
+        	const index = input.dataset.index; 
+            const previewImg = document.getElementById(`contentImg\${index}`);
+            
+	         	// previewImg가 null인지 확인
+	            if (!previewImg) {
+	                console.error(`Image element with id 'contentImg\${index}' not found.`);
+	                return;  // 요소가 없다면 함수 종료
+	            }
+            
+            
+            
+            const file = input.files[0];
+
+            console.log(previewImg, file);  // 미리보기 이미지 요소와 파일 확인
+            
+            if (file) {
+            	
+            	if(file.type.startsWith('image/')) {  // 이미지 파일인지 체크
+	                const reader = new FileReader();
+	                reader.onload = function(e) {
+	                	// console.log("파일 읽기 성공:", e.target.result); // 읽은 데이터 URL을 출력
+	                	
+	                    previewImg.src = e.target.result;  // 파일 읽기 후 미리보기 이미지에 설정
+	                    
+	                    // previesImg.style.display = 'block'; // 미리보기 이미지 표시
+	                    // console.log("미리보기 설정 완료");
+	                };
+                
+                	reader.readAsDataURL(file); // 파일을 DataURL 로 읽기
+                
+            	} else {
+	                alert('이미지 파일만 선택 가능합니다.');
+	            }
+        	}
+      	}
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const fileInputs = document.querySelectorAll('input[name="upfiles"]');
+            fileInputs.forEach((input, index) => {
+                input.addEventListener('change', function() {
+                    loadImg(input, index + 1);  // 1부터 시작하도록 index + 1
+                });
+            });
+        });
     </script>
 </body>
 </html>

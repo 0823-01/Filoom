@@ -1,6 +1,7 @@
 package com.kh.filoom.event.model.service;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import com.kh.filoom.event.model.vo.Event;
 import com.kh.filoom.event.model.vo.EventAttachment;
@@ -8,8 +9,8 @@ import com.kh.filoom.event.model.vo.Reply;
 
 public interface EventService {
 
-	// 사용자
-	// 게시판 리스조회 서비스 
+	// 사용자 
+	// 게시판 리스트조회 서비스 -> 관리자 페이지에서만 사용 
 	// 게시글 총 갯수 조회 
 	int selectListCount();
 	

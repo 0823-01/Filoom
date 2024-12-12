@@ -1,6 +1,7 @@
 package com.kh.filoom.event.model.service;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,10 +28,16 @@ public class EventServiceImpl implements EventService {
 		return 0;
 	}
 
+	
+	/**
+	 * 241212 한혜원
+	 * 사용자 게시글 목록조회 요청 메소드 
+	 * 페이징처리 필요없음 
+	 */
 	@Override
 	public ArrayList<Event> selectList() {
-		// TODO Auto-generated method stub
-		return null;
+		
+		return eventDao.selectList(sqlSession);
 	}
 
 	@Override
