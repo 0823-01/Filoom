@@ -16,7 +16,6 @@ public class BookingSeat {
 	private int bookingSeatNo;
 	private String status;
 
-	private String timeLimit;
 
 	private Date timeLimit;
 

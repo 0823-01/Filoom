@@ -222,7 +222,7 @@
 		    <version>2.8.6</version>
 		</dependency>
 		
-<<<<<<< Updated upstream
+
 		
 		
 		
@@ -267,7 +267,7 @@
 		<!-- ipgweb.jar,xpg_client.jar,jaxen-1.1.3.jar 는 lib 폴더에직접연동 -->
 		<!--결제시 필요한 라이브러리 -->
 				
-=======
+
 		<!-- 6. email 전송을 위한 라이브러리 2개 -->
 		<dependency>
 		    <groupId>org.springframework</groupId>
@@ -279,7 +279,7 @@
 		    <artifactId>mail</artifactId>
 		    <version>1.4.7</version>
 		</dependency>
->>>>>>> Stashed changes
+
 	</dependencies>
 	
 	
