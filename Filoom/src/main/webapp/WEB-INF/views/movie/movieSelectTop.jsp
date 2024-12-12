@@ -221,6 +221,7 @@
             row margin은 확인해보고 결정
             참고로 현재 column margin은 45px -->
 
+			<!-- 극장판 짱구는 못말려: 우리들의 공룡일기 -->
             <div class="movie" onclick="location.href='movie_specific.html';">
                 <img src="sauce/dinosinzzang.jpg" class="poster"><br>
                 <table class="movie-info">
