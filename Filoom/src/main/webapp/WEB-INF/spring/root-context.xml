@@ -87,7 +87,7 @@
 		-->
 	</bean>
 	
-<<<<<<< Updated upstream
+
 	<!-- 
 		위의 설정에 의해 SqlSessionFactoryBean 객체가 필요할 때 마다
 		내부적으로 스프링에 의해 아래의 구문이 실행됨
@@ -107,9 +107,9 @@
 		> SqlSessionTemplate 객체를 만들어내는 과정
 		  (2_1 에서 만든 SqlSessionFactoryBean 객체를 통해 만든다!!)
 	-->
-=======
 
->>>>>>> Stashed changes
+
+
 	<bean class="org.mybatis.spring.SqlSessionTemplate"
 		  id="sqlSession">
 		<constructor-arg ref="sqlSessionFactory" />
