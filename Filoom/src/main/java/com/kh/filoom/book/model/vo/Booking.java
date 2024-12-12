@@ -20,5 +20,8 @@ public class Booking {
 	private String costTid;
 	private String status;
 	private String modifyDate;
+	
+	//예매내역페이지에 뿌려주기 위해 필요한 데이터들
+	
 }
 
