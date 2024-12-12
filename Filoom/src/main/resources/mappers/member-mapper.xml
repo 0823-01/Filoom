@@ -16,4 +16,40 @@
 		<result column="STATUS" property="status" />
 	</resultMap>
 	
+	<select id="loginMember" 
+			parameterType="member"
+			resultMap="memberResultSet">
+		SELECT *
+		  FROM MEMBER
+		 WHERE USER_ID = #{userId}
+		   AND STATUS = 'Y'
+	</select>
+	
+	<insert id="insertMember" parameterType="member">
+		INSERT INTO MEMBER(USER_NO
+						 , USER_ID
+		                 , USER_PWD
+		                 , USER_NAME
+		                 , GENDER
+		                 , BIRTH
+		                 , EMAIL
+		                 , PHONE
+		                 , MARKETING)
+		            VALUES(SEQ_UNO.NEXTVAL
+		            	 , #{userId}
+		                 , #{userPwd}
+		                 , #{userName}
+		                 , #{gender}
+		                 , #{birth}
+		                 , #{email}
+		                 , #{phone}
+		                 , #{marketing})
+	</insert>
+	
+	<select id="idCheck" parameterType="string" resultType="_int">
+	    SELECT COUNT(*)
+	      FROM MEMBER
+	     WHERE USER_ID = #{userId}
+	</select>
+	
 </mapper>
