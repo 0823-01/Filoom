@@ -151,10 +151,25 @@
                                 </tr>
                                 <tr>
                                     <th>상영 등급</th>
-                                    <td width="160"><img class="filmrate" src="../sauce/all.svg" alt="ALL"></td>
-                                    <td width="160"><img class="filmrate" src="../sauce/12.svg" alt="12"></td>
-                                    <td width="160"><img class="filmrate" src="../sauce/15.svg" alt="15"></td>
-                                    <td width="60"><img class="filmrate" src="../sauce/19.svg" alt="19"></td>
+                                    <td width="160">
+                                        <label for="rateA"><img class="filmrate" src="../sauce/all.svg" alt="ALL"></label>
+                                    </td>
+                                    <td width="160">
+                                        <label for="rate12"><img class="filmrate" src="../sauce/12.svg" alt="12"></label>
+                                    </td>
+                                    <td width="160">
+                                        <label for="rate15"><img class="filmrate" src="../sauce/15.svg" alt="15"></label>
+                                    </td>
+                                    <td width="60">
+                                        <label for="rate19"><img class="filmrate" src="../sauce/19.svg" alt="19"></label>
+                                    </td>
+                                </tr>
+                                <tr style="display:none;">
+                                    <th>확인용</th>
+                                    <td><input type="radio" name="filmrate" value="3"id="rateA"></td>
+                                    <td><input type="radio" name="filmrate" value="12" id="rate12"></td>
+                                    <td><input type="radio" name="filmrate" value="15" id="rate15"></td>
+                                    <td><input type="radio" name="filmrate" value="19" id="rate19"></td>
                                 </tr>
                                 <tr>
                                     <th>감독</th>
@@ -185,6 +200,10 @@
                                     <td><img src="../sauce/4DX_2019_logo.svg" alt="4DX"></td>
                                     <td><img src="../sauce/ScreenX_Logo_(2019).svg" alt="SCREENX"></td>
                                 </tr> -->
+                                <tr>
+                                    <th>트레일러 링크</th>
+                                    <td colspan="4"><input type="url" id="trailer_link"></td>
+                                </tr>
                                 <tr>
                                     <th>시놉시스</th>
                                     <td colspan="4"><textarea name="" 
