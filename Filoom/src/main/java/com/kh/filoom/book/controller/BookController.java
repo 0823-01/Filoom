@@ -22,6 +22,7 @@ import com.kh.filoom.book.model.vo.BookingSeat;
 import com.kh.filoom.book.model.vo.Playing;
 import com.kh.filoom.book.payment.DataEncrypt;
 import com.kh.filoom.coupon.model.vo.CouponUser;
+import com.kh.filoom.member.model.vo.Member;
 import com.kh.filoom.movie.model.vo.Movie;
 
 @Controller
@@ -208,7 +209,7 @@ public class BookController {
 	@GetMapping("paymentForm.pm")
 	public ModelAndView paymentForm(ModelAndView mv,HttpSession session,int playingNo,  @RequestParam("seatNos")ArrayList<String> seatNos) {
 		
-		System.out.println("1==결제폼 요청");
+		System.out.println("1==결제폼 요청 seatNos : "+seatNos);
 		
 		//System.out.println(playingNo);
 		//System.out.println(seatNos);
@@ -217,7 +218,7 @@ public class BookController {
 		//int userNo = session.getAttribute("loginUser.userNo");
 		int userNo = 1;
 
-
+		
 	//1.유효성검사 + 상영좌석일렬번호 구하기
 		//좌석번호리스트, 영화상영번호 넘기면서, 유효성검사 (둘중하나라도 예약불가 / 둘다 예약가능일경우)
 		
@@ -225,6 +226,8 @@ public class BookController {
 		
 		
 		//상영좌석일렬번호
+		
+		
 		bookingSeatNoList = bookService.getBookingSeatNoList(seatNos,playingNo);
 
 		System.out.println("상영좌석 일렬번호 리스트 " +bookingSeatNoList);
@@ -259,21 +262,25 @@ public class BookController {
 			
 			//*회원번호				-> 쿠폰리스트(쿠폰고유번호)
 			
-			ArrayList<CouponUser> couponUser = new ArrayList();
-			couponUser = bookService.selectListCouponUser(userNo);
+			ArrayList<CouponUser> couponUserList = new ArrayList();
+			couponUserList = bookService.selectListCouponUser(userNo);
 			
-			
+			System.out.println("5==사용가능한 쿠폰 조회"+couponUserList);
 			
 			//*회원번호 				-> 회원정보(회원번호, 회원이름, 회원이메일, 회원전화번호)
+			Member member = bookService.selectMember(userNo);
 			
+			System.out.println("6==멤버 정보 " + member);
+			
+			
+			System.out.println("7==영화정보");
 			//*상영번호				-> 상영정보(상영번호, 상영시간, 상영관번호, 영화번호)
-			
 			//영화번호					-> 영화정보(영화번호,제목,감독,장르,러닝타임 + 영화파일경로)
-			
 			//상영번호					-> 상영관정보(상영관명)
+			System.out.println("8==좌석정보");
+			
 			
 			//*좌석번호,상영관번호		-> 좌석정보(좌석일렬번호)
-			
 			//좌석일렬번호,상영번호		-> 상영좌석정보 (상영좌설일렬번호,유효시간)
 			
 			

@@ -21,7 +21,7 @@ public class CouponUser {
 	
 	//추가 (형문)
 	private String couponName;
-	private Date couponDate;
+	private Date couponExpDate;
 	
 	
 	

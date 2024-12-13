@@ -12,6 +12,7 @@ import com.kh.filoom.book.model.vo.Booking;
 import com.kh.filoom.book.model.vo.BookingSeat;
 import com.kh.filoom.book.model.vo.Playing;
 import com.kh.filoom.coupon.model.vo.CouponUser;
+import com.kh.filoom.member.model.vo.Member;
 import com.kh.filoom.movie.model.vo.Movie;
 import com.kh.filoom.movie.model.vo.MovieWithPoster;
 
@@ -91,6 +92,7 @@ public class BookDao {
 		map.put("playingNo", playingNo);
 		
 		Integer result = sqlSession.selectOne("bookMapper.getBookingseatNoList",map);
+	
 		
 		return result; 
 										
@@ -120,5 +122,11 @@ public class BookDao {
 	//쿠폰조회
 	public ArrayList<CouponUser> selectListCouponUser(SqlSessionTemplate sqlSession, int userNo) {
 		return (ArrayList)sqlSession.selectList("couponMapper.selectListCouponUser",userNo);
+	}
+
+	//회원정보조회
+	public Member selectMember(SqlSessionTemplate sqlSession, int userNo) {
+		
+		return sqlSession.selectOne("memberMapper.selectMember",userNo);
 	}
 }

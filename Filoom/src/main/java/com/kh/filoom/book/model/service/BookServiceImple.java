@@ -13,6 +13,7 @@ import com.kh.filoom.book.model.dao.BookDao;
 import com.kh.filoom.book.model.vo.BookingSeat;
 import com.kh.filoom.book.model.vo.Playing;
 import com.kh.filoom.coupon.model.vo.CouponUser;
+import com.kh.filoom.member.model.vo.Member;
 import com.kh.filoom.movie.model.vo.Movie;
 
 
@@ -90,19 +91,14 @@ public class BookServiceImple implements BookService {
 	
 	//결제===========================================================================
 
-	/**
-	 * 상영좌석 번호 구하기+유효성검사
-	 * 	유효성통과 -> 좌석일렬번호 리턴
-	 * 	유효성불통과 -> null 리턴
-	 */
+	//1. 좌석 유효성 검사 + 상영좌석일렬번호 반환
 	@Override
-	public ArrayList<Integer> getBookingSeatNoList(ArrayList<String> seatNoList,int playingNo) {
+	public ArrayList<Integer> getBookingSeatNoList(ArrayList<String> seatNos,int playingNo) {
 		ArrayList<Integer> bookingSeatNoList = new ArrayList();
 		
 		
-		for(String s : seatNoList) {
+		for(String s : seatNos) {
 			Integer seatNo = bookDao.getBookingseatNoList(sqlSession,s,playingNo);
-			
 			
 			if(seatNo==null) {
 				bookingSeatNoList = null;
@@ -119,9 +115,7 @@ public class BookServiceImple implements BookService {
 		return bookingSeatNoList;
 	}
 
-	/**
-	 * 좌석 유효시간 늘려주기 (update)
-	 */
+	//3. 좌석 유효시간 sysdate + 5분
 	@Override
 	public int updateTimeLimit(ArrayList<Integer> bookingSeatNoList) {
 		
@@ -135,9 +129,7 @@ public class BookServiceImple implements BookService {
 
 	
 	
-	/**
-	 * 영화예매번호 생성 + 예매번호 조회
-	 */
+	//4. 영화예매번호 생성 + 반환
 	@Override
 	@Transactional
 	public int setBookNo(int userNo) {
@@ -145,15 +137,20 @@ public class BookServiceImple implements BookService {
 	}
 
 	
-	/**
-	 * 사용가능한 쿠폰 조회
-	 */
+	//5. 사용가능한 쿠폰리스트조회
 	@Override
 	public ArrayList<CouponUser> selectListCouponUser(int userNo) {
 		
 		return bookDao.selectListCouponUser(sqlSession,userNo);
 	}
 
+	//6. 회원정보조회
+	@Override
+	public Member selectMember(int userNo) {
+		return bookDao.selectMember(sqlSession,userNo);
+	}
+
+	//7.
 	
 	
 }

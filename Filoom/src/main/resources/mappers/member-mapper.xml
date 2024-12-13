@@ -56,4 +56,15 @@
 	</update>
 	
 	
+	
+	
+	
+	
+	
+	<!-- 결제페이지(형문) -->
+	<select id="selectMember" parameterType="int" resultType="member">
+		SELECT *
+		  FROM MEMBER
+		 WHERE USER_NO = #{userNo}
+	</select>
 </mapper>
