@@ -15,10 +15,9 @@ public class Member {
 	private String userId;
 	private String userPwd;
 	private String userName;
-	private String gender;
-	private String birth;
 	private String email;
-	private String phone;
+	private String birth;
+	private String gender;
 	private String marketing;
 	private String enrollDate;
 	private String status;

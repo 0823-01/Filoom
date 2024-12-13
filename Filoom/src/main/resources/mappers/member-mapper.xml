@@ -7,10 +7,9 @@
 		<result column="USER_ID" property="userId" />
 		<result column="USER_PWD" property="userPwd" />
 		<result column="USER_NAME" property="userName" />
-		<result column="GENDER" property="gender" />
-		<result column="BIRTH" property="birth" />
 		<result column="EMAIL" property="email" />
-		<result column="PHONE" property="phone" />
+		<result column="BIRTH" property="birth" />
+		<result column="GENDER" property="gender" />
 		<result column="MARKETING" property="marketing" />
 		<result column="ENROLL_DATE" property="enrollDate" />
 		<result column="STATUS" property="status" />
@@ -30,19 +29,17 @@
 						 , USER_ID
 		                 , USER_PWD
 		                 , USER_NAME
-		                 , GENDER
-		                 , BIRTH
 		                 , EMAIL
-		                 , PHONE
+		                 , BIRTH
+		                 , GENDER
 		                 , MARKETING)
 		            VALUES(SEQ_UNO.NEXTVAL
 		            	 , #{userId}
 		                 , #{userPwd}
 		                 , #{userName}
-		                 , #{gender}
-		                 , #{birth}
 		                 , #{email}
-		                 , #{phone}
+		                 , #{birth}
+		                 , #{gender}
 		                 , #{marketing})
 	</insert>
 	
@@ -51,5 +48,12 @@
 	      FROM MEMBER
 	     WHERE USER_ID = #{userId}
 	</select>
+	
+	<update id="updatePassword" parameterType="member">
+	    UPDATE MEMBER
+	       SET USER_PWD = #{userPwd}
+	     WHERE USER_ID = #{userId}
+	</update>
+	
 	
 </mapper>

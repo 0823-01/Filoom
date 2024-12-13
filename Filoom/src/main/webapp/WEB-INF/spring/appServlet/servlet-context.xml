@@ -25,6 +25,13 @@
 	<interceptors>
 		<interceptor>
 			<mapping path="/myPage.me" />
+			<mapping path="/profile.me" />
+			<mapping path="/coupon.me" />
+			<mapping path="/reserve.me" />
+			<mapping path="/history.me" />
+			<mapping path="/favorite.me" />
+			<mapping path="/review.me" />
+			<mapping path="/withdrawal.me" />
 			<beans:bean class="com.kh.filoom.common.interceptor.LoginInterceptor" 
 						id="loginInterceptor" />
 		</interceptor>

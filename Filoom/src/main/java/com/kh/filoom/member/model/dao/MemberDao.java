@@ -23,4 +23,9 @@ public class MemberDao {
 		return sqlSession.selectOne("memberMapper.idCheck", userId);
 	}
 
+	public int updatePassword(SqlSessionTemplate sqlSession, Member m) {
+
+		return sqlSession.update("memberMapper.updatePassword");
+	}
+
 }

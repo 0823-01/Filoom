@@ -379,12 +379,12 @@
         <div class="mypage-sidebar">
             <h2><a href="myPage.me">마이 페이지</a></h2>
             <ul class="menu-list">
-                <li><a href="myPage-profile.html">내 정보</a></li>
-                <li><a href="myPage-coupon.html">쿠폰 조회</a></li>
-                <li class="active"><a href="myPage-reserve.html">예매 내역 조회</a></li>
-                <li><a href="myPage-history.html">내가 본 영화 조회</a></li>
-                <li><a href="myPage-favorite.html">보고 싶은 영화 조회</a></li>
-                <li><a href="myPage-review.html">내가 쓴 리뷰 조회</a></li>
+                <li><a href="profile.me">내 정보</a></li>
+                <li><a href="coupon.me">쿠폰 조회</a></li>
+                <li class="active"><a href="reserve.me">예매 내역 조회</a></li>
+                <li><a href="history.me">내가 본 영화 조회</a></li>
+                <li><a href="favorite.me">보고 싶은 영화 조회</a></li>
+                <li><a href="review.me">내가 쓴 리뷰 조회</a></li>
             </ul>
         </div>
         <div class="mypage-content">

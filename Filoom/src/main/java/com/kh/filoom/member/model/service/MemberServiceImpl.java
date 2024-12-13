@@ -38,6 +38,13 @@ public class MemberServiceImpl implements MemberService{
 		return memberDao.idCheck(sqlSession, userId) > 0; // 아이디가 존재하면 true 반환
 	}
 
+	@Override
+	@Transactional
+	public int updatePassword(Member m) {
+
+		return memberDao.updatePassword(sqlSession, m);
+	}
+
 }
 
 

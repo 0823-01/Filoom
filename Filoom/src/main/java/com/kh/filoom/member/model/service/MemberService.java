@@ -12,5 +12,8 @@ public interface MemberService {
 
 	// 아이디 중복체크 서비스 (select)
 	boolean idCheck(String userId);
+
+	// 비밀번호 변경 서비스 (update)
+	int updatePassword(Member loginUser);
 	
 }
