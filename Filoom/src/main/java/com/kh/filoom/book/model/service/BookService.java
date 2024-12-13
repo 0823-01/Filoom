@@ -32,6 +32,9 @@ public interface BookService {
 	// 좌석 클릭시 ajax 실시간 해제
 	int deleteBookingSeat(BookingSeat bk);
 
+	// 뒤로가기 및 이전 시 값 삭제
+	int deleteBookingListList(ArrayList<BookingSeat> abk);
+
 
 	
 	//결제============================================================
