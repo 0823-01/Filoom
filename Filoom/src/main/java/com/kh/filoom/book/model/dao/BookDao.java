@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 import com.kh.filoom.book.model.vo.Booking;
 import com.kh.filoom.book.model.vo.BookingSeat;
 import com.kh.filoom.book.model.vo.Playing;
+import com.kh.filoom.coupon.model.vo.CouponUser;
 import com.kh.filoom.movie.model.vo.Movie;
 import com.kh.filoom.movie.model.vo.MovieWithPoster;
 
@@ -114,5 +115,10 @@ public class BookDao {
 		booking.setUserNo(userNo);
 		sqlSession.insert("bookMapper.setAndGetBookNo",booking);
 		return	booking.getBookNo(); 
+	}
+
+	//쿠폰조회
+	public ArrayList<CouponUser> selectListCouponUser(SqlSessionTemplate sqlSession, int userNo) {
+		return (ArrayList)sqlSession.selectList("couponMapper.selectListCouponUser",userNo);
 	}
 }

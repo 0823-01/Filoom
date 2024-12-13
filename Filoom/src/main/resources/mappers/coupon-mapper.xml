@@ -2,5 +2,20 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd" >
 <mapper namespace="couponMapperr">
 
+	<resultMap id="couponUserResultSet" type="couponUser">
+		<id column="COUPON_NO" property="couponNo"/>
+		<result column="USER_NO" property="userNo"/>
+		<result column="BOOK_NO" property="bookNo"/>
+		<result column="COUPON_USE" property="couponUse"/>
+		
+		<!-- 필요에 의해 추가(형문) -->
+		<result column="COUPON_NAME" property="couponName"/>
+		<result column="COUPON_EXP_DATE" property="couponExpDate"/>
+	</resultMap>
+
+	<select id="selectListCouponUser" parameterType="int" resultType="couponUser">
+		
+	</select>
+
 	
 </mapper>

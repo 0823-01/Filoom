@@ -12,16 +12,10 @@ import org.springframework.transaction.annotation.Transactional;
 import com.kh.filoom.book.model.dao.BookDao;
 import com.kh.filoom.book.model.vo.BookingSeat;
 import com.kh.filoom.book.model.vo.Playing;
+import com.kh.filoom.coupon.model.vo.CouponUser;
 import com.kh.filoom.movie.model.vo.Movie;
 
-/**
- * @author 김형문
- *
- */
-/**
- * @author 김형문
- *
- */
+
 @Service
 public class BookServiceImple implements BookService {
 
@@ -148,6 +142,16 @@ public class BookServiceImple implements BookService {
 	@Transactional
 	public int setBookNo(int userNo) {
 		return bookDao.setAndGetBookNo(sqlSession,userNo);
+	}
+
+	
+	/**
+	 * 사용가능한 쿠폰 조회
+	 */
+	@Override
+	public ArrayList<CouponUser> selectListCouponUser(int userNo) {
+		
+		return bookDao.selectListCouponUser(sqlSession,userNo);
 	}
 
 	

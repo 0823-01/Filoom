@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import com.kh.filoom.book.model.vo.BookingSeat;
 import com.kh.filoom.book.model.vo.Playing;
+import com.kh.filoom.coupon.model.vo.CouponUser;
 import com.kh.filoom.movie.model.vo.Movie;
 import com.kh.filoom.movie.model.vo.MovieWithPoster;
 
@@ -47,5 +48,8 @@ public interface BookService {
 
 		//영화예매번호 생성하기
 		int setBookNo(int userNo);
+		
+		//사용 가능한 쿠폰 조회하기
+		ArrayList<CouponUser> selectListCouponUser(int userNo);
 	
 }

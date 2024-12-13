@@ -16,9 +16,9 @@ public class Coupon {
 	//	COUPON_NO	NUMBER
 	private int couponNo;
 	//	COUPON_NAME	VARCHAR2(300 BYTE)
-	private String couponNmae;
+	private String couponName;
 	//	COUPON_DATE	DATE
-	private Date couponDate;
+	private Date couponExpDate;
 	//	COUPON_STATUS	VARCHAR2(1 BYTE)
 	private String couponStatus;
 	//	COUPON_LEVEL	NUMBER

@@ -21,6 +21,7 @@ import com.kh.filoom.book.model.service.BookService;
 import com.kh.filoom.book.model.vo.BookingSeat;
 import com.kh.filoom.book.model.vo.Playing;
 import com.kh.filoom.book.payment.DataEncrypt;
+import com.kh.filoom.coupon.model.vo.CouponUser;
 import com.kh.filoom.movie.model.vo.Movie;
 
 @Controller
@@ -257,6 +258,9 @@ public class BookController {
 			System.out.println("4==BOOKING_NO 생성,조회  bookNo = "+bookNo);
 			
 			//*회원번호				-> 쿠폰리스트(쿠폰고유번호)
+			
+			ArrayList<CouponUser> couponUser = new ArrayList();
+			couponUser = bookService.selectListCouponUser(userNo);
 			
 			
 			
