@@ -129,7 +129,7 @@
             row margin은 확인해보고 결정
             참고로 현재 column margin은 45px -->
 
-            <div class="movie" onclick="location.href='movie_specific.html';">
+            <div class="movie" onclick="location.href='detail.mo';">
                 <img src="resources/images/posters/wicked2.jpg" class="poster"><br>
                 <table class="movie-info">
                     <tr>

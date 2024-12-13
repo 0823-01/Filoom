@@ -217,8 +217,8 @@
                     <!-- <p>정렬 기준 |</p> -->
                     정렬 기준 |
                     <a href="#">개봉순</a>
-                    <a href="#">평점순</a>
-                    <a href="#">이름순</a>
+                    <a href="javascript:listbyCritics();">평점순</a>
+                    <a href="javascript:listbyName();">이름순</a>
                 </div>
                 <div class="right" style="padding-right:30px;">
                     <input type="search" class="search-bar" placeholder="제목으로 검색...">
@@ -480,6 +480,20 @@
             </div>
 
         </div>
+        
+        <script>
+        	$(function() {
+        		//
+        	});
+        	
+        	function listbyCritics() {
+        		alert("공사중입니다.");
+        	}
+        	
+        	function listbyName() {
+        		alert("공사중입니다.");
+        	}
+        </script>
         <br><br>
 
         <!-- Paging Bar -->

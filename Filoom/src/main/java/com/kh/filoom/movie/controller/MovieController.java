@@ -61,7 +61,7 @@ public class MovieController {
 		return "movie/movieDetail";
 	}
 	
-	// 영화 상세 정보 보기 (스틸컷까지만)
+	// 영화 상세 정보 조회 (스틸컷까지만)
 	public void showDetail() {
 		
 	}

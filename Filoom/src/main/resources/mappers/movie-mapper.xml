@@ -1,13 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd" >
 <mapper namespace="movieMapper">
-
-	<!-- 
+	<!--
 		Reply 테이블로부터 조회된 ResultSet을
 		Reply VO 타입으로 옮겨주는 ResultMap
 	-->
 	
-	<!-- 깨지면 type을 'movie2'로 변경 -->
 	<resultMap id="movieResultSet" type="movie">
 		<id column="MOVIE_NO" property="movieNo" />
 		<result column="MOVIE_TITLE" property="movieTitle" />
@@ -22,7 +20,7 @@
 		<result column="STARRING" property="starring" />
 		<result column="STATUS" property="status" />
 	</resultMap>
-
+	
 	<resultMap id ="posterResultSet" type="poster">
 		<id column="IMAGE_ID" property="imageId"/>
 		<result column="MOVIE_NO" property="movieNo"/>
@@ -44,71 +42,37 @@
 	
 	
 	<!-- 이거 영화 예매 페이지 첫페이지 정보 가져오기 -->
+	<select id ="selectList" resultMap="movieResultSet">
+		SELECT MOVIE_NO
+			, MOVIE_TITLE
+			, PREMIERE
+			, OPEN_DATE
+			, RUNTIME
+			, SCREEN_TYPE
+			, FILM_RATE
+			, DESCRIPTION
+			, STARRING
+			, STATUS
+		FROM MOVIE
+	</select>
+	
+	<!-- 이거 영화 예매 페이지 첫페이지 상세정보 가져오기 -->
 	<select id = "selectMovie" parameterType="_int" resultMap="movieWithPosterFlatResultMap">
 	
-		SELECT MOVIE TITLE
-			, 
-		SELECT 
+		SELECT
 			M.MOVIE_NO,
 		    M.MOVIE_TITLE,
 		    M.DESCRIPTION,
 		    P.IMAGE_PATH,
 		    P.FILE_CODENAME
-		FROM 
+		FROM
 		    FILOOM.MOVIE M
-		JOIN 
+		JOIN
 		    FILOOM.POSTER P
-		ON 
+		ON
 		    M.MOVIE_NO = P.MOVIE_NO
-		WHERE 
+		WHERE
 		    M.MOVIE_NO = #{movieNo}
 	
 	</select>
-	
-	<!-- ※ 이하의 쿼리들은 확정된 것이 아님 -->
-		<!-- 가나다순 정렬시 : ORDER BY MOVIE_TITLE
-			개봉순 정렬시 : ORDER BY OPEN_DATE
-			에 더해 PREMIERE = 'Y' 조건 활성화 -->	
-	<!-- <select id ="selectList" resultMap="movieResultSet">
-		SELECT /*POSTER*/, MOVIE_NO, MOVIE_TITLE, PREMIERE, OPEN_DATE, FILM_RATE
-		FROM MOVIE
-		WHERE /*PREMIERE = 'Y'*/ AND STATUS = 'Y'
-
-	</select>
-	
-	<select id="selectByCritics" resultMap="movieResultSet">
-		SELECT /*POSTER*/, M.MOVIE_NO, MOVIE_TITLE,
-			PREMIERE, OPEN_DATE, FILM_RATE, SCORE
-		FROM MOVIE JOIN REVIEW USING (MOVIE_NO)
-		WHERE PREMIERE = 'Y' AND STATUS = 'Y'
-	</select>
-	
-	<select id ="selectPreOpen" resultMap="movieResultSet">
-		SELECT /*POSTER*/, MOVIE_NO, MOVIE_TITLE, OPEN_DATE, FILM_RATE
-		FROM MOVIE
-		WHERE PREMIERE = 'N' AND STATUS = 'Y'
-	</select>
-	
-	<select id="showDetail" resultMap="movieResultSet">
-		SELECT * FROM MOVIE
-		WHERE MOVIE_NO = #{movieNo}
-	</select> -->
-	
-	<!-- // ↓ type="com.kh.filoom.movie.model.vo.Review", typeAlias="review"
-	<insert id="writeReview">
-		INSERT INTO REVIEW(
-    		REVIEW_ID, USER_NO, MOVIE_NO, REVIEW_TITLE,
-    		REVIEW_DATE, SCORE, IS_WATCHED, REVIEW_CONTENT
-		) VALUES(
-    		SEQ_REV.NEXTVAL, #{userNo} #{movieNo},
-    		#{reviewDate}, SYSDATE, #{SCORE}
-    		#{isWatched}, #{reviewContent} )
-	</insert>
-
-	<update id="deleteReview">
-		UPDATE REVIEW
-		SET IS_DELETED = 'Y'
-		WHERE REVIEW_ID = #{reviewId}
-	</update>
-	-->
 </mapper>

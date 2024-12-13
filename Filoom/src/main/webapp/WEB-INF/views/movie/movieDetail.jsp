@@ -655,11 +655,11 @@
                 </div>
 
                 <!-- if user is logged in -->
-                <%-- <c:if test="${ne sessionScope.loginUser}"> --%>
+                <c:if test="${not empty sessionScope.loginUser}">
                     <!-- <button style="float:right;">작성</button> -->
                     <a href="" id="newReview">작성</a>
                     <!-- link to 'give_a_star.html' -->
-                <%-- </c:if> --%>
+                </c:if>
                 <br><br>
 
                 <!-- Paging Bar -->

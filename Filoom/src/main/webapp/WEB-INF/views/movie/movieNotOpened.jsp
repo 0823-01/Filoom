@@ -48,12 +48,6 @@
             margin-top:20px;
         }
 
-        /* #showMore {
-            text-align:right;
-            padding-right:120px;
-            font-size:30px;
-        } */
-
         /* === 영화 목록 바로 위 설정란 === */
         /* === Toggle Switch === */
         .switch {
@@ -247,7 +241,7 @@
             참고로 현재 column margin은 45px -->
 
             <!-- 극장판 짱구는 못말려 : 우리들의 공룡일기 -->
-            <div class="movie" onclick="location.href='movie_specific.html';">
+            <div class="movie">
                 <img src="resources/images/posters/dinosinzzang.jpg" class="poster"><br>
                 <table class="movie-info">
                     <tr>
@@ -281,7 +275,7 @@
                         <td><b>시빌 워: 분열의 시대</b><br></td>
                     </tr>
                     <tr>
-                        <td colspan="2">2024.12.31 개봉</td>
+                        <td colspan="2">2024.12.31 개봉예정</td>
                     </tr>
                 </table>
             </div>
