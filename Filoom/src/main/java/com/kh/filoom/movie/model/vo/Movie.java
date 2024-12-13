@@ -1,5 +1,7 @@
 package com.kh.filoom.movie.model.vo;
 
+import java.util.Date;
+
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -34,9 +36,24 @@ public class Movie {
 	private String starring;
 //	STATUS	CHAR(1 BYTE)
 	private String status;
-	
-    private String imagePath;
-    
-    private String fileCodename;
+	private String trailer;
 
+	
+	
+	//db에는 없는 추가된 필드명
+	
+	
+	//영화이미지
+	private String imagePath;
+	private String fileCodename;
+    
+	
+    //상영정보(형문)
+    private int playingNo;
+    private Date playTime;
+    private int screenNo;
+    private String screenName;
+    private String screenInfo;
+    
+    
 }

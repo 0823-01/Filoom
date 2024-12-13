@@ -273,10 +273,17 @@ public class BookController {
 			System.out.println("6==멤버 정보 " + member);
 			
 			
-			System.out.println("7==영화정보");
+			
+			Movie movie = bookService.selectMovie(playingNo);
+			
+			System.out.println("7==영화정보 " + movie);
 			//*상영번호				-> 상영정보(상영번호, 상영시간, 상영관번호, 영화번호)
 			//영화번호					-> 영화정보(영화번호,제목,감독,장르,러닝타임 + 영화파일경로)
 			//상영번호					-> 상영관정보(상영관명)
+			
+			
+			
+			
 			System.out.println("8==좌석정보");
 			
 			
