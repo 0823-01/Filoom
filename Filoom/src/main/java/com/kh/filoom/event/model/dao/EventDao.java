@@ -18,6 +18,7 @@ public class EventDao {
 	/**
 	 * 241212 한혜원
 	 * 게시글 목록 요청 메소드 -- 페이징처리 안해도 됨
+	 * 이벤트 종료여부 상관없이 전체 목록 조회
 	 * @param sqlSession
 	 * @return
 	 */
@@ -25,16 +26,49 @@ public class EventDao {
 		// select문 여러행 : selectList 메소드 
 		return (ArrayList)sqlSession.selectList("eventMapper.selectList");
 	}
+	
+	/**
+	 * 241213 한혜원 
+	 * 게시글 목록 요청 메소드 - 페이징 처리  x
+	 * 이벤트 종료 여부에 따른 목록조회
+	 * @param sqlSession
+	 * @param eventStatus 이벤트 종료여부 상태값
+	 * @return
+	 */
+	public ArrayList<Event> selectFilterList(SqlSessionTemplate sqlSession, String eventStatus) {
+		
+		return (ArrayList)sqlSession.selectList("eventMapper.selectFilterlist", eventStatus);
+	}
+	
+	
+	/**
+	 * 241213 한혜원
+	 * 게시글 상세조회 요청 메소드
+	 * @param sqlSession
+	 * @param eventNo 게시글 번호 
+	 * @return
+	 */
+	public Event selectEvent(SqlSessionTemplate sqlSession, int eventNo) {
+		// 단일행 select문 : selectOne
+		
+		return sqlSession.selectOne("eventMapper.selectEvent", eventNo);
+	}
 
 	
-	
-	
-	
-	
-	
-	
-	
-	
+	/**
+	 * 241213 한혜원
+	 * 게시글 첨부파일 상세조회 요청 메소드
+	 * @param sqlSession
+	 * @param eventNo 게시글 번호
+	 * @return
+	 */
+	public ArrayList<EventAttachment> selectEventAttachment(SqlSessionTemplate sqlSession, int eventNo) {
+		// 여러행 select문 : selectList
+		
+		return (ArrayList)sqlSession.selectList("eventMapper.selectEventAttachment", eventNo);
+	}
+
+
 	
 	// 관리자용
 	
@@ -61,6 +95,8 @@ public class EventDao {
 	public int insertEventAttachment(SqlSessionTemplate sqlSession, EventAttachment eventAttachment) {
 		return sqlSession.insert("eventMapper.insertEventAttachment", eventAttachment); // 첨부파일 저장
 	}
+
+
 
 	
 }

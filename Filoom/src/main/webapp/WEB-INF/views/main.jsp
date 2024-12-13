@@ -21,6 +21,7 @@
 
 	<a href="/filoom/ResultTest.pm">결제후 화면 테스트</a>
 	
+	<a href="/filoom/boxoffice.mo">박스오피스 테스트</a>
 	
 	<jsp:include page="common/footer.jsp" />
 </body>

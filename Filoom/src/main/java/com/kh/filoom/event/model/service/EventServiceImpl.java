@@ -30,21 +30,53 @@ public class EventServiceImpl implements EventService {
 
 	
 	/**
-	 * 241212 한혜원
+	 * 241212 ~ 241213 한혜원
 	 * 사용자 게시글 목록조회 요청 메소드 
 	 * 페이징처리 필요없음 
+	 * 전체 이벤트 조회 (종료여부 y, n 모두)
 	 */
 	@Override
 	public ArrayList<Event> selectList() {
-		
 		return eventDao.selectList(sqlSession);
 	}
-
+	
+	/**
+	 *241212 ~ 241213 한혜원
+	 * 사용자 게시글 목록조회 요청 메소드 
+	 * 페이징처리 필요없음 
+	 * 종료여부에 따른 필터링된 목록 조회 (종료여부 y, n)
+	 */
 	@Override
-	public Event selectEvent(int EventNo) {
-		// TODO Auto-generated method stub
-		return null;
+	public ArrayList<Event> selectFilterList(String eventStatus) {
+		return eventDao.selectFilterList(sqlSession, eventStatus);
 	}
+
+	/**
+	 * 241213 한혜원 
+	 * 사용자 게시글 상세조회 요청 메소드
+	 * 조회수 필요없음
+	 */
+	@Override
+	public Event selectEvent(int eventNo) {
+		
+		return eventDao.selectEvent(sqlSession, eventNo);
+	}
+	
+	/**
+	 * 241213 한혜원 
+	 * 사용자 게시글 첨부파일 상세조회 요청 메소드
+	 * 조회수 필요없음
+	 */
+	@Override
+	public ArrayList<EventAttachment> selectEventAttachment(int eventNo) {
+		
+		return eventDao.selectEventAttachment(sqlSession, eventNo);
+	}
+	
+	
+	
+	
+	
 
 	@Override
 	public ArrayList<Reply> selectReplyList(int eventNo) {
@@ -103,6 +135,7 @@ public class EventServiceImpl implements EventService {
 		// TODO Auto-generated method stub
 		return 0;
 	}
+
 	
 	
 	

@@ -1,6 +1,8 @@
 package com.kh.filoom.book.model.service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,6 +59,13 @@ public class BookServiceImple implements BookService {
 	public int deleteBookingSeat(BookingSeat bk) {
 		// TODO Auto-generated method stub
 		return bookDao.deleteBookingSeat(sqlSession, bk);
+	}
+
+	@Override
+	@Transactional
+	public int deleteBookingListList(ArrayList<BookingSeat> abk) {
+		// TODO Auto-generated method stub
+		return bookDao.deleteBookingListList(sqlSession, abk);
 	}
 
 	

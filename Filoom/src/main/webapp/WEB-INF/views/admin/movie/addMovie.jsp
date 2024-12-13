@@ -6,7 +6,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <link rel="stylesheet" href="admin.css" />
+    <link rel="stylesheet" href="resources/css/admin.css" />
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -101,7 +101,7 @@
         <div id = "navbar">
             
             <div id = "logo">
-                <img src="./Filoom.png">
+                <img src="../main/Filoom.png">
             </div>
            
             <div id = "nav">
@@ -123,7 +123,7 @@
                 -->
                 <div id = "admin_title_content">
                     <p id="fnName" style="padding-left:33px; font-weight:bold;">영화 추가</p>
-                    <p id="goBack" style="padding-right:33px;" onclick="location.href='admin.movielist.mo';">
+                    <p id="goBack" style="padding-right:33px;" onclick="location.href='movielist_ad.mo';">
                     	← 목록으로 돌아가기</p>
                 </div>
 
@@ -138,7 +138,7 @@
                     <div id="innerAdmin">
                         <div id="newPoster">
                             <img id="posterDisplay" src="https://placehold.co/480x716">
-                            <input type="file" id="posterInput" style="display:none;" onclick="loadImg(this);">
+                            <input type="file" id="posterInput" style="display:none;" onchange="loadImg(this);">
                         </div>
 
 
@@ -147,21 +147,21 @@
                             <table>
                                 <tr>
                                     <th>영화 제목</th>
-                                    <td colspan="4"><input type="text" id="title" value="모아나 2"></td>
+                                    <td colspan="4"><input type="text" id="title" value=""></td>
                                 </tr>
                                 <tr>
                                     <th>상영 등급</th>
                                     <td width="160">
-                                        <label for="rateA"><img class="filmrate" src="../sauce/all.svg" alt="ALL"></label>
+                                        <label for="rateA"><img class="filmrate" src="resources/images/posters/all.svg" alt="ALL"></label>
                                     </td>
                                     <td width="160">
-                                        <label for="rate12"><img class="filmrate" src="../sauce/12.svg" alt="12"></label>
+                                        <label for="rate12"><img class="filmrate" src="resources/images/posters/12.svg" alt="12"></label>
                                     </td>
                                     <td width="160">
-                                        <label for="rate15"><img class="filmrate" src="../sauce/15.svg" alt="15"></label>
+                                        <label for="rate15"><img class="filmrate" src="resources/images/posters/15.svg" alt="15"></label>
                                     </td>
                                     <td width="60">
-                                        <label for="rate19"><img class="filmrate" src="../sauce/19.svg" alt="19"></label>
+                                        <label for="rate19"><img class="filmrate" src="resources/images/posters/19.svg" alt="19"></label>
                                     </td>
                                 </tr>
                                 <tr style="display:none;">
@@ -173,32 +173,32 @@
                                 </tr>
                                 <tr>
                                     <th>감독</th>
-                                    <td colspan="4"><input type="text" id="director" value="데이비드 데릭 주니어"></td>
+                                    <td colspan="4"><input type="text" id="director" value=""></td>
                                 </tr>
                                 <tr>
                                     <th>주요 배우</th>
-                                    <td colspan="4"><input type="text" id="cast" value="아우이 크라발호, 드웨인 존슨"></td>
+                                    <td colspan="4"><input type="text" id="cast" value=""></td>
                                 </tr>
                                 <tr>
                                     <th>장르</th>
-                                    <td colspan="4"><input type="text" id="genre" value="애니메이션"></td>
+                                    <td colspan="4"><input type="text" id="genre" value=""></td>
                                 </tr>
                                 <!-- ↓ 년월일까지 표기라 'date'가 맞음 -->
                                 <tr>
                                     <th>개봉일자</th>
-                                    <td colspan="4"><input type="date" id="premiere" value="2024-11-27"></td>
+                                    <td colspan="4"><input type="date" id="premiere" value=""></td>
                                 </tr>
                                 <tr>
                                     <th>상영시간</th>
-                                    <td><input type="number" id="runtime" value="100"></td>
+                                    <td><input type="number" id="runtime" value=""></td>
                                     <td colspan="3">분</td>
                                 </tr>
                                 <!-- 이 행만 width 구성을 달리할 방법이 없어 일단 보류
                                 <tr>
                                     <th colspan="2" width="">추가 상영 방식</th>
-                                    <td><img src="../sauce/IMAX_blue_logo.svg" alt="IMAX"></td>
-                                    <td><img src="../sauce/4DX_2019_logo.svg" alt="4DX"></td>
-                                    <td><img src="../sauce/ScreenX_Logo_(2019).svg" alt="SCREENX"></td>
+                                    <td><img src="resources/images/icons/IMAX_blue_logo.svg" alt="IMAX"></td>
+                                    <td><img src="resources/images/icons/4DX_2019_logo.svg" alt="4DX"></td>
+                                    <td><img src="resources/images/icons/ScreenX_Logo_(2019).svg" alt="SCREENX"></td>
                                 </tr> -->
                                 <tr>
                                     <th>트레일러 링크</th>

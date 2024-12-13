@@ -6,9 +6,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>영화 상세::Filoom</title>
-    <link rel="stylesheet" href="admin.css" />
+    <link rel="stylesheet" href="resources/css/admin.css" />
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    
     <style>
         /* *{overflow:auto;} */
+        #admin_right * {
+            font-family: "Poppins", sans-serif;
+            font-size:25px;
+        }
+        
         #admin_title_content {
             font-size:25px;
             display:flex;
@@ -179,7 +189,7 @@
                 <div id = "admin_title_content">
                     <p id="fnName" style="padding-left:33px; font-weight:bold;">영화 상세</p>
                     <p id="goBack" style="padding-right:33px;"
-                        onclick="location.href='admin_movie_list.html';">
+                        onclick="location.href='movielist_ad.mo';">
                         ← 목록으로 돌아가기
                     </p>
 
@@ -195,7 +205,7 @@
                     <div id="innerAdmin">
                         <div id="moviePoster" style="margin-right:20px;">
                             <!-- <img src="https://placehold.co/600x400"> -->
-                            <img src="../sauce/1win.jpg">
+                            <img src="resources/images/posters/1win.jpg">
                         </div>
                         <div id="tobeManaged">
                             <!-- 내부 스크롤은 여기만 지원함 -->
@@ -208,15 +218,15 @@
                              (불필요하거나 시간 부족할 경우 삭제) -->
                             <div align="right" style="width:100%;">
                                 <button id="button_sample">이미지 관리</button>
-                                <button id="button_sample" onclick="location.href='admin_review_patrol.html';">리뷰 관리</button>
-                                <button id="button_sample" onclick="location.href='admin_modifymovie.html';">수정</button>
+                                <button id="button_sample" onclick="location.href='admin.managereview.mo';">리뷰 관리</button>
+                                <button id="button_sample" onclick="location.href='modifymovie.mo';">수정</button>
                                 <button id="button_sample" class="unready" style="background-color:red;">삭제</button>
                             </div>
                             
                             <div id="movie-title">
                                 <table>
                                     <tr>
-                                        <td><img class="filmrate" src="../sauce/12.svg"></td>
+                                        <td><img class="filmrate" src="resources/images/posters/12.svg"></td>
                                         <td><b>1승</b></td>
                                     </tr>
                                 </table>
@@ -265,7 +275,7 @@
                                 <div id="tabletitle">
                                     <b>상영 정보</b>
                                     <hr>
-                                    <button><img src="../sauce/plus.svg"></button>
+                                    <button><img src="resources/images/icons/plus.svg"></button>
                                 </div>
 
                                 <br><br>
@@ -300,7 +310,7 @@
                                                     <option value="4">4</option>
                                                     <option value="5">5</option>
                                                 </select>
-                                                <button style="background-color: red;"><img src="../sauce/dash-lg.svg"></button>
+                                                <button style="background-color: red;"><img src="resources/images/icons/dash-lg.svg"></button>
                                             </td>
                                         </tr>
                                     </table>

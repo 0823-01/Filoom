@@ -4,14 +4,13 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-
 @NoArgsConstructor
 @Setter
 @Getter
 @ToString
 public class EventAttachment {
 
-	private int eventTitle; 	//	EVENT_FILE_NO	NUMBER
+	private int eventFileNo; 	//	EVENT_FILE_NO	NUMBER
 	private int refEno;			//	REF_ENO	NUMBER
 	private String originName;	//	ORIGIN_NAME	VARCHAR2(300 BYTE)
 	private String changeName;	//	CHANGE_NAME	VARCHAR2(300 BYTE)

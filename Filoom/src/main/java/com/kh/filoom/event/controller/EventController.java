@@ -31,39 +31,98 @@ public class EventController {
 	// 사용자
 
 	/**
-	 * 241212 한혜원
-	 * 사용자 게시글 목록조회 (페이징처리 없이) 
+	 * 241212 ~ 241213 한혜원
+	 * 사용자 게시글 목록조회 (페이징 처리 없이) 
+	 * ++ 이벤트 종료 여부에 따른 필터링 처리 
+	 * @param eventSataus 이벤트 종료 여부
 	 * @param model
 	 * @return
 	 */
 	@GetMapping("list.ev")
-	public String selectList(Model model) {
+	public String selectList(@RequestParam(value="eventStatus", required=false)String eventStatus, Model model) {
 		
 		// 페이징 처리 필요없음 
-		// 게시글 목록 조회
-		ArrayList<Event> list = eventService.selectList();
+		// eventStatus 가 없으면 전체 목록, 있으면 그에 맞는 목록을 가져옴
+		ArrayList<Event> list;
+		String statusTitle = "전체 이벤트"; // 기본제목
 		
-		// 응답데이터로 목록 객체 넘기고 게시글 목록 조회 페이지 포워딩 
+		
+		// eventStatus 값이 있으면 해당하는 목록만 조회
+		if("N".equals(eventStatus)) {
+			list = eventService.selectFilterList(eventStatus);
+			statusTitle = "진행중인 이벤트"; // 진행중인 이벤트 제목
+		} else if("Y".equals(eventStatus)) {
+			list = eventService.selectFilterList(eventStatus);
+			statusTitle = "지난 이벤트"; // 진행중인 이벤트 제목
+		} else {
+			// eventStatus 가 없으면 전체 목록을 조회 (기본값) 
+			list = eventService.selectList(); // 모든 이벤트를 가져오는 서비스 호출
+			statusTitle = "전체 이벤트"; // 진행중인 이벤트 제목
+		}
 		model.addAttribute("list", list);
+		model.addAttribute("statusTitle", statusTitle);  // 제목을 모델에 전달
 		
-		System.out.println(list);
+		// System.out.println(list);
+		// System.out.println("list size : " + list.size());
+		// System.out.println(statusTitle);
+		// System.out.println(eventStatus);
 		
 		return "event/eventListView";
 	}
 	
 	
-	
-	// 사용자 게시글 상세조회 페이지 요청 
+	/**
+	 * 241213 한혜원
+	 * 사용자 이벤트 게시글 상세조회 페이지 요청(쿼리스트링 이용)
+	 * 조회수 처리 x
+	 * @return
+	 */
 	@GetMapping("detail.ev")
-	public String selectEvent() {
-		return "event/eventDetailView";
+	public ModelAndView selectEvent(int eno, ModelAndView mv) {
+		
+		System.out.println(eno);
+		
+		// 게시글 정보, 첨부파일 정보 조회해오기 
+		Event e = eventService.selectEvent(eno);
+		
+		// 게시글이 없는 경우 에러페이지로 포워딩
+		if(e == null) {
+			mv.setViewName("common/errorPage");
+			mv.addObject("errorMsg", "해당 게시글을 찾을 수 없습니다.");
+			return mv;
+		}
+		
+		// 게시글 정보와 첨부파일 정보 조회 후 상세페이지 포워딩 
+		ArrayList<EventAttachment> list = eventService.selectEventAttachment(eno);
+		
+		// 조회된 데이터드 담아서 응답페이지로 포워딩 
+		mv.addObject("e", e);
+		mv.addObject("list", list);
+		mv.setViewName("event/eventDetailView");
+		
+		System.out.println(e);
+		System.out.println(list);
+		
+		
+		return mv;
+		
+		
 	}
 	
 	
 	
 	
-	// 관리자용 
 	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	// 관리자용 
 	
 	/**
 	 * 241211 한혜원 
