@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>    
 <!DOCTYPE html>
 <html>
 <head>
@@ -55,8 +56,8 @@
     .content-area {
         background-color: #F3F3F3;
         border-radius: 4px;
-        /*overflow: auto; */
-        /*height : 1250px;*/
+        /*overflow: auto;
+        height : 1250px; */
     }
 
     .content {
@@ -331,18 +332,29 @@
     
         <!--이벤트제목, 기간-->
         <div class="menu-area">
-            <div id="event_title">[모아나 2] 행운의 캐릭터 키링 증정 이벤트!</div>
-            <div id="event_date">기간&emsp;2024.11.30 ~ 2024.12.08</div>
+            <div id="event_title">${requestScope.e.eventTitle}</div>
+            <div id="event_date">기간&emsp;${requestScope.e.startDate} ~ ${requestScope.e.endDate}</div>
         </div>
 
         <!--내용부분-->
         <div class="content-area">
             <div class="content">
-                <img id="event_img" src="https://img.cgv.co.kr/WebApp/contents/eventV4/42865/17331207457360.jpg" alt="이벤트">
+            	${requestScope.e.eventContent }
+            	<c:forEach var="file" items="${requestScope.list}">
+                	<img id="event_img" src="${ pageContext.request.contextPath }${file.changeName}" alt="상세이미지">
+                </c:forEach>
                 <div id="listBtn">
-                    <button>목록으로</button>
+                    <button onclick="history.back()">목록으로</button>
                 </div>
             </div>
+            
+            <!-- 수정 / 삭제 시 필요한 글번호, 파일 경로 -->
+            <form id="postForm" action="" method="post">
+            	<input type="hidden" name="eno" value="${requestScope.e.eventNo }">
+            	<input type="hidden" name="filePath" value="${file.changeName}">
+            </form>
+            
+            
         
             <!--댓글부분-->
             <div class="reply-area">

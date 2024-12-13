@@ -415,11 +415,11 @@ body{
                             </div>
 
                             <div class="startDate">
-                                <label for="startDate">이벤트 시작일<b style="color : red;">*</b></label> <input type="date" id="startDate" name="startDate"></input>
+                                <label for="startDate">이벤트 시작일<b style="color : red;">*</b></label> <input type="date" id="startDate" name="startDate" required></input>
                             </div>
 
                             <div class="endDate">
-                                <label for="endDate">이벤트 종료일<b style="color : red;">*</b></label><input type="date" id="endDate" name="endDate"></input>
+                                <label for="endDate">이벤트 종료일<b style="color : red;">*</b></label><input type="date" id="endDate" name="endDate" required></input>
                             </div>
                         </div>
 
@@ -472,17 +472,17 @@ body{
                             <div class="type">
                                 <div style="margin-top: 2px;">이벤트 참여 방법<b style="color : red;">*</b></div>
                                 <div id="type-method">
-                                    댓글<input type="radio" name="eventType" value="1">
-                                    응모버튼<input type="radio" name="eventType" value="2">
-                                    오프라인<input type="radio" name="eventType" value="3">
+                                    댓글<input type="radio" name="eventType" value="1" required>
+                                    응모버튼<input type="radio" name="eventType" value="2" required>
+                                    오프라인<input type="radio" name="eventType" value="3" required>
                                 </div>
                             </div>
 
                             <div class="status">
                                 <div style="margin-top: 2px;">이벤트 종료 여부<b style="color : red;">*</b></div>
                                 <div id="eventStatus">
-                                    진행중인 이벤트<input type="radio" name="eventStatus" value="Y">
-                                    종료된 이벤트<input type="radio" name="eventStatus" value="N" disabled>
+                                    진행중인 이벤트<input type="radio" name="eventStatus" value="N" required> <!-- N 으로 변경 -->
+                                    종료된 이벤트<input type="radio" name="eventStatus" value="Y" disabled>  <!-- Y 으로 변경 -->
                                 </div>
                             </div>
                         

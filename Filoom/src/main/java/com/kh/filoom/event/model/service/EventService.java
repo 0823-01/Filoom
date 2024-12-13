@@ -14,11 +14,17 @@ public interface EventService {
 	// 게시글 총 갯수 조회 
 	int selectListCount();
 	
-	// 게시글 목록조회 
+	// 전체 이벤트 게시글 목록 조회 
 	ArrayList<Event> selectList();
 	
-	// 게시글 상세조회 서비스 
+	// 이벤트 종료 여부에 따른 목록 조회 
+	ArrayList<Event> selectFilterList(String eventStatus);
+	
+	// 이벤트 게시글 상세조회 서비스 
 	Event selectEvent(int EventNo);
+	
+	// 이벤트 게시글 첨부파일 상세조회 서비스 
+	ArrayList<EventAttachment> selectEventAttachment(int eventNo); 
 	
 	// 댓글 리스트 조회 서비스 (Ajax) 
 	ArrayList<Reply> selectReplyList(int eventNo);

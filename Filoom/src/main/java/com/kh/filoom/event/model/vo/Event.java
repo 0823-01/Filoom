@@ -23,7 +23,7 @@ public class Event {
 	// 실제 Event 테이블에 없는 컬럼이지만 필드로 추가 하여 썸네일 이미지 경로와 수정파일명 담을 필드 
 	private String contentImg1; 
 	
-	
+
 	
 	public String getContentImg1() {
 		return contentImg1;
@@ -32,6 +32,6 @@ public class Event {
 	public void setContentImg1(String contentImg1) {
 		this.contentImg1 = contentImg1;
 	}
-
+	
 	
 }
