@@ -21,7 +21,7 @@
 	<bean class="org.mybatis.spring.SqlSessionFactoryBean"
 		  id="sqlSessionFactory">
 		<property name="configLocation" value="classpath:mybatis-config.xml" />
-		<!-- classpath: 은 webapp 폴더 밖의 resources 폴더를 의미함 -->
+		
 		<property name="dataSource" ref="dataSource" />
 	
 	</bean>
