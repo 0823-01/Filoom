@@ -267,7 +267,7 @@
 </head>
 <body>
     
-    <%@ jsp:include file="../common/header.jsp" %>
+    <jsp:include page="../common/header.jsp" />
     
     <!-- 예시 : 위키드 -->
     <div class="backStage" align="center">
@@ -644,6 +644,6 @@
         </div>
     </div>
 
-    <%@ jsp:include file="../common/footer.jsp" %>
+    <jsp:include page="../common/footer.jsp" />
 </body>
 </html>
