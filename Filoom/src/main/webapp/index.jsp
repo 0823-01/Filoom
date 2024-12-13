@@ -12,6 +12,7 @@
 	<a href = "${pageContext.request.contextPath}/book.ao">아dh</a>
 	
 	
+	<jsp:forward page="/WEB-INF/views/main.jsp"/>
 </body>
 </html>
 <!-- 이거 book용 -->

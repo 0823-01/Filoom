@@ -7,7 +7,7 @@
 		Reply VO 타입으로 옮겨주는 ResultMap
 	-->
 	
-	<resultMap id="replyResultSet" type="booking">
+	<resultMap id="bookingResultSet" type="booking">
 		<id column="BOOK_NO" property="bookNo"/>
 		<result column="BOOK_DATE" property="bookDate"/>
 		<result column="BOOK_COST" property="bookCost"/>
@@ -223,5 +223,33 @@
 
 	<!-- 결제 -->
 	
+	<select id="getBookingseatNoList" parameterType="map" resultType="integer">
+
+ 		SELECT BOOKING_SEAT_NO
+		  FROM BOOKING_SEAT BS
+		  JOIN SCREEN_SEAT SS ON (BS.SSEAT_NO  = SS.SSEAT_NO)
+		  JOIN PLAYING P ON (BS.PLAYING_NO = P.PLAYING_NO)
+		 WHERE SEAT_NO = #{seatNo}
+		   AND BS.PLAYING_NO = #{playingNo}
+		   AND TIMELIMIT > SYSDATE
+	</select>
+	
+	<update id="updateTimeLimit" parameterType="int">
+		UPDATE BOOKING_SEAT 
+		   SET TIMELIMIT = SYSDATE+INTERVAL '5' MINUTE
+		 WHERE BOOKING_SEAT_NO = #{i}
+	</update>
+	
+
+	<insert id="setAndGetBookNo" parameterType="booking">
+		INSERT INTO BOOKING (BOOK_NO,USER_NO)
+		VALUES (SEQ_BNO.NEXTVAL, #{userNo})
+		
+		<selectKey keyProperty="bookNo" resultType="int" order="AFTER">
+			SELECT SEQ_BNO.CURRVAL FROM DUAL
+		</selectKey>
+	</insert>
+	
+
 	
 </mapper>

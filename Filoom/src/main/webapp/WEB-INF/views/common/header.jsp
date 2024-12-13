@@ -126,6 +126,17 @@
     </style>
 </head>
 <body>
+
+	<!-- alertMsg 구문 -->
+	<script>
+		if("${sessionScope.alertMsg}" != ""){
+			alert("${sessionScope.alertMsg}");		
+		}
+	</script>
+	<c:remove var="alertMsg" scope="session"/>
+	
+	
+	
 	<div id = "header">
         <div id = "header_top">
 

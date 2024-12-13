@@ -16,7 +16,7 @@ body{
 }
 
 #outer{
-    width:80%;
+    width:60%;
     background-color: #222222;
     border:1px dashed #696868;
     margin: auto;

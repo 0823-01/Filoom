@@ -33,20 +33,22 @@ function nicepayClose(){
 
 <style>
     /* 겹칠수도 있으니 나중에 지우기 */
-    body{
+     body{
         color: white;
         background-color: black;
-    }
+    } 
     
 
     #outer{
         margin: auto;
-        margin-top: 30px;
-        width:80%;
+        margin-top: 40px;
+        margin-bottom: 40px;
+        
+        width:60%;
         background-color: #222222;
         display: flex;
         padding-bottom: 3%;
-        /* border:1px solid white; */
+        border:1px solid white; 
         border-radius: 1%;
         
         
@@ -270,6 +272,7 @@ function nicepayClose(){
 </style>
 </head>
 <body> 
+	<jsp:include page="../common/header.jsp" />	
 	
     
     <form name="payForm" method="post" action="/filoom/ResultTest.pm">
@@ -430,8 +433,9 @@ function nicepayClose(){
         </div>
     </form>
     
-    dfldkf;sdkfl;
-    왜 한글 안쳐져 ?
 
+
+
+	<jsp:include page="../common/footer.jsp" />
 </body>
 </html>

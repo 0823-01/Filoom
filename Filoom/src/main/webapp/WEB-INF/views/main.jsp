@@ -17,7 +17,7 @@
 	
 		
 		
-	<a href="/filoom/paymentForm.pm">결제테스트</a>
+	<a href="/filoom/paymentForm.pm?playingNo=1&seatNos=L1-1&seatNos=L2-2"><button>결제하기</button></a>
 
 	<a href="/filoom/ResultTest.pm">결제후 화면 테스트</a>
 	

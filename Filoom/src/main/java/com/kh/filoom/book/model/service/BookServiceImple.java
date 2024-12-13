@@ -14,6 +14,14 @@ import com.kh.filoom.book.model.vo.BookingSeat;
 import com.kh.filoom.book.model.vo.Playing;
 import com.kh.filoom.movie.model.vo.Movie;
 
+/**
+ * @author 김형문
+ *
+ */
+/**
+ * @author 김형문
+ *
+ */
 @Service
 public class BookServiceImple implements BookService {
 
@@ -88,7 +96,60 @@ public class BookServiceImple implements BookService {
 	
 	//결제===========================================================================
 
+	/**
+	 * 상영좌석 번호 구하기+유효성검사
+	 * 	유효성통과 -> 좌석일렬번호 리턴
+	 * 	유효성불통과 -> null 리턴
+	 */
+	@Override
+	public ArrayList<Integer> getBookingSeatNoList(ArrayList<String> seatNoList,int playingNo) {
+		ArrayList<Integer> bookingSeatNoList = new ArrayList();
+		
+		
+		for(String s : seatNoList) {
+			Integer seatNo = bookDao.getBookingseatNoList(sqlSession,s,playingNo);
+			
+			
+			if(seatNo==null) {
+				bookingSeatNoList = null;
+				
+				return bookingSeatNoList;
+				
+			}
+			
+			bookingSeatNoList.add(seatNo);
+			
+		}
+		
+		
+		return bookingSeatNoList;
+	}
+
+	/**
+	 * 좌석 유효시간 늘려주기 (update)
+	 */
+	@Override
+	public int updateTimeLimit(ArrayList<Integer> bookingSeatNoList) {
+		
+		int updateTimeLimit = 1;
+		
+//		for(int i : bookingSeatNoList) {
+//			updateTimeLimit = bookDao.updateTimeLimit(sqlSession,i);
+//		}
+		return updateTimeLimit;
+	}
+
 	
+	
+	/**
+	 * 영화예매번호 생성 + 예매번호 조회
+	 */
+	@Override
+	@Transactional
+	public int setBookNo(int userNo) {
+		return bookDao.setAndGetBookNo(sqlSession,userNo);
+	}
+
 	
 	
 }
