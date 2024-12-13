@@ -49,6 +49,10 @@
 		<id column="STATUS" property="status"/>
 		<result column="TIMELIMIT" property="timeLimit"/>
 		<result column="SEAT_NO" property="seatNo"/>		
+		<result column="SSEAT_NO" property="sseatNo"/>
+		<result column="PLAYING_NO" property="playingNo"/>
+		<result column="BOOK_NO" property="bookNo"/>
+		
 	</resultMap>
 	
 	<resultMap id = "selectMovieDateDetail" type="playing">
@@ -73,6 +77,12 @@
 		<result column="SEAT_NO" property="seatNo"/>
 		<result column="MOVIE_TITLE" property="movieTitle"/>
 		<result column="RUNTIME" property="runtime"/>
+
+	</resultMap>
+	
+	<resultMap id = "deleteBookingListList" type="bookingseat">
+		<id column="PLAYING_NO" property="playingNo"/>
+		<result column="SEAT_NO" property="seatNo"/>
 	
 	</resultMap>
 	
@@ -89,7 +99,7 @@
 		    (SELECT COUNT(*) 
 		     FROM BOOKING_SEAT 
 		     WHERE PLAYING_NO = P.PLAYING_NO 
-		       AND TIMELIMIT >= SYSDATE - INTERVAL '10' MINUTE) AS OCCUPIED_SEATS
+		       AND TIMELIMIT &lt; SYSDATE) AS OCCUPIED_SEATS
 		FROM 
 		    PLAYING P
 		JOIN
@@ -113,7 +123,10 @@
 		    S.SCREEN_NAME,
 		    BS.SSEAT_NO,
 		    BS.TIMELIMIT,
-		    SS.SEAT_NO,
+		    CASE 
+		        WHEN BS.TIMELIMIT > SYSDATE THEN SS.SEAT_NO
+		        ELSE NULL
+		    END AS SEAT_NO,
 		    M.MOVIE_TITLE,
 		    M.RUNTIME
 		FROM 
@@ -135,9 +148,58 @@
 		ON 
 		    P.MOVIE_NO = M.MOVIE_NO
 		WHERE  
-		    P.PLAYING_NO = #{playingNo}
+		    P.PLAYING_NO =  #{playingNo}
 	</select>
 	
+	
+	<select id = "insertBookingSeat" parameterType="bookingseat">
+		INSERT INTO BOOKING_SEAT VALUES (
+            SEQ_BSNO.NEXTVAL,
+            #{timeLimit},
+            #{playingNo},
+            (SELECT SSEAT_NO
+             FROM SCREEN_SEAT
+             WHERE SEAT_NO = #{seatNo}
+               AND SCREEN_NO = (SELECT SCREEN_NO 
+                                FROM PLAYING
+                                WHERE PLAYING_NO = #{playingNo})),
+            NULL
+		)
+	</select>
+	
+	<select id = "deleteBookingSeat" parameterType="bookingseat">
+		DELETE FROM BOOKING_SEAT
+		WHERE PLAYING_NO = #{playingNo}
+		  AND SSEAT_NO = (
+		      SELECT SSEAT_NO
+		      FROM SCREEN_SEAT
+		      WHERE SEAT_NO = #{seatNo}
+		        AND SCREEN_NO = (
+		            SELECT SCREEN_NO
+		            FROM PLAYING
+		            WHERE PLAYING_NO = #{playingNo}
+		        )
+		  )
+	</select>
+	
+	
+	<delete id="deleteBookingListList" parameterType="list">
+	    DELETE FROM BOOKING_SEAT
+	    WHERE PLAYING_NO = #{list[0].playingNo}
+	      AND SSEAT_NO IN (
+	          <foreach collection="list" item="seat" separator="," open="" close="">
+	              (SELECT SSEAT_NO
+	               FROM SCREEN_SEAT
+	               WHERE SEAT_NO = #{seat.seatNo}
+	                 AND SCREEN_NO = (
+	                     SELECT SCREEN_NO
+	                     FROM PLAYING
+	                     WHERE PLAYING_NO = #{seat.playingNo}
+	                 ))
+	          </foreach>
+	      )
+	</delete>
+	 
 	
 
 

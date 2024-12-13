@@ -27,13 +27,12 @@
 		<typeAlias type = "com.kh.filoom.book.model.vo.Seat" alias="seat"/>
 		
 		<typeAlias type = "com.kh.filoom.movie.model.vo.Movie" alias="movie"/>
-		<typeAlias type = "com.kh.filoom.movie.model.vo.Poster" alias="poster"/>
+		<typeAlias type = "com.kh.filoom.movie.model.vo.Poster" alias="poster"/>		
 		
 		
-		<typeAlias type = "com.kh.filoom.event.model.vo.Event" alias="event" />
-		<typeAlias type = "com.kh.filoom.event.model.vo.EventAttachment" alias="eventAttachment" />
-		<typeAlias type = "com.kh.filoom.event.model.vo.Reply" alias="reply" />
 		
+		<!-- 개인 사용을 위한 typeAlias -->
+		<typeAlias type = "com.kh.filoom.movie.model.vo.MovieWithPoster" alias="moviewithposter"/>		
 		
 	</typeAliases>
 	
@@ -46,7 +45,6 @@
 		<mapper resource = "/mappers/member-mapper.xml"/>
 		<mapper resource = "/mappers/movie-mapper.xml"/>
 		<mapper resource = "/mappers/book-mapper.xml"/>
-		<mapper resource = "/mappers/event-mapper.xml"/>
 	
 	</mappers>
 	
