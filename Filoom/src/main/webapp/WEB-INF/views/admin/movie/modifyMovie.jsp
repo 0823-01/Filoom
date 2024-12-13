@@ -6,7 +6,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>영화 수정::Filoom</title>
-    <link rel="stylesheet" href="admin.css" />
+    <link rel="stylesheet" href="resources/css/admin.css" />
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -104,7 +104,7 @@
         <div id = "navbar">
             
             <div id = "logo">
-                <img src="./Filoom.png">
+                <img src="../main/Filoom.png">
             </div>
            
             <div id = "nav">
@@ -129,7 +129,7 @@
                     <div id="goBack">← 목록으로 돌아가기</div> -->
                     <p id="fnName" style="padding-left:33px; font-weight:bold;">영화 수정</p>
                     <p id="goBack" style="padding-right:33px;"
-                        onclick="location.href='admin_movie_list.html';">
+                        onclick="location.href='movielist_ad.mo';">
                         ← 목록으로 돌아가기
                     </p>
                 </div>
@@ -144,7 +144,7 @@
                     
                     <div id="innerAdmin">
                         <div id="newPoster">
-                            <img id="posterDisplay" src="../sauce/moana.jpg">
+                            <img id="posterDisplay" src="resources/images/posters/moana.jpg">
                             <input type="file" id="posterInput" style="display:none;" onchange="loadImg(this);">
                         </div>
 
@@ -162,16 +162,16 @@
                                 <tr>
                                     <th>상영 등급</th>
                                     <td width="160">
-                                        <label for="rateA"><img class="filmrate" src="../sauce/all.svg" alt="ALL"></label>
+                                        <label for="rateA"><img class="filmrate" src="resources/images/posters/all.svg" alt="ALL"></label>
                                     </td>
                                     <td width="160">
-                                        <label for="rate12"><img class="filmrate" src="../sauce/12.svg" alt="12"></label>
+                                        <label for="rate12"><img class="filmrate" src="resources/images/posters/12.svg" alt="12"></label>
                                     </td>
                                     <td width="160">
-                                        <label for="rate15"><img class="filmrate" src="../sauce/15.svg" alt="15"></label>
+                                        <label for="rate15"><img class="filmrate" src="resources/images/posters/15.svg" alt="15"></label>
                                     </td>
                                     <td width="60">
-                                        <label for="rate19"><img class="filmrate" src="../sauce/19.svg" alt="19"></label>
+                                        <label for="rate19"><img class="filmrate" src="resources/images/posters/19.svg" alt="19"></label>
                                     </td>
                                 </tr>
                                 <tr style="display:none;">
@@ -206,9 +206,9 @@
                                 <!-- 이 행만 width 구성을 달리할 방법이 없어 일단 보류
                                 <tr>
                                     <th colspan="2" width="">추가 상영 방식</th>
-                                    <td><img src="../sauce/IMAX_blue_logo.svg" alt="IMAX"></td>
-                                    <td><img src="../sauce/4DX_2019_logo.svg" alt="4DX"></td>
-                                    <td><img src="../sauce/ScreenX_Logo_(2019).svg" alt="SCREENX"></td>
+                                    <td><img src="resources/images/icons/IMAX_blue_logo.svg" alt="IMAX"></td>
+                                    <td><img src="resources/images/icons/4DX_2019_logo.svg" alt="4DX"></td>
+                                    <td><img src="resources/images/icons/ScreenX_Logo_(2019).svg" alt="SCREENX"></td>
                                 </tr> -->
                                 
                                 <tr>

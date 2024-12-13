@@ -53,7 +53,7 @@
             padding-top:10px;
             /* background-image: 컴퓨터 내부에서 가져오더라도 url() 써야 함 */
             /* background-size: cover; */
-            /* background-image: url('sauce/news_1732052776_1431040_m_1.jpeg'); */
+            /* background-image: url('resources/images/posters/news_1732052776_1431040_m_1.jpeg'); */
         }
 
         #description>* {
@@ -133,8 +133,18 @@
         }
 
         /* === 리뷰 === */
-        #reviewTop * {
+        #part-header * {
             /* border:1px solid red; */
+        }
+
+        #part-header {
+            height:50px;
+            display:flex;
+            justify-content: space-between;
+        }
+        #part-header>div>* {
+            display:inline-block;
+            vertical-align: middle;
         }
 
         /* === 실제 관람평 여부 체크용 스위치 === */
@@ -202,9 +212,24 @@
         /* === 토글 스위치 END === */
 
 
-        .statistic td {
-            /* padding: 0; */
+        /* 평점 개요 */
+        #evalOverview {
+            display:flex;
+            /*border: 1px solid red;*/
         }
+
+        .evalSummary {
+            width:130px;
+            display:flex;
+            flex-direction: column;
+            justify-content: center;
+            /* border: 1px solid orange; */
+        }
+        .statistic {
+            width:1030px;
+            display:inline-block;
+        }
+        
         .graph-back {
             width:1000px;
             height:10px;
@@ -214,13 +239,14 @@
         }
 
         #evalOverview .graph {
-            /* color:black; */
             /* width:50%; */
             height:10px;
             border-radius:20px;
             margin:2px 0px;
             background-color: green;
         }
+        
+        /* 상세 리뷰 */
 
         #reviewList {
             padding: 0px 45px;
@@ -267,7 +293,7 @@
 </head>
 <body>
     
-    <%@ jsp:include file="../common/header.jsp" %>
+    <jsp:include page="../common/header.jsp" />
     
     <!-- 예시 : 위키드 -->
     <div class="backStage" align="center">
@@ -279,18 +305,18 @@
             <div id="description" align="left">
                 <!-- 이미지 넣는 곳 -->
                 <div>
-                    <img src="sauce/wicked2.jpg" alt="위키드" id="thumbnail">
+                    <img src="resources/images/posters/wicked2.jpg" alt="위키드" id="thumbnail">
                 </div>
 
                 <!-- 제목과 설명을 넣는 곳 -->
                 <div style="flex-grow: 1;">
                     <!-- <div>
-                        <img src="sauce/all.svg" class="filmrate">
+                        <img src="resources/images/posters/all.svg" class="filmrate">
                         <b>위키드</b>
                     </div> -->
                     <table>
                         <tr>
-                            <td><img src="sauce/all.svg" class="filmrate"></td>
+                            <td><img src="resources/images/posters/all.svg" class="filmrate"></td>
                             <td id="movieTitle">위키드</td>
                         </tr>
                     </table>
@@ -354,7 +380,7 @@
             <div class="screenType" style="float:right; margin-right:10px;">
                 <!-- float로 별개로 배치 -->
                  <!-- CGV가 이 로고들을 넣는데, 클릭 시 사이트 내 설명 페이지로 이동 -->
-                <!-- <div><img src="sauce/IMAX.svg">대충 IMAX 로고</div>
+                <!-- <div><img src="resources/images/posters/IMAX.svg">대충 IMAX 로고</div>
                 <div>대충 4DX 로고</div>
                 <div>대충 ScreenX 로고</div>-->
                 <a href="" id="imax">IMAX</a>
@@ -371,7 +397,7 @@
                 <hr><br>
                 <!-- <div align="center">
                     // 왼쪽 끝에 '<' 이미지
-                    <img src="sauce/wicked1.jpg">
+                    <img src="resources/images/posters/wicked1.jpg">
                     // 오른쪽 끝에 '>' 이미지
                 </div> -->
 
@@ -379,8 +405,8 @@
                 <div id="container">
                     <div class="swiper">
                         <div class="swiper-wrapper" align="center">
-                            <div class="swiper-slide"><img src="sauce/wicked1.jpg"></div>
-                            <div class="swiper-slide"><img src="sauce/wicked2.jpg"></div>
+                            <div class="swiper-slide"><img src="resources/images/posters/wicked1.jpg"></div>
+                            <div class="swiper-slide"><img src="resources/images/posters/wicked2.jpg"></div>
                         </div>
 
                         <div class="swiper-button-prev"></div>
@@ -406,33 +432,36 @@
 
             <div id="reviewTop">
                 <!-- 여기 어그러지는 거 아는데 이 페이지에 시간을 너무 많이 써서 일단 보류 -->
-                <div style="height:80px;">
-                    <p style="float:left;" class="category"><b>리뷰</b></p>
-                    <!-- ↓ 얘도 흰색으로 바꿔야 함 -->
-                    <label class="switch" style="float:right;">
-                        <input type="checkbox">
-                        <span class="slider round"></span>
-                    </label>
-                    <p style="float:right;">실제 관람평만 보기</p>
+                <div id="part-header">
+                    <p class="category"><b>리뷰</b></p>
+                    <div>
+	                    <p>실제 관람평만 보기</p>
+	                    <!-- ↓ 얘도 흰색으로 바꿔야 함 -->
+	                    <label class="switch">
+	                        <input type="checkbox">
+	                        <span class="slider round"></span>
+	                    </label>
+                    </div>
                 </div>
                 <br>
 
-                <div id="evalOverview" style="display:inline-block;">
+                <div id="evalOverview">
                     <!-- 특수문자는 꽉찬 별과 빈 별만 있고 반 개짜리 별은 없기 때문에
                     다른 방법으로 구현해야 함
                     일례로 Google Play의 경우 서로 다른 opacity 값을 절반씩 적용했음
                     -->
-                    <!-- 점수랑 별 개수 가운데로 올리고 싶은데 안 올라가서 보류 -->
-                    <div style="display:inline-block;">
+                    <!-- 이렇게 하니까 border 없으면 허전해보이는데 -->
+                    <div class="evalSummary">
                         <!-- <b style="font-size:20px;">4.55</b><br>
                         ★★★★★ -->
-                        <div style="font-size:20px;">
+                        <div style="font-size:30px;">
                             4.55
                         </div>
+                        <!-- 아래 별 부분은 별 이미지 x5를 평점에 맞게 채우는 걸로 대체 예정 -->
                         <div>★★★★★</div>
                         <div>리뷰 180개</div>
                     </div>
-                    <div class="statistic" style="display:inline-block;">
+                    <div class="statistic">
                         <table>
                             <tr>
                                 <td>5</td>
@@ -487,19 +516,41 @@
                 한하여 해당 div의 테이블이 어그러지는 현상이 있음
                 별일 없으면 실전에서 가로마진 뺄 예정 -->
 
-                <!-- SAMPLE (기본형)
-                <div id="review">
-                    열글자한줄넘김기절함<br>
-                    2024-11-29<br>
-                    제목 &emsp; 원작을 봤다면 여러 번 볼 수밖에 없는 영화<br>
-                    평점 &emsp; ★★★★★<br>
-                    내용 &emsp; 동명의 소설을 N번, 동명의 뮤지컬을 1N번 본 사람으로써, 원작 팬으로써의 엄격한 잣대를 가지고 영화를 보러 갔다. 조금이라도 맘에 안 들면 바로 1점 때릴 생각으로.  그런데 이 영화는, 맘에 안 드는 구석을 전혀 찾을 수 없었다...<br>
-                </div>
-                -->
+				<%-- SAMPLE
+					 <div id="review">
+					 	※ MEMBER 테이블에 닉네임 컬럼이 없는 관계로, 리뷰어 표기는 ID 앞 4글자 + '****'로 통일
+	                    <div id="reviewerName" style="float:left;">열글자한줄넘김기절함</div>
+	                    <div id="writtenDate" style="float:right;">${writtenDate}</div><br>
+	
+	                    <table>
+	                        <tr>
+	                            <td width="50">제목</td>
+	                            <td><b>${reviewTitle}</b></td>
+	                        </tr>
+	                        <tr>
+	                            <td>평점</td>
+	                            <td>
+	                            	<c:forEach var="s" begin="1" end="${score}">
+	                            		★
+	                            	</c:forEach>
+	                            	<c:forEach var="s" begin="1" end="5-${score}">
+	                            		☆
+	                            	</c:forEach>
+	                            </td>
+	                        </tr>
+	                        <tr>
+	                            <td>내용</td>
+	                            <td>${reviewContent}</td>
+	                        </tr>
+	                    </table>
+	                </div>
+				
+				 --%>
 
                 <!-- SAMPLE (table) -->
                 <div id="review">
-                    <div id="reviewerName" style="float:left;">열글자한줄넘김기절함</div>
+                	<!-- full id = 'tenletterstunman' -->
+                    <div id="reviewerName" style="float:left;">tenl****</div>
                     <div id="writtenDate" style="float:right;">2024-11-29</div><br>
 
                     <table>
@@ -519,7 +570,8 @@
                 </div>
 
                 <div id="review">
-                    <div id="reviewerName" style="float:left;">상하이의무신</div>
+                	<!-- full id = 'bigcrab' -->
+                    <div id="reviewerName" style="float:left;">bigc****</div>
                     <div id="writtenDate" style="float:right;">2024-11-29</div><br>
                     
                     <table>
@@ -539,7 +591,8 @@
                 </div>
 
                 <div id="review">
-                    <div id="reviewerName" style="float:left;">장례식부활맨</div>
+                	<!-- full id = 'yoddle_on_funeral' -->
+                    <div id="reviewerName" style="float:left;">yodd****</div>
                     <div id="writtenDate" style="float:right;">2024-11-29</div><br>
 
                     <table>
@@ -559,9 +612,8 @@
                     
                 </div>
 
-                <!-- 닉네임 없이 아이디만 쓰는 경우 - 앞 4글자만 남기고 "****"로 처리 -->
-                <!-- full id = 'banryeseeker' -->
                 <div id="review">
+	                <!-- full id = 'banryeseeker' -->
                     <div id="reviewerName" style="float:left;">banr****</div>
                     <div id="writtenDate" style="float:right;">2024-11-29</div><br>
 
@@ -581,9 +633,9 @@
                     </table>
                 </div>
 
-                <!-- full id = 'tenletterstunman' -->
                 <div id="review">
-                    <div id="reviewerName" style="float:left;">tenl****</div>
+	                <!-- full id = 'youngheecat' -->
+                    <div id="reviewerName" style="float:left;">youn****</div>
                     <div id="writtenDate" style="float:right;">2024-11-29</div><br>
 
                     <table>
@@ -603,13 +655,12 @@
                 </div>
 
                 <!-- if user is logged in -->
-                <!-- <c:if test="${ne sessionScope.loginUser}"> -->
+                <c:if test="${not empty sessionScope.loginUser}">
                     <!-- <button style="float:right;">작성</button> -->
                     <a href="" id="newReview">작성</a>
                     <!-- link to 'give_a_star.html' -->
-                <!-- </c:if> -->
+                </c:if>
                 <br><br>
-
 
                 <!-- Paging Bar -->
 				<div class="pagingbar" align="center">
@@ -632,18 +683,17 @@
 		            	</c:choose>
 		            </c:forEach>
 		
-		            <!--  if i < maxPage -->
+		            <!-- if i < maxPage -->
 		            <c:if test="${ requestScope.pi.currentPage lt requestScope.pi.maxPage }">
 		                <button onclick="location.href = 'boxoffice.mo?page=${p+1}';">&gt;</button> <!-- next -->    
 		                <button onclick="location.href = 'boxoffice.mo?page=${requestScope.pi.maxPage}';">&gt;&gt;</button> <!-- to LastPage -->
 					</c:if>
 		        </div>
                 
-                
             </div>
         </div>
     </div>
 
-    <%@ jsp:include file="../common/footer.jsp" %>
+    <jsp:include page="../common/footer.jsp" />
 </body>
 </html>

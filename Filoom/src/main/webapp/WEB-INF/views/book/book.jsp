@@ -75,6 +75,35 @@
     </style>
 </head>
 <body>
+	<script>
+    $(document).ready(function () {
+        // 현재 URL로 초기 상태를 저장
+        if (!history.state) {
+            history.replaceState({ step: 1 }, "", window.location.href);
+            console.log("초기 상태 설정 완료");
+        }
+
+        // 다음 버튼 클릭 시 단계 이동 처리
+        $("#nextButton").on("click", function () {
+            const currentStep = history.state?.step || 1; // 현재 단계 가져오기
+            const nextStep = currentStep + 1;
+
+            // 히스토리에 새로운 상태 추가
+            history.pushState({ step: nextStep }, "", "/step" + nextStep);
+            console.log("현재 단계:", nextStep);
+        });
+
+        // 뒤로가기 이벤트 처리
+        $(window).on("popstate", function (event) {
+            if (event.originalEvent.state) {
+                console.log("뒤로가기 감지 - 현재 단계:", event.originalEvent.state.step);
+            } else {
+                console.log("초기 상태로 돌아왔습니다.");
+            }
+        });
+    });
+</script>
+
     <div id = "third_page">
         <!-- 좌석 배치도 들어갈 영역 -->
         <div id = "contents">
@@ -343,7 +372,7 @@
 	                 return;
 	             }
 
-	             console.log("Button clicked with selected movieNo:", selectedMovieNo);
+	             //console.log("Button clicked with selected movieNo:", selectedMovieNo);
 
 	             // AJAX 요청
 	             $.ajax({
@@ -351,7 +380,7 @@
 	                 type: "GET",
 	                 data: { movieNum: selectedMovieNo }, // 저장된 selectedMovieNo 사용
 	                 success: function (result) {
-	                     console.log("AJAX Success:", result);
+	                     //console.log("AJAX Success:", result);
 
 	                     movieData.length = 0;	
 	                     
@@ -377,7 +406,7 @@
 	                     console.error("AJAX Error");
 	                 },
 	                 complete: function () {
-	                     console.log("AJAX 연결 완료");
+	                     //console.log("AJAX 연결 완료");
 	                 }
 	             });
 	         });
@@ -558,7 +587,7 @@
             <div id = "buttonArea_2">
 
                 <button id = "booking_2">시간 선택</button> <br>
-                <button id = "past">이전</button>
+                <button id = "past2" class="past">이전</button>
                 
             </div>
           
@@ -627,6 +656,8 @@
     		
     		// 좌석 클릭 이벤트 처리 함수
     		/*
+    		
+    		
     		function handleSeatClick(button) {
     		    const inputField = document.getElementById("movieSeat");
     		    const seatId = button.dataset.id;
@@ -666,17 +697,19 @@
     		            })
     		            .join(", ");
     		        $.ajax({
-      	                url: "book.fb",         
+      	                url: "book.fd",         
       	                type: "GET",            
-      	                data: { seatId: seatId,
+      	                data: { 
+      	                	seatId: seatId,
       	                	playingNo: selectedValue
+      	                
       	                }, 
       	                success: function (response) {
       	                	
       	                },error:{
       	                	
       	                },complete:{
-      	                	
+      	              
       	                }
       	                
     		        });
@@ -689,8 +722,9 @@
     		        inputField.value = inputField.value
     		            ? inputField.value + ", " + seatId
     		            : seatId; // 선택된 좌석 추가
+    		       
     		        $.ajax({
-      	                url: "book.fd",         
+      	                url: "book.fb",         
       	                type: "GET",            
       	                data: { seatId: seatId,
       	                	playingNo: selectedValue
@@ -711,6 +745,15 @@
     		    // inputField의 value 업데이트
     		    inputField.setAttribute("value", inputField.value);
     		}
+    		
+    		
+
+    		
+    		
+    		
+    		
+	          	
+					
     		
     		function refreshSeats(a) {
     		    // 좌석 테이블 초기화
@@ -757,14 +800,14 @@
           	                data: { playingNo: selectedValue }, 
           	                success: function (response) {
           	                   
-          	                	console.log("Response received:", response);
+          	                	//console.log("Response received:", response);
 								
           	                	const movieTitle = response[0] && response[0].movieTitle ? response[0].movieTitle : "제목 없음";
           	                    inputField2.value = movieTitle; // input value 설정
           	                    inputField2.setAttribute("value", movieTitle);
           	                    
           	                    
-          	                    console.log(movieTitle);
+          	                    //console.log(movieTitle);
 	          	                    
           	                    const playTime = response[0] && response[0].playTime ? response[0].playTime : "00:00:00.0";
                                 const runtime = response[0] && response[0].runtime ? response[0].runtime : 0;
@@ -774,7 +817,7 @@
                                 const startHours = parseInt(startTime.split(":")[0], 10);
                                 const startMinutes = parseInt(startTime.split(":")[1], 10);
                               
-	                            console.log(startTime);
+	                            //console.log(startTime);
 	                            
 	                            let endHours = startHours;
 	                            let endMinutes = startMinutes + runtime;
@@ -784,8 +827,8 @@
 	                                endMinutes = endMinutes % 60;
 	                            }
 	                            
-	                            console.log(endHours);
-	                            console.log(endMinutes);
+	                            //console.log(endHours);
+	                            //console.log(endMinutes);
 	                            
 	                            const endTime = (endHours < 10 ? "0" + endHours : endHours) + ":" + (endMinutes < 10 ? "0" + endMinutes : endMinutes);
 
@@ -854,6 +897,9 @@
           	    });
           	});	
           	
+          	
+         
+          	
           	</script>
             
             <div id = "detail_3" >
@@ -872,16 +918,77 @@
             <div id = "buttonArea_3">
 
                 <button id = "booking_3" >결제 진행</button> <br>
-                <button id = "past" class="past-button">이전</button>
+                <button id = "past3" class="past">이전</button>
                 
             </div>
 
 			
 
 			<script>
+			    // 공통 AJAX 요청 함수
+			    function sendAjaxForSeat(seatId, playingNo) {
+			        if (seatId && playingNo) {
+			            // AJAX 요청
+			            $.ajax({
+			                url: "book.re", // AJAX 요청 URL
+			                type: "POST", // POST 요청
+			                data: {
+			                    seatId: seatId,
+			                    playingNo: playingNo
+			                },
+			                success: function (response) {
+			                    console.log("book.re 호출 성공:", response);
 			
-					
-			</script>            
+			                    // 필요한 추가 동작 작성
+			                },
+			                error: function (xhr, status, error) {
+			                    console.error("book.re 호출 실패:", error);
+			                }
+			            });
+			        } else {
+			            console.error("seatId 또는 playingNo 값이 유효하지 않습니다.");
+			        }
+			    }
+			
+			    // #past3 클릭 이벤트 처리
+			    $("#past3").on("click", function (event) {
+			        event.preventDefault(); // 기본 동작 방지
+			        console.log("이전 버튼 클릭");
+			
+			        // 값 가져오기
+			        const seatId = $("#movieSeat").val();
+			        const playingNo = $("#time input[name='playingNo']:checked").val();
+			
+			        console.log("seatId:", seatId);
+			        console.log("playingNo:", playingNo);
+			
+			        // 공통 함수 호출
+			        sendAjaxForSeat(seatId, playingNo);
+			    });
+			
+			    // 화면 벗어남(페이지 종료 또는 탭 이동) 이벤트 처리
+			    function handlePageExit() {
+			        const seatId = $("#movieSeat").val();
+			        const playingNo = $("#time input[name='playingNo']:checked").val();
+			
+			        console.log("화면 벗어남 - seatId:", seatId, "playingNo:", playingNo);
+			
+			        // 공통 함수 호출
+			        sendAjaxForSeat(seatId, playingNo);
+			    }
+			
+			    // beforeunload 이벤트
+			    $(window).on("beforeunload", function () {
+			        handlePageExit();
+			    });
+			
+			    // visibilitychange 이벤트
+			    document.addEventListener("visibilitychange", function () {
+			        if (document.visibilityState === "hidden") {
+			            handlePageExit();
+			        }
+			    });
+			</script>
 
         </div>
 
@@ -940,7 +1047,7 @@
 	    });
 	});
 	
-	document.querySelectorAll("#past").forEach((btn) => {
+	document.querySelectorAll(".past").forEach((btn) => {
 	    btn.addEventListener("click", function () {
 	        if (currentStep > 0) {
 	            document.getElementById(steps[currentStep].detailId).style.display = "none";
@@ -952,26 +1059,28 @@
 	            document.getElementById(steps[currentStep].seatId).style.display = "block";
 	            document.getElementById(steps[currentStep].buttonAreaId).style.display = "block";
 	            
+	            
+	            
 	            updateStepIndicator(); // 단계 업데이트
 	        }
 	    });
 	});
 	/////////////////
 	
-        document.addEventListener("DOMContentLoaded", function () {
-        
-        	const movieSelections = document.querySelectorAll("#movie_selection");
-	
-	        movieSelections.forEach((selection) => {
-	            selection.addEventListener("click", () => {
-	               
-	                movieSelections.forEach((s) => s.classList.remove("selected"));
-	               
-	                selection.classList.add("selected");
-	                
-	            });
-	        });
-	    });
+      document.addEventListener("DOMContentLoaded", function () {
+      
+      	const movieSelections = document.querySelectorAll("#movie_selection");
+
+       movieSelections.forEach((selection) => {
+           selection.addEventListener("click", () => {
+              
+               movieSelections.forEach((s) => s.classList.remove("selected"));
+              
+               selection.classList.add("selected");
+               
+           });
+       });
+   });
 
 
 	

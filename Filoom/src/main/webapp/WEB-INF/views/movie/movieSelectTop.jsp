@@ -44,6 +44,8 @@
         #showMore {
             text-align:right;
             padding-left:20px;
+            color:white;
+            text-decoration:none;
         }
 
         .middle>a {
@@ -61,7 +63,6 @@
         .poster {
             width:240px;
             /* height:480px; */
-            /*  */
             border-radius:5px;
             margin-bottom:5px;
         }
@@ -91,16 +92,16 @@
     </style>
 </head>
 <body>
-    <%@ jsp:include file="../common/header.jsp" %>
+    <jsp:include page="../common/header.jsp" />
 
     <div class="backStage">
         
         <div class="movie-pool" align="center">
             <div id="title" align="left">
                 <h1 align="left">박스 오피스</h1>
-                <p id="showMore">
+                <a id="showMore" href="boxoffice.mo">
                     더 보기 &gt;&gt;
-                </p> 
+                </a> 
             </div>
             <hr style="width:95%;">
     
@@ -111,25 +112,16 @@
             -->
             
             <!-- 나중에 DB에 영화 목록 넣을 때 별일 없으면 이 아래 목록 그대로 넣을 생각임 -->
-    
-            <!-- 초안은 width 360px + 4x4에 margin 45px 0px 였는데
-             (피드백 받고 세로 margin 10px로 바꾸긴 했음)
-             이렇게 하면 화면 크기 100% 기준으로 화면이 꽉 차는 문제가 있음
-             당장 한 줄에 영화 4개 들어가면 margin 포함 1800px인데
-             뒷판떼기의 width 초안이 1900px이고 이 마저도 꽉차 보인단 피드백 있었음
-             (2/3 정도로 줄이는 게 적합하다는 의견)
-             전체적으로 2/3으로 width 240px에 marin 30px 10px가 나을 듯
-              -->
             
             <div class="movie">
-                <img src="sauce/moana.jpg" class="poster">
+                <img src="resources/images/posters/moana.jpg" class="poster">
                 <table class="movie-info">
                     <tr>
-                        <td id="filmrate"><img src="sauce/all.svg" class="filmrate"></td>
+                        <td id="filmrate"><img src="resources/images/posters/all.svg" class="filmrate"></td>
                         <td><b>모아나 2</b><br></td>
                     </tr>
                     <tr>
-                        <td colspan="2">2024.11.27 개봉예정</td>
+                        <td colspan="2">2024.11.27 개봉</td>
                     </tr>
                 </table>
             </div>
@@ -137,11 +129,11 @@
             row margin은 확인해보고 결정
             참고로 현재 column margin은 45px -->
 
-            <div class="movie" onclick="location.href='movie_specific.html';">
-                <img src="sauce/wicked2.jpg" class="poster"><br>
+            <div class="movie" onclick="location.href='detail.mo';">
+                <img src="resources/images/posters/wicked2.jpg" class="poster"><br>
                 <table class="movie-info">
                     <tr>
-                        <td id="filmrate"><img src="sauce/all.svg" class="filmrate"></td>
+                        <td id="filmrate"><img src="resources/images/posters/all.svg" class="filmrate"></td>
                         <td><b>위키드</b><br></td>
                     </tr>
                     <tr>
@@ -151,10 +143,10 @@
             </div>
 
             <div class="movie">
-                <img src="sauce/1win.jpg" class="poster"><br>
+                <img src="resources/images/posters/1win.jpg" class="poster"><br>
                 <table class="movie-info">
                         <tr>
-                            <td id="filmrate"><img src="sauce/12.svg" class="filmrate"></td>
+                            <td id="filmrate"><img src="resources/images/posters/12.svg" class="filmrate"></td>
                             <td><b>1승</b><br></td>
                         </tr>
                         <tr>
@@ -164,10 +156,10 @@
             </div>
 
             <div class="movie">
-                <img src="sauce/hiddenface.jpg" class="poster"><br>
+                <img src="resources/images/posters/hiddenface.jpg" class="poster"><br>
                 <table class="movie-info">
                     <tr>
-                        <td id="filmrate"><img src="sauce/19.svg" class="filmrate"></td>
+                        <td id="filmrate"><img src="resources/images/posters/19.svg" class="filmrate"></td>
                         <td><b>히든페이스</b><br></td>
                     </tr>
                     <tr>
@@ -182,9 +174,9 @@
         <div class="movie-pool" align="center">
             <div id="title" align="left">
                 <h1>개봉 예정작</h1>
-                <p id="showMore">
+                <a id="showMore" href="preopen.mo">
                     더 보기 &gt;&gt;
-                </p> 
+                </a> 
             </div>
             <hr style="width:95%;">
             <br>
@@ -194,26 +186,16 @@
             -->
             
             <!-- 나중에 DB에 영화 목록 넣을 때 별일 없으면 이 아래 목록 그대로 넣을 생각임 -->
-    
-            <!-- 초안은 width 360px + 4x4에 margin 45px 0px 였는데
-             (피드백 받고 세로 margin 10px로 바꾸긴 했음)
-             이렇게 하면 화면 크기 100% 기준으로 화면이 꽉 차는 문제가 있음
-             당장 한 줄에 영화 4개 들어가면 margin 포함 1800px인데
-             뒷판떼기의 width 초안이 1900px이고 이 마저도 꽉차 보인단 피드백 있었음
-             (2/3 정도로 줄이는 게 적합하다는 의견)
-             전체적으로 2/3으로 width 240px에 marin 30px 10px가 나을 듯
-              -->
             
             <div class="movie">
-                <img src="sauce/harbin.jpg" class="poster">
+                <img src="resources/images/posters/harbin.jpg" class="poster">
                 <table class="movie-info">
                     <tr>
-                        <td id="filmrate"><img src="sauce/15.svg" class="filmrate"></td>
+                        <td id="filmrate"><img src="resources/images/posters/15.svg" class="filmrate"></td>
                         <td><b>하얼빈</b><br></td>
                     </tr>
                     <tr>
                         <td colspan="2">2024.12.24 개봉예정</td>
-                        <!-- <td> | 99분</td> ← 만약 넣으면 제목 쪽의 colspan='2'로 조정-->
                     </tr>
                 </table>
             </div>
@@ -223,10 +205,10 @@
 
 			<!-- 극장판 짱구는 못말려: 우리들의 공룡일기 -->
             <div class="movie" onclick="location.href='movie_specific.html';">
-                <img src="sauce/dinosinzzang.jpg" class="poster"><br>
+                <img src="resources/images/posters/dinosinzzang.jpg" class="poster"><br>
                 <table class="movie-info">
                     <tr>
-                        <td id="filmrate"><img src="sauce/all.svg" class="filmrate"></td>
+                        <td id="filmrate"><img src="resources/images/posters/all.svg" class="filmrate"></td>
                         <td><b>극장판 짱구는 못말..</b><br></td>
                     </tr>
                     <tr>
@@ -236,10 +218,10 @@
             </div>
 
             <div class="movie">
-                <img src="sauce/mufasa.jpg" class="poster"><br>
+                <img src="resources/images/posters/mufasa.jpg" class="poster"><br>
                 <table class="movie-info">
                         <tr>
-                            <td id="filmrate"><img src="sauce/all.svg" class="filmrate"></td>
+                            <td id="filmrate"><img src="resources/images/posters/all.svg" class="filmrate"></td>
                             <td><b>무파사: 라이온 킹</b><br></td>
                         </tr>
                         <tr>
@@ -249,10 +231,10 @@
             </div>
 
             <div class="movie">
-                <img src="sauce/civilwar.jpg" class="poster"><br>
+                <img src="resources/images/posters/civilwar.jpg" class="poster"><br>
                 <table class="movie-info">
                     <tr>
-                        <td id="filmrate"><img src="sauce/15.svg" class="filmrate"></td>
+                        <td id="filmrate"><img src="resources/images/posters/15.svg" class="filmrate"></td>
                         <td><b>시빌 워: 분열의 시대</b><br></td>
                     </tr>
                     <tr>
@@ -268,7 +250,7 @@
 
     <br><br>
 
-    <%@ jsp:include file="../common/footer.jsp" %>
+    <jsp:include page="../common/footer.jsp" />
     
 </body>
 </html>

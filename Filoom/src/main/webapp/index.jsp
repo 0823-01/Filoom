@@ -8,6 +8,8 @@
 </head>
 <body>
 	
+	<a href = "${pageContext.request.contextPath}/book.do">아</a>
+	<a href = "${pageContext.request.contextPath}/book.ao">아dh</a>
 	
 	
 </body>

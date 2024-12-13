@@ -15,15 +15,12 @@ public class BookingSeat {
 
 	private int bookingSeatNo;
 	private String status;
-
-
 	private Date timeLimit;
-
 	private int bookNo;
-	private int seatNo;
+	private String seatNo;
+	private String seatId;
+	private int sseatNo;
 	private int playingNo;
-	
-
 	
 	
 
