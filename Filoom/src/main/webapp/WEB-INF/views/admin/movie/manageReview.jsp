@@ -7,7 +7,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>리뷰 관리::Filoom</title>
-    <link rel="stylesheet" href="admin.css" />
+    <link rel="stylesheet" href="resources/css/admin.css" />
 
     <style>
         #admin_title_content {
@@ -64,7 +64,7 @@
         <div id = "navbar">
             
             <div id = "logo">
-                <img src="./Filoom.png">
+                <img src="../main/Filoom.png">
             </div>
            
             <div id = "nav">
@@ -87,7 +87,7 @@
                 <div id = "admin_title_content">
                     <p id="fnName" style="padding-left:33px; font-weight:bold;">리뷰 관리 | 위키드</p>
                     <p id="goBack" style="padding-right:33px;"
-                        onclick="location.href='admin_movie_list.html';">
+                        onclick="location.href='movielist_ad.mo';">
                         ← 목록으로 돌아가기
                     </p>
 
@@ -108,10 +108,10 @@
                     		<div id="review">
 	                            <div style="display:flex; justify-content: space-between;">
 	                            	<!-- MEMBER 테이블에 닉네임 개념이 따로 없어 아이디만을 사용함 -->
-	                            	<div id="reviewerName" style="float:left;">tenl****</div>
-	                                <div id="writtenDate" style="float:right;">2024-11-29</div>
-	                                <button id="deleteButton" style="float:right; background-color: red; color:white;">
-	                                    <img src="../sauce/dash-lg.svg">
+	                            	<div id="reviewerName">tenl****</div>
+	                                <div id="writtenDate">2024-11-29</div>
+	                                <button id="deleteButton" style="background-color: red; color:white;">
+	                                    <img src="resources/images/icons/dash-lg.svg">
 	                                </button>
 	                            </div>
 	                            

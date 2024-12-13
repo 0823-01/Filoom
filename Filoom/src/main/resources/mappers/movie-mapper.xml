@@ -83,6 +83,12 @@
 		WHERE PREMIERE = 'Y' AND STATUS = 'Y'
 	</select>
 	
+	<select id ="selectPreOpen" resultMap="movieResultSet">
+		SELECT /*POSTER*/, MOVIE_NO, MOVIE_TITLE, OPEN_DATE, FILM_RATE
+		FROM MOVIE
+		WHERE PREMIERE = 'N' AND STATUS = 'Y'
+	</select>
+	
 	<select id="showDetail" resultMap="movieResultSet">
 		SELECT * FROM MOVIE
 		WHERE MOVIE_NO = #{movieNo}

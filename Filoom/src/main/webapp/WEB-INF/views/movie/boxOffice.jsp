@@ -25,6 +25,10 @@
             font-family: "Poppins", sans-serif;
         }
         
+        body {
+        	background-color: #151515;
+        }
+        
         /* === 내부 div === */
         .backStage {
             background-color: #313131;
@@ -48,6 +52,81 @@
             text-align:right;
             padding-right:120px;
             font-size:30px;
+        }
+        
+        /* === 영화 목록 바로 위 설정란 === */
+        /* === Toggle Switch === */
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 40px;
+            height: 22px;
+            vertical-align:middle;
+        }
+
+        /* Hide default HTML checkbox */
+        .switch input {display:none;}
+
+        /* The slider */
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #939393;
+            -webkit-transition: .4s;
+            transition: .4s;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 2px;
+            bottom: 2px;
+            background-color: white;
+            -webkit-transition: .4s;
+            transition: .4s;
+        }
+
+        input:checked + .slider {
+            background-color: #AB886D;
+        }
+
+        input:focus + .slider {
+            box-shadow: 0 0 1px #67503F;
+        }
+
+        input:checked + .slider:before {
+            -webkit-transform: translateX(18px);
+            -ms-transform: translateX(18px);
+            transform: translateX(18px);
+        }
+
+        /* Rounded sliders */
+        .slider.round {
+            border-radius: 34px;
+        }
+
+        .slider.round:before {
+            border-radius: 50%;
+        }
+
+        /* === Toggle Switch END === */
+
+        .middle>a {
+            text-decoration: none;
+            color:white;
+        }
+        .middle>a:hover {
+            color:black;
+        }
+
+        .search-bar {
+            font-style:italic;
         }
 
         .poster {
@@ -163,8 +242,7 @@
              당장 한 줄에 영화 4개 들어가면 margin 포함 1800px인데
              뒷판떼기의 width 초안이 1900px이고 이 마저도 꽉차 보인단 피드백 있었음
              (2/3 정도로 줄이는 게 적합하다는 의견)
-             전체적으로 2/3으로 width 240px에 marin 30px 10px가 나을 듯
-             영화  -->
+             전체적으로 2/3으로 width 240px에 margin 30px 10px가 나을 듯  -->
              
              
 <%--             <c:forEach var="" items=""> --%>
@@ -173,10 +251,11 @@
 <!-- 	                <table class="movie-info"> -->
 <!-- 	                    <tr> -->
 <!-- 	                        <td id="filmrate"><img src="resources/images/posters/all.svg" class="filmrate"></td> -->
-<!-- 	                        <td><b>모아나 2</b><br></td> -->
+<!-- 	                        <td><b>${movieTitle}</b><br></td> -->
 <!-- 	                    </tr> -->
 <!-- 	                    <tr> -->
-<!-- 	                        <td colspan="2">2024.11.27 개봉예정</td> -->
+<!-- 	                        <td colspan="2">${openDate} ${premiere}</td> -->
+								<!--${premiere}: Y면 '개봉', N이면 '개봉예정' -->
 <!-- 	                    </tr> -->
 <!-- 	                </table> -->
 <!--             	</div> -->
@@ -198,7 +277,7 @@
             row margin은 확인해보고 결정
             참고로 현재 column margin은 45px -->
 
-            <div class="movie">
+            <div class="movie" onclick="location.href='detail.mo';">
                 <img src="resources/images/posters/wicked2.jpg" class="poster"><br>
                 <table class="movie-info">
                     <tr>
