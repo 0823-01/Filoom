@@ -152,8 +152,7 @@
 	</bean>	
 		
 	<!-- @Transactional 어노테이션 활성화 -->
-	<tx:annotation-driven 
-		transaction-manager="transactionManager" />
+	<tx:annotation-driven transaction-manager="transactionManager" />
 	
 	<!-- 
 		파일업로드 관련 빈 등록 
