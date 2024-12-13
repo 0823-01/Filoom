@@ -48,12 +48,6 @@
             margin-top:20px;
         }
 
-        /* #showMore {
-            text-align:right;
-            padding-right:120px;
-            font-size:30px;
-        } */
-
         /* === 영화 목록 바로 위 설정란 === */
         /* === Toggle Switch === */
         .switch {
@@ -185,7 +179,7 @@
 </head>
 <body>
 
-    <%@ jsp:include file="../common/header.jsp" %>
+    <jsp:include page="../common/header.jsp" />
 
     <div class="backStage">
         
@@ -228,14 +222,13 @@
              당장 한 줄에 영화 4개 들어가면 margin 포함 1800px인데
              뒷판떼기의 width 초안이 1900px이고 이 마저도 꽉차 보인단 피드백 있었음
              (2/3 정도로 줄이는 게 적합하다는 의견)
-             전체적으로 2/3으로 width 240px에 margin 30px 10px가 나을 듯
-              -->
+             전체적으로 2/3으로 width 240px에 margin 30px 10px가 나을 듯 -->
             
             <div class="movie">
-                <img src="sauce/harbin.jpg" class="poster">
+                <img src="resources/images/posters/harbin.jpg" class="poster">
                 <table class="movie-info">
                     <tr>
-                        <td id="filmrate"><img src="sauce/15.svg" class="filmrate"></td>
+                        <td id="filmrate"><img src="resources/images/posters/15.svg" class="filmrate"></td>
                         <td><b>하얼빈</b><br></td>
                     </tr>
                     <tr>
@@ -248,11 +241,11 @@
             참고로 현재 column margin은 45px -->
 
             <!-- 극장판 짱구는 못말려 : 우리들의 공룡일기 -->
-            <div class="movie" onclick="location.href='movie_specific.html';">
-                <img src="sauce/dinosinzzang.jpg" class="poster"><br>
+            <div class="movie">
+                <img src="resources/images/posters/dinosinzzang.jpg" class="poster"><br>
                 <table class="movie-info">
                     <tr>
-                        <td id="filmrate"><img src="sauce/all.svg" class="filmrate"></td>
+                        <td id="filmrate"><img src="resources/images/posters/all.svg" class="filmrate"></td>
                         <td><b>극장판 짱구는 못말..</b><br></td>
                     </tr>
                     <tr>
@@ -262,10 +255,10 @@
             </div>
 
             <div class="movie">
-                <img src="sauce/mufasa.jpg" class="poster"><br>
+                <img src="resources/images/posters/mufasa.jpg" class="poster"><br>
                 <table class="movie-info">
                         <tr>
-                            <td id="filmrate"><img src="sauce/all.svg" class="filmrate"></td>
+                            <td id="filmrate"><img src="resources/images/posters/all.svg" class="filmrate"></td>
                             <td><b>무파사: 라이온 킹</b><br></td>
                         </tr>
                         <tr>
@@ -275,24 +268,24 @@
             </div>
 
             <div class="movie">
-                <img src="sauce/civilwar.jpg" class="poster"><br>
+                <img src="resources/images/posters/civilwar.jpg" class="poster"><br>
                 <table class="movie-info">
                     <tr>
-                        <td id="filmrate"><img src="sauce/15.svg" class="filmrate"></td>
+                        <td id="filmrate"><img src="resources/images/posters/15.svg" class="filmrate"></td>
                         <td><b>시빌 워: 분열의 시대</b><br></td>
                     </tr>
                     <tr>
-                        <td colspan="2">2024.12.31 개봉</td>
+                        <td colspan="2">2024.12.31 개봉예정</td>
                     </tr>
                 </table>
             </div>
 
             
             <div class="movie">
-                <img src="sauce/houria.jpg" class="poster"><br>
+                <img src="resources/images/posters/houria.jpg" class="poster"><br>
                 <table class="movie-info">
                     <tr>
-                        <td id="filmrate"><img src="sauce/12.svg" class="filmrate"></td>
+                        <td id="filmrate"><img src="resources/images/posters/12.svg" class="filmrate"></td>
                         <td><b>호리아</b><br></td>
                     </tr>
                     <tr>
@@ -302,10 +295,10 @@
             </div>
 
             <div class="movie">
-                <img src="sauce/sonic3.jpg" class="poster"><br>
+                <img src="resources/images/posters/sonic3.jpg" class="poster"><br>
                 <table class="movie-info">
                     <tr>
-                        <td id="filmrate"><img src="sauce/all.svg" class="filmrate"></td>
+                        <td id="filmrate"><img src="resources/images/posters/all.svg" class="filmrate"></td>
                         <td><b>수퍼 소닉3</b><br></td>
                     </tr>
                     <tr>
@@ -315,10 +308,10 @@
             </div>
 
             <div class="movie">
-                <img src="sauce/him.jpg" class="poster"><br>
+                <img src="resources/images/posters/him.jpg" class="poster"><br>
                 <table class="movie-info">
                     <tr>
-                        <td id="filmrate"><img src="sauce/12.svg" class="filmrate"></td>
+                        <td id="filmrate"><img src="resources/images/posters/12.svg" class="filmrate"></td>
                         <td><b>힘을 낼 시간</b></td>
                     </tr>
                     <tr>
@@ -328,10 +321,10 @@
             </div>
 
             <div class="movie">
-                <img src="sauce/bogota.jpg" class="poster"><br>
+                <img src="resources/images/posters/bogota.jpg" class="poster"><br>
                 <table class="movie-info">
                     <tr>
-                        <td id="filmrate"><img src="sauce/15.svg" class="filmrate"></td>
+                        <td id="filmrate"><img src="resources/images/posters/15.svg" class="filmrate"></td>
                         <td><b>보고타</b></td>
                     </tr>
                     <tr>
@@ -341,10 +334,10 @@
             </div>
 
             <div class="movie">
-                <img src="sauce/bigfamily.jpg" class="poster"><br>
+                <img src="resources/images/posters/bigfamily.jpg" class="poster"><br>
                 <table class="movie-info">
                     <tr>
-                        <td id="filmrate"><img src="sauce/12.svg" class="filmrate"></td>
+                        <td id="filmrate"><img src="resources/images/posters/12.svg" class="filmrate"></td>
                         <td><b>대가족</b></td>
                     </tr>
                     <tr>
@@ -354,10 +347,10 @@
             </div>
 
             <div class="movie">
-                <img src="sauce/morningseagull.jpg" class="poster"><br>
+                <img src="resources/images/posters/morningseagull.jpg" class="poster"><br>
                 <table class="movie-info">
                     <tr>
-                        <td id="filmrate"><img src="sauce/12.svg" class="filmrate"></td>
+                        <td id="filmrate"><img src="resources/images/posters/12.svg" class="filmrate"></td>
                         <td><b>아침바다 갈매기는</b></td>
                     </tr>
                     <tr>
@@ -367,10 +360,10 @@
             </div>
 
             <div class="movie">
-                <img src="sauce/lemongrass.jpg" class="poster"><br>
+                <img src="resources/images/posters/lemongrass.jpg" class="poster"><br>
                 <table class="movie-info">
                     <tr>
-                        <td id="filmrate"><img src="sauce/12.svg" class="filmrate"></td>
+                        <td id="filmrate"><img src="resources/images/posters/12.svg" class="filmrate"></td>
                         <td><b>여름날의 레몬그...</b></td>
                     </tr>
                     <tr>
@@ -380,10 +373,10 @@
             </div>
 
             <div class="movie">
-                <img src="sauce/gladiator2.jpg" class="poster"><br>
+                <img src="resources/images/posters/gladiator2.jpg" class="poster"><br>
                 <table class="movie-info">
                     <tr>
-                        <td id="filmrate"><img src="sauce/19.svg" class="filmrate"></td>
+                        <td id="filmrate"><img src="resources/images/posters/19.svg" class="filmrate"></td>
                         <td><b>글레디에이터 II</b></td>
                     </tr>
                     <tr>
@@ -393,10 +386,10 @@
             </div>
 
             <div class="movie">
-                <img src="sauce/knivesout.jpg" class="poster"><br>
+                <img src="resources/images/posters/knivesout.jpg" class="poster"><br>
                 <table class="movie-info">
                     <tr>
-                        <td id="filmrate"><img src="sauce/15.svg" class="filmrate"></td>
+                        <td id="filmrate"><img src="resources/images/posters/15.svg" class="filmrate"></td>
                         <td><b>나이브스 아웃</b></td>
                     </tr>
                     <tr>
@@ -407,10 +400,10 @@
             </div>
 
             <div class="movie">
-                <img src="sauce/thecrow.jpg" class="poster"><br>
+                <img src="resources/images/posters/thecrow.jpg" class="poster"><br>
                 <table class="movie-info">
                     <tr>
-                        <td id="filmrate"><img src="sauce/19.svg" class="filmrate"></td>
+                        <td id="filmrate"><img src="resources/images/posters/19.svg" class="filmrate"></td>
                         <td><b>더 크로우</b></td>
                     </tr>
                     <tr>
@@ -420,10 +413,10 @@
             </div>
 
             <div class="movie">
-                <img src="sauce/carol.jpg" class="poster"><br>
+                <img src="resources/images/posters/carol.jpg" class="poster"><br>
                 <table class="movie-info">
                     <tr>
-                        <td id="filmrate"><img src="sauce/19.svg" class="filmrate"></td>
+                        <td id="filmrate"><img src="resources/images/posters/19.svg" class="filmrate"></td>
                         <td><b>캐롤</b></td>
                     </tr>
                     <tr>
@@ -434,10 +427,10 @@
             </div>
 
             <div class="movie">
-                <img src="sauce/joker.jpg" class="poster"><br>
+                <img src="resources/images/posters//joker.jpg" class="poster"><br>
                 <table class="movie-info">
                     <tr>
-                        <td id="filmrate"><img src="sauce/15.svg" class="filmrate"></td>
+                        <td id="filmrate"><img src="resources/images/posters/15.svg" class="filmrate"></td>
                         <td><b>조커</b>
                     </tr>
                     <tr>
@@ -483,6 +476,6 @@
 
     <br><br>
 
-    <%@ jsp:include file="../footer.jsp"%>
+    <jsp:include page="../common/footer.jsp"/>
 </body>
 </html>
