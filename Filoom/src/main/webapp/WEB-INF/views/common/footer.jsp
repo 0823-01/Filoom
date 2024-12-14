@@ -8,26 +8,29 @@
 
 <style>
 
+	* {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+    }
+
 	#footer{
-	
 	width: 100%;
 	height: 350px;
 	background-color: #313131;
-	margin: auto;
 	color: #999999;
 	font-size: 15px;
-	
+	margin-top: 50px;
 	}
 	
 	#footer_top{
-	height: 20px;
+	padding-top: 20px;
 	background-color: #313131;
 	}
 	
 	#footer_a{
 	
-	width: 1100px;
-	height: 100%;
+	width: 100%;
 	margin: auto;
 	
 	}

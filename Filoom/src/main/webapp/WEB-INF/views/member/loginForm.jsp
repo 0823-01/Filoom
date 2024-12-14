@@ -16,22 +16,18 @@
     }
 
     body {
-        font-family: Arial, sans-serif;
-        background-color: #121212;
-        color: #ffffff;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: auto; /* 이거 나중에 손바야대 */
-    }
+	    font-family: Arial, sans-serif;
+	    background-color: #121212;
+	    color: #ffffff;
+	}
 
     .login-container {
-        width: 100%;
-        max-width: 600px;
+        width: 600px;
         background-color: #1e1e1e;
         border-radius: 10px;
         padding: 50px;
         box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+        margin: 100px auto;
     }
 
     .login-Header {
@@ -148,6 +144,9 @@
 </style>
 </head>
 <body>
+
+	<jsp:include page="../common/header.jsp" />
+
     <div class="login-container">
         <div class="login-box">
             <h1 class="login-Header">로그인</h1>
@@ -180,7 +179,7 @@
                 </c:choose>
                 
                     <div>
-                        <a href="findIdForm.html">아이디 찾기</a> | <a href="findPwdForm.html">비밀번호 찾기</a>
+                        <a href="findIdForm.me">아이디 찾기</a> | <a href="findPwdForm.me">비밀번호 찾기</a>
                     </div>
                 </div>
                 <button type="submit" class="login-btn">로그인</button>
@@ -193,5 +192,8 @@
             </div>
         </div>
     </div>
+    
+    <jsp:include page="../common/footer.jsp" />
+    
 </body>
 </html>

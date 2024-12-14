@@ -18,19 +18,15 @@
 	    font-family: Arial, sans-serif;
 	    background-color: #121212;
 	    color: #ffffff;
-	    display: flex;
-	    justify-content: center;
-	    align-items: center;
-	    height: auto; /* 이거 나중에 손바야대 */
 	}
 	
 	.login-container {
-	    width: 100%;
-	    max-width: 600px;
+	    width: 600px;
 	    background-color: #1e1e1e;
 	    border-radius: 10px;
 	    padding: 50px;
 	    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+	    margin: 100px auto;
 	}
 	
 	.login-Header {
@@ -159,6 +155,9 @@
 </style>
 </head>
 <body>
+
+	<jsp:include page="../common/header.jsp" />
+
     <div class="login-container">
         <div class="login-box">
             <h1 class="login-Header">비밀번호 찾기</h1>
@@ -191,7 +190,7 @@
                     </div>
                 </div>
                 <div class="find-button">
-                    <button type="button" class="findId-btn" onclick="location.href='findIdForm.html'">아이디 찾기</button>
+                    <button type="button" class="findId-btn" onclick="location.href='findIdForm.me'">아이디 찾기</button>
                     <button type="submit" class="findPwd-btn">비밀번호 찾기</button>
                 </div>
             </form>
@@ -199,9 +198,12 @@
             <div class="signup-box">
                 <p class="signup-text1">아직 계정이 없으신가요?</p>
                 <p class="signup-text2">개인 계정을 생성하시면 더욱 다양한 혜택을 누리실 수 있습니다.</p>
-                <button type="button" class="signup-btn" onclick="location.href='enrollForm.html'">Filoom 계정 만들기</button>
+                <button type="button" class="signup-btn" onclick="location.href='enrollForm.me'">Filoom 계정 만들기</button>
             </div>
         </div>
     </div>
+    
+    <jsp:include page="../common/footer.jsp" />
+    
 </body>
 </html>

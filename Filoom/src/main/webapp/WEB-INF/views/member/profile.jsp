@@ -19,22 +19,18 @@
 	    font-family: Arial, sans-serif;
 	    background-color: #121212;
 	    color: #ffffff;
-	    display: flex;
-	    justify-content: center;
-	    align-items: center;
-	    height: auto;
 	}
 	
 	/* 마이페이지 컨테이너 */
 	.mypage-container {
 	    display: flex;
-	    width: 100%;
-	    max-width: 1100px;
+	    width: 1100px;
 	    background-color: #1e1e1e;
 	    border-radius: 10px;
 	    padding: 50px;
 	    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
 	    overflow: hidden;
+	    margin: 50px auto;
 	}
 	
 	/* 사이드바 */
@@ -138,17 +134,7 @@
 	    color: #888;
 	}
 
-	.alert {
-		margin-left: 10px;
-		font-size: 12px;
-		color: rgb(255, 255, 0);
-		display: none;
-	}
 
-	.button-area {
-		text-align: center;
-	}
-	
 	.btn-change {
 	    padding: 5px 10px;
 	    background-color: transparent;
@@ -286,19 +272,7 @@
 	    border-radius: 50%;
 	}
 
-	.changes-btn {
-        background-color: #493628;
-        margin-top: 50px;
-		width: 50%;
-        padding: 10px;
-        border: none;
-        font-size: 16px;
-        font-weight: bold;
-        color: #ffffff;
-        border-radius: 60px;
-        cursor: pointer;
-        transition: background-color 0.3s ease, color 0.3s ease;
-    }
+	
 
 	.changes-btn:hover {
         background-color: #fff; /* 배경을 흰색으로 변경 */
@@ -307,120 +281,54 @@
 
 /* ----------------------------- */
 	
-	/* 모달 전체 */
-.modal {
-    display: none; /* 기본적으로 숨김 */
+	.modal {
+    display: none;
     position: fixed;
-    z-index: 1000;
+    z-index: 1;
     left: 0;
     top: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.6); /* 반투명 배경 */
-    justify-content: center;
-    align-items: center;
+    overflow: auto;
+    background-color: rgb(0,0,0);
+    background-color: rgba(0,0,0,0.4);
 }
-
-/* 모달 컨텐츠 */
 .modal-content {
-    background: #fff;
-    border-radius: 8px;
+    background-color: #fefefe;
+    margin: 15% auto;
     padding: 20px;
-    width: 400px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-    position: relative;
-    text-align: center;
+    border: 1px solid #888;
+    width: 80%;
 }
-
-/* 모달 닫기 버튼 */
-.modal-content .close {
-    position: absolute;
-    top: 10px;
-    right: 15px;
-    font-size: 20px;
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
     font-weight: bold;
-    color: #333;
+}
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
     cursor: pointer;
 }
 
-/* 제목 스타일 */
-.modal-content h2 {
-    font-size: 24px;
-    margin-bottom: 20px;
-    color: #444;
-}
-
-/* 폼 그룹 */
-.form-group {
-    margin-bottom: 20px;
-    text-align: left;
-}
-
-/* 라벨 */
-.form-group label {
-    font-size: 14px;
-    font-weight: 600;
-    color: #555;
-    display: block;
-    margin-bottom: 5px;
-}
-
-/* 입력 필드 */
-.form-group input {
+/* 기본 스타일 */
+input[type="password"] {
     width: 100%;
     padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    font-size: 14px;
+    margin: 5px 0 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
     box-sizing: border-box;
+    transition: border-color 0.3s ease;
 }
 
-.form-group input:focus {
-    border-color: #007bff;
+/* 성공 스타일 */
+input[type="password"]:focus {
     outline: none;
-}
-
-/* 안내 텍스트 */
-.form-group .info-text {
-    font-size: 12px;
-    color: #888;
-    margin-top: 5px;
-    display: block;
-}
-
-/* 버튼 그룹 */
-.button-group {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 20px;
-}
-
-/* 버튼 스타일 */
-.btn {
-    padding: 10px 20px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 14px;
-}
-
-/* 기본 버튼 스타일 */
-.btn-primary {
-    background: #007bff;
-    color: #fff;
-}
-
-.btn-primary:hover {
-    background: #0056b3;
-}
-
-.btn-secondary {
-    background: #ccc;
-    color: #333;
-}
-
-.btn-secondary:hover {
-    background: #bbb;
+    border-color: #80bdff;
+    box-shadow: 0 0 5px rgba(128, 189, 255, 0.5);
 }
 	
 
@@ -428,6 +336,9 @@
 </style>
 </head>
 <body>
+
+	<jsp:include page="../common/header.jsp" />
+
     <div class="mypage-container">
         <div class="mypage-sidebar">
             <h2><a href="myPage.me">마이 페이지</a></h2>
@@ -459,7 +370,7 @@
                 </div>
 
                 <div class="info-item">
-                    <label class="label">비밀번호</label><apan class="alert">수정하기를 눌러주세요.</apan>
+                    <label class="label">비밀번호</label>
                     <div class="value-btn">
                         <div class="value">
                             ●●●●●●●●●●
@@ -470,30 +381,25 @@
                     </div>
                 </div>
 
-				<!-- 비밀번호 변경 모달창 -->
-				<!-- 비밀번호 변경 모달창 -->
+				<!-- 비밀번호 변경 모달 -->
 				<div id="changePasswordModal" class="modal">
 				    <div class="modal-content">
 				        <span class="close" onclick="closeChangePasswordModal()">&times;</span>
 				        <h2>비밀번호 변경</h2>
-				        <form>
+				        <form id="changePasswordForm" action="changePwd.me" method="post">
 				            <div class="form-group">
 				                <label for="currentPassword">기존 비밀번호</label>
-				                <input type="password" id="currentPassword" placeholder="기존 비밀번호를 입력해주세요">
+				                <input type="password" id="currentPwd" name="currentPwd" placeholder="기존 비밀번호를 입력해주세요" required>
 				            </div>
 				            <div class="form-group">
 				                <label for="newPassword">새 비밀번호</label>
-				                <input type="password" id="newPassword" placeholder="새 비밀번호를 입력해주세요">
-				                <small class="info-text">* 영문, 숫자, 특수기호 포함 10자 이상</small>
+				                <input type="password" id="newPwd" name="newPwd" placeholder="새 비밀번호를 입력해주세요" required>
 				            </div>
 				            <div class="form-group">
 				                <label for="confirmNewPassword">새 비밀번호 확인</label>
-				                <input type="password" id="confirmNewPassword" placeholder="새 비밀번호를 다시 입력해주세요">
+				                <input type="password" id="confirmNewPwd" name="confirmNewPwd" placeholder="새 비밀번호를 다시 입력해주세요" required>
 				            </div>
-				            <div class="button-group">
-				                <button type="button" onclick="changePassword()" class="btn btn-primary">완료</button>
-				                <button type="button" onclick="closeChangePasswordModal()" class="btn btn-secondary">취소</button>
-				            </div>
+				            <button type="submit">완료</button>
 				        </form>
 				    </div>
 				</div>
@@ -502,7 +408,7 @@
 
 
                 <div class="info-item">
-                    <label class="label">이름</label><apan class="alert">수정하기를 눌러주세요.</apan>
+                    <label class="label">이름</label>
                     <div class="value-btn">
                         <div class="value">
                             ${ sessionScope.loginUser.userName }
@@ -514,7 +420,7 @@
                 </div>
 
                 <div class="info-item">
-                    <label class="label">성별</label><apan class="alert">수정하기를 눌러주세요.</apan>
+                    <label class="label">성별</label>
                     <div class="value-btn">
                         <div class="value">
                             <c:choose>
@@ -536,7 +442,7 @@
                 </div>
                 
                 <div class="info-item">
-                    <label class="label">생년월일</label><apan class="alert">수정하기를 눌러주세요.</apan>
+                    <label class="label">생년월일</label>
                     <div class="value-btn">
                         <div class="value">
                             <c:set var="birth" value="${sessionScope.loginUser.birth}" />
@@ -551,7 +457,7 @@
                 </div>
                 
                 <div class="info-item">
-                    <label class="label">약관동의</label><apan class="alert">수정하기를 눌러주세요.</apan>
+                    <label class="label">약관동의</label>
                     <div class="value-btn">
                         <div class="value">
                             개인 정보 마케팅 활용 동의
@@ -568,11 +474,7 @@
                     </div>
                 </div>
 
-				<div class="button-area">
-					<button id="changes-submit" class="changes-btn">수정하기</button>
-				</div>
-
-                <a class="out" href="withdrawal.me">회원탈퇴</a>
+	                <a class="out" href="withdrawal.me">회원탈퇴</a>
 
                 <!-- 약관 내용 모달 -->
                 <div id="agreement-modal" class="agreement-modal">
@@ -585,6 +487,9 @@
             </div>
         </div>
     </div>
+    
+    <jsp:include page="../common/footer.jsp" />
+    
     <script>
         	
         // 약관모달-------------------------------------------------
@@ -607,10 +512,7 @@
                 }
             });
         });
-
-
-
-
+        
      	// 비밀번호 변경 모달 보여주기
         function showChangePasswordModal() {
             document.getElementById('changePasswordModal').style.display = 'block';
@@ -621,68 +523,72 @@
             document.getElementById('changePasswordModal').style.display = 'none';
         }
 
-        // 비밀번호 유효성 검사
-        $("#newPassword").on("keyup", function () {
-            const password = $(this).val();
-            if (pwdRegexp.test(password)) {
-                $(this).css("border-color", "green");
-            } else {
-                $(this).css("border-color", "red");
-            }
-        });
 
-        // 비밀번호 확인 검사
-        $("#confirmNewPassword").on("keyup", function () {
-            const password = $("#newPassword").val();
-            const confirmPassword = $(this).val();
-            if (password === confirmPassword && pwdRegexp.test(password)) {
-                $(this).css("border-color", "green");
-            } else {
-                $(this).css("border-color", "red");
-            }
-        });
+        $(function() {
+        	
+        	
+            
+         	// 비밀번호 유효성 검사 정규식
+            const pwdRegexp = /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[!@#$%^&*()_+~`|}{[\]:;?><,./-]).{10,}$/;
+            
+         	// 새 비밀번호 유효성 검사
+            $("#newPwd").on("keyup", function () {
+                const password = $(this).val();
 
-        // 비밀번호 변경
-        function changePassword() {
-            const currentPassword = $("#currentPassword").val();
-            const newPassword = $("#newPassword").val();
-            const confirmNewPassword = $("#confirmNewPassword").val();
-
-            if (!pwdRegexp.test(newPassword)) {
-                alert("새 비밀번호는 영문, 숫자, 특수기호를 포함한 10자 이상이어야 합니다.");
-                return;
-            }
-
-            if (newPassword !== confirmNewPassword) {
-                alert("새 비밀번호와 새 비밀번호 확인이 일치하지 않습니다.");
-                return;
-            }
-
-            $.ajax({
-                url: "changePassword.me",
-                type: "post",
-                data: JSON.stringify({
-                    currentPassword: currentPassword,
-                    newPassword: newPassword
-                }),
-                contentType: "application/json", // 서버가 JSON으로 인식하도록 설정
-                success: function (response) {
-                    if (response.result === "success") {
-                        alert("비밀번호가 성공적으로 변경되었습니다.");
-                        closeChangePasswordModal();
-                    } else if (response.result === "mismatch") {
-                        alert("기존 비밀번호가 일치하지 않습니다.");
-                        $("#currentPassword").css("border-color", "red").focus();
-                    } else {
-                        alert("비밀번호 변경에 실패했습니다.");
-                    }
-                },
-                error: function () {
-                    alert("비밀번호 변경 중 오류가 발생했습니다.");
+                if (pwdRegexp.test(password)) {
+                    $(this).css("border-color", "green");
+                } else {
+                    $(this).css("border-color", "red");
                 }
             });
 
-        }
+            // 새 비밀번호 확인 검사
+            $("#confirmNewPwd").on("keyup", function () {
+                const password = $("#newPwd").val();
+                const confirmPassword = $(this).val();
+
+                if (password === confirmPassword && pwdRegexp.test(password)) {
+                    $(this).css("border-color", "green");
+                } else {
+                    $(this).css("border-color", "red");
+                }
+            });
+            
+            // 폼 제출 시 이벤트
+            $("#changePasswordForm").on("submit", function (e) {
+                const newPwd = $("#newPwd").val();
+                const confirmNewPwd = $("#confirmNewPwd").val();
+
+                // 새 비밀번호 조건 확인
+                if (!pwdRegexp.test(newPwd)) {
+                	e.preventDefault(); // 폼 제출 중단
+                    alert("새 비밀번호는 영문, 숫자, 특수문자를 포함한 10자 이상이어야 합니다.");
+                    $("#newPwd").focus().css("border-color", "red"); // 포커스 및 빨간 테두리
+                    return;
+                }
+
+                // 새 비밀번호와 확인 비밀번호 일치 확인
+                if (newPwd !== confirmNewPwd) {
+                	e.preventDefault(); // 폼 제출 중단
+                    alert("새 비밀번호와 확인 비밀번호가 일치하지 않습니다.");
+                    $("#confirmNewPwd").focus().css("border-color", "red"); // 포커스 및 빨간 테두리
+                    return;
+                }
+                // 모든 조건을 통과하면 폼이 정상적으로 제출됩니다.
+            });
+        });
+        
+     	
+        
+     	
+
+        
+        
+
+
+     	
+
+
 
 
 

@@ -19,19 +19,15 @@
         font-family: Arial, sans-serif;
         background-color: #121212;
         color: #ffffff;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: auto; /* 이거 나중에 손바야대 */
     }
 
     .signup-container {
-        width: 100%;
-        max-width: 700px;
+        width: 700px;
         background-color: #1e1e1e;
         border-radius: 10px;
         padding: 50px;
         box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+        margin: 50px auto;
     }
 
     .enroll-Header {
@@ -321,6 +317,9 @@
 </style>
 </head>
 <body>
+
+	<jsp:include page="../common/header.jsp" />
+
     <div class="signup-container">
         <div class="signup-box">
             <h1 class="enroll-Header">회원가입</h1>
@@ -464,6 +463,8 @@
             </form>
         </div>
     </div>
+    
+    <jsp:include page="../common/footer.jsp" />
     
     <script>
     

@@ -8,46 +8,44 @@
 <title>Insert title here</title>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <style>
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
         
 #header {
    
    margin: auto;
    z-index: 1000;
-   width: 1900px;
-   height: 200px;
+   width: 100%;
+   margin: 30px 0 50px 0;
    opacity: 90%;
    /*background-color: aqua;*/
 }
 
-#header>hr{
-   height: 3px; 
-   width: 1900px;
-   background-color: #E4E0E1; 
-   border: none;
-   border-radius: 5px;
-}
 
 #header_top {
+
    width: 100%;
-   height: 40%;
    display: flex; 
    align-items: center;
    justify-content: space-between; 
    padding: 0 20px;
+   border-bottom: 3px solid #E4E0E1;
 }
 
 
 .logo {
 
-   margin-right: 80px;
-   margin-top: 60px;
-   vertical-align : bottom;
+   margin: 0;
    font-size: 50px; 
    font-weight: bold; 
    color: #E4E0E1; 
    text-decoration: none; 
    font-family: 'Arial', sans-serif;
-
+	pointer: cursor;
 }
 
 
@@ -57,13 +55,13 @@
    display: flex;
    margin: 0;
    padding: 0;
+   align-items: center;
   
 }
 
 #header_top ul li {
    
-   margin-top: 60px;
-   margin-right: 50px;
+   margin: 0 15px;
    width: auto;
    font-size: 25px;
    color: #E4E0E1;
@@ -89,12 +87,12 @@
 
 #header_bottom {
    margin: auto;
-   width: 95%;
+   width: 100%;
    height: 70px;
    display: flex; 
    align-items: center; 
    justify-content: center;
-   border-radius: 10px;
+   border-bottom: 3px solid #E4E0E1;
 }
 
 #header_bottom ul {
@@ -149,7 +147,7 @@
 
 
 
-            <a class="logo">Filoom</a>
+            <a class="logo" href="${ pageContext.request.contextPath }">Filoom</a>
 
 
 			<c:choose>
@@ -170,7 +168,7 @@
             </c:choose>
 
         </div>
-        <hr >
+
         <div id = "header_bottom">
             <ul>
                 <li>영화</li>
@@ -179,7 +177,7 @@
 
             </ul>
         </div>
-        <hr>
+
     </div>
 </body>
 </html>

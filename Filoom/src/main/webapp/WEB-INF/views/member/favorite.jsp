@@ -18,22 +18,18 @@
 	    font-family: Arial, sans-serif;
 	    background-color: #121212;
 	    color: #ffffff;
-	    display: flex;
-	    justify-content: center;
-	    align-items: center;
-	    height: auto;
 	}
 	
 	/* 마이페이지 컨테이너 */
 	.mypage-container {
 	    display: flex;
-	    width: 100%;
-	    max-width: 1100px;
+	    width: 1100px;
 	    background-color: #1e1e1e;
 	    border-radius: 10px;
 	    padding: 50px;
 	    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
 	    overflow: hidden;
+	    margin: 50px auto;
 	}
 	
 	/* 사이드바 */
@@ -196,6 +192,9 @@
 </style>
 </head>
 <body>
+
+	<jsp:include page="../common/header.jsp" />
+
     <div class="mypage-container">
         <div class="mypage-sidebar">
             <h2><a href="myPage.me">마이 페이지</a></h2>
@@ -313,6 +312,8 @@
             </div>
         </div>
     </div>
+    
+    <jsp:include page="../common/footer.jsp" />
 
 </body>
 </html>
