@@ -274,7 +274,7 @@ public class BookController {
 			
 			
 			
-			Movie movie = bookService.selectMovie(playingNo);
+			Movie movie = bookService.selectMovieForPlayingNo(playingNo);
 			
 			System.out.println("7==영화정보 " + movie);
 			//*상영번호				-> 상영정보(상영번호, 상영시간, 상영관번호, 영화번호)

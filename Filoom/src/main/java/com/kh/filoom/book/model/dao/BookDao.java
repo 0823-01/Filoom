@@ -129,4 +129,9 @@ public class BookDao {
 		
 		return sqlSession.selectOne("memberMapper.selectMember",userNo);
 	}
+
+	//영화,상영정보
+	public Movie selectMovieForPlayingNo(SqlSessionTemplate sqlSession, int playingNo) {
+		return sqlSession.selectOne("movieMapper.selectMovieForPlayingNo",playingNo);
+	}
 }

@@ -56,4 +56,9 @@ public interface BookService {
 	//회원정보조회
 	Member selectMember(int userNo);
 
+	//상영번호로 영화정보 조회
+	Movie selectMovieForPlayingNo(int playingNo);
+	
+	
+
 }

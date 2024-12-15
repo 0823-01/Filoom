@@ -150,7 +150,12 @@ public class BookServiceImple implements BookService {
 		return bookDao.selectMember(sqlSession,userNo);
 	}
 
-	//7.
+	//7.상영번호로 영화정보 조회
+	@Override
+	public Movie selectMovieForPlayingNo(int playingNo) {
+		return bookDao.selectMovieForPlayingNo(sqlSession,playingNo);
+	}
+	
 	
 	
 }

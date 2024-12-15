@@ -20,6 +20,13 @@
 		<result column="DESCRIPTION" property="description" />
 		<result column="STARRING" property="starring" />
 		<result column="STATUS" property="status" />
+		<result column="TRAILER" property="trailer"/>
+		
+		<!-- 상영정보 추가(결제페이지-형문) -->
+		<result column="IMAGE_PATH" property="imagePath"/>
+		<result column="FILE_CODE_NAME" property="fileCodename"/>
+		<result column="PLAYING_NO" property="playingNo"/>
+		<result column="PLAY_TIME" property="playTime"/>
 	</resultMap>
 	
 	<resultMap id ="posterResultSet" type="poster">
@@ -75,6 +82,18 @@
 		WHERE 
 		    M.MOVIE_NO = #{movieNo}
 	
+	</select>
+
+
+
+	<!-- 결제페이지 : 영화,상영정보 조회 -->
+	<select id="selectMovieForPlayingNo" parameterType="int" resultMap="movieResultSet">
+		SELECT MOVIE_NO, MOVIE_TITLE, DIRECTOR, GENRE, RUNTIME, FILM_RATE, FILE_CODENAME, IMAGE_PATH, PLAYING_NO, PLAYTIME
+		  FROM MOVIE M 
+		  JOIN POSTER  USING(MOVIE_NO)
+		  JOIN PLAYING  USING(MOVIE_NO)
+		 WHERE PLAYING_NO = #{playinNo}
+		   AND FILE_LEVEL = 1
 	</select>
 
 
