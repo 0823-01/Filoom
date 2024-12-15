@@ -93,38 +93,24 @@ public class BookServiceImple implements BookService {
 
 	//1. 좌석 유효성 검사 + 상영좌석일렬번호 반환
 	@Override
-	public ArrayList<Integer> getBookingSeatNoList(ArrayList<String> seatNos,int playingNo) {
-		ArrayList<Integer> bookingSeatNoList = new ArrayList();
+	public ArrayList<BookingSeat> getBookingSeatNoList(ArrayList<String> seatNos,int playingNo) {
+		
+		ArrayList<BookingSeat> bookingSeatNoList = new ArrayList();
 		
 		
-		for(String s : seatNos) {
-			Integer seatNo = bookDao.getBookingseatNoList(sqlSession,s,playingNo);
-			
-			if(seatNo==null) {
-				bookingSeatNoList = null;
-				
-				return bookingSeatNoList;
-				
-			}
-			
-			bookingSeatNoList.add(seatNo);
-			
-		}
-		
-		
+		bookingSeatNoList = bookDao.getBookingseatNoList(sqlSession,seatNos,playingNo);
 		return bookingSeatNoList;
 	}
 
 	//3. 좌석 유효시간 sysdate + 5분
 	@Override
-	public int updateTimeLimit(ArrayList<Integer> bookingSeatNoList) {
+	@Transactional
+	public int updateTimeLimit(ArrayList<BookingSeat> bookingSeatNoList) {
 		
-		int updateTimeLimit = 1;
+		//int updateTimeLimit=bookDao.updateTimeLimit(sqlSession, bookingSeatNoList);
+		int updateTeimLimit = 0;
 		
-//		for(int i : bookingSeatNoList) {
-//			updateTimeLimit = bookDao.updateTimeLimit(sqlSession,i);
-//		}
-		return updateTimeLimit;
+		return updateTeimLimit;
 	}
 
 	
@@ -150,10 +136,16 @@ public class BookServiceImple implements BookService {
 		return bookDao.selectMember(sqlSession,userNo);
 	}
 
-	//7.상영번호로 영화정보 조회
+	//7. 상영번호로 영화정보 조회
 	@Override
 	public Movie selectMovieForPlayingNo(int playingNo) {
 		return bookDao.selectMovieForPlayingNo(sqlSession,playingNo);
+	}
+
+	//8. 상영좌석정보, 좌석번호 조회
+	@Override
+	public ArrayList<BookingSeat> selectListBookingSeat(ArrayList<BookingSeat> bookingSeatNoList) {
+		return bookDao.selectListBookingSeat(sqlSession,bookingSeatNoList);
 	}
 	
 	

@@ -42,10 +42,10 @@ public interface BookService {
 	//결제============================================================
 	
 	//상영좌석 번호 구하기+유효성검사
-	ArrayList<Integer> getBookingSeatNoList(ArrayList<String> seatNoList, int playingNo);
+	ArrayList<BookingSeat> getBookingSeatNoList(ArrayList<String> seatNoList, int playingNo);
 
 	//좌석 유효시간 늘려주기
-	int updateTimeLimit(ArrayList<Integer> bookingSeatNoList);
+	int updateTimeLimit(ArrayList<BookingSeat> bookingSeatNoList);
 
 	//영화예매번호 생성하기
 	int setBookNo(int userNo);
@@ -58,6 +58,9 @@ public interface BookService {
 
 	//상영번호로 영화정보 조회
 	Movie selectMovieForPlayingNo(int playingNo);
+
+	//상영좌석정보, 좌석번호 조회
+	ArrayList<BookingSeat> selectListBookingSeat(ArrayList<BookingSeat> bookingSeatNoList);
 	
 	
 

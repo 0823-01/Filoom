@@ -14,13 +14,20 @@ import lombok.ToString;
 public class BookingSeat {
 
 	private int bookingSeatNo;
-	private String status;
 	private Date timeLimit;
-	private int bookNo;
-	private String seatNo;
-	private String seatId;
 	private int sseatNo;
 	private int playingNo;
+	private int bookNo;
+	
+	//추가 ??? 확인해보기
+	private String status;
+	private String seatId;
+	
+	private String seatNo;
+	
+	
+	
+	
 	
 	
 

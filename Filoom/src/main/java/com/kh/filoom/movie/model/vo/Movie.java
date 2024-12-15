@@ -51,6 +51,7 @@ public class Movie {
     //상영정보(형문)
     private int playingNo;
     private Date playTime;
-    
+    private String screenName;
+    private String screenInfo;
     
 }

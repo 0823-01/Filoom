@@ -43,12 +43,14 @@
 	</resultMap>
 	
 	<resultMap id = "bookingSeatResultSet" type="bookingseat">
-		<id column="STATUS" property="status"/>
-		<result column="TIMELIMIT" property="timeLimit"/>
-		<result column="SEAT_NO" property="seatNo"/>		
+		<id column="BOOKING_SEAT_NO" property="bookingSeatNo"/>
+		<result column="TIMELIMIT" property="timeLimit"/>	
 		<result column="SSEAT_NO" property="sseatNo"/>
 		<result column="PLAYING_NO" property="playingNo"/>
 		<result column="BOOK_NO" property="bookNo"/>
+		
+		<!-- 좌석번호 -->
+		<result column="SEAT_NO" property="seatNo"/> 
 		
 	</resultMap>
 	
@@ -220,21 +222,30 @@
 
 	<!-- 결제 -->
 	
-	<select id="getBookingseatNoList" parameterType="map" resultType="integer">
+	<select id="getBookingseatNoList" parameterType="map" resultMap="bookingSeatResultSet">
 
  		SELECT BOOKING_SEAT_NO
 		  FROM BOOKING_SEAT BS
 		  JOIN SCREEN_SEAT SS ON (BS.SSEAT_NO  = SS.SSEAT_NO)
 		  JOIN PLAYING P ON (BS.PLAYING_NO = P.PLAYING_NO)
-		 WHERE SEAT_NO = #{seatNo}
+		 WHERE BS.BOOK_NO IS NULL
 		   AND BS.PLAYING_NO = #{playingNo}
 		   AND TIMELIMIT > SYSDATE
+		   AND
+		   	<foreach item="item" collection="seatNos" open="SEAT_NO IN (" separator="," close=")">
+		   		#{item}
+		   	</foreach>
+		   
+		   
 	</select>
 	
-	<update id="updateTimeLimit" parameterType="int">
+	<update id="updateTimeLimit" parameterType="list" >
 		UPDATE BOOKING_SEAT 
 		   SET TIMELIMIT = SYSDATE+INTERVAL '5' MINUTE
-		 WHERE BOOKING_SEAT_NO = #{i}
+		 WHERE 
+		 <foreach item="item" collection="list" open="BOOKING_SEAT_NO IN(" separator="," close=")">
+		 	#{item.bookingSeatNo}
+		 </foreach>
 	</update>
 	
 
@@ -247,6 +258,15 @@
 		</selectKey>
 	</insert>
 	
-
+	<select id="selectListBookingSeat" parameterType="list" resultMap="bookingSeatResultSet">
+	   SELECT BOOKING_SEAT_NO, TIMElIMIT, SEAT_NO
+	     FROM BOOKING_SEAT
+	     JOIN SCREEN_SEAT USING(SSEAT_NO)
+ 		 <where>
+		 	<foreach item="item" collection="list" open="BOOKING_SEAT_NO IN (" separator="," close=")" >
+		 		#{item.bookingSeatNo}
+		 	</foreach>
+		 </where>
+	</select>
 	
 </mapper>

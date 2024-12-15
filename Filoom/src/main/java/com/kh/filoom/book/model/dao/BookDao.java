@@ -77,37 +77,24 @@ public class BookDao {
 	//결제===========================================================================
 	
 
-	/**
-	 * 유효성 검사 + 좌석일렬번호 쿼리문 실행
-	 * @param sqlSession
-	 * @param seatNo : 좌석번호(문자열)
-	 * @param playingNo : 상영번호
-	 * @return : 값이 있을경우 상영좌석일렬번호 / 없을경우 null
-	 */
-	public Integer getBookingseatNoList(SqlSessionTemplate sqlSession, String seatNo, int playingNo) {
+	
+	//유효성 검사 + 좌석일렬번호 검사
+	public ArrayList<BookingSeat> getBookingseatNoList(SqlSessionTemplate sqlSession, ArrayList<String> seatNos, int playingNo) {
 		
 		
 		HashMap<String,Object> map = new HashMap<>();
-		map.put("seatNo", seatNo);
+		map.put("seatNos", seatNos);
 		map.put("playingNo", playingNo);
 		
-		Integer result = sqlSession.selectOne("bookMapper.getBookingseatNoList",map);
-	
-		
-		return result; 
+		return (ArrayList)sqlSession.selectList("bookMapper.getBookingseatNoList",map); 
 										
 										
 	}
 
 	
-	/**
-	 * 좌석의 타임리밋 늘려주기 쿼리문 실행 메소드
-	 * @param sqlSession
-	 * @param i : 좌석일렬번호
-	 * @return : 처리된 행의 갯수
-	 */
-	public int updateTimeLimit(SqlSessionTemplate sqlSession, int i) {
-		return sqlSession.update("bookMapper.updateTimeLimit",i);
+	//TIME_LIMIT 늘려주기
+	public int updateTimeLimit(SqlSessionTemplate sqlSession, ArrayList<BookingSeat> bookingSeatNoList) {
+		return sqlSession.update("bookMapper.updateTimeLimit",bookingSeatNoList);
 	}
 
 	//영화예매번호 생성 + 반환
@@ -133,5 +120,12 @@ public class BookDao {
 	//영화,상영정보
 	public Movie selectMovieForPlayingNo(SqlSessionTemplate sqlSession, int playingNo) {
 		return sqlSession.selectOne("movieMapper.selectMovieForPlayingNo",playingNo);
+	}
+
+	//상영좌석일렬번호, 좌석 정보
+	public ArrayList<BookingSeat> selectListBookingSeat(SqlSessionTemplate sqlSession,
+			ArrayList<BookingSeat> bookingSeatNoList) {
+
+		return (ArrayList)sqlSession.selectList("bookMapper.selectListBookingSeat",bookingSeatNoList);
 	}
 }

@@ -22,11 +22,15 @@
 		<result column="STATUS" property="status" />
 		<result column="TRAILER" property="trailer"/>
 		
-		<!-- 상영정보 추가(결제페이지-형문) -->
+		<!-- 포스터정보,상영정보,상영관정보 추가(결제페이지-형문) -->
 		<result column="IMAGE_PATH" property="imagePath"/>
-		<result column="FILE_CODE_NAME" property="fileCodename"/>
+		<result column="FILE_CODENAME" property="fileCodename"/>
 		<result column="PLAYING_NO" property="playingNo"/>
-		<result column="PLAY_TIME" property="playTime"/>
+		<result column="PLAYTIME" property="playTime"/>
+		<result column="SCREEN_NAME" property="screenName"/>
+		<result column="SCREEN_INFO" property="screenInfo"/>
+		
+		
 	</resultMap>
 	
 	<resultMap id ="posterResultSet" type="poster">
@@ -88,11 +92,12 @@
 
 	<!-- 결제페이지 : 영화,상영정보 조회 -->
 	<select id="selectMovieForPlayingNo" parameterType="int" resultMap="movieResultSet">
-		SELECT MOVIE_NO, MOVIE_TITLE, DIRECTOR, GENRE, RUNTIME, FILM_RATE, FILE_CODENAME, IMAGE_PATH, PLAYING_NO, PLAYTIME
+		SELECT MOVIE_NO, MOVIE_TITLE, DIRECTOR, GENRE, RUNTIME, FILM_RATE, FILE_CODENAME, IMAGE_PATH, PLAYING_NO, PLAYTIME,SCREEN_NAME, SCREEN_INFO
 		  FROM MOVIE M 
 		  JOIN POSTER  USING(MOVIE_NO)
 		  JOIN PLAYING  USING(MOVIE_NO)
-		 WHERE PLAYING_NO = #{playinNo}
+		  JOIN SCREEN USING(SCREEN_NO)
+		 WHERE PLAYING_NO = #{playingNo}
 		   AND FILE_LEVEL = 1
 	</select>
 
