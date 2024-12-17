@@ -25,8 +25,8 @@ public class BookDao {
 		return (ArrayList)sqlSession.selectList("movieMapper.selectList");
 	}
 
-	public Movie selectMovie(SqlSessionTemplate sqlSession, int movieNo) {
-		return sqlSession.selectOne("movieMapper.selectMovie", movieNo);
+	public ArrayList<Movie> selectMovie(SqlSessionTemplate sqlSession, int movieNo) {
+		return (ArrayList)sqlSession.selectList("movieMapper.selectMovie", movieNo);
 	}
 
 	public ArrayList<Playing> selectMovieDate(SqlSessionTemplate sqlSession, int movieNo) {
@@ -54,7 +54,7 @@ public class BookDao {
 		Map<String, Object> paramMap = new HashMap<>();
 		paramMap.put("list", abk);
 		
-		System.out.println("paramMap :" + paramMap);
+		// System.out.println("paramMap :" + paramMap);
 		
 		return sqlSession.delete("bookMapper.deleteBookingListList", paramMap);
 	}

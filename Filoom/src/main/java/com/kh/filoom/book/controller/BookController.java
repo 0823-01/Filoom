@@ -49,15 +49,15 @@ public class BookController {
 	
 	@ResponseBody
 	@GetMapping(value = "movie.de", produces="application/json; charset=UTF-8")
-	public Movie getMovieDetail(@RequestParam("movieNo") int movieNo, Model model) {
+	public ArrayList<Movie> getMovieDetail(@RequestParam("movieNo") int movieNo, Model model) {
 		
 		//System.out.println(movieNo);
 		
-		Movie movie = bookService.selectMovie(movieNo);
+		ArrayList<Movie> movie = bookService.selectMovie(movieNo);
 		
 		model.addAttribute("movie", movie);
 		
-		//System.out.println(movie);
+		System.out.println(movie);
 		
 		return movie;
 	}
@@ -99,24 +99,28 @@ public class BookController {
 		// System.out.println(playingNo);
 
 		Calendar calendar = Calendar.getInstance();
-	    calendar.setTime(currentDate);
-	    calendar.add(Calendar.MINUTE, 10);
+		calendar.setTime(currentDate);
+		calendar.add(Calendar.MINUTE, 10);
 
-	    Date updatedTime = calendar.getTime();
-	    // System.out.println("10분 후 시간: " + updatedTime);
-	    java.sql.Date sqlUpdatedTime = new java.sql.Date(updatedTime.getTime());
-	    
-	    BookingSeat bk = new BookingSeat();
-	    
-	    bk.setSeatNo(seatId);
-	    bk.setPlayingNo(playingNo);
-	    bk.setTimeLimit(sqlUpdatedTime);
+		Date updatedTime = calendar.getTime();
+		System.out.println("10분 후 시간: " + updatedTime);
 
-	    // System.out.println("BookingSeat 객체: " + bk);
-	 
-	    int result = bookService.insertBookingSeat(bk);
+		// java.sql.Timestamp 사용
+		java.sql.Timestamp sqlUpdatedTime = new java.sql.Timestamp(updatedTime.getTime());
 
-	    return new Gson().toJson(bk);
+		System.out.println("sql시간 : " + sqlUpdatedTime);
+
+		BookingSeat bk = new BookingSeat();
+
+		bk.setSeatNo(seatId);
+		bk.setPlayingNo(playingNo);
+		bk.setTimeLimit(sqlUpdatedTime);
+
+		// System.out.println("BookingSeat 객체: " + bk);
+
+		int result = bookService.insertBookingSeat(bk);
+
+		return new Gson().toJson(bk);
 	}
 	
 	@ResponseBody
@@ -134,7 +138,7 @@ public class BookController {
 
 	    // 10분 후의 시간을 구하고 java.sql.Date로 변환
 	    Date updatedTime = calendar.getTime();
-	    java.sql.Date sqlUpdatedTime = new java.sql.Date(updatedTime.getTime());
+	    java.sql.Timestamp sqlUpdatedTime = new java.sql.Timestamp(updatedTime.getTime());
 	    
 	    BookingSeat bkk = new BookingSeat();
 	    bkk.setSeatNo(seatId);

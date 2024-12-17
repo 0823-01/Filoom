@@ -46,6 +46,7 @@ public class Movie {
 	//영화이미지
 	private String imagePath;
 	private String fileCodename;
+	private int fileLevel;
     
 	
     //상영정보(형문)

@@ -172,7 +172,7 @@
         <div id = "header_bottom">
             <ul>
                 <li>영화</li>
-                <li>예매</li>
+                <li><a href="${ pageContext.request.contextPath }/book.do">예매</a></li>
                 <li>이벤트</li>
 
             </ul>

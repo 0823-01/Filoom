@@ -33,7 +33,7 @@ public class BookServiceImple implements BookService {
 	}
 
 	@Override
-	public Movie selectMovie(int movieNo) {
+	public ArrayList<Movie> selectMovie(int movieNo) {
 		return bookDao.selectMovie(sqlSession, movieNo);
 	}
 
