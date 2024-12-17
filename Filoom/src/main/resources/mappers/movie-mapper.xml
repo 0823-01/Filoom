@@ -50,7 +50,6 @@
 	    <result column="DESCRIPTION" property="description" />
 	    <result column="IMAGE_PATH" property="imagePath" />
 	    <result column="FILE_CODENAME" property="fileCodename" />
-	    <result column="FILE_LEVEL" property="fileLevel" />
 	</resultMap>
 	
 	
@@ -77,8 +76,7 @@
 		    M.MOVIE_TITLE,
 		    M.DESCRIPTION,
 		    P.IMAGE_PATH,
-		    P.FILE_CODENAME,
-            P.FILE_LEVEL
+		    P.FILE_CODENAME
 		FROM 
 		    FILOOM.MOVIE M
 		JOIN 

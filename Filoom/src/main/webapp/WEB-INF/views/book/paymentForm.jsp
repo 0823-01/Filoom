@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -116,6 +116,7 @@ function nicepayClose(){
     /* 영화이미지 */
     #imgDiv{
         /* border:1px solid yellow; */
+        width:40%;
         padding-right: 3%;
         
     }
@@ -174,8 +175,13 @@ function nicepayClose(){
     }
 
     #payMethods label:hover{
-        border: 2px solid red;
+        border: 2px solid gray;
     }
+    
+    .selectedPayMethod{
+    	background-color:gray;
+    }
+    
 
     /* 오른쪽영역//////////////////////////////////////////////////// */
 
@@ -292,15 +298,29 @@ function nicepayClose(){
                     <div class="infoTitle">예매정보</div>
                     <div id="bookInfo">
                         <div id="imgDiv">
-                            <img src="${pageContext.request.contextPath}/resources/event_images/1tmd.jpg" alt="영화이미지" />
+                            <img src="${requestScope.movie.imagePath }" alt="영화이미지" width="100%" />
+                            
                         </div>
                         <div id="movieInfo">
-                            <div>19 조커</div>
                             <div>
-                                <div>2024.12.04(수)</div>
-                                <div>12:00 - 13:57</div>
-                                <div>상영관 3관</div>
-                                <div>c-3, c-4</div>
+                            	<span>
+                            		${requestScope.movie.filmRate}
+                            	</span>
+                            	-
+                            	<span>
+                            		${requestScope.movie.movieTitle}
+                            	</span>
+                            </div>
+                            <div>
+                                <div id="movieDate"></div>
+                                <div id="moviePlayTime">12:00 - 13:57 [더미]</div>
+                                <div>${requestScope.movie.screenName }</div>
+                                <div>
+                                	<c:forEach items="${requestScope.bookingSeatList}" var="bookingSeat">
+                                		"${bookingSeat.seatNo}"
+                                		
+                                	</c:forEach>
+                               	</div>
                             </div>
                         </div>
                     </div>
@@ -311,8 +331,8 @@ function nicepayClose(){
                         <div>
                             <!-- 동적으로 생성할 영역 -->
                             <!-- 쿠폰이 있는경우 / 없는경우 -->
-                            <input type="radio" name="cupon"id="cupon1"><label for="cupon1">할인쿠폰1</label>
-                            <input type="radio" name="cupon"id="cupon2"><label for="cupon2">할인쿠폰2</label>
+                            <input type="radio" name="cupon"id="cupon1"><label for="cupon1">할인쿠폰1[더미]</label>
+                            <input type="radio" name="cupon"id="cupon2"><label for="cupon2">할인쿠폰2[더미]</label>
                         </div>
                     </div>
                 </div>
@@ -320,17 +340,49 @@ function nicepayClose(){
                     <div class="infoTitle">결제수단</div>
                     <div id="payMethods">
                         <div>
-                            <input type="radio" name="cosoProcess" id="pay1" ><label for="pay1">카드결제</label>
-                            <input type="radio" name="cosoProcess" id="pay2" ><label for="pay2">계좌이체</label>
-                            <input type="radio" name="cosoProcess" id="pay3" ><label for="pay3">휴대폰결제</label>
-                            <input type="radio" name="cosoProcess" id="pay4" ><label for="pay4">컬쳐캐쉬</label>
-                            <input type="radio" name="cosoProcess" id="pay5" ><label for="pay5">SSG계좌이체</label>
+                            <input type="radio" name="PayMethod" id="pay1" value="CARD"  hidden required><label for="pay1">카드결제</label>
+                            <input type="radio" name="PayMethod" id="pay2" value="BANK" hidden required><label for="pay2">계좌이체</label>
+                            <input type="radio" name="PayMethod" id="pay3" value="CELLPHONE" hidden required><label for="pay3">휴대폰결제</label>
+                            
                         </div>
                     </div>
                 </div>
 
             </div> 
+			<script>
+				/* 선택된 결제수단 띄어주기 */
+				$("#payMethods input").change(function(){
 
+					let selectedPayMethod = $(this).val();
+					
+					if(selectedPayMethod==="BANK"){
+						selectedPayMethod="계좌이체";
+					}else if(selectedPayMethod==="CELLPHONE"){
+						selectedPayMethod="휴대폰결제";
+					}else{
+						selectedPayMethod="신용카드";
+					}					
+					let payMethodsLabel = $(this).next();
+					$("#payMethod").text(selectedPayMethod);
+				});
+				
+				
+				/* 선택된 결제수단 스타일  .selectedPayMethod  */
+				let labelTags = $("#payMethods label"); //라벨테그들
+				
+				labelTags.click(function(){ // 라벨테그가 클릭된경우
+					
+					labelTags.removeClass("selectedPayMethod"); //라벨태그 리무브 삭제
+					
+					$(this).addClass("selectedPayMethod"); //선택된 라벨에 클래스 추가
+					
+					console.log($(this));
+				});
+				
+				
+				
+				
+			</script>
 
 
 
@@ -338,6 +390,7 @@ function nicepayClose(){
             <div id="rightDiv">
 
                 <!-- 약관동의 -->
+                <!--  
                 <div id="checkArea">
                     <div  class="infoTitle">약관동의</div>
                     <div id="CheckBoxArea">
@@ -358,7 +411,9 @@ function nicepayClose(){
                         </div>
                     </div>
                 </div>
-
+				-->
+				
+				
                 <!-- 총 결제 금액 -->
                 <div id="totalArea">
                     <div class="infoTitle" >결제금액</div>
@@ -367,21 +422,24 @@ function nicepayClose(){
                             <tbody>
                                 <tr>
                                     <td>결제수단</td>
-                                    <td>신용카드</td>
+                                    <td id="payMethod"></td>
                                 </tr>
                                 <tr>
                                     <td>금액</td>
-                                    <td>30,000</td>
+                                    <td  id="totalPriceTd">
+                                    	<!-- 총결제금액 15000원 x  -->
+                                    	
+                                    </td>
                                 </tr>
                                 <tr>
                                     <td>할인</td>
-                                    <td>-15,000원</td>
+                                    <td>-15,000원[더미]</td>
                                 </tr>
                                 <tr>
                                     <td colspan="2" ><h4>최종결제금액</h4></td>
                                 </tr>
                                 <tr>
-                                    <td colspan="2">15,000원</td>
+                                    <td colspan="2">15,000원[더미]</td>
                                 </tr>
 
                             </tbody>
@@ -391,10 +449,10 @@ function nicepayClose(){
                         <!-- 결제시 필요한 정보들 담고, 안보이게 -->
 				                
 						<div id="submitData">			
-							            
-				             <input type="text" name="PayMethod" value="CARD">결제 수단
-				             <input type="text" name="GoodsName" value="조커 20241225 14:00 3관 c1,c2">결제 상품명
+
+				             <input type="text" name="GoodsName" value="${requestScope.movie.movieTitle} + " " +${requestScope.booking.bookNo} }>결제 상품명
 				             <input type="text" name="Amt" value="15000">결제 상품금액
+				             
 				             <input type="text" name="MID" value="nictest00m">상점 아이디
 				             <input type="text" name="Moid" value="0">상품 주문번호
 				             <input type="text" name="BuyerName" value="김형문">구매자명
@@ -433,6 +491,90 @@ function nicepayClose(){
         </div>
     </form>
     
+    
+    <script>
+    	
+    	//영화금액
+    	const price = 99900;
+    	
+    	//쿠폰금액 (100%)
+    	const couponPrice = price;
+    	
+    	//선택된 좌석 수
+		const seatCounts = "${requestScope.bookingSeatList.size()}"; 
+	
+		//영화상영시간(문자열)
+		const playTime = "${requestScope.movie.playTime}";
+	
+		//영화상영시간(date타입)
+		const playTimeObj = new Date(playTime);
+		
+   
+		//처음 로드될때
+    	$(function(){
+    		showPlayDate(); 	
+    		showPlayTime();		
+    		showTotalPrice();	
+    		
+    	});
+    	
+		//상영날짜
+    	function showPlayDate(){
+    		
+    		let yyyy = playTimeObj.getFullYear();
+    		
+            let mm = String(playTimeObj.getMonth()+1).padStart(2,'0');
+            let dd = String(playTimeObj.getDate()).padStart(2,'0');
+            
+            const daysOfWeek = ["일요일","월요일","화요일","수요일","목요일","금요일","토요일"];
+            let dayOfWeek = daysOfWeek[playTimeObj.getDay()];
+            
+            let date =yyyy + "년 " + mm + "월 "+dd+"일 "+ dayOfWeek;
+    		
+			$("#movieDate").text(date);
+    	};
+    	
+    	
+    	//시작시간~종료시간
+    	function showPlayTime(){
+    		let startTime = playTime.substring(11,16);
+    		let [hours, minutes] = startTime.split(":").map(Number);
+			
+    		minutes += ${requestScope.movie.runtime};
+    		
+    		hours += Math.floor(minutes/60);
+    		
+    		minutes %=60;
+    		
+    		hours %= 24
+    		
+    		let endTime = String(hours).padStart(2,"0")+":"+String(minutes).padStart(2,"0");
+    		
+    		let moviePlayTime = startTime + " ~ " + endTime;
+    		
+    		$("#moviePlayTime").text(moviePlayTime);
+				
+    		
+    	}
+    		
+    	
+        
+        
+    	//할인전 금액
+    	//선택된 좌석수 * 영화가격
+    	function showTotalPrice(){
+			
+    		let totalPrice = price*seatCounts;
+    		let inputTag ="<input type='hidden' name='bookTotalCost' value='"+totalPrice+"' readonly>";
+     		$("#totalPriceTd").html(totalPrice+inputTag);
+    	}
+    		
+    	
+    
+    
+
+   
+    </script>
 
 
 

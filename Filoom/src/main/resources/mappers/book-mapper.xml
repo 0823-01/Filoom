@@ -98,7 +98,7 @@
 		    (SELECT COUNT(*) 
 		     FROM BOOKING_SEAT 
 		     WHERE PLAYING_NO = P.PLAYING_NO 
-		       AND TIMELIMIT > SYSDATE) AS OCCUPIED_SEATS
+		       AND TIMELIMIT &lt; SYSDATE) AS OCCUPIED_SEATS
 		FROM 
 		    PLAYING P
 		JOIN
@@ -122,7 +122,10 @@
 		    S.SCREEN_NAME,
 		    BS.SSEAT_NO,
 		    BS.TIMELIMIT,
-		    SS.SEAT_NO,
+		    CASE 
+		        WHEN BS.TIMELIMIT > SYSDATE THEN SS.SEAT_NO
+		        ELSE NULL
+		    END AS SEAT_NO,
 		    M.MOVIE_TITLE,
 		    M.RUNTIME
 		FROM 
@@ -144,7 +147,7 @@
 		ON 
 		    P.MOVIE_NO = M.MOVIE_NO
 		WHERE  
-		    P.PLAYING_NO = #{playingNo}
+		    P.PLAYING_NO =  #{playingNo}
 	</select>
 	
 	
