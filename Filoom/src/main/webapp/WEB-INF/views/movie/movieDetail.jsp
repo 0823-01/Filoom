@@ -310,10 +310,6 @@
 
                 <!-- 제목과 설명을 넣는 곳 -->
                 <div style="flex-grow: 1;">
-                    <!-- <div>
-                        <img src="resources/images/posters/all.svg" class="filmrate">
-                        <b>위키드</b>
-                    </div> -->
                     <table>
                         <tr>
                             <td><img src="resources/images/posters/all.svg" class="filmrate"></td>
@@ -372,6 +368,7 @@
                 <a href="" id="toBook">예매하기</a>
                 <a href="" id="like">♡ 1234</a>
                 <!-- 로그인 후 클릭시 ♥ 1235 으로 바뀌도록. 비로그인시 로그인하라고 얼럿함 -->
+                <!-- 좋아요 켜면 FAVORITE 테이블에 넣는 거니까 확인하고 넣을 것 -->
             </div>
 
 
@@ -431,7 +428,6 @@
             <br><br><hr>
 
             <div id="reviewTop">
-                <!-- 여기 어그러지는 거 아는데 이 페이지에 시간을 너무 많이 써서 일단 보류 -->
                 <div id="part-header">
                     <p class="category"><b>리뷰</b></p>
                     <div>
@@ -463,46 +459,17 @@
                     </div>
                     <div class="statistic">
                         <table>
-                            <tr>
-                                <td>5</td>
-                                <td>
-                                    <div class="graph-back">
-                                        <div class="graph" style="width:65%;"></div>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>4</td>
-                                <td>
-                                    <div class="graph-back">
-                                        <div class="graph" style="width:17%;"></div>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>3</td>
-                                <td>
-                                    <div class="graph-back">
-                                        <div class="graph" style="width:10%;"></div>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>2</td>
-                                <td>
-                                    <div class="graph-back">
-                                        <div class="graph" style="width:1%;"></div>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>1</td>
-                                <td>
-                                    <div class="graph-back">
-                                        <div class="graph" style="width:7%;"></div>
-                                    </div>
-                                </td>
-                            </tr>
+                        	<c:forEach var="s" begin="1" end="5" step="1">
+                        		<tr>
+	                                <td>${6-s}</td>
+	                                <td>
+	                                    <div class="graph-back">
+	                                        <div class="graph" style="width:30%;"></div>
+	                                    </div>
+	                                </td>
+	                            </tr>
+                        	</c:forEach>
+                        	<!-- dummy percentage : 5점부터 순서대로 65% 17% 10% 1% 7% -->
                         </table>
                     </div>
                 </div>
@@ -515,6 +482,8 @@
                 이로 인해 일부 예시가 2줄을 아슬아슬하게 넘어가는 화면크기 67%에
                 한하여 해당 div의 테이블이 어그러지는 현상이 있음
                 별일 없으면 실전에서 가로마진 뺄 예정 -->
+                
+                <!-- 그리고 여기도 AJAX로 넣어야 함 -->
 
 				<%-- SAMPLE
 					 <div id="review">

@@ -125,10 +125,11 @@
 
         .poster {
             width:240px;
-            /* height:480px; */
-            /*  */
             border-radius:5px;
             margin-bottom:5px;
+        }
+        .poster:hover {
+        	cursor:pointer;
         }
 
         #filmrate {
@@ -198,8 +199,8 @@
                 <div class="middle" style="padding-left:30px;">
                     <!-- <p>정렬 기준 |</p> -->
                     정렬 기준 |
-                    <a href="#">개봉순</a>
-                    <a href="#">이름순</a>
+                    <a href="javascript:listbyOpenOrder();">개봉순</a>
+                    <a href="javascript:listbyName();">이름순</a>
                 </div>
                 <div class="right" style="padding-right:30px;">
                     <input type="search" class="search-bar" placeholder="제목으로 검색...">
@@ -223,6 +224,22 @@
              뒷판떼기의 width 초안이 1900px이고 이 마저도 꽉차 보인단 피드백 있었음
              (2/3 정도로 줄이는 게 적합하다는 의견)
              전체적으로 2/3으로 width 240px에 margin 30px 10px가 나을 듯 -->
+             
+<%--             <c:forEach var="" items=""> --%>
+<!--             	<div class="movie"> -->
+<!-- 	                <img src="resources/images/posters/moana.jpg" class="poster"> -->
+<!-- 	                <table class="movie-info"> -->
+<!-- 	                    <tr> -->
+<!-- 	                        <td id="filmrate"><img src="resources/images/posters/all.svg" class="filmrate"></td> -->
+<!-- 	                        <td><b>${movieTitle}</b><br></td> -->
+<!-- 	                    </tr> -->
+<!-- 	                    <tr> -->
+<!-- 	                        <td colspan="2">${openDate} 개봉 예정</td> -->
+								<!-- 어차피 여기 있으면 전부 premiere=N이라 케이스 안 나눠도 됨 -->
+<!-- 	                    </tr> -->
+<!-- 	                </table> -->
+<!--             	</div> -->
+<%--             </c:forEach> --%>
             
             <div class="movie">
                 <img src="resources/images/posters/harbin.jpg" class="poster">
@@ -441,6 +458,20 @@
             </div>
 
         </div>
+        
+        <script>
+	        $(function() {
+	    		//
+	    	});
+	    	
+	    	function listbyOpenOrder() {
+	    		alert("공사중입니다.");
+	    	}
+	    	
+	    	function listbyName() {
+	    		alert("공사중입니다.");
+	    	}
+        </script>
         <br><br>
 
         <!-- Paging Bar -->

@@ -14,10 +14,12 @@ public interface BookService {
 	// 첫페이지) 영화 리스트 조회
 	ArrayList<Movie> selectList();
 
+	// 첫페이지 대표 영화 조회
+	ArrayList<Movie> selectFirstMovie();
 	// -- 이후 전부 Ajax --
 	
 	// 첫페이지) AJAX 영화 조회후 선택시 영화 상세설명 조회
-	Movie selectMovie(int movieNo);
+	ArrayList<Movie> selectMovie(int movieNo);
 	
 	// 첫페이지 > 두번쨰페이지) Ajax사용) 
 	// 영화 선택 클릭시 영화의 날짜 조회
@@ -61,6 +63,7 @@ public interface BookService {
 
 	//상영좌석정보, 좌석번호 조회
 	ArrayList<BookingSeat> selectListBookingSeat(ArrayList<BookingSeat> bookingSeatNoList);
+
 	
 	
 

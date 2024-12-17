@@ -66,6 +66,9 @@
             border-radius:5px;
             margin-bottom:5px;
         }
+        .poster:hover {
+        	cursor:pointer;
+        }
 
         #filmrate {
             width:50px;

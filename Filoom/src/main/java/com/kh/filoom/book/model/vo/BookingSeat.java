@@ -1,6 +1,7 @@
 package com.kh.filoom.book.model.vo;
 
 import java.sql.Date;
+import java.sql.Timestamp;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,7 +15,7 @@ import lombok.ToString;
 public class BookingSeat {
 
 	private int bookingSeatNo;
-	private Date timeLimit;
+	private java.sql.Timestamp timeLimit;
 	private int sseatNo;
 	private int playingNo;
 	private int bookNo;
@@ -24,6 +25,8 @@ public class BookingSeat {
 	private String seatId;
 	
 	private String seatNo;
+
+
 	
 	
 	

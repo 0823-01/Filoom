@@ -30,7 +30,8 @@
 	
 	#footer_a{
 	
-	width: 100%;
+	width: 1900px;
+    height: 100%;
 	margin: auto;
 	
 	}
@@ -41,6 +42,13 @@
 	gap: 30px;
 	}
 	
+	#footer_a>hr{
+		
+		margin:auto;
+		
+	}
+	
+
 
 
 </style>
@@ -51,7 +59,7 @@
 	<div id = "footer_top"></div>
 	<div id = "footer_a">
 	    <ul>
-	        <li>
+	         &nbsp;&nbsp;&nbsp;&nbsp;<li>
 	            <a>회사 소개</a>
 	        </li>
 	        <li>
@@ -62,8 +70,11 @@
 	        </li>
 	   
 	    </ul>
+	    <br>
+	    
 	    <hr>
 	    
+	    <br>
 	    &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;(030303) 서울특별시 OO구 OO대로 OO길 390 4층<br>
 	    &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;대표이사 : 백라룸   사업자등록번호 : 111-23-155344  통신판매업신고번호 : 2031 - 32332 - 3333<br>
 	    &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;대표이메일 : backlight@gmail.com<br>

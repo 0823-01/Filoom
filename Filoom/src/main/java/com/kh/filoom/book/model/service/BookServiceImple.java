@@ -31,9 +31,16 @@ public class BookServiceImple implements BookService {
 		// TODO Auto-generated method stub
 		return bookDao.selectList(sqlSession);
 	}
+	
+	@Override
+	public ArrayList<Movie> selectFirstMovie() {
+		
+		return bookDao.selectFirstMovie(sqlSession);
+		
+	}
 
 	@Override
-	public Movie selectMovie(int movieNo) {
+	public ArrayList<Movie> selectMovie(int movieNo) {
 		return bookDao.selectMovie(sqlSession, movieNo);
 	}
 

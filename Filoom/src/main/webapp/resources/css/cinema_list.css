@@ -159,17 +159,22 @@ body{
 
 }
 
-#subImg{
+.subImg{
 
     margin: auto;
     width: 28%;
     height: 90%;
     background-color: aqua;
     border-radius: 5px;
-
+	overflow: hidden; 
 
 }
-
+.subImg>img{
+	height:100%;
+	width:100%;
+	object-fit: cover; 
+    border-radius: 5px;	
+}
 
 
 /*   우측 구상   */

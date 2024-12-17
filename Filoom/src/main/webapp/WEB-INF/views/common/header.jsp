@@ -114,12 +114,6 @@
    
 }
 
-#header_bottom li>a {
-	color: #8B8B8B; 
-	text-decoration: none;
-	
-}
-
 
 #header_bottom li:hover {
    color: #493628; 
@@ -179,13 +173,8 @@
         <div id = "header_bottom">
             <ul>
                 <li>영화</li>
-
-                <li>예매</li>
-                <li><a href="${pageContext.request.contextPath }/list.ev">이벤트</a></li>
-
                 <li><a href="${ pageContext.request.contextPath }/book.do">예매</a></li>
                 <li>이벤트</li>
-
 
             </ul>
         </div>
