@@ -49,10 +49,46 @@
 	     WHERE USER_ID = #{userId}
 	</select>
 	
-	<update id="updatePassword" parameterType="member">
+	<update id="changePwd" parameterType="member">
 	    UPDATE MEMBER
 	       SET USER_PWD = #{userPwd}
 	     WHERE USER_ID = #{userId}
+	       AND STATUS = 'Y'
+	</update>
+	
+	<update id="changeName" parameterType="member">
+	    UPDATE MEMBER
+	       SET USER_NAME = #{userName}
+	     WHERE USER_ID = #{userId}
+	       AND STATUS = 'Y'
+	</update>
+	
+	<update id="changeGender" parameterType="member">
+	    UPDATE MEMBER
+	       SET GENDER = #{gender}
+	     WHERE USER_ID = #{userId}
+	       AND STATUS = 'Y'
+	</update>
+	
+	<update id="changeBirth" parameterType="member">
+	    UPDATE MEMBER
+	       SET BIRTH = #{birth}
+	     WHERE USER_ID = #{userId}
+	       AND STATUS = 'Y'
+	</update>
+	
+	<update id="changeMarketing" parameterType="member">
+	    UPDATE MEMBER
+	       SET MARKETING = #{marketing}
+	     WHERE USER_ID = #{userId}
+	       AND STATUS = 'Y'
+	</update>
+	
+	<update id="withdrawMember" parameterType="member">
+		UPDATE MEMBER
+		   SET STATUS = 'N'
+		 WHERE USER_ID = #{userId}
+		   AND STATUS = 'Y'
 	</update>
 	
 	

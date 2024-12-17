@@ -329,7 +329,7 @@
                 <div class="form-group">
                     <label for="userId">아이디 *</label>
                     <div class="input-with-btn">
-                        <input type="text" id="userId" name="userId" placeholder="영문, 숫자를 조합한 5-20자 이내로 입력해주세요." required>
+                        <input type="text" id="userId" name="userId" placeholder="영문, 숫자를 조합한 5-20자 이내로 입력해주세요." >
                         <button class="check-btn" id="checkIdBtn" disabled>중복확인</button>
                     </div>
                 </div>
@@ -369,7 +369,7 @@
 
                 <div class="form-group">
 				    <label for="birth">생년월일 *</label>
-				    <input type="text" id="birth" name="birth" placeholder="YYYYMMDD" required maxlength="8" oninput="validateBirth(this)">
+				    <input type="text" id="birth" name="birth" placeholder="YYYYMMDD" required maxlength="8" oninput="validateBirth(this)" required>
 				</div>
                 
                 <div class="form-group">
@@ -467,57 +467,53 @@
     <jsp:include page="../common/footer.jsp" />
     
     <script>
-    
-	 	// 이메일 인증번호 전송 요청
+	    // 이메일 인증번호 전송 요청
 	    function sendCert() {
-		    let email = $("#email").val();
-		    
-		    $.ajax({
-		        url: "cert.do",
-		        type: "post",
-		        data: {
-		            email: email
-		        },
-		        success: function(result) {
-		            alert(result);
-		
-		            // 인증번호 입력 창 보이기
-		            $("#cert-section").show();
-		
-		            // 인증번호 입력 창 및 확인 버튼 활성화
-		            $("#checkNo").attr("disabled", false).focus();
-		            $("#validate").attr("disabled", false);
-		
-		            // 이메일 입력창 및 인증번호 받기 버튼 비활성화
-		            $("#email").attr("readonly", true);
-		            $("#cert").attr("disabled", true);
-		        },
-		        error: function() {
-		            console.log("인증번호 발급용 ajax 통신 실패");
-		        }
-		    });
-		}
-
+	        let email = $("#email").val();
+	        $.ajax({
+	            url: "cert.do",
+	            type: "post",
+	            data: {
+	                email: email,
+	            },
+	            success: function (result) {
+	                alert(result);
+	                // 인증번호 입력 창 보이기
+	                $("#cert-section").show();
+	
+	                // 인증번호 입력 창 및 확인 버튼 활성화
+	                $("#checkNo").attr("disabled", false).focus();
+	                $("#validate").attr("disabled", false);
+	
+	                // 이메일 입력창 및 인증번호 받기 버튼 비활성화
+	                $("#email").attr("readonly", true);
+	                $("#cert").attr("disabled", true);
+	            },
+	            error: function () {
+	                console.log("인증번호 발급용 ajax 통신 실패");
+	            },
+	        });
+	    }
+	
 	    // 이메일 인증번호 대조 요청
 	    function validateCert() {
 	        let email = $("#email").val();
 	        let checkNo = $("#checkNo").val();
-	        
+	
 	        $.ajax({
 	            url: "validate.do",
 	            type: "post",
 	            data: {
 	                email: email,
-	                checkNo: checkNo
+	                checkNo: checkNo,
 	            },
-	            success: function(result) {
+	            success: function (result) {
 	                alert(result);
-	                
 	                if (result === "인증 성공") {
 	                    // 인증 성공 후 이메일 입력창과 인증번호 입력창의 테두리를 초록색으로 변경
 	                    $("#email").css("border-color", "green");
 	                    $("#checkNo").css("border-color", "green");
-	                    
+	
 	                    // 인증 성공 후 인증 관련 요소들 비활성화
 	                    $("#checkNo").attr("disabled", true);
 	                    $("#validate").attr("disabled", true);
@@ -525,41 +521,40 @@
 	                    // 인증 실패 시 이메일 입력창과 인증번호 입력창의 테두리를 빨간색으로 변경
 	                    $("#email").css("border-color", "red");
 	                    $("#checkNo").css("border-color", "red");
-	                    
+	
 	                    // 인증 실패 시 이메일 입력창 및 인증번호 받기 버튼 활성화, 이메일 입력창에 포커스
 	                    $("#email").attr("readonly", false).focus();
 	                    $("#cert").attr("disabled", false);
-	                    
+	
 	                    // 인증 실패 시 인증번호 입력창과 인증확인 버튼 비활성화
 	                    $("#checkNo").attr("disabled", true);
 	                    $("#validate").attr("disabled", true);
 	                }
 	            },
-	            error: function() {
+	            error: function () {
 	                console.log("인증번호 대조용 ajax 통신 실패");
-	            }
+	            },
 	        });
 	    }
-
+	
 	    $(function () {
 	        // 비속어 목록
-	        const restrictedWords = ["admin", "fuck"]; 
-
+	        const restrictedWords = ["admin", "fuck"];
+	
 	        // 아이디 조건 : 영문, 숫자를 조합한 5-20자
-	        const idRegexp = /^[a-zA-Z0-9]{5,20}$/; 
-
+	        const idRegexp = /^[a-zA-Z0-9]{5,20}$/;
+	
 	        // 비밀번호 조건 : 영문, 숫자, 특수기호를 포함한 10자 이상
 	        const pwdRegexp = /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[!@#$%^&*()_+~`|}{[\]:;?><,./-]).{10,}$/;
-
+	
 	        // 이름 조건 : 한글 또는 영문, 최소 2자 이상 20자 이하
 	        const nameRegexp = /^[가-힣a-zA-Z]{2,20}$/;
-
+	
 	        let isIdChecked = false; // 아이디 중복 확인 여부 플래그
-
+	
 	        // 아이디 입력 실시간 검증
 	        $("#userId").on("input", function () {
 	            const userId = $(this).val().trim();
-
 	            if (idRegexp.test(userId)) {
 	                $("#checkIdBtn").prop("disabled", false); // 버튼 활성화
 	                isIdChecked = false; // 아이디가 수정되면 다시 중복 확인 필요
@@ -567,12 +562,12 @@
 	                $("#checkIdBtn").prop("disabled", true); // 버튼 비활성화
 	            }
 	        });
-
+	
 	        // 중복확인 버튼 클릭 이벤트
 	        $("#checkIdBtn").click(function (e) {
 	            e.preventDefault();
 	            const userId = $("#userId").val().trim();
-
+	
 	            $.ajax({
 	                url: "idCheck.me",
 	                method: "post",
@@ -580,7 +575,7 @@
 	                data: JSON.stringify({ userId: userId }),
 	                success: function (response) {
 	                    if (response.result === "duplicate") {
-	                        alert("중복된 아이디입니다.");
+	                        alert("이미 사용 중인 아이디입니다.");
 	                        $("#userId").css("border-color", "red").focus();
 	                    } else if (response.result === "invalid") {
 	                        alert("사용이 불가능한 아이디입니다.");
@@ -599,157 +594,220 @@
 	                },
 	            });
 	        });
-
+	
 	        // 비밀번호 유효성 검사
 	        $("#userPwd").on("keyup", function () {
 	            const password = $(this).val();
-
 	            if (pwdRegexp.test(password)) {
 	                $(this).css("border-color", "green");
 	            } else {
 	                $(this).css("border-color", "red");
 	            }
 	        });
-
+	
 	        // 비밀번호 확인 검사
 	        $("#checkPwd").on("keyup", function () {
 	            const password = $("#userPwd").val();
 	            const confirmPassword = $(this).val();
-
 	            if (password === confirmPassword && pwdRegexp.test(password)) {
 	                $(this).css("border-color", "green");
 	            } else {
 	                $(this).css("border-color", "red");
 	            }
 	        });
-
+	
 	        // 이름 유효성 검사
 	        $("#userName").on("keyup", function () {
 	            const userName = $(this).val();
-
 	            if (nameRegexp.test(userName)) {
-	                $(this).css("border-color", "green"); // 테두리 초록색
+	                $(this).css("border-color", "green");
 	            } else {
-	                $(this).css("border-color", "red"); // 테두리 빨간색
+	                $(this).css("border-color", "red");
 	            }
 	        });
-
+	
 	        // 생년월일 유효성 검사
 	        $("#birth").on("keyup", function () {
 	            const birth = $(this).val();
-	            $(this).val(birth.replace(/[^0-9]/g, '').slice(0, 8)); // 숫자 외 문자 제거 및 최대 8자리로 제한
-
+	            $(this).val(birth.replace(/[^0-9]/g, "").slice(0, 8)); // 숫자 외 문자 제거 및 최대 8자리로 제한
 	            if (birth.length === 8) {
-	                $(this).css("border-color", "green"); // 테두리 초록색
+	                $(this).css("border-color", "green");
 	            } else {
-	                $(this).css("border-color", "red"); // 테두리 빨간색
+	                $(this).css("border-color", "red");
 	            }
 	        });
-
+	
 	        $(".submit-btn").click(function (e) {
 	            e.preventDefault(); // 기본 제출 동작 막기
-	            
+	
 	            const userId = $("#userId").val().trim();
-	            const password = $("#userPwd").val();
-	            const confirmPassword = $("#checkPwd").val();
+	            const userPwd = $("#userPwd").val();
+	            const checkPwd = $("#checkPwd").val();
 	            const userName = $("#userName").val().trim();
 	            const email = $("#email").val().trim();
 	            const checkNo = $("#checkNo").val().trim();
 	            const birth = $("#birth").val();
-	            
+	
 	            const isAgree1 = $("#agree1").is(":checked");
 	            const isAgree2 = $("#agree2").is(":checked");
 	            const isAgree3 = $("#agree3").is(":checked");
-	            const isAgree4 = $("#agree4").is(":checked") ? 'Y' : 'N'; // 선택 약관 동의 여부
-	            
-	         	// 필수 약관 동의 여부 확인
-	         	if (!isAgree1 || !isAgree2 || !isAgree3) {
-	         		alert("필수 약관에 모두 동의해주세요.");
-	         		return;
-	         	}
-	            
-	            // alert 및 포커스 이동
+	            const isAgree4 = $("#agree4").is(":checked") ? "Y" : "N"; // 선택 약관 동의 여부
+	
+	            if (!userId) {
+	                alert("아이디를 입력해주세요.");
+	                $("#userId").focus().css("border-color", "red");
+	                return;
+	            }
+	
 	            if (!idRegexp.test(userId)) {
 	                alert("아이디는 영문, 숫자 조합으로 5~20자 이내로 입력해주세요.");
-	                $("#userId").focus().css("border-color", "red"); // 포커스 및 빨간 테두리
-	            } else if (!isIdChecked) {
-	                alert("아이디 중복 확인을 진행해주세요.");
-	                $("#userId").focus().css("border-color", "red"); // 포커스 및 빨간 테두리
-	            } else if (!pwdRegexp.test(password)) {
-	                alert("비밀번호는 영문, 숫자, 특수기호를 포함한 10자 이상이어야 합니다.");
-	                $("#userPwd").focus().css("border-color", "red"); // 포커스 및 빨간 테두리
-	            } else if (password !== confirmPassword) {
-	                alert("비밀번호와 비밀번호 확인이 일치하지 않습니다.");
-	                $("#checkPwd").focus().css("border-color", "red"); // 포커스 및 빨간 테두리
-	            } else if (!nameRegexp.test(userName)) {
-	                alert("이름은 한글 또는 영문으로 2~20자 이내로 입력해주세요.");
-	                $("#userName").focus().css("border-color", "red"); // 포커스 및 빨간 테두리
-	            } else if (!email) {
-	                alert("이메일을 입력해주세요.");
-	                $("#email").focus().css("border-color", "red"); // 포커스 및 빨간 테두리
-	            } else if ($("#cert").prop("disabled") !== true) {
-	                alert("이메일 인증번호 받기를 진행해주세요.");
-	                $("#email").focus().css("border-color", "red"); // 포커스 및 빨간 테두리
-	            } else if (!checkNo) {
-	                alert("이메일 인증번호를 입력해주세요.");
-	                $("#checkNo").focus().css("border-color", "red"); // 포커스 및 빨간 테두리
-	            } else if ($("#validate").prop("disabled") !== true) {
-	                alert("이메일 인증번호 확인을 진행해주세요.");
-	                $("#checkNo").focus().css("border-color", "red"); // 포커스 및 빨간 테두리
-	            } else if (birth.length !== 8) {
-	                alert("생년월일은 YYYYMMDD 형식으로 8자리로 입력해주세요.");
-	                $("#birth").focus().css("border-color", "red"); // 포커스 및 빨간 테두리
-	            } else {
-	            	
-	            	$('<input>').attr({
-	            		type: 'hidden',
-	            		name: 'marketing',
-	            		value: isAgree4
-	            	}).appendTo('#enrollForm');
-	            	
-	                $("form").submit(); // 모든 조건이 충족되면 폼 제출
+	                $("#userId").focus().css("border-color", "red");
+	                return;
 	            }
+	
+	            if (!isIdChecked) {
+	                alert("아이디 중복 확인을 진행해주세요.");
+	                $("#userId").focus().css("border-color", "red");
+	                return;
+	            }
+	
+	            if (!userPwd) {
+	                alert("비밀번호를 입력해주세요.");
+	                $("#userPwd").focus().css("border-color", "red");
+	                return;
+	            }
+	
+	            if (!pwdRegexp.test(userPwd)) {
+	                alert("비밀번호는 영문, 숫자, 특수기호를 포함한 10자 이상이어야 합니다.");
+	                $("#userPwd").focus().css("border-color", "red");
+	                return;
+	            }
+	            
+	            if (!checkPwd) {
+	                alert("비밀번호 확인을 입력해주세요.");
+	                $("#checkPwd").focus().css("border-color", "red");
+	                return;
+	            }
+	
+	            if (userPwd !== checkPwd) {
+	                alert("비밀번호가 일치하지 않습니다.");
+	                $("#checkPwd").focus().css("border-color", "red");
+	                return;
+	            }
+	            
+	            if (!userName) {
+	                alert("이름을 입력해주세요.");
+	                $("#checkPwd").focus().css("border-color", "red");
+	                return;
+	            }
+	
+	            if (!nameRegexp.test(userName)) {
+	                alert("이름은 한글 또는 영문으로 2~20자 이내로 입력해주세요.");
+	                $("#userName").focus().css("border-color", "red");
+	                return;
+	            }
+	
+	            if (!email) {
+	                alert("이메일을 입력해주세요.");
+	                $("#email").focus().css("border-color", "red");
+	                return;
+	            }
+	
+	            if ($("#cert").prop("disabled") !== true) {
+	                alert("이메일 인증번호 받기를 진행해주세요.");
+	                $("#email").focus().css("border-color", "red");
+	                return;
+	            }
+	
+	            if (!checkNo) {
+	                alert("이메일 인증번호를 입력해주세요.");
+	                $("#checkNo").focus().css("border-color", "red");
+	                return;
+	            }
+	
+	            if ($("#validate").prop("disabled") !== true) {
+	                alert("이메일 인증번호 확인을 진행해주세요.");
+	                $("#checkNo").focus().css("border-color", "red");
+	                return;
+	            }
+	            
+	            if (!birth) {
+	                alert("생년월일을 입력해주세요.");
+	                $("#birth").focus().css("border-color", "red");
+	                return;
+	            }
+	
+	            if (birth.length !== 8) {
+	                alert("생년월일은 8자리(YYYYMMDD)로 입력해주세요.");
+	                $("#birth").focus().css("border-color", "red");
+	                return;
+	            }
+	
+	            if (!isAgree1) {
+	                alert("만 14세 이상만 가입할 수 있습니다.");
+	                $("#agree1").focus();
+	                return;
+	            }
+	
+	            if (!isAgree2 || !isAgree3) {
+	                alert("이용 약관과 개인정보 수집 및 이용에 관한 안내를 모두 동의해 주세요.");
+	                if (!isAgree2) {
+	                    $("#agree2").focus();
+	                } else {
+	                    $("#agree3").focus();
+	                }
+	                return;
+	            }
+	
+	            // 모든 조건을 충족한 경우
+	            $("<input>")
+	                .attr({
+	                    type: "hidden",
+	                    name: "marketing",
+	                    value: isAgree4,
+	                })
+	                .appendTo("#enrollForm");
+	
+	            $("form").submit(); // 폼 제출
+	        });
+	
+	        // 약관 체크박스
+	        $(function () {
+	            // 전체동의 체크박스 동작
+	            $("#all-agree").change(function () {
+	                const isChecked = $(this).prop("checked");
+	                $(".agree-checkbox").prop("checked", isChecked);
+	            });
+
+	            // 개별 약관 체크박스 동작
+	            $(".agree-checkbox").change(function () {
+	                const allChecked =
+	                    $(".agree-checkbox").length ===
+	                    $(".agree-checkbox:checked").length;
+	                $("#all-agree").prop("checked", allChecked);
+	            });
+
+	            // 모달 열기
+	            $(".open-modal-btn").click(function () {
+	                const targetModal = "#" + $(this).data("target");
+	                $(targetModal).fadeIn(200); // 모달을 서서히 나타냄
+	            });
+
+	            // 모달 닫기
+	            $(".close-btn").click(function () {
+	                $(this).closest(".modal").fadeOut(100); // 모달을 서서히 사라지게 함
+	            });
+
+	            // 모달 외부 클릭 시 닫기
+	            $(window).click(function (event) {
+	                if ($(event.target).hasClass("modal")) {
+	                    $(event.target).fadeOut(100);
+	                }
+	            });
 	        });
 	    });
+	</script>
 
-    	// 약관 체크박스 ---------------------------------------------------------------------
-        $(function () {
-            
-            // 전체동의 체크박스 동작
-            $('#all-agree').change(function () {
-                const isChecked = $(this).prop('checked');
-                $('.agree-checkbox').prop('checked', isChecked);
-            });
-
-            // 개별 약관 체크박스 동작
-            $('.agree-checkbox').change(function () {
-                const allChecked = $('.agree-checkbox').length === $('.agree-checkbox:checked').length;
-                $('#all-agree').prop('checked', allChecked);
-            });
-        });
-    	
-     	// 약관 모달 -------------------------------------------------------------------------
-        $(function () {
-            // 모달 열기
-            $('.open-modal-btn').click(function () {
-            	const targetModal = '#' + $(this).data('target');
-                $(targetModal).fadeIn(200); // 모달을 서서히 나타냄
-            });
-
-            // 모달 닫기
-            $('.close-btn').click(function () {
-                $(this).closest('.modal').fadeOut(100); // 모달을 서서히 사라지게 함
-            });
-
-            // 모달 외부 클릭 시 닫기
-            $(window).click(function (event) {
-                if ($(event.target).hasClass('modal')) {
-                    $(event.target).fadeOut(100);
-                }
-            });
-        });
-
-    </script>
 
 </body>
 </html>

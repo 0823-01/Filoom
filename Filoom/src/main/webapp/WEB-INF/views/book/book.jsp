@@ -36,8 +36,8 @@
             justify-content: center; /* 수평 정렬 */
             width: 120px; /* 단계 박스 너비 */
             height: 60px; /* 단계 박스 높이 */
-            border-radius: 5px; /* 모서리 둥글게 */
-            background-color: #f0f0f0; /* 기본 배경색 */
+            border-radius: 5px; 
+            background-color: #696969;
             font-size: 16px; /* 텍스트 크기 */
             text-align: center; /* 텍스트 중앙 정렬 */
             transition: all 0.3s ease; /* 부드러운 전환 */
@@ -45,12 +45,12 @@
 
         .step.active {
             background-color: #493628; /* 활성화된 단계 배경 */
-            color: white; /* 활성화된 단계 텍스트 색 */
+            color: #D9D9D9; /* 활성화된 단계 텍스트 색 */
         }
 
         .step.completed {
-            background-color: #D6C0B3; /* 완료된 단계 배경 */
-            color: #AB886D; /* 완료된 단계 텍스트 색 */
+            background-color: #999999; /* 완료된 단계 배경 */
+            color: #313131; /* 완료된 단계 텍스트 색 */
         }
 
         .step a {
@@ -112,7 +112,7 @@
             
             
             <div id = "flow">
-                <div id = "movieSelect" class="step">
+                <div id = "movieSelect" class="step active">
                     <a>영화 선택</a>
                 </div>
 
@@ -127,42 +127,46 @@
 
             <div style ="height: 10px;"></div>
 
-            <div id = "seat_1">
-                
-                <div id = "thumbnail_img">
-                    <img src ="${movie.imagePath}/${movie.fileCodename}">
-                </div>
-                
-                <div id = "selectMovie">
-                    <div id = "selectMovie_detail">
-                        <div id ="selectMovie_a">
-                            <div id = "selectMovie_title">
-                                <a></a>
-                            </div>
-                            <div id = "selectMovie_summary">
-                                <a></a>
-                            </div>
-                            <input type="hidden" name="movieDetailNo" value="${ movie.movieNo}">
-                        </div>
-                    </div>
-                    
-                    <div id = "selectMovie_subImg">
-
-                        <div id = "subImg">
-
-                        </div>
-                        <div id = "subImg">
-
-                        </div>
-                        <div id = "subImg">
-
-                        </div>
-
-                    </div>
-                </div>
-                
-            </div>
-   
+			<c:if test="${not empty requestScope.firstMovie}">
+    <div id="seat_1">
+        <!-- 메인 이미지 출력 -->
+        <div id="thumbnail_img">
+            <c:forEach var="movie" items="${requestScope.firstMovie}">
+                <c:if test="${movie.fileLevel == 1}">
+                    <img src="${pageContext.request.contextPath}/resources/images/posters/${movie.fileCodename}" alt="메인 이미지">
+                </c:if>
+		            </c:forEach>
+		        </div>
+		
+		        <!-- 영화 상세 정보 출력 -->
+		        <div id="selectMovie">
+		            <div id="selectMovie_detail">
+		                <div id="selectMovie_a">
+		                    <!-- 영화 제목 -->
+		                    <div id="selectMovie_title">
+		                        <a>${requestScope.firstMovie[0].movieTitle}</a>
+		                    </div>
+		                    <!-- 영화 설명 -->
+		                    <div id="selectMovie_summary">
+		                        <a>${requestScope.firstMovie[0].description}</a>
+		                    </div>
+		                    <input type="hidden" name="movieDetailNo" value="${requestScope.firstMovie[0].movieNo}">
+		                </div>
+		            </div>
+		
+		            <!-- 서브 이미지 출력 -->
+		            <div id="selectMovie_subImg">
+		                <c:forEach var="movie" items="${requestScope.firstMovie}">
+		                    <c:if test="${movie.fileLevel == 2}">
+		                        <div class="subImg">
+		                            <img src="${pageContext.request.contextPath}/resources/images/posters/${movie.fileCodename}" alt="서브 이미지">
+		                        </div>
+		                    </c:if>
+		                </c:forEach>
+		            </div>
+		        </div>
+		    </div>
+		</c:if>
             <div id = "seat_2">
     
                 <div id ="seat1">
@@ -246,7 +250,7 @@
 				    <div id="movie_selection_${b.movieNo}" class="movie_selection" data-movie-no="${b.movieNo}">
 				            <input type="hidden" name="movieNo" value="${b.movieNo}">
 				            <div id="selection_img">
-				                <img src="" alt="">
+				                <img src="${pageContext.request.contextPath}/resources/images/posters/${b.fileCodename}" alt="메인이미지">
 				            </div>
 				            <div id="selection_detail">
 				                <h2>${b.movieTitle}</h2>
@@ -258,6 +262,8 @@
 				</c:forEach>
                    
 				<script>
+					
+					
 					
 					$(document).ready(function (){
 						$("#past2").on("click", function () {
@@ -281,6 +287,8 @@
 					        }
 					    });
 					});
+					
+					var contextPath = "${pageContext.request.contextPath}";
 	
 					function fetchMovieDetails(movieNo) {
 					    $.ajax({
@@ -290,19 +298,18 @@
 					        success: function (data) {
 					            //console.log(data);
 					            
-					            // 첫 번째 데이터 객체 사용
+					       
 					            let mainMovie = data[0];
 
 					            // 1. 메인 이미지 출력 (fileLevel = 1)
 					            let mainImage = data.find(item => item.fileLevel === 1);
 					            if (mainImage) {
-					                let mainImagePath = "${pageContext.request.contextPath}" 
-		                                  + "/" + mainImage.imagePath.replace("WEB-INF/", "").replace(/^\/?resources\//, "")
-		                                  +  mainImage.fileCodename;
-					
-					                $("#thumbnail_img img").attr("src", mainImagePath);
-					                console.log("Main Image Path: ", mainImagePath);
-					            }
+
+					            	let mainImagePath = contextPath + "/resources/images/posters/" + mainImage.fileCodename;
+
+					                document.getElementById("thumbnail_img").innerHTML =
+					                    "<img src='" + mainImagePath + "' alt='메인 이미지'>";
+				                }
 
 					            // 2. 영화 타이틀, 설명, movieNo 출력
 					            $("#selectMovie_title a").text(mainMovie.movieTitle);
@@ -310,19 +317,34 @@
 					            $("input[name='movieDetailNo']").val(mainMovie.movieNo);
 
 					            // 3. 서브 이미지 출력 (fileLevel = 2)
-					            const subImgContainer = $("#selectMovie_subImg");
-					            subImgContainer.empty();
+					             const subImgContainer = document.getElementById("selectMovie_subImg");
+            					subImgContainer.innerHTML = "";
 					
 					            let subImages = data.filter(item => item.fileLevel === 2);
 					            if (subImages.length > 0) {
-					                subImages.forEach(function (img) {
-					                    let subImagePath = "${pageContext.request.contextPath}" 
-		                                      + "/" + img.imagePath.replace("WEB-INF/", "").replace(/^\/?resources\//, "")
-		                                      +  img.fileCodename;
-					                    subImgContainer.append(`<img src="${subImagePath}" alt="sub image">`);
+					            	const subImgContainer = document.getElementById("selectMovie_subImg");
+
+					                subImages.forEach(function (img, index) {
+					                    let subImagePath = contextPath + "/resources/images/posters/" + img.fileCodename;
+
+					                    // 새로운 div 생성
+					                    let imgDiv = document.createElement("div");
+					                    imgDiv.classList.add("subImg");
+
+					                    // 이미지 태그 생성
+					                    let image = document.createElement("img");
+					                    image.src = subImagePath;
+					                    image.alt = "서브 이미지";
+
+					                    // 이미지 태그를 div에 추가
+					                    imgDiv.appendChild(image);
+
+					                    // 부모 컨테이너에 div 추가
+					                    subImgContainer.appendChild(imgDiv);
 					                });
 					            } else {
-					                subImgContainer.append("<p>서브 이미지가 없습니다.</p>");
+					                document.getElementById("selectMovie_subImg").innerHTML = "<p>서브 이미지가 없습니다.</p>";
+
 					            }
 					        },
 					        error: function () {
@@ -426,7 +448,7 @@
 	                     renderCalendar();
 	                 },
 	                 error: function () {
-	                     console.error("AJAX Error");
+	                     //console.error("AJAX Error");
 	                 },
 	                 complete: function () {
 	                     //console.log("AJAX 연결 완료");
@@ -550,8 +572,9 @@
 			}
             
             //상영시간 + 러닝타임 계산해주는 메소드 (24시간형식)
-            function calculationTime (playTime,runTime){
-                let startTime = playTime.substring(11,16);
+            function calculationTime (playTime ,runTime){
+                
+            	let startTime = playTime.substring(11,16);
                 let [hours, minutes] = startTime.split(":").map(Number);
                 minutes += runTime;
                 hours += Math.floor(minutes/60);
@@ -559,6 +582,7 @@
                 hours %= 24;
     			let endTime = String(hours).padStart(2,'0')+":"+String(minutes).padStart(2,'0');
                 return [startTime,endTime];
+           
             }
             
             //상영시간을 클릭했을때 실행할 메소드 : 영화상영번호 넘기기~
@@ -924,6 +948,7 @@
           	            });
           	        } else {
           	            alert("시간을 선택해주세요!");
+          	          	window.location.reload();
           	        }
           	    });
           	});	
@@ -1157,5 +1182,7 @@
     
 
     </script>
+    
+    <jsp:include page="../common/footer.jsp" />	
 </body>
 </html>

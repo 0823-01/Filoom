@@ -125,7 +125,7 @@
                 <img src="sauce/moana.jpg" class="poster">
                 <table class="movie-info">
                     <tr>
-                        <td id="filmrate"><img src="sauce/all.svg" class="filmrate"></td>
+                        <td id="filmrate"><img src="sauce/3.svg" class="filmrate"></td>
                         <td><b>모아나 2</b><br></td>
                     </tr>
                     <tr>
@@ -141,7 +141,7 @@
                 <img src="sauce/wicked2.jpg" class="poster"><br>
                 <table class="movie-info">
                     <tr>
-                        <td id="filmrate"><img src="sauce/all.svg" class="filmrate"></td>
+                        <td id="filmrate"><img src="sauce/3.svg" class="filmrate"></td>
                         <td><b>위키드</b><br></td>
                     </tr>
                     <tr>
@@ -226,7 +226,7 @@
                 <img src="sauce/dinosinzzang.jpg" class="poster"><br>
                 <table class="movie-info">
                     <tr>
-                        <td id="filmrate"><img src="sauce/all.svg" class="filmrate"></td>
+                        <td id="filmrate"><img src="sauce/3.svg" class="filmrate"></td>
                         <td><b>극장판 짱구는 못말..</b><br></td>
                     </tr>
                     <tr>
@@ -239,7 +239,7 @@
                 <img src="sauce/mufasa.jpg" class="poster"><br>
                 <table class="movie-info">
                         <tr>
-                            <td id="filmrate"><img src="sauce/all.svg" class="filmrate"></td>
+                            <td id="filmrate"><img src="sauce/3.svg" class="filmrate"></td>
                             <td><b>무파사: 라이온 킹</b><br></td>
                         </tr>
                         <tr>

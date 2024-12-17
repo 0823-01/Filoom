@@ -236,5 +236,9 @@
 
 
     <jsp:include page="../common/footer.jsp" />
+<title>Insert title here</title>
+</head>
+<body>
+
 </body>
 </html>

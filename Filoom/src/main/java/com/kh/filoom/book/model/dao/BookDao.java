@@ -25,6 +25,11 @@ public class BookDao {
 		return (ArrayList)sqlSession.selectList("movieMapper.selectList");
 	}
 
+	public ArrayList<Movie> selectFirstMovie(SqlSessionTemplate sqlSession) {
+		// TODO Auto-generated method stub
+		return (ArrayList)sqlSession.selectList("movieMapper.selectFirstMovie");
+	}
+	
 	public ArrayList<Movie> selectMovie(SqlSessionTemplate sqlSession, int movieNo) {
 		return (ArrayList)sqlSession.selectList("movieMapper.selectMovie", movieNo);
 	}
@@ -128,4 +133,5 @@ public class BookDao {
 
 		return (ArrayList)sqlSession.selectList("bookMapper.selectListBookingSeat",bookingSeatNoList);
 	}
+
 }

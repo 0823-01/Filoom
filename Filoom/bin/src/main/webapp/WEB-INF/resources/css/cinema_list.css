@@ -159,22 +159,17 @@ body{
 
 }
 
-.subImg{
+#subImg{
 
     margin: auto;
     width: 28%;
     height: 90%;
     background-color: aqua;
     border-radius: 5px;
-	overflow: hidden; 
+
 
 }
-.subImg>img{
-	height:100%;
-	width:100%;
-	object-fit: cover; 
-    border-radius: 5px;	
-}
+
 
 
 /*   우측 구상   */
@@ -214,29 +209,9 @@ body{
     height: 170px;
     background-color: #493628;
     transition: all 0.3s ease;
-    /*filter: blur(2px);*/ 
+    filter: blur(2px); 
     opacity: 0.7; /* 흐림 효과 */
 }
-
-.movie_selection{
-	margin: auto;
-    flex-shrink: 0;
-    width: 440px;
-    height: 170px;
-    background-color: #493628;
-    transition: all 0.3s ease;
-    /*filter: blur(2px); */
-    opacity: 0.7; /* 흐림 효과 */
-}
-
-.movie_selection.selected{
-	
-	transform: scale(1.1); 
-    filter: none;
-    opacity: 1;
-}
-
-
 
 #movie_selection.selected {
     transform: scale(1.1); 
@@ -244,9 +219,8 @@ body{
     opacity: 1; /* 불투명도 변경 */
 }
 
-
 #detail_content.blur .movie_selection:not(.selected) {
-    /*filter: blur(2px); */
+    filter: blur(2px); 
     opacity: 0.5; 
 }
 
