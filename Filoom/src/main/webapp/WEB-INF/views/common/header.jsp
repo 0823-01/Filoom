@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -113,6 +114,12 @@
    
 }
 
+#header_bottom li>a {
+	color: #8B8B8B; 
+	text-decoration: none;
+	
+}
+
 
 #header_bottom li:hover {
    color: #493628; 
@@ -173,6 +180,8 @@
             <ul>
                 <li>영화</li>
                 <li>예매</li>
+                <li><a href="${pageContext.request.contextPath }/list.ev">이벤트</a></li>
+                <li><a href="${ pageContext.request.contextPath }/book.do">예매</a></li>
                 <li>이벤트</li>
 
             </ul>
