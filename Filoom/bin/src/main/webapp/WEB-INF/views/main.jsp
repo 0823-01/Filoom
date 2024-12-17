@@ -23,5 +23,6 @@
 	
 	
 	<jsp:include page="common/footer.jsp" />
+	<jsp:include page="../../index.jsp">
 </body>
 </html>

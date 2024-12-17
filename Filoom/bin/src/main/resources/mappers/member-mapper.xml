@@ -52,4 +52,5 @@
 	     WHERE USER_ID = #{userId}
 	</select>
 	
+	<select></select>
 </mapper>
