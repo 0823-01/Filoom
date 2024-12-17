@@ -133,5 +133,53 @@
 		   AND FILE_LEVEL = 1
 	</select>
 
+	
+	<!-- 작품 수 체크(필터링 없음) -->
+	<!-- 전체 (사용자 / 관리자) -->
+	<select id="checkVideoCount" resultType="_int">
+		SELECT COUNT(*) FROM MOVIE
+		WHERE STATUS = 'Y'
+	</select>
+	
+	<!-- 개봉작만 (사용자 / 관리자) -->
+	<select id="checkOpenedVideoCount" resultType="_int">
+		SELECT COUNT(*) FROM MOVIE
+		WHERE STATUS = 'Y' AND PREMIERE = 'Y'
+	</select>
+	
+	<!-- 미개봉작만 (사용자) -->
+	<select id="checkNotOpenVideoCount" resultType="_int">
+		SELECT COUNT(*) FROM MOVIE
+		WHERE STATUS = 'Y' AND PREMIERE = 'N'
+	</select>
+	
+	<!-- 박스오피스 (전체, 16) -->
+	<select id="selectBoxOffice" resultMap="movieResultSet">
+		SELECT MOVIE_NO, MOVIE_TITLE, PREMIERE,
+		 TO_CHAR(OPEN_DATE,'YYYY.MM.DD'), FILM_RATE
+		FROM MOVIE
+		WHERE STATUS = 'Y'
+	</select>
+	
+	<select id="selectNowPlaying" resultMap="movieResultSet">
+		SELECT MOVIE_NO, MOVIE_TITLE, PREMIERE,
+		 TO_CHAR(OPEN_DATE,'YYYY.MM.DD'), FILM_RATE
+		FROM MOVIE
+		WHERE STATUS = 'Y' AND PREMIERE = 'Y'
+	</select>
+	
+	<!-- 박스오피스 정렬(개봉순, 페이징 처리 포함) -->
+	<select id="listbyOpenedOrder" parameterType="int" resultMap="movieResultSet">
+		SELECT * FROM (
+			SELECT ROWNUM RNUM, A.* FROM (
+				SELECT MOVIE_NO, MOVIE_TITLE, PREMIERE,
+				 TO_CHAR(OPEN_DATE,'YYYY.MM.DD') AS "OPEN_DATE", FILM_RATE
+				FROM MOVIE
+				WHERE STATUS = 'Y' AND PREMIERE = 'Y'
+				ORDER BY OPEN_DATE	
+			) A
+		)
+		WHERE RNUM BETWEEN 16*(#{cpage}-1)+1 AND 16*#{cpage}
+	</select>
 
 </mapper>
