@@ -195,5 +195,52 @@
     
     <jsp:include page="../common/footer.jsp" />
     
+    <script>
+    
+	    $(function () {
+	        $("form").on("submit", function (e) {
+	            e.preventDefault(); // 기본 폼 제출 동작 방지
+	
+	            // 클라이언트 유효성 검사
+	            const userId = $("#userId").val().trim();
+	            const userPwd = $("#userPwd").val().trim();
+	
+	            if (!userId) {
+	                alert("아이디를 입력해주세요");
+	                $("#userId").focus(); // 아이디 입력창 포커스
+	                return false; // 더 이상 진행하지 않음
+	            }
+	
+	            if (!userPwd) {
+	                alert("비밀번호를 입력해주세요");
+	                $("#userPwd").focus(); // 비밀번호 입력창 포커스
+	                return false; // 더 이상 진행하지 않음
+	            }
+	
+	            // 클라이언트 유효성 검사를 통과하면 AJAX 요청
+	            const formData = $(this).serialize(); // 폼 데이터 직렬화
+	
+	            $.ajax({
+	                url: "login.me",
+	                method: "POST",
+	                data: formData,
+	                success: function (response) {
+	                    if (response === "로그인 성공") {
+	                        alert(response);
+	                        location.href = "${pageContext.request.contextPath}/"; // 홈으로 이동
+	                    } else {
+	                        alert(response); // 실패 메시지 출력
+	                    }
+	                },
+	                error: function () {
+	                    alert("로그인 처리 중 문제가 발생했습니다. 다시 시도해주세요.");
+	                }
+	            });
+	        });
+	    });
+
+    
+    </script>
+    
 </body>
 </html>

@@ -40,9 +40,39 @@ public class MemberServiceImpl implements MemberService{
 
 	@Override
 	@Transactional
-	public int updatePassword(Member m) {
+	public int changePwd(Member loginUser) {
 
-		return memberDao.updatePassword(sqlSession, m);
+		return memberDao.changePwd(sqlSession, loginUser);
+	}
+
+	@Override
+	public int changeName(Member loginUser) {
+
+		return memberDao.changeName(sqlSession, loginUser);
+	}
+
+	@Override
+	public int changeGender(Member loginUser) {
+
+		return memberDao.changeGender(sqlSession, loginUser);
+	}
+
+	@Override
+	public int changeBirth(Member loginUser) {
+
+		return memberDao.changeBirth(sqlSession, loginUser);
+	}
+
+	@Override
+	public int changeMarketing(Member loginUser) {
+
+		return memberDao.changeMarketing(sqlSession, loginUser);
+	}
+
+	@Override
+	public int withdrawMember(String userId) {
+
+		return memberDao.withdrawMember(sqlSession, userId);
 	}
 
 }
