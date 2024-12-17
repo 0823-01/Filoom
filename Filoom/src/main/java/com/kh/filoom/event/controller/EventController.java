@@ -9,18 +9,22 @@ import java.util.List;
 
 import javax.servlet.http.HttpSession;
 
+import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.google.gson.Gson;
 import com.kh.filoom.event.model.service.EventService;
 import com.kh.filoom.event.model.vo.Event;
 import com.kh.filoom.event.model.vo.EventAttachment;
+import com.kh.filoom.event.model.vo.Reply;
 
 @Controller
 public class EventController {
@@ -80,7 +84,7 @@ public class EventController {
 	@GetMapping("detail.ev")
 	public ModelAndView selectEvent(int eno, ModelAndView mv) {
 		
-		System.out.println(eno);
+		// System.out.println(eno);
 		
 		// 게시글 정보, 첨부파일 정보 조회해오기 
 		Event e = eventService.selectEvent(eno);
@@ -100,8 +104,8 @@ public class EventController {
 		mv.addObject("list", list);
 		mv.setViewName("event/eventDetailView");
 		
-		System.out.println(e);
-		System.out.println(list);
+		// System.out.println(e);
+		// System.out.println(list);
 		
 		
 		return mv;
@@ -109,19 +113,54 @@ public class EventController {
 		
 	}
 	
+	/**
+	 * 241217 한혜원 
+	 * 댓글 목록조회 요청 (ajax)
+	 * @return
+	 */
+	@ResponseBody
+	@GetMapping(value="rlist.ev", produces="application/json; charset=UTF-8")
+	public String ajaxSelectReplyList(int eno) {
+		// System.out.println(eno);
+		ArrayList<Reply> list = eventService.selectReplyList(eno);
+		// System.out.println(list);
+		return new Gson().toJson(list);
+		
+	}
 	
+	/**
+	 * 241217 댓글 작성용 요청
+	 * @param r
+	 * @return
+	 */
+	@ResponseBody
+	@PostMapping(value="rinsert.ev", produces="text/html; charset=UTF-8")
+	public String ajaxInsertReply(Reply r) {
+		// System.out.println(r);
+		
+		// 댓글 작성
+		int result = eventService.insertReply(r);
+		
+		return (result>0) ? "success" : "fail";
+	}
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+	/**
+	 * 241217 댓글 수정용 요청
+	 * @param r (replyNo, replyContent)
+	 * @return
+	 */
+	@ResponseBody
+	@GetMapping(value="rupdate.ev", produces="text/html; charset=UTF-8")
+	public String ajaxUpdateReply(Reply r) {
+		System.out.println(r);
+		
+		// 댓글 수정 로직 처리 
+		int result = eventService.updateReply(r);
+		
+		return (result>0) ? "success" : "fail";
+		
+	}
+
 	// 관리자용 
 	
 	/**

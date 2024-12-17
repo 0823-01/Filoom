@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import com.kh.filoom.event.model.vo.Event;
 import com.kh.filoom.event.model.vo.EventAttachment;
+import com.kh.filoom.event.model.vo.Reply;
 
 @Repository
 public class EventDao {	
@@ -67,6 +68,58 @@ public class EventDao {
 		
 		return (ArrayList)sqlSession.selectList("eventMapper.selectEventAttachment", eventNo);
 	}
+	
+	// 댓글 
+	/**
+	 * 241217 한혜원
+	 * 댓글 목록 조회용 
+	 * @param sqlSession
+	 * @param eventNo 게시글 번호
+	 * @return
+	 */
+	public ArrayList<Reply> selectReplyList(SqlSessionTemplate sqlSession, int eventNo) {
+		// select문(여러행) : selectList 메소드 
+		return (ArrayList)sqlSession.selectList("eventMapper.selectReplyList", eventNo);
+	}
+	
+	
+	/**
+	 * 241217 한혜원 
+	 * 댓글 작성여부 체크
+	 * @param eventNo
+	 * @param userNo
+	 * @return
+	 
+	public int checkIfReplyExists(SqlSessionTemplate sqlSession, int eventNo, String replyWriter) {
+		// select 문(단행) : selectOne 메소드 
+		return sqlSession.selectOne("eventMappter.selectCheckReply", eventNo, replyWriter);
+	} */
+	
+	/**
+	 * 241217 한혜원
+	 * 댓글 작성용 
+	 * @param sqlSession
+	 * @param r 댓글 객체 
+	 * @return
+	 */
+	public int insertReply(SqlSessionTemplate sqlSession, Reply r) {
+		// insert문 : insert 메소드 
+		return sqlSession.insert("eventMapper.insertReply", r);
+	}
+	
+	/**
+	 * 241217 한혜원
+	 * @param sqlSession
+	 * @param r
+	 * @return
+	 */
+	public int updateReply(SqlSessionTemplate sqlSession, Reply r) {
+		// update문 : update 메소드 
+		return sqlSession.update("eventMapper.updateReply", r);
+	}
+
+	
+
 
 
 	
