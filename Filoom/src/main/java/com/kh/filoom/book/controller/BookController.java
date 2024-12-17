@@ -38,9 +38,13 @@ public class BookController {
 		
 		ArrayList<Movie> list = bookService.selectList();
 		
+		ArrayList<Movie> firstMovie = bookService.selectFirstMovie(); 
+		
 		model.addAttribute("list", list);
 		
-		//System.out.println(list);
+		model.addAttribute("firstMovie", firstMovie);
+		
+		System.out.println(list);
 		
 		return "book/book";
 		
@@ -57,7 +61,7 @@ public class BookController {
 		
 		model.addAttribute("movie", movie);
 		
-		System.out.println(movie);
+		//System.out.println(movie);
 		
 		return movie;
 	}

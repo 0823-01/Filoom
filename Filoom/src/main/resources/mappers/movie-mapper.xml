@@ -25,6 +25,7 @@
 		<!-- 포스터정보,상영정보,상영관정보 추가(결제페이지-형문) -->
 		<result column="IMAGE_PATH" property="imagePath"/>
 		<result column="FILE_CODENAME" property="fileCodename"/>
+		<result column="FILE_LEVEL" property="fileLevel"/>
 		<result column="PLAYING_NO" property="playingNo"/>
 		<result column="PLAYTIME" property="playTime"/>
 		<result column="SCREEN_NAME" property="screenName"/>
@@ -56,17 +57,46 @@
 	
 	<!-- 이거 영화 예매 페이지 첫페이지 정보 가져오기 -->
 	<select id ="selectList" resultMap="movieResultSet">
-		SELECT MOVIE_NO
-			, MOVIE_TITLE
-			, PREMIERE
-			, OPEN_DATE
-			, RUNTIME
-			, SCREEN_TYPE
-			, FILM_RATE
-			, DESCRIPTION
-			, STARRING
-			, STATUS
-		FROM MOVIE
+		SELECT M.MOVIE_NO
+		    , M.MOVIE_TITLE
+		    , M.PREMIERE
+		    , M.OPEN_DATE
+		    , M.RUNTIME
+		    , M.SCREEN_TYPE
+		    , M.FILM_RATE
+		    , M.DESCRIPTION
+		    , M.STARRING
+		    , M.STATUS
+		    , P.IMAGE_PATH
+		    , P.FILE_CODENAME
+	    FROM MOVIE M 
+	    JOIN POSTER P
+	    ON M.MOVIE_NO = P.MOVIE_NO
+	    WHERE P.FILE_LEVEL=1
+	</select>
+	
+	<select id = "selectFirstMovie" resultMap="movieResultSet">
+		SELECT M.MOVIE_NO
+		     , M.MOVIE_TITLE
+		     , M.PREMIERE
+		     , M.OPEN_DATE
+		     , M.RUNTIME
+		     , M.SCREEN_TYPE
+		     , M.FILM_RATE
+		     , M.DESCRIPTION
+		     , M.STARRING
+		     , M.STATUS
+		     , P.IMAGE_PATH
+		     , P.FILE_LEVEL
+		     , P.FILE_CODENAME
+		FROM MOVIE M
+		JOIN POSTER P 
+		    ON M.MOVIE_NO = P.MOVIE_NO
+		WHERE M.STATUS = 'Y'
+		  AND M.MOVIE_NO = (SELECT MIN(MOVIE_NO)
+		                    FROM MOVIE
+		                    WHERE STATUS = 'Y')
+	
 	</select>
 	
 	<!-- 이거 영화 예매 페이지 첫페이지 상세정보 가져오기 -->
