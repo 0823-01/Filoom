@@ -109,6 +109,7 @@ public class EventDao {
 	
 	/**
 	 * 241217 한혜원
+	 * 댓글 수정용
 	 * @param sqlSession
 	 * @param r
 	 * @return
