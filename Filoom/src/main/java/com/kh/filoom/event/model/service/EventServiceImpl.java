@@ -7,26 +7,26 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.kh.filoom.common.model.vo.PageInfo;
 import com.kh.filoom.event.model.dao.EventDao;
 import com.kh.filoom.event.model.vo.Event;
 import com.kh.filoom.event.model.vo.EventAttachment;
 import com.kh.filoom.event.model.vo.Reply;
 
+/**
+ * @author user1
+ *
+ */
 @Service
 public class EventServiceImpl implements EventService {
 
 	@Autowired
 	private SqlSessionTemplate sqlSession;
 	
+
 	@Autowired
 	private EventDao eventDao;
 	
-	@Override
-	public int selectListCount() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
 	
 	/**
 	 * 241212 ~ 241213 한혜원
@@ -111,14 +111,18 @@ public class EventServiceImpl implements EventService {
 		return eventDao.updateReply(sqlSession, r);
 	}
 
+	/**
+	 * 241218 한혜원
+	 * 댓글 삭제용 요청 메소드
+	 */
 	@Override
+	@Transactional
 	public int deleteReply(int replyNo) {
-		// TODO Auto-generated method stub
-		return 0;
+		return eventDao.deleteReply(sqlSession, replyNo);
 	}
 
-
 	
+	// 관리자 --------------------------------------------------------------------------------
 	/**
 	 * 241211 한혜원 
 	 * 관리자용 게시글 작성 메소드 
@@ -129,6 +133,7 @@ public class EventServiceImpl implements EventService {
 		return eventDao.insertEvent(sqlSession, e); // 게시글 저장
 		
 	}
+	
 
 	/**
 	 * 241211 한혜원 
@@ -139,6 +144,44 @@ public class EventServiceImpl implements EventService {
 	public int insertEventAttachment(EventAttachment eventAttachment) {
 		return eventDao.insertEventAttachment(sqlSession, eventAttachment); // 첨부파일저장
 	}
+	
+	/**
+	 * 241218 한혜원 
+	 * 관리자용 게시글 총 갯수
+	 */
+	@Override
+	public int selectListCount() {
+		return eventDao.selectListCount(sqlSession);
+	}
+
+	
+	/**
+	 * 241218 한혜원
+	 * 관리자용 게시글 목록 리스트 조회 
+	 */
+	@Override
+	public ArrayList<Event> adminSelectList(PageInfo pi) {
+		return eventDao.adminSelectList(sqlSession, pi);
+	}
+	
+	
+	/**
+	 * 241218 한혜원
+	 * 관리자용 게시글 상세조회 
+	 */
+	@Override
+	public Event adminSelectEvent(int eventNo) {
+		return eventDao.adminSelectEvent(sqlSession, eventNo);
+	}
+	
+	/**
+	 * 241218 한혜원
+	 * 관리자용 게시글 첨부파일 상세조회
+	 */
+	@Override
+	public ArrayList<EventAttachment> adminSelectEventAttachment(int eventNo) {
+		return eventDao.adminSelectEventAttachment(sqlSession, eventNo);
+	}
 
 	@Override
 	public int updateEvent(Event e) {
@@ -147,10 +190,11 @@ public class EventServiceImpl implements EventService {
 	}
 
 	@Override
-	public int updateEvevnt(Event e) {
+	public int deleteEvevnt(Event e) {
 		// TODO Auto-generated method stub
 		return 0;
 	}
+
 
 	
 	
