@@ -265,7 +265,7 @@
         width : 20%;
     }
 
-    #replyContent {
+    .replyContent {
         width : 70%;
     }
     
@@ -289,9 +289,12 @@
         height : 50px;
         box-sizing: border-box;
         border-bottom: 5px;
+        display: flex;
+        justify-content: flex-start;
+        gap : 10px;
     }
 
-    #updateReply {
+    #updateReplyContent {
         /*border: 1px solid red;*/
         resize: none;
         width : 100%;
@@ -307,7 +310,7 @@
         line-height: 50px;
     }
 
-    #updateBtn, #deleteBtn{
+    #updateBtn, #deleteBtn, #saveBtn, #cancelBtn {
         background-color: #493628;
         color : #E4E0E1;
         font-size : 15px;
@@ -320,33 +323,33 @@
         cursor: pointer;
     }
 
-    #updateBtn:hover, #deleteBtn:hover {
+    #updateBtn:hover, #deleteBtn:hover, #saveBtn, #cancelBtn {
         background-color: #AB886D;
     }
     
     /*응모버튼*/
     .apply {
     	box-sizing : border-box;
-    	margin-top: 20px;
+    	margin-top: 10px;
     	text-align : center;
-    	margin-bottom : 20px;
+        padding-bottom : 30px;
     	
     }
     
     #applyBtn {
-    	height : 40px;
-    	width : 160px;
+    	height : 70px;
+    	width : 300px;
     	color : #E4E0E1;
-    	background-color: red;
+    	background-color: #AB886D;
     	border-radius : 4px;
-    	font-size : 20px;
+    	font-size : 40px;
     	font-weight : bold;
     	border : none;
     	
     }
     
-    #applyBtn>button:hover {
-        background-color : #yellow;
+    #applyBtn:hover {
+        background-color : #493628;
         cursor: pointer;
     }
 
@@ -367,7 +370,7 @@
         <!--내용부분-->
         <div class="content-area">
             <div class="content">
-            	${requestScope.e.eventContent }
+            	${requestScope.e.eventContent }<br><br><br>
             	<c:forEach var="file" items="${requestScope.list}">
                 	<img id="event_img" src="${ pageContext.request.contextPath }${file.changeName}" alt="상세이미지">
                 </c:forEach>
@@ -376,11 +379,6 @@
                 </div>
             </div>
             
-            <!-- 수정 / 삭제 시 필요한 글번호, 파일 경로 -->
-            <form id="postForm" action="" method="post">
-            	<input type="hidden" name="eno" value="${requestScope.e.eventNo }">
-            	<input type="hidden" name="filePath" value="${file.changeName}">
-            </form>
             
             <!-- 이벤트 타입에 따라 보여지는 화면이 다름 -->
             <c:choose>
@@ -456,21 +454,21 @@
 		                        <tr>
 		                            <!--수정상황-->
 		                            <td id="replyWriter">us****</td>
-		                            <td id="replyContent">
-		                                <div class="updateReply">
-		                                    <div id="updateForm">
-		                                        <textarea id="updateReply" readonly>모아나 정말 보고싶어용! 저희 엄마가 좋아해여!</textarea>
-		                                    </div>
-		                                    <div class="btn">
-		                                        <button id="updateBtn">수정</button>
-		                                        <button id="deleteBtn">삭제</button>
-		                                    </div>
-		                                </div>
+		                            <td class="replyContent">
+		                                
+		                                    
+		                                        <textarea id="updateReplyContent">모아나 정말 보고싶어용! 저희 엄마가 좋아해여!</textarea>
+		                                        
+		                                        <button id="saveBtn">저장</button>
+		                                        <button id="cancelBtn">취소</button>
+			                                    
+		                                     
+		                                
 		                            </td>
 		                            <td id="replyDate">2024-11-21 오후 2:12:00</td>
 		                        </tr>
 		
-		                        <!--댓글작성자인 경우, 수정 삭제 버튼 -->
+		                        <!--댓글작성자인 경우, 수정 삭제 버튼 
 		                        <tr>
 		                            <td id="replyWriter">us****</td>
 		                            <td id="replyContent">
@@ -479,7 +477,7 @@
 		                                <button id="deleteBtn">삭제</button>
 		                            </td>
 		                            <td id="replyDate">2024-11-21 오후 2:12:00</td>
-		                        </tr>
+		                        </tr> -->
 		                        
 		                    </tbody>
 		                </table>
@@ -503,6 +501,9 @@
     
     <!-- 댓글 관련 스크립트 -->
     <script>
+    // 로그인 유저 정보
+    var loginUser = '${sessionScope.loginUser.userId}'; // jsp 에서 로그인한 ID를 가져오기
+    
     	$(function() {
     		// console.log("왜 안돼..?");
     		selectReplyList();
@@ -563,16 +564,15 @@
     			success : function(result) {
     				let resultStr ="";
     				
-    				// 로그인한 사용자 정보 
-    				var loginUser = '${sessionScope.loginUser.userId}'; // jsp 에서 로그인한 ID를 가져오기
+    				
     				for(let i=0; i<result.length; i++) {
-    					resultStr +="<tr>"
+    					resultStr += "<tr data-reply-no='" + result[i].replyNo + "'>"
     									+ "<td id='replyWriter'>" + result[i].replyWriter + "</td>"
-    									+ "<td id='replyContent'>" + result[i].replyContent; 
+    									+ "<td class='replyContent'>" + result[i].replyContent; 
     									
     									// 로그인한 사용자와 댓글 작성자가 동일한 경우 수정 / 삭제 버튼 추가 
     				    				if(result[i].replyWriter === loginUser) {
-    				    					 resultStr +="<button id='updateBtn' onclick='updateReply(" + result[i].replyNo + ");'>수정</button>"
+    				    					 resultStr +="<button id='updateBtn' onclick='editReply(" + result[i].replyNo + ");'>수정</button>"
     				    					 			+"<button id='deleteBtn' onclick='deleteReply(" + result[i].replyNo + ");'>삭제</button>";
     				    				 }
 
@@ -593,24 +593,106 @@
     		});
     	}
     	
-    	// 댓글 수정 요청 
-    	function updateFormReply(replyNo) {
-    		// 기존 댓글 내용을 가져오기 위한 AJAX
-    		$.ajax({
-    			url : "rlist.ev",
-    			type : "get",
-    			data : {replyNo : replyNo},
-    			success : function(result) {
-    				// 수정 폼에 기존 댓글 내용 반영
-    				$("#updateReply").val(result.replyContent); // 댓글 수정 창에 내용 채우기 
-    				$("#updateBtn").click(function(){
-    					updateReply(replyNo); // 수정 완료 시 처리 함수 호출
-    				});
-    			},
-    			error : function() {
-    				console.log("댓글 수정 정보 조회 실패")
-    			}
-    		});
+    	// 댓글 수정용 함수
+    	function editReply(replyNo) {
+    		let row = $("tr[data-reply-no='" + replyNo + "']");
+    	    // console.log("Row element:", row); // 콘솔에서 tr 요소가 선택되는지 확인
+    	    
+    	    let replyContentCell = row.find("td").eq(1); // 두번째 td가 댓글 내용
+    	    // console.log("replyContentCell:", replyContentCell); // td.replyContent가 제대로 선택되는지 확인
+    	    
+    	    let originalContent = replyContentCell.text().trim();  // 원본 댓글 내용
+    	    // console.log("originalContent : ", originalContent);
+    	    
+    	 	// 댓글의 원본 내용을 data로 저장
+    	    row.data("originalContent", originalContent); // 원본내용 저장
+
+    	    
+    	 	// 댓글 내용 텍스트 영역으로 변경
+    	    replyContentCell.html('<textarea id="updateReplyContent">' + originalContent + '</textarea>');
+    	    
+    	 	// 버튼 영역을 "저장"과 "취소" 버튼으로 변경
+    	    let buttonCell = row.find("td").eq(1);
+    	 	// buttonCell.html('');
+    	    // console.log(buttonCell);
+    	    // buttonCell.empty();
+    	    
+    	    // "저장" 버튼 추가
+    	    buttonCell.append('<button id="saveBtn" class="btn" onclick="saveEditedReply(' + replyNo + ')">저장</button>');
+    	    // "취소" 버튼 추가
+    	    buttonCell.append('<button id="cancelBtn" class="btn" onclick="cancelEditReply(' + replyNo + ')">취소</button>');
+    	}
+
+    	// 댓글 수정 저장 함수
+    	function saveEditedReply(replyNo) {
+    	    let updatedContent = $("#updateReplyContent").val(); // 수정된 내용 가져오기
+    	 	// 댓글 작성자를 가져옵니다 (서버에서 해당 데이터를 넘기면 좋습니다)
+    	    let writer = $("tr[data-reply-no='" + replyNo + "']").data("writer"); // 예시로, 댓글을 작성한 사용자의 정보를 HTML에서 data attribute로 전달했다고 가정
+    	    let row = $("tr[data-reply-no='" + replyNo + "']");
+    	    
+    	    // Ajax로 서버에 수정된 댓글 내용 보내기
+    	    $.ajax({
+    	        url: "rupdate.ev", // 수정할 주소
+    	        type: "POST",
+    	        data: JSON.stringify({replyNo: replyNo, replyContent: updatedContent, replyWriter: "${ sessionScope.loginUser.userNo }" }),
+    	        contentType: "application/json; charset=UTF-8",
+    	        success: function(response) {
+    	            if (response.status === "success") {
+    	                alert(response.message);
+    	                row.find("td.replyContent").text(updatedContent); // 댓글 내용 수정
+    	                // 버튼을 "수정"과 "삭제" 버튼으로 복원
+    	                let buttonCell = row.find("td").eq(1);
+    	                // buttonCell.html('');
+    	                buttonCell.append('<button id="updateBtn" onclick="editReply(' + replyNo + ')">수정</button>');
+    	                buttonCell.append('<button id="deleteBtn" onclick="deleteReply(' + replyNo + ')">삭제</button>');
+    	            } else {
+    	                alert(response.message);
+    	            }
+    	        },
+    	        error: function() {
+    	            alert("댓글 수정에 실패했습니다.");
+    	        }
+    	    });
+    	}
+
+    	// 댓글 수정 취소 함수
+    	function cancelEditReply(replyNo) {
+    	    let row = $("tr[data-reply-no='" + replyNo + "']");
+
+    	    // 댓글 원본 내용 가져오기 (최초 상태)
+    	    let originalContent = row.data("originalContent"); // 이전에 저장한 댓글 원본 내용
+    	    
+    	    // 텍스트를 원본 내용으로 복원
+    	    let replyContentCell = row.find("td.replyContent");
+    	    replyContentCell.text(originalContent); // 기존 내용 복원
+    	    
+    	    // 버튼을 "수정"과 "삭제" 버튼으로 복원
+    	    let buttonCell = row.find("td").eq(1);
+    	    // buttonCell.html(''); // 기존 버튼 제거
+    	    buttonCell.append('<button id="updateBtn" onclick="editReply(' + replyNo + ')">수정</button>');
+    	    buttonCell.append('<button id="deleteBtn" onclick="deleteReply(' + replyNo + ')">삭제</button>');
+    	}
+    	
+    	// 댓글 삭제
+    	function deleteReply(replyNo) {
+    	    $.ajax({
+    	        url: "rdelete.ev",  // 삭제 요청 URL
+    	        type: "POST",       // POST 방식
+    	        data: { replyNo: replyNo },  // 삭제할 댓글 번호 전달
+    	        success: function(response) {
+    	            if (response === "success") {
+    	                // 성공적인 삭제 시 해당 댓글을 DOM에서 삭제
+    	                $("tr[data-reply-no='" + replyNo + "']").remove();
+    	                alert("댓글이 삭제되었습니다.");
+    	            } else {
+    	                alert("댓글 삭제에 실패했습니다.");
+    	            }
+    	        },
+    	        error: function() {
+    	            console.log("댓글 삭제 요청 실패");
+    	            alert("댓글 삭제 요청에 실패했습니다.");
+    	        }
+    	    });
     	}
     	
     
