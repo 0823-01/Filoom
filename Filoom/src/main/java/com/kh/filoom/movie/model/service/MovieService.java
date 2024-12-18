@@ -1,6 +1,7 @@
 package com.kh.filoom.movie.model.service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import com.kh.filoom.movie.model.vo.Movie;
 
@@ -16,20 +17,28 @@ public interface MovieService {
 	
 	// 영화 목록 조회 관련 메소드들
 	/*
-	 * movieSelectTop()
-	 * 	└ selectNow4()
-	 * 	└ selectPre4()
-	 * viewBoxOffice(pi) - selectBoxOffice(pi)
-	 * viewOpenedOnly(pi) - selectNowPlaying(pi)
-	 * 		listbyOpenedOrder(pi)
+	 * === 현재 페이징처리와 listbyCritics() 빼고 전부 완료 ===
+	 * - listbyCritics()도 쿼리와 함수까지 전부 만들어 놓긴 했으나, 
+	 * 	REVIEW 테이블과의 JOIN이 필요한 관계로 REVIEW 더미데이터 넣은 후 추가예정
+	 * 
+	 * movieSelectTop() V
+	 * 	└ selectNow4() V
+	 * 	└ selectPre4() V
+	 * viewBoxOffice(pi) - selectBoxOffice(pi) V
+	 * viewOpenedOnly(pi) - selectNowPlaying(pi) V
+	 * 		listbyOpenedOrder(pi) V
 	 * 		listbyCritics(pi)
-	 * 		listbyName(pi)
-	 * viewNotOpened(pi) - selectMovieListPre(pi)
-	 * 		listbyOpenOrder(pi)
-	 * 		listbyNamePre(pi)
+	 * 		listbyName(pi) V
+	 * 		listbyNamePlaying(pi) V
+	 * viewNotOpened(pi) 
+	 * 		listbyOpenOrder(pi) - 기본, V
+	 * 		listbyNamePre(pi) V
+	 * searchMovie() V
 	 */
 	
-	int movieSelectTop();
+	// 영화 탭 HOME
+	ArrayList<Movie> selectNow4(); // 박스오피스 TOP 4 (임시로 MOVIE_NO 빠른 순)
+	ArrayList<Movie> selectPre4(); // 개봉 예정일순 TOP 4
 	
 	// 초기 정렬
 	ArrayList<Movie> selectBoxOffice(); // 개봉순
@@ -37,15 +46,21 @@ public interface MovieService {
 	
 	// 정렬 기준
 	// 박스 오피스
-	ArrayList<Movie> listbyOpenedOrder(int cpage); // 개봉순
-	ArrayList<Movie> listbyOpenedOrderPlaying(); // 개봉순(개봉작만)
+	ArrayList<Movie> listbyOpenedOrder(int cpage); // 개봉순 (개봉작만)
 	ArrayList<Movie> listbyCritics(); // 평점순(개봉작만)
 	ArrayList<Movie> listbyName(); // 가나다순(전체)
 	ArrayList<Movie> listbyNamePlaying(); // 가나다순(개봉작만)
 	
 	// 개봉 예정작
-	ArrayList<Movie> selectNotOpened(); // 기본 개봉예정 빠른 순
-	ArrayList<Movie> listWaitingByName(); // 가나다순
+	ArrayList<Movie> listbyOpenOrder(); // 개봉예정 빠른 순 ← 기본 정렬 기준
+	ArrayList<Movie> listbyNamePre(); // 가나다순
+	
+	// 영화 검색 - status = 0은 전체, 1은 개봉작만, 2는 미개봉작만 
+	ArrayList<Movie> searchMovie(HashMap<String, Object> map);
 	
 	
+	// === 영화 상세 페이지 ===
+	Movie showDetail(int movieNo); // 상세 정보 조회
+	// listScenes(); // 스틸컷 목록 조회
+	// selectReviewList(); // 리뷰 목록 조회
 }

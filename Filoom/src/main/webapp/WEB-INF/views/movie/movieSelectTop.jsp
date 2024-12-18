@@ -107,69 +107,22 @@
                 </a> 
             </div>
             <hr style="width:95%;">
-    
             <br>
-            <!-- 실제 jsp 파일에서는 반복문 돌려서 구현할 계획
-                <.filmrate> <b>MovieName</b><br>
-                <open_date> <if_premiere ? '개봉' : '개봉예정'>
-            -->
-            
-            <!-- 나중에 DB에 영화 목록 넣을 때 별일 없으면 이 아래 목록 그대로 넣을 생각임 -->
-            
-            <div class="movie">
-                <img src="resources/images/posters/moana.jpg" class="poster">
-                <table class="movie-info">
-                    <tr>
-                        <td id="filmrate"><img src="resources/images/posters/all.svg" class="filmrate"></td>
-                        <td><b>모아나 2</b><br></td>
-                    </tr>
-                    <tr>
-                        <td colspan="2">2024.11.27 개봉</td>
-                    </tr>
-                </table>
-            </div>
-            <!-- 300 x 400, column margin 25px로 5x3으로 조정
-            row margin은 확인해보고 결정
-            참고로 현재 column margin은 45px -->
 
-            <div class="movie" onclick="location.href='detail.mo';">
-                <img src="resources/images/posters/wicked2.jpg" class="poster"><br>
-                <table class="movie-info">
-                    <tr>
-                        <td id="filmrate"><img src="resources/images/posters/all.svg" class="filmrate"></td>
-                        <td><b>위키드</b><br></td>
-                    </tr>
-                    <tr>
-                        <td colspan="2">2024.11.20 개봉</td>
-                    </tr>
-                </table>
-            </div>
-
-            <div class="movie">
-                <img src="resources/images/posters/1win.jpg" class="poster"><br>
-                <table class="movie-info">
-                        <tr>
-                            <td id="filmrate"><img src="resources/images/posters/12.svg" class="filmrate"></td>
-                            <td><b>1승</b><br></td>
-                        </tr>
-                        <tr>
-                            <td colspan="2">2024.12.4 개봉</td>
-                        </tr>
-                </table>
-            </div>
-
-            <div class="movie">
-                <img src="resources/images/posters/hiddenface.jpg" class="poster"><br>
-                <table class="movie-info">
-                    <tr>
-                        <td id="filmrate"><img src="resources/images/posters/19.svg" class="filmrate"></td>
-                        <td><b>히든페이스</b><br></td>
-                    </tr>
-                    <tr>
-                        <td colspan="2">2024.11.20 개봉</td>
-                    </tr>
-                </table>
-            </div>
+			<c:forEach var="pic" items="${now}">
+            	<div class="movie">
+	                <img src="${pageContext.request.contextPath}/resources/images/posters/${pic.fileCodename}" class="poster">
+	                <table class="movie-info">
+	                    <tr>
+	                        <td id="filmrate"><img src="resources/images/posters/${pic.filmRate}.svg" class="filmrate"></td>
+	                        <td><b>${pic.movieTitle}</b><br></td>
+	                    </tr>
+	                    <tr>
+	                        <td colspan="2">${pic.openDate} ${pic.premiere eq 'Y' ? '개봉' : '개봉예정'} </td>
+	                    </tr>
+	                </table>
+            	</div>
+            </c:forEach>
 
         </div>
         <br><br>
@@ -183,68 +136,21 @@
             </div>
             <hr style="width:95%;">
             <br>
-            <!-- 실제 jsp 파일에서는 반복문 돌려서 구현할 계획
-                <.filmrate> <b>MovieName</b><br>
-                <open_date> <if_premiere ? '개봉' : '개봉예정'>
-            -->
-            
-            <!-- 나중에 DB에 영화 목록 넣을 때 별일 없으면 이 아래 목록 그대로 넣을 생각임 -->
-            
-            <div class="movie">
-                <img src="resources/images/posters/harbin.jpg" class="poster">
-                <table class="movie-info">
-                    <tr>
-                        <td id="filmrate"><img src="resources/images/posters/15.svg" class="filmrate"></td>
-                        <td><b>하얼빈</b><br></td>
-                    </tr>
-                    <tr>
-                        <td colspan="2">2024.12.24 개봉예정</td>
-                    </tr>
-                </table>
-            </div>
-            <!-- 300 x 400, column margin 25px로 5x3으로 조정
-            row margin은 확인해보고 결정
-            참고로 현재 column margin은 45px -->
 
-			<!-- 극장판 짱구는 못말려: 우리들의 공룡일기 -->
-            <div class="movie" onclick="location.href='movie_specific.html';">
-                <img src="resources/images/posters/dinosinzzang.jpg" class="poster"><br>
-                <table class="movie-info">
-                    <tr>
-                        <td id="filmrate"><img src="resources/images/posters/all.svg" class="filmrate"></td>
-                        <td><b>극장판 짱구는 못말..</b><br></td>
-                    </tr>
-                    <tr>
-                        <td colspan="2">2024.12.18 개봉예정</td>
-                    </tr>
-                </table>
-            </div>
-
-            <div class="movie">
-                <img src="resources/images/posters/mufasa.jpg" class="poster"><br>
-                <table class="movie-info">
-                        <tr>
-                            <td id="filmrate"><img src="resources/images/posters/all.svg" class="filmrate"></td>
-                            <td><b>무파사: 라이온 킹</b><br></td>
-                        </tr>
-                        <tr>
-                            <td colspan="2">2024.12.18 개봉예정</td>
-                        </tr>
-                </table>
-            </div>
-
-            <div class="movie">
-                <img src="resources/images/posters/civilwar.jpg" class="poster"><br>
-                <table class="movie-info">
-                    <tr>
-                        <td id="filmrate"><img src="resources/images/posters/15.svg" class="filmrate"></td>
-                        <td><b>시빌 워: 분열의 시대</b><br></td>
-                    </tr>
-                    <tr>
-                        <td colspan="2">2024.12.31 개봉예정</td>
-                    </tr>
-                </table>
-            </div>
+			<c:forEach var="pic" items="${pre}">
+            	<div class="movie">
+	                <img src="${pageContext.request.contextPath}/resources/images/posters/${pic.fileCodename}" class="poster">
+	                <table class="movie-info">
+	                    <tr>
+	                        <td id="filmrate"><img src="resources/images/posters/${pic.filmRate}.svg" class="filmrate"></td>
+	                        <td><b>${pic.movieTitle}</b><br></td>
+	                    </tr>
+	                    <tr>
+	                        <td colspan="2">${pic.openDate} 개봉예정 </td>
+	                    </tr>
+	                </table>
+            	</div>
+            </c:forEach>
 
         </div>
         <br><br>

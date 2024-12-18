@@ -218,56 +218,22 @@
                     <a href="javascript:listbyName();">이름순</a>
                 </div>
                 <div class="right" style="padding-right:30px;">
-                    <input type="search" class="search-bar" placeholder="제목으로 검색...">
-                    <!-- <i class="fa-solid fa-magnifying-glass" onclick="window.alert('검색 기능은 준비중입니다.')"></i> -->
+                    <input type="search" class="search-bar" placeholder="제목으로 검색..."
+                    	name="keyword" value="${requestScope.keyword}">
+                    <i class="fa-solid fa-magnifying-glass"
+                    	onclick="searchMovie();"></i>
                     <!-- ↑ 이게 검색 아이콘인데 횟수 절약을 위해 잠시 비활성화 처리하였음 -->
                 </div>
             </div>
-    
-    
             <br>
-            <!-- 실제 jsp 파일에서는 반복문 돌려서 구현할 계획
-                <.filmrate> <b>MovieName</b><br>
-                <open_date> <if_premiere ? '개봉' : '개봉예정'>
-            -->
-            
-            <!-- 나중에 DB에 영화 목록 넣을 때 별일 없으면 이 아래 목록 그대로 넣을 생각임 -->
-    
-            <!-- 초안은 width 360px + 4x4에 margin 45px 0px 였는데
-             (피드백 받고 세로 margin 10px로 바꾸긴 했음)
-             이렇게 하면 화면 크기 100% 기준으로 화면이 꽉 차는 문제가 있음
-             당장 한 줄에 영화 4개 들어가면 margin 포함 1800px인데
-             뒷판떼기의 width 초안이 1900px이고 이 마저도 꽉차 보인단 피드백 있었음
-             (2/3 정도로 줄이는 게 적합하다는 의견)
-             전체적으로 2/3으로 width 240px에 margin 30px 10px가 나을 듯  -->
-             
-             
-<%--             <c:forEach var="" items=""> --%>
-<!--             	<div class="movie"> -->
-<!-- 	                <img src="resources/images/posters/moana.jpg" class="poster"> -->
-<!-- 	                <table class="movie-info"> -->
-<!-- 	                    <tr> -->
-<!-- 	                        <td id="filmrate"><img src="resources/images/posters/all.svg" class="filmrate"></td> -->
-<!-- 	                        <td><b>${movieTitle}</b><br></td> -->
-<!-- 	                    </tr> -->
-<!-- 	                    <tr> -->
-<!-- 	                        <td colspan="2">${openDate} ${premiere}</td> -->
-								<!--${premiere}: Y면 '개봉', N이면 '개봉예정' -->
-<!-- 	                    </tr> -->
-<!-- 	                </table> -->
-<!--             	</div> -->
-<%--             </c:forEach> --%>
 
-			<!-- 300 x 400, column margin 25px로 5x3으로 조정
-	            row margin은 확인해보고 결정
-	            참고로 현재 column margin은 45px -->
             <div class="movie-list">
             
 	            <div class="movie">
 	                <img src="resources/images/posters/moana.jpg" class="poster">
 	                <table class="movie-info">
 	                    <tr>
-	                        <td id="filmrate"><img src="resources/images/posters/all.svg" class="filmrate"></td>
+	                        <td id="filmrate"><img src="resources/images/posters/3.svg" class="filmrate"></td>
 	                        <td><b>모아나 2</b><br></td>
 	                    </tr>
 	                    <tr>
@@ -280,7 +246,7 @@
 	                <img src="resources/images/posters/wicked2.jpg" class="poster"><br>
 	                <table class="movie-info">
 	                    <tr>
-	                        <td id="filmrate"><img src="resources/images/posters/all.svg" class="filmrate"></td>
+	                        <td id="filmrate"><img src="resources/images/posters/3.svg" class="filmrate"></td>
 	                        <td><b>위키드</b><br></td>
 	                    </tr>
 	                    <tr>
@@ -335,7 +301,7 @@
 	                <table class="movie-info">
 	                    <tr>
 	                        <td id="filmrate"><img src="resources/images/posters/12.svg" class="filmrate"></td>
-	                        <td><b>알엠 : 라이트...</b><br></td>
+	                        <td><b>알엠: 라이트 피플...</b><br></td>
 	                    </tr>
 	                    <tr>
 	                        <td colspan="2">2024.12.5 개봉예정</td>
@@ -360,7 +326,7 @@
 	                <img src="resources/images/posters/chungsul.jpg" class="poster"><br>
 	                <table class="movie-info">
 	                    <tr>
-	                        <td id="filmrate"><img src="resources/images/posters/all.svg" class="filmrate"></td>
+	                        <td id="filmrate"><img src="resources/images/posters/3.svg" class="filmrate"></td>
 	                        <td><b>청설</b></td>
 	                    </tr>
 	                    <tr>
@@ -487,7 +453,7 @@
         	});
         	
         	function toggleSwitch() {
-        		alert($("#openedOnly").prop("checked"));
+        		// alert($("#openedOnly").prop("checked"));
         		if(!$("#openedOnly").prop("checked")) {
         			viewAll();
         		} else {
@@ -507,15 +473,12 @@
     				success: function(result) {
     					$(".movie-list").empty();
     					$(".movie-list").append(result);
-    					
     				},
     				error: function() {
     					alert("Mission Failure");
     				}
     			});	
         	}
-        	
-
         	
         	function openedOnly() {
         		$.ajax({
@@ -526,7 +489,6 @@
     				success: function(result) {    					
     					$(".movie-list").empty();
     					$(".movie-list").append(result);
-    					
     				},
     				error: function() {
     					alert("Mission Failure");
@@ -545,7 +507,6 @@
     				success: function(result) {    					
     					$(".movie-list").empty();
     					$(".movie-list").append(result);
-    					
     				},
     				error: function() {
     					alert("Mission Failure");
@@ -554,18 +515,84 @@
         	}
         	
         	function listbyCritics() {
+//         		$.ajax({
+//     				url: "criticchoice.mo",
+//     				type: "get",
+//     				dataType:"html",
+    				
+//     				success: function(result) {    					
+//     					$(".movie-list").empty();
+//     					$(".movie-list").append(result);
+    					
+//     				},
+//     				error: function() {
+//     					alert("Mission Failure");
+//     				}
+//     			});
         		alert("공사중입니다.");
         	}
         	
+        	// '이름순'을 눌렀을 때, '상영중인 영화만 표시' 스위치가 켜져 있으면 상영중인 영화만 가지고 정렬함 
         	function listbyName() {
-        		alert("공사중입니다.");
+        		if($("#openedOnly").prop("checked")) {
+   		        	$.ajax({
+	    				url: "nameorderplaying.mo",
+	    				type: "get",
+	    				dataType:"html",
+	    				
+	    				success: function(result) {
+	    					$(".movie-list").empty();
+	    					$(".movie-list").append(result);
+	    				},
+	    				error: function() {
+	    					alert("Mission Failure");
+	    				}
+	    			});		
+        		} else {
+	        		$.ajax({
+	    				url: "nameorder.mo",
+	    				type: "get",
+	    				dataType:"html",
+	    				
+	    				success: function(result) {
+	    					$(".movie-list").empty();
+	    					$(".movie-list").append(result);
+	    				},
+	    				error: function() {
+	    					alert("Mission Failure");
+	    				}
+	    			});
+        		}
+
+        	}
+        	
+        	function searchMovie() {
+        		let keyword = $("input[name=keyword]").val();
+        		console.log(keyword);
+        		// status = '상영중인 영화만 표시' 스위치 체크 여부
+        		let status = $("#openedOnly").prop("checked") ? 1 : 0;
+        		if(keyword != "") {
+        			$.ajax({
+	        			url: "searchMovie.mo",
+	        			type: "get",
+	        			data: {"keyword" : keyword, "status" : status},
+	        			dataType:"html",
+	        			
+	        			success: function(result) {
+	    					$(".movie-list").empty();
+	    					$(".movie-list").append(result);
+	    				},
+	    				error: function() {
+	    					alert("Mission Failure");
+	    				}
+        			});
+        		}
         	}
         </script>
         <br><br>
 
         <!-- Paging Bar -->
         <div class="pagingbar" align="center">
-            <!-- 나중에 currentPage에 대해서만 볼드 & btn disabled 적용할 예정 -->
             <!-- if i > 1 -->
             <c:if test="${ requestScope.pi.currentPage gt 1 }">
                 <button onclick="location.href = 'boxoffice.mo?page=1';">&lt;&lt;</button> <!-- to Page1 -->

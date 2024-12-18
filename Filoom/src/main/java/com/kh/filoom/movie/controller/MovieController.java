@@ -1,6 +1,7 @@
 package com.kh.filoom.movie.controller;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -16,10 +17,16 @@ import com.kh.filoom.movie.model.vo.Movie;
 
 /**
  * @author 정원섭
- * === MovieController v 0.1 ===
+ * === MovieController v 0.2 ===
  * 작업 착수일 : 2024-12-13
- * 최종 수정일 : 2024-12-17
+ * 최종 수정일 : 2024-12-18
  */
+
+/* 작업 내역
+ * v 0.1 - 틀 잡기
+ * v 0.2 - 영화 목록 출력
+ * 
+ * */
 @Controller
 public class MovieController {
 	
@@ -35,11 +42,15 @@ public class MovieController {
 	
 	// == 사용자 페이지 ==
 	@GetMapping("movies.mo")
-	public String viewMovieSelectTop() {
+	public String viewMovieSelectTop(Model model) {
 		// premiere = 'y'인 쪽에서 movie_no 역순으로 4편
-			// msi.selectNow4()
-		// premiere = 'n'인 쪽에서 movie_no 역순으로 4편
-			// msi.selectPre4()
+		ArrayList<Movie> now = msi.selectNow4();
+		
+		// premiere = 'n'인 쪽에서 open_date 빠른 순으로 4편
+		ArrayList<Movie> pre = msi.selectPre4();
+		
+		model.addAttribute("now",now);
+		model.addAttribute("pre",pre);
 		return "movie/movieSelectTop";
 	}
 	
@@ -76,7 +87,8 @@ public class MovieController {
 		return "movie/list_using_taglib";
 	}
 	
-	// 개봉순 정렬 (상영작만) - 테스트 중
+	// 개봉순 정렬 (개봉작만) - 테스트 중
+	// 미개봉작을 포함한 개봉순 정렬은 만들 예정 없음
 	// @GetMapping("openorder.mo?cpage=x")
 	@GetMapping("openorder.mo")
 	public String listbyOpenedOrder(@RequestParam(value="cpage", defaultValue="1")int cpage, Model model) {
@@ -90,56 +102,92 @@ public class MovieController {
 		return "movie/list_using_taglib";
 	}
 	
-	/*
-	// 개봉순 정렬 (상영작만)
-	@ResponseBody
-	@GetMapping("openorder.mo")
-	public void listbyOpenedOrder(Model model) {
-		PageInfo pi = Pagination.getPageInfo(listCount, cpage, pgLimit, boardLimit);
-		ArrayList<Movie> nowplaying = msi.listbyOpenedOrder();
+	// 가나다순 정렬
+	@GetMapping("nameorder.mo")
+	public String listbyName(Model model) {
+		int listCount = msi.checkVideoCount();
+		
+		ArrayList<Movie> nowplaying = msi.listbyName();
+		model.addAttribute("box", nowplaying);
+		return "movie/list_using_taglib";
 	}
+	
+	// 가나다순 정렬 (상영작만)
+	@GetMapping("nameorderplaying.mo")
+	public String listbyNamePlaying(Model model) {
+		int listCount = msi.checkVideoCount();
+		
+		ArrayList<Movie> nowplaying = msi.listbyNamePlaying();
+		model.addAttribute("box", nowplaying);
+		return "movie/list_using_taglib";
+	}
+	
+	/*
 	
 	// 평점순 정렬 (상영작만)
-	@ResponseBody
 	@GetMapping("criticchoice.mo")
-	public void listbyCritics(Model model) {
-		PageInfo pi = Pagination.getPageInfo(listCount, cpage, pgLimit, boardLimit);
-		ArrayList<Movie> toprotten = msi.listbyCritics();
-	}
-	
-	// 가나다순 정렬
-	@ResponseBody
-	@GetMapping("nameorder.mo")
-	public void listbyName(Model model) {
-		PageInfo pi = Pagination.getPageInfo(listCount, cpage, pgLimit, boardLimit);
-		ArrayList<Movie> nowplaying = msi.listbyName();
+	public String listbyCritics(Model model) {
+		int listCount = msi.checkOpenedVideoCount();
+		// PageInfo pi = Pagination.getPageInfo(listCount, cpage, pgLimit, boardLimit);
+
+		ArrayList<Movie> bestlist = msi.listbyCritics();
+		model.addAttribute("box", bestlist);
+		return "movie/list_using_taglib";
 	}
 	*/
 	
 	
-	// 상영 예정작만 보기
+	// 상영 예정작만 보기 - 페이지 띄우기
 	@GetMapping("preopen.mo")
 	public String viewNotOpened() {
 		// ArrayList<Movie> tbs = msi.selectMovieListPre();
 		return "movie/movieNotOpened";
 	}
+
 	
-	/*
 	// 개봉예정작의 개봉순 정렬 - 기본값이 됨에 따라 viewNotOpened로 통합 예정
-	@ResponseBody
 	@GetMapping("openorderpre.mo")
-	public void listbyOpenOrder(PageInfo pi) {
+	public String listbyOpenOrder(/*@RequestParam(value="cpage", defaultValue="1")int cpage, */Model model) {
+		int listCount = msi.checkNotOpenVideoCount();
+//		PageInfo pi = Pagination.getPageInfo(listCount, cpage, pgLimit, boardLimit);
 		ArrayList<Movie> comingsoon = msi.listbyOpenOrder();
+		model.addAttribute("box",comingsoon);
+//		model.addAttribute("pi",pi);
+		
+		return "movie/list_using_taglib";
 	}
 		
 	// 개봉예정작의 가나다순 정렬
-	@ResponseBody
 	@GetMapping("nameorderpre.mo")
-	public void listWaitingByName(PageInfo pi) {
+	public String listWaitingByName(Model model) {
+		int listCount = msi.checkNotOpenVideoCount();
+//		PageInfo pi = Pagination.getPageInfo(listCount, cpage, pgLimit, boardLimit);
 		ArrayList<Movie> comingsoon = msi.listbyNamePre();
+		model.addAttribute("box",comingsoon);
+//		model.addAttribute("pi",pi);
+		return "movie/list_using_taglib";
 	}
-	*/
 	
+	// 모든 검색은 제목으로만 가능하며, 정렬 기준은 MOVIE_NO DESC 하나로 고정
+	// (해당 : 박스오피스, 개봉 예정작, 관리자 영화 관리 목록)
+	@GetMapping("searchMovie.mo")
+	public String searchMovie(String keyword, int status, Model model) {
+		// status : 0 = 전체, 1 = 개봉작만, 2 = 미개봉작만(searchFromPreOpen에서 씀)
+		HashMap<String, Object> map = new HashMap<>();
+		map.put("keyword", keyword);
+		map.put("status", status);
+		
+		ArrayList<Movie> searched = msi.searchMovie(map);
+		model.addAttribute("box", searched);
+		return "movie/list_using_taglib";
+	}
+
+	/*
+	 * public String searchByName(String keyword, Model model) {
+	 * 		
+	 *  }
+	 * 
+	 */
 	
 	
 	// 영화 상세 페이지
@@ -152,13 +200,16 @@ public class MovieController {
 	}
 	
 	// 영화 상세 정보 조회 (스틸컷까지만)
-	public void showDetail() {
+	public void showDetail(int movieNo) {
+		msi.showDetail(movieNo);
 		
 	}
 	
 	// 리뷰 목록 조회 (+ 페이징 처리) (AJAX 예상)
-	public void selectReview(PageInfo pi) {
-		
+	public void selectReview(@RequestParam(value="cpage", defaultValue="1")int cpage) {
+		int pgLimit = 10;
+		int listCount = 42; // 임시숫자
+		PageInfo pi = Pagination.getPageInfo(listCount, cpage, pgLimit, boardLimit);
 	}
 	
 	
@@ -230,7 +281,7 @@ public class MovieController {
 	public void deleteMovie() {
 		/* 사용할 쿼리
 		 * UPDATE MOVIE
-			SET STATUS = 'Y'
+			SET STATUS = 'N'
 			WHERE MOVIE_NO = #{movieNo}
 		 */
 	}
@@ -282,7 +333,11 @@ public class MovieController {
 	
 	// 관리자가 리뷰 삭제 (목록에서 해당 리뷰 상단의 '-' 버튼을 눌렀을 때)
 	public void adminDeleteReview() {
-		
+		/* 사용할 쿼리
+		 * UPDATE REVIEW
+			SET IS_DELETED = 'Y'
+			WHERE REVIEW_ID = #{reviewId}
+		 */
 	}
 	
 }
