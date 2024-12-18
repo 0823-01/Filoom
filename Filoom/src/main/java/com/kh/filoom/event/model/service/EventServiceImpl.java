@@ -1,7 +1,6 @@
 package com.kh.filoom.event.model.service;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -73,27 +72,43 @@ public class EventServiceImpl implements EventService {
 		return eventDao.selectEventAttachment(sqlSession, eventNo);
 	}
 	
-	
-	
-	
-	
 
+	// 댓글
+	/**
+	 * 241217 한혜원 
+	 * 사용자 댓글 목록조회 요청 메소드
+	 */
 	@Override
 	public ArrayList<Reply> selectReplyList(int eventNo) {
-		// TODO Auto-generated method stub
-		return null;
+		return eventDao.selectReplyList(sqlSession, eventNo);
+	}
+	
+	/**
+	 *
+	 
+	public boolean checkIfReplyExists(int eventNo, String userNo) {
+		return eventDao.checkIfReplyExists(eventNo, userNo) > 0;
+	} */
+
+	/**
+	 * 241217 한혜원 
+	 * 댓글 작성용 요청 메소드 
+	 */
+	@Override
+	@Transactional
+	public int insertReply(Reply r) {
+		return eventDao.insertReply(sqlSession, r);
 	}
 
+	/**
+	 * 241217 한혜원
+	 * 댓글 수정용 요청 메소드 
+	 *
+	 */
 	@Override
-	public int insetReply(Reply r) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
+	@Transactional
 	public int updateReply(Reply r) {
-		// TODO Auto-generated method stub
-		return 0;
+		return eventDao.updateReply(sqlSession, r);
 	}
 
 	@Override
@@ -101,6 +116,7 @@ public class EventServiceImpl implements EventService {
 		// TODO Auto-generated method stub
 		return 0;
 	}
+
 
 	
 	/**

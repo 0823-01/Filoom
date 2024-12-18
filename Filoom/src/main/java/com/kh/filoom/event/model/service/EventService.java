@@ -30,7 +30,7 @@ public interface EventService {
 	ArrayList<Reply> selectReplyList(int eventNo);
 	
 	// 댓글 작성 서비스 (Ajax)
-	int insetReply(Reply r);
+	int insertReply(Reply r);
 	
 	// 댓글 수정 서비스 (Ajax) 
 	int updateReply(Reply r);
