@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpSession;
@@ -14,13 +15,14 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.google.gson.Gson;
 import com.kh.filoom.book.model.service.BookService;
-import com.kh.filoom.book.model.vo.Booking;
 import com.kh.filoom.book.model.vo.BookingSeat;
 import com.kh.filoom.book.model.vo.Playing;
 import com.kh.filoom.book.payment.DataEncrypt;
@@ -215,7 +217,15 @@ public class BookController {
 		
 		//session에서 회원번호 가져오기
 		//int userNo = session.getAttribute("loginUser.userNo");
-		int userNo = 1;
+		Member loginUser = new Member();
+		loginUser.setUserNo(1);
+		loginUser.setUserName("김형문");
+		loginUser.setEmail("hhhh@naver.com");
+		 
+		session.setAttribute("loginUser",loginUser);
+		
+		
+		int userNo = loginUser.getUserNo();
 		
 		
 		  
@@ -248,6 +258,7 @@ public class BookController {
 			
 		//3.결제화면에 넘길 정보 조회, mv에 담기
 			
+			/*
 			//결제시 필요한 예매번호+유저번호 미리생성
 			int bookNo = bookService.setBookNo(userNo);
 			Booking booking = new Booking();
@@ -255,31 +266,30 @@ public class BookController {
 			log.debug("4==BOOKING_NO 생성,조회  booking = " + booking.toString());
 			
 			mv.addObject("booking = ",booking);
+			*/
 			
-			//*회원번호 -> 쿠폰리스트(쿠폰고유번호)
-			ArrayList<CouponUser> couponUserList = new ArrayList();
-			couponUserList = bookService.selectListCouponUser(userNo);
-			log.debug("5==사용가능한 쿠폰 조회 couponUserList : "+couponUserList.toString());
 			
-			mv.addObject("couponUserList",couponUserList);
 			
+			/*
 			//*회원번호 -> 회원정보(회원번호, 회원이름, 회원이메일, 회원전화번호)
 			Member member = bookService.selectMember(userNo);
 			log.debug("6==멤버 정보 member : " + member.toString());
 			
 			mv.addObject("member",member);
+			*/
+			
 			
 			//*상영번호 -> 영화정보,이미지,상영정보, 상영관정보 조회
 			Movie movie = bookService.selectMovieForPlayingNo(playingNo);
 			
-			log.debug("7==영화정보(+포스터),상영정보,상영관 정보 movie : " + movie.toString());
+			log.debug("4==영화정보(+포스터),상영정보,상영관 정보 movie : " + movie.toString());
 			mv.addObject("movie",movie);
 			
 			//*상영번호 -> 상영좌석, 상영관정보 조회
 			
 			ArrayList<BookingSeat> bookingSeatList = new ArrayList();			
 			bookingSeatList = bookService.selectListBookingSeat(bookingSeatNoList);
-			log.debug("8==좌석정보, 상영관정보 : bookingSeatList : " + bookingSeatList.toString() );
+			log.debug("5==좌석정보, 상영관정보 : bookingSeatList : " + bookingSeatList.toString() );
 			
 			mv.addObject("bookingSeatList",bookingSeatList);
 	
@@ -317,6 +327,32 @@ public class BookController {
 
 	}
 	
+	@ResponseBody
+	@PostMapping(value="couponList.co",produces="application/json; charset=UTF-8")
+	public String selectCouponList(int userNo){
+		
+		//*회원번호 -> 쿠폰리스트
+		ArrayList<CouponUser> couponUserList = new ArrayList();
+		couponUserList = bookService.selectListCouponUser(userNo);
+		log.debug("ajax==사용가능한 쿠폰 조회 couponUserList : "+couponUserList.toString());
+		
+		return new Gson().toJson(couponUserList);
+
+	}
+	
+	
+	
+	@ResponseBody
+	@PostMapping(value="beforePay.pm",produces="application/json; charset=UTF-8")
+	public String getBookNoAndCheckCoupon(@RequestBody Map<String,List<String>> couponNos) {
+		
+		log.debug("결제전 ajax 실행"+couponNos.toString());
+		
+//		ArrayList<CouponUser> CouponUserList = bookService.
+		return "";
+	}
+
+	
 	
 	
 	//결제시 필요한 정보 암호화 메소드
@@ -335,6 +371,8 @@ public class BookController {
 		return "book/paymentResult";
 
 	}
+	
+	
 	
 	
 }
