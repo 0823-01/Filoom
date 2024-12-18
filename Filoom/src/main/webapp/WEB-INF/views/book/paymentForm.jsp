@@ -312,8 +312,10 @@ function nicepayClose(){
                             	</span>
                             </div>
                             <div>
+
                                 <div id="movieDate"></div>
                                 <div id="moviePlayTime">12:00 - 13:57 [더미]</div>
+
                                 <div>${requestScope.movie.screenName }</div>
                                 <div>
                                 	<c:forEach items="${requestScope.bookingSeatList}" var="bookingSeat">
@@ -340,9 +342,11 @@ function nicepayClose(){
                     <div class="infoTitle">결제수단</div>
                     <div id="payMethods">
                         <div>
+
                             <input type="radio" name="PayMethod" id="pay1" value="CARD"  hidden required><label for="pay1">카드결제</label>
                             <input type="radio" name="PayMethod" id="pay2" value="BANK" hidden required><label for="pay2">계좌이체</label>
                             <input type="radio" name="PayMethod" id="pay3" value="CELLPHONE" hidden required><label for="pay3">휴대폰결제</label>
+
                             
                         </div>
                     </div>
@@ -496,7 +500,7 @@ function nicepayClose(){
     	
     	//영화금액
     	const price = 99900;
-    	
+
     	//쿠폰금액 (100%)
     	const couponPrice = price;
     	
@@ -514,6 +518,7 @@ function nicepayClose(){
     	$(function(){
     		showPlayDate(); 	
     		showPlayTime();		
+
     		showTotalPrice();	
     		
     	});
@@ -557,9 +562,7 @@ function nicepayClose(){
     		
     	}
     		
-    	
-        
-        
+
     	//할인전 금액
     	//선택된 좌석수 * 영화가격
     	function showTotalPrice(){
@@ -567,6 +570,7 @@ function nicepayClose(){
     		let totalPrice = price*seatCounts;
     		let inputTag ="<input type='hidden' name='bookTotalCost' value='"+totalPrice+"' readonly>";
      		$("#totalPriceTd").html(totalPrice+inputTag);
+
     	}
     		
     	
