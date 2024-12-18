@@ -12,6 +12,9 @@ public interface EventService {
 
 	// 사용자 
 	
+	// 추천 이벤트 조회 (startDate 또는 endDate가 null 인 이벤트들) 
+	List<Event> selectHotEventList();
+	
 	// 전체 이벤트 게시글 목록 조회 
 	ArrayList<Event> selectList();
 	
@@ -24,8 +27,11 @@ public interface EventService {
 	// 이벤트 게시글 첨부파일 상세조회 서비스 
 	ArrayList<EventAttachment> selectEventAttachment(int eventNo); 
 	
+	// 댓글 총갯수
+	int seletReplyListCount(int eventNo);
+	
 	// 댓글 리스트 조회 서비스 (Ajax) 
-	ArrayList<Reply> selectReplyList(int eventNo);
+	ArrayList<Reply> selectReplyList(int eventNo, PageInfo pi);
 	
 	// 댓글 작성 서비스 (Ajax)
 	int insertReply(Reply r);
@@ -61,6 +67,8 @@ public interface EventService {
 	
 	// 관리자용 게시글 첨부파일 상세조회 서비스 
 	ArrayList<EventAttachment> adminSelectEventAttachment(int eventNo);
+
+
 
 
 	

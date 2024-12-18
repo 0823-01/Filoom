@@ -1,7 +1,9 @@
 package com.kh.filoom.event.model.dao;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.session.RowBounds;
 import org.mybatis.spring.SqlSessionTemplate;
@@ -17,6 +19,16 @@ public class EventDao {
 	
 	
 	// 사용자
+	
+	/**
+	 * 241218 한혜원 
+	 * 게시글 추천이벤트 목록조회
+	 * @param sqlSession
+	 * @return
+	 */
+	public List<Event> selectHotEventList(SqlSessionTemplate sqlSession) {
+		return (List)sqlSession.selectList("eventMapper.selectHotEventList");
+	}
 	
 	/**
 	 * 241212 한혜원
@@ -71,7 +83,17 @@ public class EventDao {
 		return (ArrayList)sqlSession.selectList("eventMapper.selectEventAttachment", eventNo);
 	}
 	
-	// 댓글 
+	// 댓글
+	/**
+	 * 241218 한혜원
+	 * 댓글 갯수
+	 * @param eventNo
+	 * @return
+	 */
+	public int selectReplyListCount(SqlSessionTemplate sqlSession, int eventNo) {
+		return sqlSession.selectOne("eventMapper.selectReplyListCount", eventNo);
+	}
+	
 	/**
 	 * 241217 한혜원
 	 * 댓글 목록 조회용 
@@ -79,9 +101,18 @@ public class EventDao {
 	 * @param eventNo 게시글 번호
 	 * @return
 	 */
-	public ArrayList<Reply> selectReplyList(SqlSessionTemplate sqlSession, int eventNo) {
+	public ArrayList<Reply> selectReplyList(SqlSessionTemplate sqlSession, int eventNo, PageInfo pi) {
 		// select문(여러행) : selectList 메소드 
-		return (ArrayList)sqlSession.selectList("eventMapper.selectReplyList", eventNo);
+		// 페이지 계산 
+		int offset = (pi.getCurrentPage()-1) * pi.getBoardLimit();
+		int limit = pi.getBoardLimit();
+		
+		RowBounds rowBounds = new RowBounds(offset, limit);
+		
+		Map<String, Object> paraMap = new HashMap<>();
+		paraMap.put("eventNo", eventNo);
+		
+		return (ArrayList)sqlSession.selectList("eventMapper.selectReplyList", paraMap, rowBounds);
 	}
 	
 	
@@ -214,5 +245,7 @@ public class EventDao {
 		// 여러행 select문 
 		return (ArrayList)sqlSession.selectList("eventMapper.adminSelectEventAttachment", eventNo);
 	}
+
+
 	
 }

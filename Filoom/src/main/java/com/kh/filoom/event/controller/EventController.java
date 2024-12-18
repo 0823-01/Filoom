@@ -56,6 +56,9 @@ public class EventController {
 		ArrayList<Event> list;
 		String statusTitle = "전체 이벤트"; // 기본제목
 		
+		// 추천 이벤트 따로 가져오는 로직 추가 
+		List<Event> hotList = eventService.selectHotEventList(); // 추천 이벤트 가져오기 
+		
 		
 		// eventStatus 값이 있으면 해당하는 목록만 조회
 		if("N".equals(eventStatus)) {
@@ -71,11 +74,13 @@ public class EventController {
 		}
 		model.addAttribute("list", list);
 		model.addAttribute("statusTitle", statusTitle);  // 제목을 모델에 전달
+		model.addAttribute("hotList", hotList);
 		
-		// System.out.println(list);
+		System.out.println(list);
 		// System.out.println("list size : " + list.size());
 		// System.out.println(statusTitle);
 		// System.out.println(eventStatus);
+		System.out.println(hotList);
 		
 		return "event/eventListView";
 	}
@@ -116,8 +121,8 @@ public class EventController {
 		
 		return mv;
 		
-		
 	}
+	
 	
 	/**
 	 * 241217 한혜원 
@@ -126,11 +131,29 @@ public class EventController {
 	 */
 	@ResponseBody
 	@GetMapping(value="rlist.ev", produces="application/json; charset=UTF-8")
-	public String ajaxSelectReplyList(int eno) {
+	public String ajaxSelectReplyList(int eno, @RequestParam(value="cpage", defaultValue="1") int currentpage) {
 		// System.out.println(eno);
-		ArrayList<Reply> list = eventService.selectReplyList(eno);
-		// System.out.println(list);
-		return new Gson().toJson(list);
+		
+		// 댓글 목록의 총 개수 조회 
+		int listCount = eventService.seletReplyListCount(eno);
+		
+		// 페이지당 댓글 수와 페이지번호 설정
+		int pageLimit = 10;
+		int boardLimit = 10; 
+		
+		PageInfo pi = Pagination.getPageInfo(listCount, currentpage, pageLimit, boardLimit);
+		
+		// 페이징된 댓글 목록 조회
+		ArrayList<Reply> list = eventService.selectReplyList(eno, pi);
+		
+		// 응답 데이터 JSON 형식으로 반환할 객체 
+		Map<String, Object> response = new HashMap<>();
+		response.put("list", list);
+		response.put("pi", pi);
+		
+		 System.out.println(list);
+		 System.out.println(pi);
+		return new Gson().toJson(response);
 		
 	}
 	

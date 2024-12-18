@@ -1,6 +1,7 @@
 package com.kh.filoom.event.model.service;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +30,15 @@ public class EventServiceImpl implements EventService {
 	
 	
 	/**
+	 * 241218 한혜원
+	 * 사용자 게시글 추천이벤트 목록조회 요청 메소드 
+	 */
+	@Override
+	public List<Event> selectHotEventList() {
+		return eventDao.selectHotEventList(sqlSession);
+	}
+	
+	/**
 	 * 241212 ~ 241213 한혜원
 	 * 사용자 게시글 목록조회 요청 메소드 
 	 * 페이징처리 필요없음 
@@ -38,7 +48,7 @@ public class EventServiceImpl implements EventService {
 	public ArrayList<Event> selectList() {
 		return eventDao.selectList(sqlSession);
 	}
-	
+
 	/**
 	 *241212 ~ 241213 한혜원
 	 * 사용자 게시글 목록조회 요청 메소드 
@@ -75,12 +85,23 @@ public class EventServiceImpl implements EventService {
 
 	// 댓글
 	/**
+	 * 241218 한혜원 
+	 * 댓글 총 갯수 
+	 */
+	@Override
+	public int seletReplyListCount(int eventNo) {
+		return eventDao.selectReplyListCount(sqlSession, eventNo);
+	}
+	
+	
+	
+	/**
 	 * 241217 한혜원 
 	 * 사용자 댓글 목록조회 요청 메소드
 	 */
 	@Override
-	public ArrayList<Reply> selectReplyList(int eventNo) {
-		return eventDao.selectReplyList(sqlSession, eventNo);
+	public ArrayList<Reply> selectReplyList(int eventNo, PageInfo pi) {
+		return eventDao.selectReplyList(sqlSession, eventNo, pi);
 	}
 	
 	/**

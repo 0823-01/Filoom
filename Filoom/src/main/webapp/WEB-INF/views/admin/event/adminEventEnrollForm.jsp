@@ -411,17 +411,40 @@ body{
                         <!--제목, 작성일, 조회수-->
                         <div class="title_date_count">
                             <div class="title">
-                                <label for="title">제목<b style="color : red;">*</b></label><input type="text" id="title" name="eventTitle" requried></input>
+                                <label for="title">제목<b style="color : red;">*</b></label><input type="text" id="title" name="eventTitle"></input>
                             </div>
 
                             <div class="startDate">
-                                <label for="startDate">이벤트 시작일<b style="color : red;">*</b></label> <input type="date" id="startDate" name="startDate" required></input>
+                                <label for="startDate">이벤트 시작일<b style="color : red;">*</b></label> <input type="date" id="startDate" min="" name="startDate"></input>
                             </div>
 
                             <div class="endDate">
-                                <label for="endDate">이벤트 종료일<b style="color : red;">*</b></label><input type="date" id="endDate" name="endDate" required></input>
+                                <label for="endDate">이벤트 종료일<b style="color : red;">*</b></label><input type="date" id="endDate" min="" name="endDate"></input>
                             </div>
                         </div>
+                        
+                        <!-- 날짜 관련 스크립트 -->
+                        <script>
+						    document.addEventListener("DOMContentLoaded", function() {
+						        const startDateInput = document.getElementById("startDate");
+						        const endDateInput = document.getElementById("endDate");
+						
+						        // 오늘 날짜 (yyyy-mm-dd 형식) 계산
+						        const today = new Date().toISOString().split('T')[0];
+						
+						        // 시작일을 오늘 날짜 이상으로 제한
+						        startDateInput.setAttribute("min", today);
+						
+						        // 종료일의 최소 날짜를 오늘 날짜로 설정
+						        endDateInput.setAttribute("min", today);
+						
+						        // 시작일이 변경될 때, 종료일의 min 속성도 시작일 이후로 업데이트
+						        startDateInput.addEventListener("change", function() {
+						            const startDate = startDateInput.value;
+						            endDateInput.setAttribute("min", startDate); // 종료일은 시작일 이후로만 선택 가능
+						        });
+						    });
+						</script>
 
                         <!-- 내용 -->
                         <div class="contentArea">

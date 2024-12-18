@@ -38,6 +38,21 @@
 
 
 <!-- 사용자 -->
+<!-- 241218 한혜원, 이벤트 추천게시글 목록조회 -->
+<select id="selectHotEventList" resultMap="eventResultSet">
+	SELECT EVENT_NO
+	     , EVENT_TITLE
+	     , CHANGE_NAME AS "CONTENTIMG1"
+	     , TO_CHAR(START_DATE, 'YYYY-MM-DD') "START_DATE"
+	     , TO_CHAR(END_DATE, 'YYYY-MM-DD') "END_DATE"
+	  FROM EVENT E
+	  JOIN EVENT_ATTACHMENT ON (EVENT_NO = REF_ENO)
+	 WHERE E.STATUS = 'Y'
+	   AND FILE_LEVEL = 1
+	   AND START_DATE IS NULL OR END_DATE IS NULL
+	 ORDER BY EVENT_NO DESC 
+</select>
+
 <!-- 241212 한혜원, 이벤트 게시글 목록조회 -->
 <select id="selectList" resultMap="eventResultSet">
 	SELECT EVENT_NO
@@ -92,8 +107,16 @@
    AND FILE_LEVEL = 2
 </select>
 
+<!-- 241218 한혜원 이벤트 게시판 댓글 총 갯수 -->
+<select id="selectReplyListCount" resultType="_int">
+	SELECT COUNT(*)
+	  FROM REPLY R
+	 WHERE REF_ENO = #{eventNo}
+	   AND R.STATUS = 'Y'
+</select>
+
 <!-- 241217 한혜원 이벤트 게시판 댓글 목록조회 -->
-<select id="selectReplyList" resultMap="replyResultSet">
+<select id="selectReplyList" parameterType="map" resultMap="replyResultSet">
 	SELECT REPLY_NO
 	     , USER_ID AS "REPLY_WRITER"
 	     , REPLY_CONTENT

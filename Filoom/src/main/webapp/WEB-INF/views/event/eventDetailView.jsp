@@ -255,77 +255,119 @@
     }
 
     /*댓글 목록조회*/
-    #replyWriter {
-        text-align: center;
-        width : 10%;
-    }
+       #replyWriter {
+           text-align: center;
+           width : 10%;
+       }
 
-    #replyDate {
-        text-align: center;
-        width : 20%;
-    }
+       #replyDate {
+           text-align: center;
+           width : 20%;
+       }
 
-    .replyContent {
-        width : 70%;
-    }
-    
-    #modalLink>a {
-        color : #493628;
-        margin-left: 33px;
-    }
+       #replyContent {
+           width : 60%;
+       }
 
-    /*댓글 수정*/
-    .updateReply {
-        /*border: 1px solid red;*/
-        display: flex;
-        justify-content: left;
-        gap : 10px;
-        box-sizing: border-box;
-    }
+       #buttons {
+           width : 10%;
+       }
+       
+       #modalLink>a {
+           color : #493628;
+           margin-left: 33px;
+       }
 
-    #updateForm {
-        /*border: 1px solid red;*/
-        width : 80%;
-        height : 50px;
-        box-sizing: border-box;
-        border-bottom: 5px;
-        display: flex;
-        justify-content: flex-start;
-        gap : 10px;
-    }
+       /*댓글 수정*/
+       .updateReply {
+           /*border: 1px solid red;*/
+           display: flex;
+           justify-content: left;
+           gap : 10px;
+           box-sizing: border-box;
+       }
 
-    #updateReplyContent {
-        /*border: 1px solid red;*/
-        resize: none;
-        width : 100%;
-        height: 100%;
-        border: 2px solid #493628;
-        background-color: #E4E0E1;
-        border-radius: 4px;
-        box-sizing: border-box;
-    }
+       #updateForm {
+           /*border: 1px solid red;*/
+           width : 80%;
+           height : 50px;
+           box-sizing: border-box;
+           border-bottom: 5px;
+       }
 
-    .btn {
-        /*border : 1px solid  blue;*/
-        line-height: 50px;
-    }
+       #updateReply {
+           /*border: 1px solid red;*/
+           resize: none;
+           width : 100%;
+           height: 100%;
+           border: 2px solid #493628;
+           background-color: #E4E0E1;
+           border-radius: 4px;
+           box-sizing: border-box;
+       }
 
-    #updateBtn, #deleteBtn, #saveBtn, #cancelBtn {
-        background-color: #493628;
-        color : #E4E0E1;
-        font-size : 15px;
-        font-weight: bold;
-        border-radius: 4px;
-        border : none;
-        height : 30px;
-        width : 50px;
-        margin-right: 5px;
-        cursor: pointer;
-    }
+       #updateBtn, #deleteBtn, #savedBtn, #cancelBtn {
+           background-color: #493628;
+           color : #E4E0E1;
+           font-size : 15px;
+           font-weight: bold;
+           border-radius: 4px;
+           border : none;
+           height : 30px;
+           width : 50px;
+           margin-right: 5px;
+           cursor: pointer;
+       }
 
-    #updateBtn:hover, #deleteBtn:hover, #saveBtn, #cancelBtn {
-        background-color: #AB886D;
-    }
+       #updateBtn:hover, #deleteBtn:hover,
+       #savedBtn:hover, #cancelBtn:hover {
+           background-color: #AB886D;
+       }
+
+       /*페이징영역*/
+       .pagingArea {
+           display: flex;
+           justify-content: center;
+           padding : 20px;
+           font-size: 20px;
+           font-weight: bold;
+
+       }
+       .pagination {
+           list-style-type : none;
+           display: flex;
+           padding : 0;
+           margin: 0;
+           font-size: 20px;
+           font-weight: bold;
+       }
+       .pagination>li {
+           margin : 0 10px; /*리스트 항목 간의 간격*/
+           cursor: pointer;
+           transition: color 0.3s ease; /*색상 전환 효과*/
+           font-size: 25px;
+           font-weight: bold;
+           color : #F3F3F3;
+       }
+
+       li>a {
+           text-decoration: none;
+           color :  #493628;
+       }
+
+       li>a:hover {
+           text-decoration: none;
+           color : #AB886D;
+       }
+
+       li>a.disabled {
+           color: #AB886D;
+           pointer-events: none;
+       }
+
+       li>a.active {
+           color: #AB886D;
+       }
     
     /*응모버튼*/
     .apply {
@@ -390,7 +432,7 @@
 		                <table class="reply">
 		                    <thead>
 		                        <tr>
-		                            <td colspan="3" style="height : 50px">
+		                            <td colspan="4" style="height : 50px">
 		                                <div class="replyRegister">
 		                                	<c:choose>	
 			                                	<c:when test="${ empty sessionScope.loginUser}">
@@ -451,36 +493,56 @@
 		                    </thead>
 		
 		                    <tbody>
-		                        <tr>
-		                            <!--수정상황-->
-		                            <td id="replyWriter">us****</td>
-		                            <td class="replyContent">
-		                                
-		                                    
-		                                        <textarea id="updateReplyContent">모아나 정말 보고싶어용! 저희 엄마가 좋아해여!</textarea>
-		                                        
-		                                        <button id="saveBtn">저장</button>
-		                                        <button id="cancelBtn">취소</button>
-			                                    
-		                                     
-		                                
-		                            </td>
-		                            <td id="replyDate">2024-11-21 오후 2:12:00</td>
+		                       <tr>
+	                            <!--수정상황-->
+	                            <td id="replyWriter">us****</td>
+	                            <td id="replyContent">
+	                                <textarea id="updateReply" readonly>모아나 정말 보고싶어용! 저희 엄마가 좋아해여!</textarea>
+	                            </td>
+	                            <td id="buttons">
+	                                <button id="savedBtn">저장</button>
+	                                <button id="cancelBtn">취소</button>
+	                            </td>
+	                            <td id="replyDate">2024-11-21 오후 2:12:00</td>
 		                        </tr>
 		
-		                        <!--댓글작성자인 경우, 수정 삭제 버튼 
+		                        <!--댓글작성자인 경우, 수정 삭제 버튼 -->
 		                        <tr>
 		                            <td id="replyWriter">us****</td>
-		                            <td id="replyContent">
-		                                모아나 정말 보고싶어요! 저희 아빠가 좋아해여!
+		                            <td id="replyContent">모아나 정말 보고싶어요! 저희 아빠가 좋아해여!</td>
+		                            <td id="buttons">
 		                                <button id="updateBtn">수정</button>
 		                                <button id="deleteBtn">삭제</button>
 		                            </td>
 		                            <td id="replyDate">2024-11-21 오후 2:12:00</td>
-		                        </tr> -->
-		                        
+		                        </tr>
+		                        <tr>
+		                            <td id="replyWriter">us****</td>
+		                            <td id="replyContent">모아나 정말 보고싶어요! 저희 아빠가 좋아해여!</td>
+		                            <td></td>
+		                            <td id="replyDate">2024-11-21 오후 2:12:00</td>
+		                            
+		                        </tr>
 		                    </tbody>
 		                </table>
+		                
+		                <!-- 댓글 페이징 영역 -->
+		                <div class="pagingArea">
+		                    <ul class="pagination" id="pagination">
+		                        <li class="page-item disabled"><a class="page-link" href="#">«</a></li>
+		                        <li class="page-item"><a class="page-link" href="#">1</a></li>
+		                        <li class="page-item"><a class="page-link" href="#">2</a></li>
+		                        <li class="page-item"><a class="page-link" href="#">3</a></li>
+		                        <li class="page-item"><a class="page-link" href="#">4</a></li>
+		                        <li class="page-item"><a class="page-link" href="#">5</a></li>
+		                        <li class="page-item"><a class="page-link" href="#">6</a></li>
+		                        <li class="page-item"><a class="page-link" href="#">7</a></li>
+		                        <li class="page-item"><a class="page-link" href="#">8</a></li>
+		                        <li class="page-item"><a class="page-link" href="#">9</a></li>
+		                        <li class="page-item"><a class="page-link" href="#">10</a></li>
+		                        <li class="page-item"><a class="page-link" href="#">»</a></li>
+		                    </ul>
+		                </div>
 		            </div>
             	</c:when>
             	<c:when test="${requestScope.e.eventType == 2 }">
@@ -501,202 +563,133 @@
     
     <!-- 댓글 관련 스크립트 -->
     <script>
-    // 로그인 유저 정보
-    var loginUser = '${sessionScope.loginUser.userId}'; // jsp 에서 로그인한 ID를 가져오기
+    var loginUser = '${sessionScope.loginUser.userId}';  // 로그인한 ID
+
+    $(function() {
+        selectReplyList(1); // 페이지 첫 로딩시 댓글 목록 조회
+        // setInterval(selectReplyList, 10000); // 10초마다 댓글 목록 갱신
+    });
+
+    // 댓글 목록 조회
+    function selectReplyList(cpage = 1) {
+        $.ajax({
+            url: "rlist.ev", // 댓글 목록 조회 API URL
+            type: "get",
+            data: { eno: ${requestScope.e.eventNo}, cpage: cpage },
+            success: function(response) {
+                var resultStr = "";
+                // 댓글 목록 렌더링
+                if (response.list && Array.isArray(response.list)) {
+                    response.list.forEach(function(reply) {
+                        resultStr += "<tr data-reply-no='" + reply.replyNo + "'>";
+                        resultStr += "<td id='replyWriter'>" + reply.replyWriter + "</td>";
+                        resultStr += "<td id='replyContent'>" + reply.replyContent + "</td>";
+
+                        // 댓글 작성자와 로그인 유저가 같으면 수정 및 삭제 버튼 추가
+                        if (reply.replyWriter === loginUser) {
+                            resultStr += "<td id='buttons'><button id='updateBtn' onclick='editReply(" + reply.replyNo + ")'>수정</button><button id='deleteBtn' onclick='deleteReply(" + reply.replyNo + ")'>삭제</button></td>";
+                        } else {
+                            resultStr += "<td></td>";
+                        }
+
+                        resultStr += "<td id='replyDate'>" + reply.createDate + "</td>";
+                        resultStr += "</tr>";
+                    });
+
+                    $(".reply>tbody").html(resultStr); // 댓글 내용 업데이트
+                    $("#rcount").text(response.list.length); // 댓글 갯수 표시
+                    handlePagination(response.pi, cpage); // 페이징 처리
+                }
+            },
+            error: function() {
+                console.error("댓글 목록 조회 실패");
+            }
+        });
+    }
+
+    // 댓글 작성 함수
+    function addReply() {
+        let replyContent = $("#replyInput").val();
+
+        if(replyContent.trim().length != 0) { 
+            $.ajax({
+                url: "rinsert.ev", // 댓글 작성 API
+                type: "post",
+                data: {
+                    replyContent: replyContent,
+                    replyWriter: "${ sessionScope.loginUser.userNo }",
+                    refEno: ${requestScope.e.eventNo}
+                },
+                success: function(result) {
+                    if(result === "success") {
+                        selectReplyList(); // 댓글 목록 갱신
+                        $("#replyInput").val(""); // 입력창 비우기
+                    } else {
+                        alert("댓글 작성 실패");
+                    }
+                },
+                error: function() {
+                    alert("댓글 작성 오류");
+                }
+            });
+        } else {
+            alert("댓글을 작성해주세요.");
+        }
+    }
     
-    	$(function() {
-    		// console.log("왜 안돼..?");
-    		selectReplyList();
-    		// console.log("목록조회도 안돼?");
-    		// 실시간 댓글 등록 효과 
-    		//setInterval(selectReplyList, 1000);
-    	});
-    	
-    	// 댓글 작성용 함수 
-    	function addReply() {
-    		
-    		// 댓글 내용은 not null 일 수 없으니 입력한 댓글 내용이 있는지 검사 후 진행 
-    		let replyContent = $("#replyInput").val();
-    		// console.log(replyContent.trim().length);
-    		// > 댓글 내용 문자열 기준으로 앞뒤 공백 제거해준 후 문자열의 길이가 0과 일치하지 않으면 내용이 있는걸로 판별 
-    		
-    		if(replyContent.trim().length != 0) { // 댓글 내용이 있다면 
-    			// > 댓글 작성용 ajax 요청 
-    			$.ajax({
-    				url : "rinsert.ev",
-    				type : "post",
-    				data : {
-    					replyContent : replyContent,
-    					replyWriter : "${ sessionScope.loginUser.userNo }",
-    					refEno : ${requestScope.e.eventNo}
-    				}, 
-    				success : function(result) {
-    					if(result == "success") {
-    						selectReplyList();
-    						$("#replyInput").val("");
-    						console.log("여기까지 오나?");
-    					} else {
-    						alert("댓글 작성 실패");
-    						$("#replyInput").val("");
-    					}
-    				}, 
-    				error : function() {
-    					console.log("댓글 작성용 ajax 통신 실패!");
-    				}
- 
-    			});
-    			
-    		} else { // 댓글 내용이 없는 경우 
-    			// alert 로 알려주기 
-    			alert("댓글 작성 후 등록해주세요.");
-    			
-    		}
-
-    	}
-    	
-    	// 댓글 목록조회용 함수 
-    	function selectReplyList() {
-    		// console.log("경로 찾았어?");
-    		$.ajax({
-    			url : "rlist.ev",
-    			type : "get",
-    			data : {eno : ${requestScope.e.eventNo}},
-    			success : function(result) {
-    				let resultStr ="";
-    				
-    				
-    				for(let i=0; i<result.length; i++) {
-    					resultStr += "<tr data-reply-no='" + result[i].replyNo + "'>"
-    									+ "<td id='replyWriter'>" + result[i].replyWriter + "</td>"
-    									+ "<td class='replyContent'>" + result[i].replyContent; 
-    									
-    									// 로그인한 사용자와 댓글 작성자가 동일한 경우 수정 / 삭제 버튼 추가 
-    				    				if(result[i].replyWriter === loginUser) {
-    				    					 resultStr +="<button id='updateBtn' onclick='editReply(" + result[i].replyNo + ");'>수정</button>"
-    				    					 			+"<button id='deleteBtn' onclick='deleteReply(" + result[i].replyNo + ");'>삭제</button>";
-    				    				 }
-
-    									resultStr += "</td>"
-    									+ "<td id='replyDate'>" + result[i].createDate + "</td>"
-    							   +"</tr>"
-    							   // console.log("수정, 삭제 버튼 왜 안보여?");
-    							   // console.log("replyWriter : " + result[i].replyWriter);
-    							   // console.log("loginUser : " + result[i].loginUser);
-    							   
-    				}
-    				$(".reply>tbody").html(resultStr);
-    				$("#rcount").text(result.length); // 댓글 갯수 표시
-    			},
-    			error : function() {
-    				console.log("댓글리스트 조회용 ajax 통신 실패!");
-    			}
-    		});
-    	}
-    	
-    	// 댓글 수정용 함수
-    	function editReply(replyNo) {
-    		let row = $("tr[data-reply-no='" + replyNo + "']");
-    	    // console.log("Row element:", row); // 콘솔에서 tr 요소가 선택되는지 확인
-    	    
-    	    let replyContentCell = row.find("td").eq(1); // 두번째 td가 댓글 내용
-    	    // console.log("replyContentCell:", replyContentCell); // td.replyContent가 제대로 선택되는지 확인
-    	    
-    	    let originalContent = replyContentCell.text().trim();  // 원본 댓글 내용
-    	    // console.log("originalContent : ", originalContent);
-    	    
-    	 	// 댓글의 원본 내용을 data로 저장
-    	    row.data("originalContent", originalContent); // 원본내용 저장
-
-    	    
-    	 	// 댓글 내용 텍스트 영역으로 변경
-    	    replyContentCell.html('<textarea id="updateReplyContent">' + originalContent + '</textarea>');
-    	    
-    	 	// 버튼 영역을 "저장"과 "취소" 버튼으로 변경
-    	    let buttonCell = row.find("td").eq(1);
-    	 	// buttonCell.html('');
-    	    // console.log(buttonCell);
-    	    // buttonCell.empty();
-    	    
-    	    // "저장" 버튼 추가
-    	    buttonCell.append('<button id="saveBtn" class="btn" onclick="saveEditedReply(' + replyNo + ')">저장</button>');
-    	    // "취소" 버튼 추가
-    	    buttonCell.append('<button id="cancelBtn" class="btn" onclick="cancelEditReply(' + replyNo + ')">취소</button>');
-    	}
-
-    	// 댓글 수정 저장 함수
-    	function saveEditedReply(replyNo) {
-    	    let updatedContent = $("#updateReplyContent").val(); // 수정된 내용 가져오기
-    	 	// 댓글 작성자를 가져옵니다 (서버에서 해당 데이터를 넘기면 좋습니다)
-    	    let writer = $("tr[data-reply-no='" + replyNo + "']").data("writer"); // 예시로, 댓글을 작성한 사용자의 정보를 HTML에서 data attribute로 전달했다고 가정
-    	    let row = $("tr[data-reply-no='" + replyNo + "']");
-    	    
-    	    // Ajax로 서버에 수정된 댓글 내용 보내기
-    	    $.ajax({
-    	        url: "rupdate.ev", // 수정할 주소
-    	        type: "POST",
-    	        data: JSON.stringify({replyNo: replyNo, replyContent: updatedContent, replyWriter: "${ sessionScope.loginUser.userNo }" }),
-    	        contentType: "application/json; charset=UTF-8",
-    	        success: function(response) {
-    	            if (response.status === "success") {
-    	                alert(response.message);
-    	                row.find("td.replyContent").text(updatedContent); // 댓글 내용 수정
-    	                // 버튼을 "수정"과 "삭제" 버튼으로 복원
-    	                let buttonCell = row.find("td").eq(1);
-    	                // buttonCell.html('');
-    	                buttonCell.append('<button id="updateBtn" onclick="editReply(' + replyNo + ')">수정</button>');
-    	                buttonCell.append('<button id="deleteBtn" onclick="deleteReply(' + replyNo + ')">삭제</button>');
-    	            } else {
-    	                alert(response.message);
-    	            }
-    	        },
-    	        error: function() {
-    	            alert("댓글 수정에 실패했습니다.");
-    	        }
-    	    });
-    	}
-
-    	// 댓글 수정 취소 함수
-    	function cancelEditReply(replyNo) {
-    	    let row = $("tr[data-reply-no='" + replyNo + "']");
-
-    	    // 댓글 원본 내용 가져오기 (최초 상태)
-    	    let originalContent = row.data("originalContent"); // 이전에 저장한 댓글 원본 내용
-    	    
-    	    // 텍스트를 원본 내용으로 복원
-    	    let replyContentCell = row.find("td.replyContent");
-    	    replyContentCell.text(originalContent); // 기존 내용 복원
-    	    
-    	    // 버튼을 "수정"과 "삭제" 버튼으로 복원
-    	    let buttonCell = row.find("td").eq(1);
-    	    // buttonCell.html(''); // 기존 버튼 제거
-    	    buttonCell.append('<button id="updateBtn" onclick="editReply(' + replyNo + ')">수정</button>');
-    	    buttonCell.append('<button id="deleteBtn" onclick="deleteReply(' + replyNo + ')">삭제</button>');
-    	}
-    	
-    	// 댓글 삭제
-    	function deleteReply(replyNo) {
-    	    $.ajax({
-    	        url: "rdelete.ev",  // 삭제 요청 URL
-    	        type: "POST",       // POST 방식
-    	        data: { replyNo: replyNo },  // 삭제할 댓글 번호 전달
-    	        success: function(response) {
-    	            if (response === "success") {
-    	                // 성공적인 삭제 시 해당 댓글을 DOM에서 삭제
-    	                $("tr[data-reply-no='" + replyNo + "']").remove();
-    	                alert("댓글이 삭제되었습니다.");
-    	            } else {
-    	                alert("댓글 삭제에 실패했습니다.");
-    	            }
-    	        },
-    	        error: function() {
-    	            console.log("댓글 삭제 요청 실패");
-    	            alert("댓글 삭제 요청에 실패했습니다.");
-    	        }
-    	    });
-    	}
-    	
     
-    </script>
+   // 수정, 저장 다시
+
+    // 댓글 수정 취소
+    function cancelEdit(replyNo) {
+        selectReplyList(); // 댓글 목록 새로고침
+    }
+
+    // 댓글 삭제
+    function deleteReply(replyNo) {
+        $.ajax({
+            url: "rdelete.ev", 
+            type: "POST",
+            data: { replyNo: replyNo },
+            success: function(response) {
+                if (response === "success") {
+                    alert("댓글이 삭제되었습니다.");
+                    selectReplyList(); // 댓글 목록 갱신
+                } else {
+                    alert("댓글 삭제 실패");
+                }
+            },
+            error: function() {
+                alert("댓글 삭제 오류");
+            }
+        });
+    }
+
+    // 페이징 처리 함수
+    function handlePagination(pi, currentPage) {
+        const totalPages = pi.totalPage;
+        let paginationHtml = "";
+
+        // 이전 페이지 버튼
+        if (currentPage > 1) {
+            paginationHtml += "<button class='pagination-btn' onclick='selectReplyList(" + (currentPage - 1) + ")'>«</button>";
+        }
+
+        // 페이지 번호 버튼
+        for (let i = 1; i <= totalPages; i++) {
+            paginationHtml += "<button class='pagination-btn' onclick='selectReplyList(" + i + ")'>" + i + "</button>";
+        }
+
+        // 다음 페이지 버튼
+        if (currentPage < totalPages) {
+            paginationHtml += "<button class='pagination-btn' onclick='selectReplyList(" + (currentPage + 1) + ")'>»</button>";
+        }
+
+        // 페이징 영역 갱신
+        $(".pagination").html(paginationHtml);
+    }
+</script>
+
 
     
     <jsp:include page="../common/footer.jsp"/>
