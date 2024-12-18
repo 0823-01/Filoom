@@ -1,9 +1,12 @@
 package com.kh.filoom.member.model.dao;
 
+import java.util.List;
+
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
 
 import com.kh.filoom.member.model.vo.Member;
+import com.kh.filoom.member.model.vo.Reserve;
 
 @Repository
 public class MemberDao {
@@ -51,6 +54,16 @@ public class MemberDao {
 	public int withdrawMember(SqlSessionTemplate sqlSession, String userId) {
 
 		return sqlSession.update("memberMapper.withdrawMember", userId);
+	}
+
+	public List<Reserve> reserveList(SqlSessionTemplate sqlSession, int userNo) {
+
+		return sqlSession.selectList("memberMapper.reserveList", userNo);
+	}
+
+	public List<Reserve> cancelList(SqlSessionTemplate sqlSession, int userNo) {
+
+		return sqlSession.selectList("memberMapper.cancelList", userNo);
 	}
 
 }

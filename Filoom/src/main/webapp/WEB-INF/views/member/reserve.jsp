@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -96,6 +97,7 @@
 	.reserve-item {
 	    border-bottom: 1px solid #aaa;
 	    padding-bottom: 20px;
+	    margin-bottom: 50px;
 	}
 	
 	
@@ -139,7 +141,7 @@
 	    font-weight: bold;
 	}
 	
-	.reserve-price {
+	.cancel-btn {
 	    color: #D6C0B3;
 	}
 	
@@ -275,9 +277,6 @@
 	
 	
 	
-	.cancel-item {
-	    margin-top: 50px;
-	}
 	
 	.cancel-header {
 	    display: flex;
@@ -396,98 +395,110 @@
                 <!-- 예매 내역들만 묶은 div -->
                 <div class="reserve-list">
                     <!-- 예매 내역 하나의 div -->
-                    <div class="reserve-item">
-                        <div class="box-info">
-                            <div class="box-image">
-                                <a href="#"><img src="https://img.cgv.co.kr/Movie/Thumbnail/Poster/000088/88920/88920_320.jpg" class="poster"></a>
-                            </div>
-                            <div class="reserve-info">
-                                <div class="title-price">
-                                    <div><a href="#" class="movie-title">히든페이스</a></div>
-                                    <div><span class="reserve-price">30,000원</span></div>
-                                </div>
-                                <div class="reserve-content">
-                                    <ul>
-                                        <li>
-                                            <dl>
-                                                <dt>관람일시</dt>
-                                                <dd>2024.12.02(월) 20:10</dd>
-                                            </dl>
-                                        </li>
-                                        <li>
-                                            <dl>
-                                                <dt>관람좌석</dt>
-                                                <dd>I 05, I 06</dd>
-                                            </dl>
-                                        </li>
-                                        <li>
-                                            <dl>
-                                                <dt>상영관</dt>
-                                                <dd>3관 4층</dd>
-                                            </dl>
-                                        </li>
-                                        <li>
-                                            <dl>
-                                                <dt>매수</dt>
-                                                <dd>2매</dd>
-                                            </dl>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="payment-info">
-                            <h4>결제내역</h4>
-                            <div class="reserve-payment">
-                                <p class="payment-total">
-                                    <span>총 결제금액</span>
-                                    <span>30,000원</span>
-                                </p>
-                                <p class="payment-part">
-                                    <span>└ 카드결제</span>
-                                    <span>30,000원</span>
-                                </p>
-                                <div class="btn_incomeDeduction">
-                                    <span>* 영화관람료 소득공제 대상</span>
-                                    <button type="button" class="open-content-btn">자세히 보기</button>
-                                </div>
-                                <div class="incomeDeduction-content">
-                                    <p class="first-content">본 콘텐츠는 영화관람료 소득공제 대상 상품입니다.</p>
-                                    <p>문화비소득공제는 자동 적용되며, 결제완료 후 변경이 불가합니다.</p>
-                                    <h6>1. 영화 관람료 소득공제란?</h6>
-                                    <p>2023년 7월 1일 결제분 부터 영화 관람료에 대해 문화비 소득공제가 적용됩니다.</p>
-                                    <ul>
-                                        <li>총급여 7천만 원 이하 근로자 중 신용카드 등 사용액이 총급여액의 25 % 가 넘는 근로소득자를 대상으로 적용됩니다.</li>
-                                        <li>공제율은 30%, 공제한도는 전통시장 사용분, 대중교통 사용분, 문화비 사용분에 대한 소득공제를 합해 총 300만원 입니다.</li>
-                                    </ul>
-                                    <h6>2. 영화 관람료 소득공제 대상</h6>
-                                    <ul>
-                                        <li>영화 및 공연상품 (단, 영화와 매점(패스트오더) 상품 통합결제 시 대상 제외 / 스포츠 중계, 게임 중계, 강연 등 일부 콘텐츠 제외)</li>
-                                    </ul>
-                                    <h6>3. 영화 관람료 소득공제 제외 대상</h6>
-                                    <ul>
-                                        <li>매점(패스트오더), 씨네샵, 포토티켓 등 영화와 무관한 상품 제외</li>
-                                        <li>비상설상영관 등 일부 상영관 제외</li>
-                                    </ul>
-                                    <h6>4. 영화 관람료 소득공제 가능 결제수단</h6>
-                                    <ul>
-                                        <li>카드결제: 신용카드(법인카드 불가, 개인카드에 한함)</li>
-                                        <li>현금결제: 관람권, 포인트 등 현금영수증 처리가 가능한 결제수단</li>
-                                        <li>간편결제: 네이버페이, 카카오페이, Payco, 토스페이</li>
-                                        <li>휴대폰결제</li>
-                                    </ul>
-                                    <h6>5. 영화 관람료 소득공제 제외 결제수단</h6>
-                                    <ul>
-                                        <li>현금영수증 처리가 불가한 제휴 결제수단</li>
-                                        <li>그 외 OK캐쉬백 등 일부 결제수단</li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="msg-expired">상영시간이 지난 영화입니다.</div>
-                    </div>
-                    
+                    <c:if test="${empty reserveList}">
+					    <div class="no-reserve">
+					        예매 내역이 존재하지 않습니다.
+					    </div>
+					</c:if>
+					
+					<c:if test="${not empty reserveList}">
+	                    <c:forEach var="reserve" items="${reserveList}">
+		                    <div class="reserve-item">
+		                        <div class="box-info">
+		                            <div class="box-image">
+		                                <a href="#"><img src="https://img.cgv.co.kr/Movie/Thumbnail/Poster/000088/88920/88920_320.jpg" class="poster"></a>
+		                            </div>
+		                            <input type="hidden" id="hiddenEndTime" value="${reserve.endTime}">
+		                            <div class="reserve-info">
+		                                <div class="title-price">
+		                                    <div><a href="#" class="movie-title">${reserve.movieTitle}</a></div>
+		                                    <div><button class="cancel-btn">예매 취소</button></div>
+		                                </div>
+		                                <div class="reserve-content">
+		                                    <ul>
+		                                        <li>
+		                                            <dl>
+		                                                <dt>관람일시</dt>
+		                                                <dd><fmt:formatDate value="${reserve.playtime}" pattern="yyyy.MM.dd(E) HH:mm" /></dd>
+		                                            </dl>
+		                                        </li>
+		                                        <li>
+		                                            <dl>
+		                                                <dt>관람좌석</dt>
+		                                                <dd>${reserve.seatNo}</dd>
+		                                            </dl>
+		                                        </li>
+		                                        <li>
+		                                            <dl>
+		                                                <dt>상영관</dt>
+		                                                <dd>${reserve.screenName} 관</dd>
+		                                            </dl>
+		                                        </li>
+		                                        <li>
+		                                            <dl>
+		                                                <dt>매수</dt>
+		                                                <dd>${reserve.totalTickets} 매</dd>
+		                                            </dl>
+		                                        </li>
+		                                    </ul>
+		                                </div>
+		                            </div>
+		                        </div>
+		                        <div class="payment-info">
+		                            <h4>결제내역</h4>
+		                            <div class="reserve-payment">
+		                                <p class="payment-total">
+		                                    <span>총 결제금액</span>
+		                                    <span><fmt:formatNumber value="${reserve.bookTotalCost}" type="number" pattern="#,##0" />원</span>
+		                                </p>
+		                                <p class="payment-part">
+		                                    <span>└ ${reserve.costProcess}</span>
+		                                    <span><fmt:formatNumber value="${reserve.bookTotalCost}" type="number" pattern="#,##0" />원</span>
+		                                </p>
+		                                <div class="btn_incomeDeduction">
+		                                    <span>* 영화관람료 소득공제 대상</span>
+		                                    <button type="button" class="open-content-btn">자세히 보기</button>
+		                                </div>
+		                                <div class="incomeDeduction-content">
+		                                    <p class="first-content">본 콘텐츠는 영화관람료 소득공제 대상 상품입니다.</p>
+		                                    <p>문화비소득공제는 자동 적용되며, 결제완료 후 변경이 불가합니다.</p>
+		                                    <h6>1. 영화 관람료 소득공제란?</h6>
+		                                    <p>2023년 7월 1일 결제분 부터 영화 관람료에 대해 문화비 소득공제가 적용됩니다.</p>
+		                                    <ul>
+		                                        <li>총급여 7천만 원 이하 근로자 중 신용카드 등 사용액이 총급여액의 25 % 가 넘는 근로소득자를 대상으로 적용됩니다.</li>
+		                                        <li>공제율은 30%, 공제한도는 전통시장 사용분, 대중교통 사용분, 문화비 사용분에 대한 소득공제를 합해 총 300만원 입니다.</li>
+		                                    </ul>
+		                                    <h6>2. 영화 관람료 소득공제 대상</h6>
+		                                    <ul>
+		                                        <li>영화 및 공연상품 (단, 영화와 매점(패스트오더) 상품 통합결제 시 대상 제외 / 스포츠 중계, 게임 중계, 강연 등 일부 콘텐츠 제외)</li>
+		                                    </ul>
+		                                    <h6>3. 영화 관람료 소득공제 제외 대상</h6>
+		                                    <ul>
+		                                        <li>매점(패스트오더), 씨네샵, 포토티켓 등 영화와 무관한 상품 제외</li>
+		                                        <li>비상설상영관 등 일부 상영관 제외</li>
+		                                    </ul>
+		                                    <h6>4. 영화 관람료 소득공제 가능 결제수단</h6>
+		                                    <ul>
+		                                        <li>카드결제: 신용카드(법인카드 불가, 개인카드에 한함)</li>
+		                                        <li>현금결제: 관람권, 포인트 등 현금영수증 처리가 가능한 결제수단</li>
+		                                        <li>간편결제: 네이버페이, 카카오페이, Payco, 토스페이</li>
+		                                        <li>휴대폰결제</li>
+		                                    </ul>
+		                                    <h6>5. 영화 관람료 소득공제 제외 결제수단</h6>
+		                                    <ul>
+		                                        <li>현금영수증 처리가 불가한 제휴 결제수단</li>
+		                                        <li>그 외 OK캐쉬백 등 일부 결제수단</li>
+		                                    </ul>
+		                                </div>
+		                            </div>
+		                        </div>
+		                        <!-- 상영시간 종료 여부 -->
+						        <div class="msg-expired" style="display: none;">
+						        	상영시간이 지난 영화입니다.
+						        </div>
+		                    </div>
+		                </c:forEach>
+                    </c:if>
                 </div>
 
                 <!-- 취소 내역들만 묶은 div -->
@@ -510,7 +521,9 @@
                                 </thead>
                                 <tbody>
                                     <tr>
-                                        <td colspan="4" class="nodata">고객님의 최근 취소내역이 존재하지 않습니다.</td>
+	                                    <c:if test="${empty cancelList}">
+										    <td colspan="4" class="nodata">고객님의 최근 취소내역이 존재하지 않습니다.</td>
+										</c:if>
                                     </tr>
                                 </tbody>
                             </table>
@@ -583,7 +596,8 @@
     <jsp:include page="../common/footer.jsp" />
 
     <script>
-        
+
+    
         // 소득공제 슬라이드 다운
         $(function() {
 
@@ -592,6 +606,35 @@
                 $('.incomeDeduction-content').slideToggle();
             });
         });
+        
+        $(function () {
+            $(".reserve-item").each(function () {
+            	
+            	const endTimeText = $("#hiddenEndTime").val();
+                const now = new Date(); // 현재 시간
+                
+                const parts = endTimeText.split(" ");
+                const months = {
+                    Jan: 0, Feb: 1, Mar: 2, Apr: 3, May: 4, Jun: 5,
+                    Jul: 6, Aug: 7, Sep: 8, Oct: 9, Nov: 10, Dec: 11
+                };
+
+                const year = parseInt(parts[5], 10);
+                const month = months[parts[1]];
+                const day = parseInt(parts[2], 10);
+                const [hours, minutes, seconds] = parts[3].split(":").map(Number);
+
+                const endTime = new Date(year, month, day, hours, minutes, seconds);
+
+                if (now > endTime) {
+                    $(this).find(".msg-expired").show();
+                } else {
+                    $(this).find(".msg-expired").hide();
+                }
+            });
+        });
+
+        
     </script>
 
 </body>

@@ -1,5 +1,7 @@
 package com.kh.filoom.member.model.service;
 
+import java.util.List;
+
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -7,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.kh.filoom.member.model.dao.MemberDao;
 import com.kh.filoom.member.model.vo.Member;
+import com.kh.filoom.member.model.vo.Reserve;
 
 @Service
 public class MemberServiceImpl implements MemberService{
@@ -73,6 +76,18 @@ public class MemberServiceImpl implements MemberService{
 	public int withdrawMember(String userId) {
 
 		return memberDao.withdrawMember(sqlSession, userId);
+	}
+
+	@Override
+	public List<Reserve> reserveList(int userNo) {
+
+		return memberDao.reserveList(sqlSession, userNo);
+	}
+
+	@Override
+	public List<Reserve> cancelList(int userNo) {
+
+		return memberDao.cancelList(sqlSession, userNo);
 	}
 
 }

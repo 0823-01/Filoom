@@ -1,6 +1,9 @@
 package com.kh.filoom.member.model.service;
 
+import java.util.List;
+
 import com.kh.filoom.member.model.vo.Member;
+import com.kh.filoom.member.model.vo.Reserve;
 
 public interface MemberService {
 	
@@ -30,5 +33,12 @@ public interface MemberService {
 
 	// 회원탈퇴용 서비스 (update)
 	int withdrawMember(String userId);
+
+	// 예매 내역 조회용 서비스 (select)
+	List<Reserve> reserveList(int userNo);
+
+	// 취소된 예매 내역 조회용 서비스 (select)
+	List<Reserve> cancelList(int userNo);
+	
 	
 }

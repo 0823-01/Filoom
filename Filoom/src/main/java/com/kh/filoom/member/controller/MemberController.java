@@ -24,9 +24,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.kh.filoom.book.model.vo.Booking;
 import com.kh.filoom.member.model.service.MemberService;
 import com.kh.filoom.member.model.vo.Member;
+import com.kh.filoom.member.model.vo.Reserve;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -356,16 +356,16 @@ public class MemberController {
 		return "member/coupon";
 	}
 	
-	/**
-	 * 2024.12.13 김다훈
-	 * 마이페이지(예매 내역 조회) 접속 요청
-	 * @return
-	 */
-	@GetMapping("reserve.me")
-	public String reserve() {
-		
-		return "member/reserve";
-	}
+//	/**
+//	 * 2024.12.13 김다훈
+//	 * 마이페이지(예매 내역 조회) 접속 요청
+//	 * @return
+//	 */
+//	@GetMapping("reserve.me")
+//	public String reserve() {
+//		
+//		return "member/reserve";
+//	}
 	
 	/**
 	 * 2024.12.13 김다훈
@@ -643,7 +643,28 @@ public class MemberController {
 	    return "탈퇴 실패";
 	}
 
-	
+	@GetMapping("/reserve.me")
+    public String reserveList(HttpSession session, Model model) {
+		
+        // 로그인된 사용자 세션에서 가져오기
+        Member loginUser = (Member) session.getAttribute("loginUser");
+        
+        System.out.println("userNo = " + loginUser.getUserNo());
+        
+        // 예매 내역 조회
+        List<Reserve> reserveList = memberService.reserveList(loginUser.getUserNo());
+        
+        List<Reserve> cancelList = memberService.cancelList(loginUser.getUserNo());
+        
+        System.out.println("reserveList = " + reserveList);
+
+        // 모델에 예매 내역 데이터 담기
+        model.addAttribute("reserveList", reserveList);
+        
+        model.addAttribute("cancelList", cancelList);
+        
+        return "member/reserve"; // 예매 내역 화면으로 이동
+    }
 
 
 
