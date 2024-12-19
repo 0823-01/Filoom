@@ -41,19 +41,19 @@ public interface MovieService {
 	ArrayList<Movie> selectPre4(); // 개봉 예정일순 TOP 4
 	
 	// 초기 정렬
-	ArrayList<Movie> selectBoxOffice(); // 개봉순
-	ArrayList<Movie> selectNowPlaying(); // 개봉작만
+	ArrayList<Movie> selectBoxOffice(int cpage); // 개봉순
+	ArrayList<Movie> selectNowPlaying(int cpage); // 개봉작만
 	
 	// 정렬 기준
 	// 박스 오피스
 	ArrayList<Movie> listbyOpenedOrder(int cpage); // 개봉순 (개봉작만)
-	ArrayList<Movie> listbyCritics(); // 평점순(개봉작만)
-	ArrayList<Movie> listbyName(); // 가나다순(전체)
-	ArrayList<Movie> listbyNamePlaying(); // 가나다순(개봉작만)
+	ArrayList<Movie> listbyCritics(int cpage); // 평점순(개봉작만)
+	ArrayList<Movie> listbyName(int cpage); // 가나다순(전체)
+	ArrayList<Movie> listbyNamePlaying(int cpage); // 가나다순(개봉작만)
 	
 	// 개봉 예정작
-	ArrayList<Movie> listbyOpenOrder(); // 개봉예정 빠른 순 ← 기본 정렬 기준
-	ArrayList<Movie> listbyNamePre(); // 가나다순
+	ArrayList<Movie> listbyOpenOrder(int cpage); // 개봉예정 빠른 순 ← 기본 정렬 기준
+	ArrayList<Movie> listbyNamePre(int cpage); // 가나다순
 	
 	// 영화 검색 - status = 0은 전체, 1은 개봉작만, 2는 미개봉작만 
 	ArrayList<Movie> searchMovie(HashMap<String, Object> map);
@@ -63,4 +63,7 @@ public interface MovieService {
 	Movie showDetail(int movieNo); // 상세 정보 조회
 	// listScenes(); // 스틸컷 목록 조회
 	// selectReviewList(); // 리뷰 목록 조회
+	
+	// === 관리자 영화 추가 페이지 ===
+	int addMovie(Movie m);
 }

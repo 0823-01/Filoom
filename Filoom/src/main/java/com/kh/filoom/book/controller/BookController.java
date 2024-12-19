@@ -101,6 +101,8 @@ public class BookController {
 		
 		ArrayList<BookingSeat> list = bookService.selectMovieSeat(playingNo);
 		
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		
 		
 		System.out.println(list);
 		
@@ -172,8 +174,8 @@ public class BookController {
 	@PostMapping(value="book.re", produces="application/json; charset=UTF-8")
 	public String pay(int playingNo, String seatId) {
 	
-		System.out.println(playingNo);
-		System.out.println(seatId);
+		// System.out.println(playingNo);
+		// System.out.println(seatId);
 		
 		String[] seatArray = seatId.split(",\\s*"); // 쉼표와 공백 기준으로 분리
 	    ArrayList<BookingSeat> abk = new ArrayList<>();
@@ -189,7 +191,7 @@ public class BookController {
 	        abk.add(bookingSeat);
 	    }
 
-		System.out.println(abk);
+		// System.out.println(abk);
 	    
 		
 	    int result = bookService.deleteBookingListList(abk);
@@ -197,8 +199,20 @@ public class BookController {
 		return new Gson().toJson(abk);
 	}
 	
-	
-	
+	@ResponseBody
+	@GetMapping(value="movie.sea", produces="application/json; charset=UTF-8")
+	public int movieSearch(String searchMovieKeyword) {
+		
+		HashMap<String, Object> map = new HashMap<>();
+		map.put("searchMovieKeyword", searchMovieKeyword);
+		
+		int moiveNo = bookService.movieSearch(map);
+		
+		System.out.println(map);
+		
+		return moiveNo;
+		
+	}
 	
 	
 	

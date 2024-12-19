@@ -79,6 +79,13 @@ public class BookServiceImple implements BookService {
 		return bookDao.deleteBookingListList(sqlSession, abk);
 	}
 
+	@Override
+	public int movieSearch(HashMap<String, Object> map) {
+		// TODO Auto-generated method stub
+		return bookDao.movieSearch(sqlSession, map);
+	}
+	
+	
 	
 	
 	
@@ -156,6 +163,7 @@ public class BookServiceImple implements BookService {
 		return bookDao.selectListBookingSeat(sqlSession,bookingSeatNoList);
 	}
 
+
 	//결제전 쿠폰 유효성 검사
 	@Override
 	public int selectCheckCoupon(List<Integer> couponNos,int userNo) { 
@@ -176,6 +184,6 @@ public class BookServiceImple implements BookService {
 
 
 	
-	
+
 	
 }

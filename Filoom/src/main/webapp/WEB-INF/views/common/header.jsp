@@ -159,7 +159,7 @@
 
 
 
-            <a class="logo" href="${ pageContext.request.contextPath }">Filoom</a>
+            <a class="logo" href="${ pageContext.request.contextPath }/">Filoom</a>
 
 
 			<c:choose>

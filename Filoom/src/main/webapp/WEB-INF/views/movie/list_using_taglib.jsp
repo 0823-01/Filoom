@@ -8,6 +8,9 @@
 <title>Insert title here</title>
 </head>
 <body>
+			<input type="hidden" id="first" value="${requestScope.pi.startPage}">
+			<input type="hidden" id="last" value="${requestScope.pi.endPage}">
+			<input type="hidden" id="MX" value="${requestScope.pi.maxPage}">
             <c:forEach var="pic" items="${box}">
             	<div class="movie">
 	                <!-- <img src="resources/images/posters/moana.jpg" class="poster"> -->
