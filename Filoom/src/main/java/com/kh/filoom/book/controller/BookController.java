@@ -61,15 +61,15 @@ public class BookController {
 	
 	@ResponseBody
 	@GetMapping(value = "movie.de", produces="application/json; charset=UTF-8")
-	public Movie getMovieDetail(@RequestParam("movieNo") int movieNo, Model model) {
+	public ArrayList<Movie> getMovieDetail(@RequestParam("movieNo") int movieNo, Model model) {
 		
 		//System.out.println(movieNo);
 		
-		Movie movie = bookService.selectMovie(movieNo);
+		ArrayList<Movie> movie = bookService.selectMovie(movieNo);
 		
 		model.addAttribute("movie", movie);
 		
-		//System.out.println(movie);
+		// System.out.println(movie);
 		
 		return movie;
 	}
@@ -82,7 +82,7 @@ public class BookController {
 		
 		ArrayList<Playing> list = bookService.selectMovieDate(movieNum);
 		
-		//System.out.println(list);
+		// System.out.println(list);
 		
 		return new Gson().toJson(list);
 		
@@ -94,7 +94,8 @@ public class BookController {
 		
 		ArrayList<BookingSeat> list = bookService.selectMovieSeat(playingNo);
 		
-		// System.out.println(list);
+		
+		System.out.println(list);
 		
 		
 		return new Gson().toJson(list);
@@ -116,7 +117,7 @@ public class BookController {
 
 	    Date updatedTime = calendar.getTime();
 	    // System.out.println("10분 후 시간: " + updatedTime);
-	    java.sql.Date sqlUpdatedTime = new java.sql.Date(updatedTime.getTime());
+	    java.sql.Timestamp sqlUpdatedTime = new java.sql.Timestamp(updatedTime.getTime());
 	    
 	    BookingSeat bk = new BookingSeat();
 	    
@@ -146,7 +147,7 @@ public class BookController {
 
 	    // 10분 후의 시간을 구하고 java.sql.Date로 변환
 	    Date updatedTime = calendar.getTime();
-	    java.sql.Date sqlUpdatedTime = new java.sql.Date(updatedTime.getTime());
+	    java.sql.Timestamp sqlUpdatedTime = new java.sql.Timestamp(updatedTime.getTime());
 	    
 	    BookingSeat bkk = new BookingSeat();
 	    bkk.setSeatNo(seatId);

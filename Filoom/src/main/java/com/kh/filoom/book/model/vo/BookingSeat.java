@@ -15,7 +15,7 @@ import lombok.ToString;
 public class BookingSeat {
 
 	private int bookingSeatNo;
-	private java.sql.Timestamp timeLimit;
+	private Timestamp timeLimit;
 	private int sseatNo;
 	private int playingNo;
 	private int bookNo;
