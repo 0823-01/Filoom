@@ -66,4 +66,9 @@ public class MemberDao {
 		return sqlSession.selectList("memberMapper.cancelList", userNo);
 	}
 
+	public List<Reserve> couponList(SqlSessionTemplate sqlSession, int userNo) {
+
+		return sqlSession.selectList("memberMapper.couponList", userNo);
+	}
+
 }

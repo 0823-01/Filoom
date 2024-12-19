@@ -39,6 +39,9 @@ public interface MemberService {
 
 	// 취소된 예매 내역 조회용 서비스 (select)
 	List<Reserve> cancelList(int userNo);
+
+	// 쿠폰으로 예매 했는데 그게 무슨 쿠폰이냐? 조회용 서비스 (select)
+	List<Reserve> couponList(int userNo);
 	
 	
 }

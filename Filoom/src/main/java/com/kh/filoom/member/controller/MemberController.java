@@ -649,18 +649,22 @@ public class MemberController {
         // 로그인된 사용자 세션에서 가져오기
         Member loginUser = (Member) session.getAttribute("loginUser");
         
-        System.out.println("userNo = " + loginUser.getUserNo());
-        
         // 예매 내역 조회
         List<Reserve> reserveList = memberService.reserveList(loginUser.getUserNo());
+        
+        List<Reserve> couponList = memberService.couponList(loginUser.getUserNo());
         
         List<Reserve> cancelList = memberService.cancelList(loginUser.getUserNo());
         
         System.out.println("reserveList = " + reserveList);
+        System.out.println("couponList = " + couponList);
+        
+        System.out.println("cancelList = " + cancelList);
 
         // 모델에 예매 내역 데이터 담기
         model.addAttribute("reserveList", reserveList);
-        
+        model.addAttribute("couponList", couponList);
+
         model.addAttribute("cancelList", cancelList);
         
         return "member/reserve"; // 예매 내역 화면으로 이동

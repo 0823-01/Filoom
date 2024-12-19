@@ -17,14 +17,15 @@ import com.kh.filoom.movie.model.vo.Movie;
 
 /**
  * @author 정원섭
- * === MovieController v 0.2 ===
+ * === MovieController v 0.3 ===
  * 작업 착수일 : 2024-12-13
- * 최종 수정일 : 2024-12-18
+ * 최종 수정일 : 2024-12-19
  */
 
 /* 작업 내역
  * v 0.1 - 틀 잡기
- * v 0.2 - 영화 목록 출력
+ * v 0.2 - 영화 목록 출력 (평점순 제외)
+ * v 0.3 - 검색을 제외한 각 영화 목록에 페이징바 추가
  * 
  * */
 @Controller
@@ -34,7 +35,7 @@ public class MovieController {
 	private MovieServiceImpl msi;
 	
 	// 페이징 처리용 변수 (현재 페이징처리 쓰는 모든 곳에서 값 동일)
-	private int boardLimit = 10;
+	private int pgLimit = 10;
 	
 	/* select4랑 select16을 따로 나눠야 할 듯
 	 * 그래야 4개만 출력할 때랑 16개 출력할 때를 구분해서 넣지
@@ -65,25 +66,28 @@ public class MovieController {
 	// ajax로 JSTL을 띄우는 방식이라 responsebody 필요없다고 함
 	// 박스오피스 전체
 	@GetMapping("viewall.mo")
-	public String viewBoxOffice(Model model) {
-		int pgLimit = 16;
+	public String viewBoxOffice(@RequestParam(value="cpage", defaultValue="1")int cpage, Model model) {
+		int boardLimit = 16;
 		int listCount = msi.checkVideoCount();
+		PageInfo pi = Pagination.getPageInfo(listCount, cpage, pgLimit, boardLimit);
 		
-		// PageInfo pi = Pagination.getPageInfo(listCount, cpage, pgLimit, boardLimit);
-		ArrayList<Movie> box = msi.selectBoxOffice();
+		ArrayList<Movie> box = msi.selectBoxOffice(cpage);
 		model.addAttribute("box", box);
+		model.addAttribute("pi", pi);
 		return "movie/list_using_taglib";
 	}
 	
 	// ajax-jstl 테스트용
 	@GetMapping("viewopened.mo")
-	public String viewOpenedOnly(Model model) {
-		int pgLimit = 16;
+	public String viewOpenedOnly(@RequestParam(value="cpage", defaultValue="1")int cpage, Model model) {
+		int boardLimit = 16;
 		int listCount = msi.checkOpenedVideoCount();
-		
-		// PageInfo pi = Pagination.getPageInfo(listCount, cpage, pgLimit, boardLimit);
-		ArrayList<Movie> box = msi.selectNowPlaying();
+		PageInfo pi = Pagination.getPageInfo(listCount, cpage, pgLimit, boardLimit);
+
+		ArrayList<Movie> box = msi.selectNowPlaying(cpage);
 		model.addAttribute("box", box);
+		model.addAttribute("pi", pi);
+		
 		return "movie/list_using_taglib";
 	}
 	
@@ -92,7 +96,7 @@ public class MovieController {
 	// @GetMapping("openorder.mo?cpage=x")
 	@GetMapping("openorder.mo")
 	public String listbyOpenedOrder(@RequestParam(value="cpage", defaultValue="1")int cpage, Model model) {
-		int pgLimit = 16;
+		int boardLimit = 16;
 		int listCount = msi.checkOpenedVideoCount();
 		PageInfo pi = Pagination.getPageInfo(listCount, cpage, pgLimit, boardLimit);
 		
@@ -104,21 +108,27 @@ public class MovieController {
 	
 	// 가나다순 정렬
 	@GetMapping("nameorder.mo")
-	public String listbyName(Model model) {
+	public String listbyName(@RequestParam(value="cpage", defaultValue="1")int cpage, Model model) {
+		int boardLimit = 16;
 		int listCount = msi.checkVideoCount();
+		PageInfo pi = Pagination.getPageInfo(listCount, cpage, pgLimit, boardLimit);
 		
-		ArrayList<Movie> nowplaying = msi.listbyName();
+		ArrayList<Movie> nowplaying = msi.listbyName(cpage);
 		model.addAttribute("box", nowplaying);
+		model.addAttribute("pi", pi);
 		return "movie/list_using_taglib";
 	}
 	
 	// 가나다순 정렬 (상영작만)
 	@GetMapping("nameorderplaying.mo")
-	public String listbyNamePlaying(Model model) {
+	public String listbyNamePlaying(@RequestParam(value="cpage", defaultValue="1")int cpage, Model model) {
+		int boardLimit = 16;
 		int listCount = msi.checkVideoCount();
+		PageInfo pi = Pagination.getPageInfo(listCount, cpage, pgLimit, boardLimit);
 		
-		ArrayList<Movie> nowplaying = msi.listbyNamePlaying();
+		ArrayList<Movie> nowplaying = msi.listbyNamePlaying(cpage);
 		model.addAttribute("box", nowplaying);
+		model.addAttribute("pi", pi);
 		return "movie/list_using_taglib";
 	}
 	
@@ -126,12 +136,14 @@ public class MovieController {
 	
 	// 평점순 정렬 (상영작만)
 	@GetMapping("criticchoice.mo")
-	public String listbyCritics(Model model) {
+	public String listbyCritics(@RequestParam(value="cpage", defaultValue="1")int cpage, Model model) {
+		int boardLimit = 16;
 		int listCount = msi.checkOpenedVideoCount();
-		// PageInfo pi = Pagination.getPageInfo(listCount, cpage, pgLimit, boardLimit);
+		PageInfo pi = Pagination.getPageInfo(listCount, cpage, pgLimit, boardLimit);
 
-		ArrayList<Movie> bestlist = msi.listbyCritics();
+		ArrayList<Movie> bestlist = msi.listbyCritics(cpage);
 		model.addAttribute("box", bestlist);
+		model.addAttribute("pi", pi);
 		return "movie/list_using_taglib";
 	}
 	*/
@@ -147,24 +159,28 @@ public class MovieController {
 	
 	// 개봉예정작의 개봉순 정렬 - 기본값이 됨에 따라 viewNotOpened로 통합 예정
 	@GetMapping("openorderpre.mo")
-	public String listbyOpenOrder(/*@RequestParam(value="cpage", defaultValue="1")int cpage, */Model model) {
+	public String listbyOpenOrder(@RequestParam(value="cpage", defaultValue="1")int cpage, Model model) {
+		int boardLimit = 16;
 		int listCount = msi.checkNotOpenVideoCount();
-//		PageInfo pi = Pagination.getPageInfo(listCount, cpage, pgLimit, boardLimit);
-		ArrayList<Movie> comingsoon = msi.listbyOpenOrder();
+		PageInfo pi = Pagination.getPageInfo(listCount, cpage, pgLimit, boardLimit);
+		
+		ArrayList<Movie> comingsoon = msi.listbyOpenOrder(cpage);
 		model.addAttribute("box",comingsoon);
-//		model.addAttribute("pi",pi);
+		model.addAttribute("pi",pi);
 		
 		return "movie/list_using_taglib";
 	}
 		
 	// 개봉예정작의 가나다순 정렬
 	@GetMapping("nameorderpre.mo")
-	public String listWaitingByName(Model model) {
+	public String listWaitingByName(@RequestParam(value="cpage", defaultValue="1")int cpage, Model model) {
+		int boardLimit = 16;
 		int listCount = msi.checkNotOpenVideoCount();
-//		PageInfo pi = Pagination.getPageInfo(listCount, cpage, pgLimit, boardLimit);
-		ArrayList<Movie> comingsoon = msi.listbyNamePre();
+		PageInfo pi = Pagination.getPageInfo(listCount, cpage, pgLimit, boardLimit);
+		
+		ArrayList<Movie> comingsoon = msi.listbyNamePre(cpage);
 		model.addAttribute("box",comingsoon);
-//		model.addAttribute("pi",pi);
+		model.addAttribute("pi",pi);
 		return "movie/list_using_taglib";
 	}
 	
@@ -172,7 +188,7 @@ public class MovieController {
 	// (해당 : 박스오피스, 개봉 예정작, 관리자 영화 관리 목록)
 	@GetMapping("searchMovie.mo")
 	public String searchMovie(String keyword, int status, Model model) {
-		// status : 0 = 전체, 1 = 개봉작만, 2 = 미개봉작만(searchFromPreOpen에서 씀)
+		// status : 0 = 전체, 1 = 개봉작만, 2 = 미개봉작만(searchFromPreOpen에서 이것만 씀)
 		HashMap<String, Object> map = new HashMap<>();
 		map.put("keyword", keyword);
 		map.put("status", status);
@@ -182,13 +198,6 @@ public class MovieController {
 		return "movie/list_using_taglib";
 	}
 
-	/*
-	 * public String searchByName(String keyword, Model model) {
-	 * 		
-	 *  }
-	 * 
-	 */
-	
 	
 	// 영화 상세 페이지
 	// specific.mo?movieNo=XXX
@@ -207,7 +216,7 @@ public class MovieController {
 	
 	// 리뷰 목록 조회 (+ 페이징 처리) (AJAX 예상)
 	public void selectReview(@RequestParam(value="cpage", defaultValue="1")int cpage) {
-		int pgLimit = 10;
+		int boardLimit = 10;
 		int listCount = 42; // 임시숫자
 		PageInfo pi = Pagination.getPageInfo(listCount, cpage, pgLimit, boardLimit);
 	}
