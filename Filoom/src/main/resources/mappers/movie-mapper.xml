@@ -51,27 +51,28 @@
 	    <result column="DESCRIPTION" property="description" />
 	    <result column="IMAGE_PATH" property="imagePath" />
 	    <result column="FILE_CODENAME" property="fileCodename" />
+	    <result column="FILE_LEVEL" property="fileLevel"/>
 	</resultMap>
 	
 	
 	<!-- 이거 영화 예매 페이지 첫페이지 정보 가져오기 -->
 	<select id ="selectList" resultMap="movieResultSet">
 		SELECT M.MOVIE_NO
-		    , M.MOVIE_TITLE
-		    , M.PREMIERE
-		    , M.OPEN_DATE
-		    , M.RUNTIME
-		    , M.SCREEN_TYPE
-		    , M.FILM_RATE
-		    , M.DESCRIPTION
-		    , M.STARRING
-		    , M.STATUS
-		    , P.IMAGE_PATH
-		    , P.FILE_CODENAME
-	    FROM MOVIE M 
-	    JOIN POSTER P
-	    ON M.MOVIE_NO = P.MOVIE_NO
-	    WHERE P.FILE_LEVEL=1
+		     , M.MOVIE_TITLE
+		     , M.PREMIERE
+		     , M.OPEN_DATE
+		     , M.RUNTIME
+		     , M.SCREEN_TYPE
+		     , M.FILM_RATE
+		     , M.DESCRIPTION
+		     , M.STARRING
+		     , M.STATUS
+		     , P.IMAGE_PATH
+		     , P.FILE_CODENAME
+		FROM MOVIE M
+		LEFT JOIN POSTER P
+		ON M.MOVIE_NO = P.MOVIE_NO
+		   AND P.FILE_LEVEL = 1
 	</select>
 	
 	<select id = "selectFirstMovie" resultMap="movieResultSet">
@@ -102,18 +103,23 @@
 	<select id = "selectMovie" parameterType="_int" resultMap="movieWithPosterFlatResultMap">
 	
 		SELECT 
-			M.MOVIE_NO,
+		    M.MOVIE_NO,
 		    M.MOVIE_TITLE,
-		    M.DESCRIPTION,
+		    CASE 
+		        WHEN LENGTH(M.DESCRIPTION) > 120 THEN SUBSTR(M.DESCRIPTION, 1, 120) || '...'
+		        ELSE M.DESCRIPTION
+		    END AS DESCRIPTION,
 		    P.IMAGE_PATH,
-		    P.FILE_CODENAME
+		    P.FILE_CODENAME,
+		    P.FILE_LEVEL
 		FROM 
 		    FILOOM.MOVIE M
-		JOIN 
+		LEFT JOIN 
 		    FILOOM.POSTER P
 		ON 
 		    M.MOVIE_NO = P.MOVIE_NO
 		WHERE 
+		
 		    M.MOVIE_NO = #{movieNo}
 	
 	</select>

@@ -16,13 +16,13 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.google.gson.Gson;
 import com.kh.filoom.book.model.service.BookService;
+import com.kh.filoom.book.model.vo.Booking;
 import com.kh.filoom.book.model.vo.BookingSeat;
 import com.kh.filoom.book.model.vo.Playing;
 import com.kh.filoom.book.payment.DataEncrypt;
@@ -36,6 +36,13 @@ import lombok.extern.slf4j.Slf4j;
 @Controller
 public class BookController {
 
+	// 상점키
+	private String merchantKey 		= "EYzu8jGGMfqaDEp76gSckuvnaHHu+bC4opsSN6lHv3b2lurNYkVXrZ7Z1AoqQnXI3eLuaUFyoRNC6FkrzVjceg==";
+	// 상점아이디
+	private String merchantID 		= "nicepay00m"; 				
+	
+	
+	
 	@Autowired
 	private BookService bookService;
 	
@@ -61,15 +68,15 @@ public class BookController {
 	
 	@ResponseBody
 	@GetMapping(value = "movie.de", produces="application/json; charset=UTF-8")
-	public Movie getMovieDetail(@RequestParam("movieNo") int movieNo, Model model) {
+	public ArrayList<Movie> getMovieDetail(@RequestParam("movieNo") int movieNo, Model model) {
 		
 		//System.out.println(movieNo);
 		
-		Movie movie = bookService.selectMovie(movieNo);
+		ArrayList<Movie> movie = bookService.selectMovie(movieNo);
 		
 		model.addAttribute("movie", movie);
 		
-		//System.out.println(movie);
+		// System.out.println(movie);
 		
 		return movie;
 	}
@@ -82,7 +89,7 @@ public class BookController {
 		
 		ArrayList<Playing> list = bookService.selectMovieDate(movieNum);
 		
-		//System.out.println(list);
+		// System.out.println(list);
 		
 		return new Gson().toJson(list);
 		
@@ -94,7 +101,8 @@ public class BookController {
 		
 		ArrayList<BookingSeat> list = bookService.selectMovieSeat(playingNo);
 		
-		// System.out.println(list);
+		
+		System.out.println(list);
 		
 		
 		return new Gson().toJson(list);
@@ -116,7 +124,7 @@ public class BookController {
 
 	    Date updatedTime = calendar.getTime();
 	    // System.out.println("10분 후 시간: " + updatedTime);
-	    java.sql.Date sqlUpdatedTime = new java.sql.Date(updatedTime.getTime());
+	    java.sql.Timestamp sqlUpdatedTime = new java.sql.Timestamp(updatedTime.getTime());
 	    
 	    BookingSeat bk = new BookingSeat();
 	    
@@ -146,7 +154,7 @@ public class BookController {
 
 	    // 10분 후의 시간을 구하고 java.sql.Date로 변환
 	    Date updatedTime = calendar.getTime();
-	    java.sql.Date sqlUpdatedTime = new java.sql.Date(updatedTime.getTime());
+	    java.sql.Timestamp sqlUpdatedTime = new java.sql.Timestamp(updatedTime.getTime());
 	    
 	    BookingSeat bkk = new BookingSeat();
 	    bkk.setSeatNo(seatId);
@@ -216,14 +224,8 @@ public class BookController {
 	public ModelAndView paymentForm(ModelAndView mv,HttpSession session,int playingNo,  @RequestParam("seatNos")ArrayList<String> seatNos) {
 		
 		//session에서 회원번호 가져오기
-		//int userNo = session.getAttribute("loginUser.userNo");
-		Member loginUser = new Member();
-		loginUser.setUserNo(1);
-		loginUser.setUserName("김형문");
-		loginUser.setEmail("hhhh@naver.com");
-		 
-		session.setAttribute("loginUser",loginUser);
-		
+		Member loginUser = (Member)session.getAttribute("loginUser");
+
 		
 		int userNo = loginUser.getUserNo();
 		
@@ -258,27 +260,8 @@ public class BookController {
 			
 		//3.결제화면에 넘길 정보 조회, mv에 담기
 			
-			/*
-			//결제시 필요한 예매번호+유저번호 미리생성
-			int bookNo = bookService.setBookNo(userNo);
-			Booking booking = new Booking();
-			booking.setBookNo(bookNo);
-			log.debug("4==BOOKING_NO 생성,조회  booking = " + booking.toString());
-			
-			mv.addObject("booking = ",booking);
-			*/
-			
-			
-			
-			/*
-			//*회원번호 -> 회원정보(회원번호, 회원이름, 회원이메일, 회원전화번호)
-			Member member = bookService.selectMember(userNo);
-			log.debug("6==멤버 정보 member : " + member.toString());
-			
-			mv.addObject("member",member);
-			*/
-			
-			
+
+	
 			//*상영번호 -> 영화정보,이미지,상영정보, 상영관정보 조회
 			Movie movie = bookService.selectMovieForPlayingNo(playingNo);
 			
@@ -295,25 +278,7 @@ public class BookController {
 	
 			
 			
-		
-			//결제시 필요한 정보들 (상점키, 상점id,ediDate, hsahString ) hashMap 으로 가공하기
-			
-			int price = 15000*bookingSeatList.size();
-			String merchantKey 		= "EYzu8jGGMfqaDEp76gSckuvnaHHu+bC4opsSN6lHv3b2lurNYkVXrZ7Z1AoqQnXI3eLuaUFyoRNC6FkrzVjceg=="; // 상점키
-			String merchantID 		= "nicepay00m"; 				// 상점아이디
-			
-			String ediDate 			= getyyyyMMddHHmmss();
-			String hashString 		= sha256Enc.encrypt(ediDate + merchantID + price + merchantKey);
-			
-			
-			Map<String,Object> paymentInfo = new HashMap<>();
-			
-			paymentInfo.put("merchantKey", merchantKey);
-			paymentInfo.put("merchantID", merchantID);
-			paymentInfo.put("ediDate", ediDate);
-			paymentInfo.put("hashString", hashString);
-			
-			
+
 			
 			session.setAttribute("alertMsg", "결제하자");	
 			mv.setViewName("book/paymentForm");
@@ -344,12 +309,83 @@ public class BookController {
 	
 	@ResponseBody
 	@PostMapping(value="beforePay.pm",produces="application/json; charset=UTF-8")
-	public String getBookNoAndCheckCoupon(@RequestBody Map<String,List<String>> couponNos) {
+	public String beforePay(@RequestBody Map<String,List<String>> couponNos,HttpSession session) {
 		
-		log.debug("결제전 ajax 실행"+couponNos.toString());
 		
-//		ArrayList<CouponUser> CouponUserList = bookService.
-		return "";
+		log.debug("=====결제전 ajax 실행======");
+		
+		log.debug("쿠폰넘버스 => "+couponNos.toString());
+		
+		//결제시 필요한 예매번호+유저번호 미리생성
+		int userNo = ((Member)session.getAttribute("loginUser")).getUserNo();
+		
+		log.debug("유저넘버 => "+ userNo);
+		/*
+	
+		Booking booking = new Booking();
+		booking.setBookNo(bookNo);
+		log.debug("4==BOOKING_NO 생성,조회  booking = " + booking.toString());
+		
+		mv.addObject("booking = ",booking);
+		 */
+		
+		//1. booking 번호 생성(+userNo)
+		int bookNo = bookService.setBookNo(userNo);
+		
+		Booking booking = new Booking();
+		booking.setBookNo(bookNo);
+		booking.setUserNo(userNo);
+		
+		log.debug("생성된 booking 객체 => "+ booking.toString() );
+		
+		
+		//쿠폰이 있을경우 (없을경우 패스)
+		if(!couponNos.isEmpty()) { 
+		// 쿠폰유저에 booking 번호가 없는지 먼저 체크 
+			int couponResult = bookService.checkCoupons(userNo,couponNos);
+		// 	if(없는경우 통과)  -
+			if(couponResult==0) {
+				bookService.couponUpdateBookNo(bookNo,couponNos);
+			}else {
+				//다시 새로고침
+				return "redirect :/";
+			}
+			
+			
+		}
+		
+		
+		
+		//결제시 필요한 정보들 (상점키, 상점id,ediDate, hsahString ) hashMap 으로 가공하기
+		
+		//String merchantKey 	 	상점키
+		//String merchantID 		상점아이디
+		
+		String ediDate 			= getyyyyMMddHHmmss();
+		String hashString 		= sha256Enc.encrypt(ediDate + merchantID + price + merchantKey);
+		
+	
+		
+		//bookNo, , 결제 번호, 상점키, 상점아이디, 전문생성일시, 해쉬값
+		return ""; //결제정보 Map 으로
+		
+		//     쿠폰에 북넘버 붙이기.
+		
+		
+		//  else(있는경우 - 악용) - 다시 결제
+		//     
+		
+		//
+		// 쿠폰유저에 booking 번호 심기
+		// 
+		
+		
+		
+		
+		
+		
+		
+		
 	}
 
 	

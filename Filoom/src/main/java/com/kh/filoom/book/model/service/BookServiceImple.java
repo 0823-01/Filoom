@@ -2,6 +2,7 @@ package com.kh.filoom.book.model.service;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.mybatis.spring.SqlSessionTemplate;
@@ -153,6 +154,13 @@ public class BookServiceImple implements BookService {
 	@Override
 	public ArrayList<BookingSeat> selectListBookingSeat(ArrayList<BookingSeat> bookingSeatNoList) {
 		return bookDao.selectListBookingSeat(sqlSession,bookingSeatNoList);
+	}
+
+	//결제전 쿠폰 유효성 검사
+	@Override
+	public int checkCoupons(int userNo, Map<String, List<String>> couponNos) {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 	
 	

@@ -1,6 +1,8 @@
 package com.kh.filoom.book.model.service;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 import com.kh.filoom.book.model.vo.BookingSeat;
 import com.kh.filoom.book.model.vo.Playing;
@@ -63,6 +65,9 @@ public interface BookService {
 
 	//상영좌석정보, 좌석번호 조회
 	ArrayList<BookingSeat> selectListBookingSeat(ArrayList<BookingSeat> bookingSeatNoList);
+
+	//결제전 쿠폰 유효성 검사
+	int checkCoupons(int userNo, Map<String, List<String>> couponNos);
 
 	
 	
