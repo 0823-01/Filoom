@@ -213,9 +213,9 @@
                 <div class="middle">
                     <!-- <p>정렬 기준 |</p> -->
                     정렬 기준 |
-                    <a href="javascript:listbyOpenedOrder();">개봉순</a>
+                    <a href="javascript:listbyOpenedOrder(1);">개봉순</a>
                     <a href="javascript:listbyCritics();">평점순</a>
-                    <a href="javascript:listbyName();">이름순</a>
+                    <a href="javascript:listbyName(1);">이름순</a>
                 </div>
                 <div class="right" style="padding-right:30px;">
                     <input type="search" class="search-bar" placeholder="제목으로 검색..."
@@ -227,6 +227,8 @@
             </div>
             <br>
 
+			<!-- 하드코딩본을 의도적으로 안 지웠음
+				사유 : <위키드>를 상세 페이지로 이어놨음 -->
             <div class="movie-list">
             
 	            <div class="movie">
@@ -447,32 +449,35 @@
 
         </div>
         
+<%--         <input type="hidden" value="${meosigi } id="meosigi"> --%>
+        
         <script>
         	$(function() {
+        		//refreshPagingBar(??);
         		// openedOnly();
         	});
         	
         	function toggleSwitch() {
         		// alert($("#openedOnly").prop("checked"));
         		if(!$("#openedOnly").prop("checked")) {
-        			viewAll();
+        			viewAll(1);
         		} else {
-        			openedOnly();
+        			openedOnly(1);
         		}
         	}
         	
         	// 별도의 jsp에 JSTL을 적용한 것을 AJAX로 띄우는 방식
         	// 출처: https://velog.io/@hana78786/Ajax를-활용하여-jstl-적용하기
-        	// 긴 제목이 들어갈 경우 자르는 로직이 아직 안 들어가서 어그러지는 게 정상임
-        	function viewAll() {
+        	function viewAll(cpage) {
         		$.ajax({
-    				url: "viewall.mo",
+    				url: "viewall.mo?cpage="+cpage,
     				type: "get",
     				dataType:"html",
     				
     				success: function(result) {
     					$(".movie-list").empty();
     					$(".movie-list").append(result);
+    					refreshPagingBar('all', cpage);
     				},
     				error: function() {
     					alert("Mission Failure");
@@ -480,15 +485,16 @@
     			});	
         	}
         	
-        	function openedOnly() {
+        	function openedOnly(cpage) {
         		$.ajax({
-    				url: "viewopened.mo",
+    				url: "viewopened.mo?cpage="+cpage,
     				type: "get",
     				dataType:"html",
     				
     				success: function(result) {    					
     					$(".movie-list").empty();
     					$(".movie-list").append(result);
+    					refreshPagingBar('open', cpage);
     				},
     				error: function() {
     					alert("Mission Failure");
@@ -496,17 +502,17 @@
     			});
         	}
         	
-        	// mapper 때문에 공사 중입니다.
         	// 상영작 한정 스위치 체크 여부에 따라 함수 나누고 싶은데 고민 중
-        	function listbyOpenedOrder() {
+        	function listbyOpenedOrder(cpage) {
         		$.ajax({
-    				url: "openorder.mo",
+    				url: "openorder.mo?cpage="+cpage,
     				type: "get",
     				dataType:"html",
     				
-    				success: function(result) {    					
+    				success: function(result) {
     					$(".movie-list").empty();
     					$(".movie-list").append(result);
+    					refreshPagingBar('order', cpage);
     				},
     				error: function() {
     					alert("Mission Failure");
@@ -514,16 +520,17 @@
     			});
         	}
         	
-        	function listbyCritics() {
+        	
+        	function listbyCritics(/*cpage*/) {
 //         		$.ajax({
-//     				url: "criticchoice.mo",
+//     				url: "criticchoice.mo?cpage="+cpage,
 //     				type: "get",
 //     				dataType:"html",
     				
 //     				success: function(result) {    					
 //     					$(".movie-list").empty();
 //     					$(".movie-list").append(result);
-    					
+    					//refreshPagingBar('critic', cpage);
 //     				},
 //     				error: function() {
 //     					alert("Mission Failure");
@@ -532,37 +539,30 @@
         		alert("공사중입니다.");
         	}
         	
-        	// '이름순'을 눌렀을 때, '상영중인 영화만 표시' 스위치가 켜져 있으면 상영중인 영화만 가지고 정렬함 
-        	function listbyName() {
-        		if($("#openedOnly").prop("checked")) {
-   		        	$.ajax({
-	    				url: "nameorderplaying.mo",
-	    				type: "get",
-	    				dataType:"html",
-	    				
-	    				success: function(result) {
-	    					$(".movie-list").empty();
-	    					$(".movie-list").append(result);
-	    				},
-	    				error: function() {
-	    					alert("Mission Failure");
-	    				}
-	    			});		
-        		} else {
-	        		$.ajax({
-	    				url: "nameorder.mo",
-	    				type: "get",
-	    				dataType:"html",
-	    				
-	    				success: function(result) {
-	    					$(".movie-list").empty();
-	    					$(".movie-list").append(result);
-	    				},
-	    				error: function() {
-	    					alert("Mission Failure");
-	    				}
-	    			});
-        		}
+        	// '이름순'을 눌렀을 때, '상영중인 영화만 표시' 스위치가 켜져 있으면 상영중인 영화만 가지고 정렬함
+        	// 아니 근데 지금 개봉 19편 전체 30편인데 왜 자꾸 3페이지까지 나옴???
+        	function listbyName(cpage) {
+
+        		$.ajax({
+//         			if($("#openedOnly").prop("checked")) {
+//         				url: "nameorderplaying.mo?cpage="+cpage
+//         			} else {
+//         				url: "nameorder.mo?cpage="+cpage
+//         			},
+					url: ($("#openedOnly").prop("checked") ? "nameorderplaying" : "nameorder")
+						+".mo?cpage="+cpage,
+    				type: "get",
+    				dataType:"html",
+    				
+    				success: function(result) {
+    					$(".movie-list").empty();
+    					$(".movie-list").append(result);
+    					refreshPagingBar('name', cpage);
+    				},
+    				error: function() {
+    					alert("Mission Failure");
+    				}
+    			});
 
         	}
         	
@@ -581,12 +581,71 @@
 	        			success: function(result) {
 	    					$(".movie-list").empty();
 	    					$(".movie-list").append(result);
+	    					//refreshPagingBar(??);
+	    					// 검색 결과가 두 페이지 넘을 일이 있을까? 적어도 더미에선 없을 것 같은데
+	    					// 그래서 대신 이걸 함: $("pagingbar").empty();
 	    				},
 	    				error: function() {
 	    					alert("Mission Failure");
 	    				}
         			});
         		}
+        	}
+        	
+        	
+        	function refreshPagingBar(sort, cpage) {
+        		$(".pagingbar").empty();
+        		let link = '';
+        		let pgbar = '';
+
+        		switch(sort) {
+        			case 'all' : link ="viewAll("; break;
+        			case 'open' : link ="openedOnly("; break;
+        			case 'order' : link = "listbyOpenedOrder("; break;
+        			case 'critic' : link = "listbyCritics("; break;
+        			case 'name' : link = "listbyName("; break;
+        			// default : alert('오류가 발생했습니다.'); return;
+        		}
+
+        		// EL 태그를 function 안에 쓸 수 없어서 다른 방법을 연구하는 중
+        		// 여기만 해결하면 진짜 끝남
+     
+        		let start = $("#first").val();
+        		let end = $("#last").val();
+        		let max = $("#MX").val();
+        		
+        		console.log("start = " + start + ", end = " + end + ", max = " + max);
+        				
+    			// '<<', '<' 처리
+        		if(cpage > 1) {
+        			// add &lt;&lt;
+        			// add &lt;
+        			pgbar += "<button onclick= '" + link + "1);'>&lt;&lt;</button> <!-- to Page1 -->"
+        				+ "<button onclick= '" + link + (cpage-1) + ");'>&lt;</button> <!-- Prev -->";
+        		}
+
+        		for(let i = start; i <= Math.min(end,max); i++) {
+
+        			if(i == cpage) {
+        				// font-weight:normal 넣는 이유 : 나머지는 lighter로 해놨음
+        				pgbar += "<button disabled style='font-weight: normal;' onclick= '" + link + i + ");'>"
+        					+ i + "</button>";
+        			}
+        			else {
+        				pgbar += "<button onclick= '" + link + i + ");'>" + i + "</button>";
+        			}
+        		}
+
+        		if (cpage < max) {
+        			// add &gt;
+        			// add &gt;&gt;
+        			pgbar += "<button onclick= '" + link
+        					+ (cpage+1) + ");'>&gt;</button> <!-- Next -->"
+        				+ "<button onclick= '" + link + max + ")';>&gt;&gt;</button> <!-- to LastPage -->";
+        		}
+
+        		$(".pagingbar").html(pgbar);
+        		
         	}
         </script>
         <br><br>

@@ -199,8 +199,8 @@
                 <div class="middle" style="padding-left:30px;">
                     <!-- <p>정렬 기준 |</p> -->
                     정렬 기준 |
-                    <a href="javascript:listbyOpenOrder();">개봉순</a>
-                    <a href="javascript:listbyName();">이름순</a>
+                    <a href="javascript:listbyOpenOrder(1);">개봉순</a>
+                    <a href="javascript:listbyName(1);">이름순</a>
                 </div>
                 <div class="right" style="padding-right:30px;">
                     <input type="search" class="search-bar" placeholder="제목으로 검색..."
@@ -219,19 +219,19 @@
         
         <script>
 	        $(function() {
-	    		listbyOpenOrder();
+	    		listbyOpenOrder(1);
 	    	});
 	    	
-	    	function listbyOpenOrder() {
+	    	function listbyOpenOrder(cpage) {
 	    		$.ajax({
-    				url: "openorderpre.mo",
+    				url: "openorderpre.mo?cpage="+cpage,
     				type: "get",
     				dataType:"html",
     				
     				success: function(result) {
     					$(".movie-list").empty();
     					$(".movie-list").append(result);
-    					
+    					refreshPagingBar('order',cpage);
     				},
     				error: function() {
     					alert("Mission Failure");
@@ -239,16 +239,16 @@
     			});	
 	    	}
 	    	
-	    	function listbyName() {
+	    	function listbyName(cpage) {
 	    		$.ajax({
-    				url: "nameorderpre.mo",
+    				url: "nameorderpre.mo?cpage="+cpage,
     				type: "get",
     				dataType:"html",
     				
     				success: function(result) {
     					$(".movie-list").empty();
     					$(".movie-list").append(result);
-    					
+    					refreshPagingBar('name',cpage);
     				},
     				error: function() {
     					alert("Mission Failure");
@@ -274,6 +274,58 @@
 	    				}
         			});
         		}
+        	}
+	    	
+	    	function refreshPagingBar(sort, cpage) {
+        		$(".pagingbar").empty();
+        		let link = '';
+        		let pgbar = '';
+
+        		switch(sort) {
+        			case 'order' : link = "listbyOpenOrder("; break;
+        			case 'name' : link = "listbyNamePre("; break;
+        			// default : alert('오류가 발생했습니다.'); return;
+        		}
+
+        		// EL 태그를 function 안에 쓸 수 없어서 다른 방법을 연구하는 중
+        		// 여기만 해결하면 진짜 끝남
+     
+        		let start = $("#first").val();
+        		let end = $("#last").val();
+        		let max = $("#MX").val();
+        		
+        		console.log("start = " + start + ", end = " + end + ", max = " + max);
+        				
+    			// '<<', '<' 처리
+        		if(cpage > 1) {
+        			// add &lt;&lt;
+        			// add &lt;
+        			pgbar += "<button onclick= '" + link + "1);'>&lt;&lt;</button> <!-- to Page1 -->"
+        				+ "<button onclick= '" + link + (cpage-1) + ");'>&lt;</button> <!-- Prev -->";
+        		}
+
+        		for(let i = start; i <= Math.min(end,max); i++) {
+
+        			if(i == cpage) {
+        				// font-weight:normal 넣는 이유 : 나머지는 lighter로 해놨음
+        				pgbar += "<button disabled style='font-weight: normal;' onclick= '" + link + i + ");'>"
+        					+ i + "</button>";
+        			}
+        			else {
+        				pgbar += "<button onclick= '" + link + i + ");'>" + i + "</button>";
+        			}
+        		}
+
+        		if (cpage < max) {
+        			// add &gt;
+        			// add &gt;&gt;
+        			pgbar += "<button onclick= '" + link
+        					+ (cpage+1) + ")';>&gt;</button> <!-- Next -->"
+        				+ "<button onclick= '" + link + max + ")';>&gt;&gt;</button> <!-- to LastPage -->";
+        		}
+
+        		$(".pagingbar").html(pgbar);
+        		
         	}
         </script>
         <br><br>
