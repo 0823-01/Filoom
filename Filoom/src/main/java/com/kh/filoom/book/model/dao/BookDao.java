@@ -2,6 +2,7 @@ package com.kh.filoom.book.model.dao;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.ibatis.annotations.Param;
@@ -56,6 +57,7 @@ public class BookDao {
 	}
 
 	public int deleteBookingListList(SqlSessionTemplate sqlSession, ArrayList<BookingSeat> abk) {
+		
 		Map<String, Object> paramMap = new HashMap<>();
 		paramMap.put("list", abk);
 		
@@ -64,8 +66,11 @@ public class BookDao {
 		return sqlSession.delete("bookMapper.deleteBookingListList", paramMap);
 	}
 
-
-
+	
+	public int movieSearch(SqlSessionTemplate sqlSession, HashMap<String, Object> map) {
+		// TODO Auto-generated method stub
+		return sqlSession.selectOne("movieMapper.movieSearch", map);
+	}
 
 	
 	
@@ -133,5 +138,30 @@ public class BookDao {
 	//쿠폰조회
 	public ArrayList<CouponUser> selectListCouponUser(SqlSessionTemplate sqlSession, int userNo) {
 		return (ArrayList)sqlSession.selectList("couponMapper.selectListCouponUser",userNo);
+	}
+
+	//쿠폰 검사
+	public int selectCheckCoupon(SqlSessionTemplate sqlSession, List<Integer> couponNos,int userNo) {
+		
+		Map<String,Object> map = new HashMap();
+		map.put("couponNos", couponNos);
+		map.put("userNo", userNo);
+		
+		return sqlSession.selectOne("couponMapper.selectCheckCoupon",map);
+	}
+
+	public int setCouponBookNo(SqlSessionTemplate sqlSession, List<Integer> couponNos, int userNo, int bookNo) {
+		Map<String,Object> map = new HashMap();
+		map.put("couponNos", couponNos);
+		map.put("userNo", userNo);
+		map.put("bookNo", bookNo);
+		return sqlSession.update("couponMapper.setCouponBookNo",map);
+	}
+
+	public int deleteBookNo(SqlSessionTemplate sqlSession, int bookNo, int userNo) {
+		Map<String,Object> map = new HashMap();
+		map.put("bookNo", bookNo);
+		map.put("userNo", userNo);
+		return sqlSession.delete("bookMapper.deleteBookNo",map);
 	}
 }

@@ -90,6 +90,12 @@ public class MemberServiceImpl implements MemberService{
 		return memberDao.cancelList(sqlSession, userNo);
 	}
 
+	@Override
+	public List<Reserve> couponList(int userNo) {
+
+		return memberDao.couponList(sqlSession, userNo);
+	}
+
 }
 
 

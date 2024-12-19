@@ -2,6 +2,11 @@ package com.kh.filoom.book.model.service;
 
 import java.util.ArrayList;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+
 import com.kh.filoom.book.model.vo.BookingSeat;
 import com.kh.filoom.book.model.vo.Playing;
 import com.kh.filoom.coupon.model.vo.CouponUser;
@@ -39,7 +44,9 @@ public interface BookService {
 	// 뒤로가기 및 이전 시 값 삭제
 	int deleteBookingListList(ArrayList<BookingSeat> abk);
 
-
+	// 영화 검색 기능
+	int movieSearch(HashMap<String, Object> map);
+	
 	
 	//결제============================================================
 	
@@ -63,6 +70,17 @@ public interface BookService {
 
 	//상영좌석정보, 좌석번호 조회
 	ArrayList<BookingSeat> selectListBookingSeat(ArrayList<BookingSeat> bookingSeatNoList);
+
+	//결제전 쿠폰 유효성 검사
+	int selectCheckCoupon(List<Integer> couponNos, int userNo);
+
+	//쿠폰에 bookNo 추가하기(예비)
+	int setCouponBookNo(List<Integer> couponNos, int userNo, int bookNo);
+
+	//유효성 테스트 통과x, bookNo 지우기
+	int deleteBookNo(int bookNo, int userNo);
+
+
 
 	
 	

@@ -26,14 +26,14 @@ public class MovieDao {
 		return sqlSession.selectOne("movieMapper.checkNotOpenVideoCount");
 	}
 
-	public ArrayList<Movie> selectBoxOffice(SqlSessionTemplate sqlSession) {
+	public ArrayList<Movie> selectBoxOffice(SqlSessionTemplate sqlSession, int cpage) {
 		// TODO Auto-generated method stub
-		return (ArrayList) sqlSession.selectList("movieMapper.selectBoxOffice");
+		return (ArrayList) sqlSession.selectList("movieMapper.selectBoxOffice", cpage);
 	}
 
-	public ArrayList<Movie> selectNowPlaying(SqlSessionTemplate sqlSession) {
+	public ArrayList<Movie> selectNowPlaying(SqlSessionTemplate sqlSession, int cpage) {
 		// TODO Auto-generated method stub
-		return (ArrayList) sqlSession.selectList("movieMapper.selectNowPlaying");
+		return (ArrayList) sqlSession.selectList("movieMapper.selectNowPlaying", cpage);
 	}
 
 	public ArrayList<Movie> listbyOpenedOrder(SqlSessionTemplate sqlSession, int cpage) {
@@ -41,14 +41,14 @@ public class MovieDao {
 		return (ArrayList) sqlSession.selectList("movieMapper.listbyOpenedOrder", cpage);
 	}
 	
-	public ArrayList<Movie> listbyName(SqlSessionTemplate sqlSession) {
+	public ArrayList<Movie> listbyName(SqlSessionTemplate sqlSession, int cpage) {
 		// TODO Auto-generated method stub
-		return (ArrayList) sqlSession.selectList("movieMapper.listbyName");
+		return (ArrayList) sqlSession.selectList("movieMapper.listbyName", cpage);
 	}
 
-	public ArrayList<Movie> listbyNamePlaying(SqlSessionTemplate sqlSession) {
+	public ArrayList<Movie> listbyNamePlaying(SqlSessionTemplate sqlSession, int cpage) {
 		// TODO Auto-generated method stub
-		return (ArrayList) sqlSession.selectList("movieMapper.listbyNamePlaying");
+		return (ArrayList) sqlSession.selectList("movieMapper.listbyNamePlaying", cpage);
 	}
 	
 	/**
@@ -59,14 +59,14 @@ public class MovieDao {
 	 * @param sqlSession - 접속용 객체
 	 * @return
 	 */
-	public ArrayList<Movie> listbyOpenOrder(SqlSessionTemplate sqlSession) {
+	public ArrayList<Movie> listbyOpenOrder(SqlSessionTemplate sqlSession, int cpage) {
 		// TODO Auto-generated method stub
-		return (ArrayList) sqlSession.selectList("movieMapper.listbyOpenOrder");
+		return (ArrayList) sqlSession.selectList("movieMapper.listbyOpenOrder", cpage);
 	}
 
-	public ArrayList<Movie> listbyNamePre(SqlSessionTemplate sqlSession) {
+	public ArrayList<Movie> listbyNamePre(SqlSessionTemplate sqlSession, int cpage) {
 		// TODO Auto-generated method stub
-		return (ArrayList) sqlSession.selectList("movieMapper.listbyNamePre");
+		return (ArrayList) sqlSession.selectList("movieMapper.listbyNamePre", cpage);
 	}
 
 	public ArrayList<Movie> selectNow4(SqlSessionTemplate sqlSession) {
@@ -83,6 +83,11 @@ public class MovieDao {
 		// TODO Auto-generated method stub
 		
 		return (ArrayList) sqlSession.selectList("movieMapper.searchMovie", map);
+	}
+
+	public ArrayList<Movie> listbyCritics(SqlSessionTemplate sqlSession, int cpage) {
+		// TODO Auto-generated method stub
+		return (ArrayList) sqlSession.selectList("movieMapper.listbyCritics", cpage);
 	}
 
 	

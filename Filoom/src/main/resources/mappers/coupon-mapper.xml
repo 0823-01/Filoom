@@ -28,5 +28,34 @@
 				
 	</select>
 
+	<!-- 결제전 쿠폰 유효성 검사 -->
+	<select id="selectCheckCoupon" parameterType="map" resultType="int">
+	  SELECT COUNT(CU.COUPON_NO)
+	 	FROM COUPON C
+		JOIN COUPON_USER CU ON (C.COUPON_NO = CU.COUPON_NO) 
+		<where>
+			COUPON_USE = 'X'
+		  	AND BOOK_NO IS NULL
+		  	AND USER_NO = #{userNo}
+			<foreach item="item" collection="couponNos" open="AND C.COUPON_NO IN (" separator="," close=")" > 
+				#{item}
+			</foreach>
+		</where>
+	</select>
+		
+	<!-- 쿠폰에 bookNo 추가하기(예비) -->
+	<update id="setCouponBookNo" parameterType="map">
+		UPDATE COUPON_USER
+		   SET BOOK_NO = #{bookNo} 
+		<where>
+			USER_NO = #{userNo}
+			<foreach item="item" collection="couponNos" open="AND COUPON_NO IN (" separator="," close=")" >
+				#{item}
+			</foreach>
+		</where>
+	
+	
+	</update>
+
 	
 </mapper>

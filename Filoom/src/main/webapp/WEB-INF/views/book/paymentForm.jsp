@@ -319,9 +319,6 @@ function nicepayClose(){
         margin-bottom: 20px;
     }
     
-    #submitData{
-    	display:none;
-    }
 
     /* 이전 버튼 */
     #backBtn{
@@ -335,8 +332,22 @@ function nicepayClose(){
     
     
         
+	/* 결제시 필요한 인풋태그들 */
+
+	#couponList input{
+		/* display:none; */
+	}
+	
+	
+	#payMethods input{
+		/* display:none; */
+	}	
 
 
+    #submitData{
+    	/* display:none; */
+
+    }
 
 
 </style>
@@ -345,7 +356,7 @@ function nicepayClose(){
 	<jsp:include page="../common/header.jsp" />	
 	
     
-    <form name="payForm" method="post" action="/filoom/ResultTest.pm">
+    <form id="payForm" name="payForm" method="post" action="/filoom/payResult.pm">
         <div id="outer"> <!-- 바깥테두리-->
 			
 
@@ -408,9 +419,9 @@ function nicepayClose(){
                     <div id="payMethods">
                         <div>
 
-                            <input type="radio" name="PayMethod" id="pay1" value="CARD"  hidden required><label for="pay1">카드결제</label>
-                            <input type="radio" name="PayMethod" id="pay2" value="BANK" hidden required><label for="pay2">계좌이체</label>
-                            <input type="radio" name="PayMethod" id="pay3" value="CELLPHONE" hidden required><label for="pay3">휴대폰결제</label>
+                            <input type="radio" name="payMethod" id="pay1" value="CARD" required><label for="pay1">카드결제</label>
+                            <input type="radio" name="payMethod" id="pay2" value="BANK" ><label for="pay2">계좌이체</label>
+                            <input type="radio" name="payMethod" id="pay3" value="CELLPHONE"><label for="pay3">휴대폰결제</label>
 
                             
                         </div>
@@ -482,30 +493,7 @@ function nicepayClose(){
                             </tbody>
                         </table>
                         
-                        
-                        <!-- 결제시 필요한 정보들 담고, 안보이게 -->
-				                
-						<div id="submitData">			
-
-				             <input type="text" name="GoodsName" value="${requestScope.movie.movieTitle} + " " +${requestScope.booking.bookNo} }>결제 상품명
-				             <input type="text" name="Amt" value="15000">결제 상품금액
-				             
-				             <input type="text" name="MID" value="nictest00m">상점 아이디
-				             <input type="text" name="Moid" value="0">상품 주문번호
-				             <input type="text" name="BuyerName" value="김형문">구매자명
-				             <input type="text" name="BuyerEmail" value="hyeongmoon5429@naver.com">구매자명 이메일
-				             <input type="text" name="BuyerTel" value="01097735429">구매자 연락처
-				             
-				             <!-- <input type="text" name="VbankExpDate" value="">가상계좌입금만료일(YYYYMMDD) -->
-				             <!-- 옵션 --> 
-							<!-- <input type="hidden" name="GoodsCl" value="0"/> -->						<!-- 상품구분(실물(1),컨텐츠(0)) -->
-							<input type="hidden" name="TransType" value="0"/>					<!-- 일반(0)/에스크로(1) --> 
-							<input type="hidden" name="CharSet" value="utf-8"/>					<!-- 응답 파라미터 인코딩 방식 -->
-							<!-- <input type="hidden" name="ReqReserved" value=""/> -->					<!-- 상점 예약필드 -->
-										
-							<!-- 변경 불가능 -->
-							<input type="hidden" name="EdiDate" value="<%-- <%=ediDate%> --%>"/>			<!-- 전문 생성일시 -->
-							<input type="hidden" name="SignData" value="<%-- <%=hashString%> --%>"/>	<!-- 해쉬값 -->
+                       
 							
 							
 							
@@ -517,8 +505,8 @@ function nicepayClose(){
                             </div>
                             <div>
                             	<button type="button" onclick="beforePay();">결제전 ajax 실행</button>
-                                <button type="button" onclick="nicepayStart();">나이스페이결제</button>
-                                <!-- 원래버튼<button  href="#" type="button" id="submitBtn" onclick="nicepayStart();">결제</button> -->
+                                <button id="noPayBtn" type="submit" onclick=";">0원결제</button>
+                                <button  href="#" type="button" id="submitBtn" onclick="nicepayStart();">나이스페이결제</button>
                             </div>
                         </div>
                     </div>
@@ -528,6 +516,54 @@ function nicepayClose(){
             </div>
 
         </div>
+        
+         
+                        <!-- 결제시 필요한 정보들 담고, 안보이게 -->
+				                
+						<div id="submitData">			
+							
+
+
+				             <input type="text" name="GoodsName" value="${requestScope.movie.movieTitle}">결제 상품명(o)
+				             <br>
+				             <input type="text" name= "totalCost" value=""> 토탈 코스트(o)
+				             <br>
+				             <input type="text" name="Amt" value="">결제 상품금액(o)
+				             <br>
+				             
+				             <br>
+				             <input type="text" name="MID" value="nictest00m">상점 아이디(o)
+				             <br>
+				             <input type="text" name="Moid" value="${requestScope.booking.bookNo }">상품 주문번호 (o)
+				             <br>
+				             <input type="text" name="BuyerName" value="${sessionScope.loginUser.userName }">구매자명 (o)
+				             <br>
+				             <input type="text" name="BuyerEmail" value=${sessionScope.loginUser.email }>구매자명 이메일 (o)
+				             <br>
+				             <!-- <input type="text" name="BuyerTel" value="">구매자 연락처 -->
+				             
+										
+							<!-- 변경 불가능 -->
+							<br>
+				            <input type="hidden" name="EdiDate" value="<%-- <%=ediDate%> --%>"/>전문 생성일시 (o)
+							<br>
+				            <input type="hidden" name="SignData" value="<%-- <%=hashString%> --%>"/>해쉬값(o) 
+
+
+							
+							
+							
+							
+							
+							
+							<!--  필요없을것같은것들 -->
+				             <!-- <input type="text" name="VbankExpDate" value="">가상계좌입금만료일(YYYYMMDD) -->
+				             <!-- 옵션 --> 
+							<!-- <input type="hidden" name="GoodsCl" value="0"/> -->						<!-- 상품구분(실물(1),컨텐츠(0)) -->
+							<input type="hidden" name="TransType" value="0"/>					<!-- 일반(0)/에스크로(1) --> 
+							<br>
+				            <input type="hidden" name="CharSet" value="utf-8"/>					<!-- 응답 파라미터 인코딩 방식 -->
+							<!-- <input type="hidden" name="ReqReserved" value=""/> -->					<!-- 상점 예약필드 -->
     </form>
     
     
@@ -555,6 +591,8 @@ function nicepayClose(){
 		const runTime = "${requestScope.movie.runtime}";
  
 		let timeLimit = "${requestScope.bookingSeatList[0].timeLimit}"
+		
+		let Amt = ""; //결제할 금액
 		
 		
 		//전체 로드 다 된후 실행
@@ -646,9 +684,9 @@ function nicepayClose(){
     	function showTotalPrice(){
 			
     		let totalPrice = price*seatCount;
-    		let inputTag ="<input type='hidden' name='bookTotalCost' value='"+totalPrice+"' readonly>";
-     		$("#totalPriceTd").html(totalPrice+inputTag);
-
+     		$("#totalPriceTd").text(totalPrice);
+     		$("#finalPrice").text(totalPrice);
+     		$("#submitData>input[name=totalCost]").val(totalPrice);
     	}
     		
     	
@@ -693,7 +731,7 @@ function nicepayClose(){
     	//조회 클릭시 : 쿠폰리스트
     	function selectCoupon(){
     		
-    		//alert("selectCoupon실행됨 userNo 1");
+    		
     		
     		$.ajax({
     			url:"couponList.co",
@@ -772,9 +810,13 @@ function nicepayClose(){
 			
 			let finalPrice = totalPrice - totalCouponPrice;
 			$("#finalPrice").text(finalPrice)
+			$("#submitData>input[name=Amt]").val(finalPrice);
+			
+			Amt = finalPrice;
+			//console.log("최종 결제금액 = " +Amt );
 			
 		}  
-		
+		//$("#submitData>input[name=totalCost]").val(totalPrice);
 		
 		
 		
@@ -784,16 +826,43 @@ function nicepayClose(){
 			
 			let couponNos=getCouponNos();
 			
-			console.log(couponNos)
+			//console.log(couponNos);
+			//console.log(Amt);
 			
 			
 			$.ajax({
 				url:"beforePay.pm",
 				type:"post",
 				contentType:"application/json",
-				data: JSON.stringify({ couponNos: couponNos}),
-				success:function(){
-					console.log("ajax통신성공");
+				data: JSON.stringify({ couponNos: couponNos,
+										price:Amt }),
+				success:function(payInfo){
+					let bookNo=payInfo.bookNo; //
+					let merchantKey=payInfo.merchantKey; 
+					let merchantId=payInfo.merchantId; //
+					let ediDate = payInfo.ediDate;//
+					let hashString = payInfo.hashString;
+					
+					$("#submitData>input[name=Moid]").val(bookNo);
+					$("#submitData>input[name=MID]").val(merchantId);
+					$("#submitData>input[name=EdiDate]").val(ediDate);
+					$("#submitData>input[name=SignData]").val(hashString);
+				
+					$()
+					
+					
+					
+					if(Amt===0){ //결제할 금액이 0원인경우
+						 /* <form name="payForm" method="post" action="/payResult.pm"> */
+						
+						$("#payForm").submit();
+						
+
+						
+					}else{
+					
+						nicepayStart();
+					}
 				},
 				error:function(){
 					console.log("ajax통신실패:결제전")
@@ -804,6 +873,8 @@ function nicepayClose(){
 			})
 		}
 		
+
+		//선택된 쿠폰 넘버 배열로 가져오기
 		function getCouponNos(){
 			let checkedCoupons = $("#couponList input:checked");
 			
@@ -814,8 +885,6 @@ function nicepayClose(){
 				
 			});
 
-			
-			
 			return couponNos;
 		}
 		

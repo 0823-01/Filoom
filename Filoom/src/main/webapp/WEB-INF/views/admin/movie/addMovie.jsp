@@ -82,8 +82,15 @@
         textarea {max-height:300px;}
         
         #basicInfo .filmrate {
+        	/* padding:5px; */
             width:60px; height:60px;
         }
+
+        /* input[type=radio]:checked + label>img {
+            border: 3px solid black;
+            // background-origin: padding-box;
+            // background-color: blueviolet;
+        } */
 
         /* 나중에 admin.css 손볼 때 #movie_submit로 변경 예정 */
         #button_sample {
@@ -149,27 +156,35 @@
                                     <th>영화 제목</th>
                                     <td colspan="4"><input type="text" id="title" value=""></td>
                                 </tr>
-                                <tr>
-                                    <th>상영 등급</th>
-                                    <td width="160">
-                                        <label for="rateA"><img class="filmrate" src="resources/images/posters/3.svg" alt="ALL"></label>
-                                    </td>
-                                    <td width="160">
-                                        <label for="rate12"><img class="filmrate" src="resources/images/posters/12.svg" alt="12"></label>
-                                    </td>
-                                    <td width="160">
-                                        <label for="rate15"><img class="filmrate" src="resources/images/posters/15.svg" alt="15"></label>
-                                    </td>
-                                    <td width="60">
-                                        <label for="rate19"><img class="filmrate" src="resources/images/posters/19.svg" alt="19"></label>
-                                    </td>
-                                </tr>
                                 <tr style="display:none;">
                                     <th>확인용</th>
-                                    <td><input type="radio" name="filmrate" value="3"id="rateA"></td>
+                                    <td><input type="radio" name="filmrate" value="3" id="rate3"></td>
                                     <td><input type="radio" name="filmrate" value="12" id="rate12"></td>
                                     <td><input type="radio" name="filmrate" value="15" id="rate15"></td>
                                     <td><input type="radio" name="filmrate" value="19" id="rate19"></td>
+                                </tr>
+                                <tr>
+                                    <th>상영 등급</th>
+                                    <!-- <td width="160">
+                                        <label for="rate3"><img class="filmrate" src="resources/images/posters/3.svg" onclick="rateFilm(3);" alt="ALL"></label>
+                                    </td>
+                                    <td width="160">
+                                        <label for="rate12"><img class="filmrate" src="resources/images/posters/12.svg" onclick="rateFilm(12);" alt="12"></label>
+                                    </td>
+                                    <td width="160">
+                                        <label for="rate15"><img class="filmrate" src="resources/images/posters/15.svg" onclick="rateFilm(15);" alt="15"></label>
+                                    </td>
+                                    <td width="60">
+                                        <label for="rate19"><img class="filmrate" src="resources/images/posters/19.svg" onclick="rateFilm(19);" alt="19"></label>
+                                    </td> -->
+                                    <td colspan="4" width=540>
+                                    	<div style="display:flex; justify-content: space-between;">
+	                                    	<label for="rate3"><img class="filmrate" src="resources/images/posters/3.svg" onclick="rateFilm(3);" alt="ALL"></label>
+	                                    	<label for="rate12"><img class="filmrate" src="resources/images/posters/12.svg" onclick="rateFilm(12);" alt="12"></label>
+	                                    	<label for="rate15"><img class="filmrate" src="resources/images/posters/15.svg" onclick="rateFilm(15);" alt="15"></label>
+	                                    	<label for="rate19"><img class="filmrate" src="resources/images/posters/19.svg" onclick="rateFilm(19);" alt="19"></label>
+                                    	</div>
+                                    </td>
                                 </tr>
                                 <tr>
                                     <th>감독</th>
@@ -215,7 +230,7 @@
                     <!-- <button>1234</button> -->
 
                     <input type="button" id ="button_sample"
-                     name="movie_submit" value="추가 완료">
+                     name="movie_submit" value="추가 완료" onclick="console.log($(':radio:checked').val());">
 
                 </div>
 
@@ -259,7 +274,7 @@
 
                 $("#posterDisplay").attr("src",e.target.result);
                 var photo = document.getElementById("posterDisplay").innerHTML;
-                console.log(photo);
+                console.log(e.target.result);
             };
         }
         // if not
@@ -267,6 +282,17 @@
             console.log("OFF");
             $("#posterDisplay").attr("src","https://placehold.co/480x716");
         }
+    }
+    
+    function rateFilm(num) {
+        // console.log(num);
+        let target = $("label[for$="+num+"]");
+        $("label *").removeAttr("border");
+        target.children().first().attr({
+            "border":"3px solid red"
+        });
+        // 현재 border-style과 border-color가 적용되지 않는 이슈 있음
+        // 즉, 현재 버튼 선택시 3px만 적용됨
     }
     </script>
     

@@ -44,15 +44,15 @@ public class MovieServiceImpl implements MovieService {
 
 	
 	// 박스 오피스 목록 조회
-	public ArrayList<Movie> selectBoxOffice() {
+	public ArrayList<Movie> selectBoxOffice(int cpage) {
 		// TODO Auto-generated method stub
-		return mDao.selectBoxOffice(sqlSession);
+		return mDao.selectBoxOffice(sqlSession, cpage);
 	}
 
 	@Override
-	public ArrayList<Movie> selectNowPlaying() {
+	public ArrayList<Movie> selectNowPlaying(int cpage) {
 		// TODO Auto-generated method stub
-		return mDao.selectNowPlaying(sqlSession);
+		return mDao.selectNowPlaying(sqlSession, cpage);
 	}
 	
 	// 박스오피스 - 개봉순 정렬 (개봉작만)
@@ -64,22 +64,21 @@ public class MovieServiceImpl implements MovieService {
 	}
 
 	@Override
-	public ArrayList<Movie> listbyCritics() {
+	public ArrayList<Movie> listbyCritics(int cpage) {
 		// TODO Auto-generated method stub
-		return null;
-		//return mDao.listbyCritics();
+		return mDao.listbyCritics(sqlSession, cpage);
 	}
 
 	@Override
-	public ArrayList<Movie> listbyName() {
+	public ArrayList<Movie> listbyName(int cpage) {
 		// TODO Auto-generated method stub
-		return mDao.listbyName(sqlSession);
+		return mDao.listbyName(sqlSession, cpage);
 	}
 
 	@Override
-	public ArrayList<Movie> listbyNamePlaying() {
+	public ArrayList<Movie> listbyNamePlaying(int cpage) {
 		// TODO Auto-generated method stub
-		return mDao.listbyNamePlaying(sqlSession);
+		return mDao.listbyNamePlaying(sqlSession, cpage);
 	}
 
 	// 개봉 예정작 목록 조회
@@ -89,15 +88,15 @@ public class MovieServiceImpl implements MovieService {
 	 * 제작자 : 정원섭
 	 */
 	@Override
-	public ArrayList<Movie> listbyOpenOrder() {
+	public ArrayList<Movie> listbyOpenOrder(int cpage) {
 		// TODO Auto-generated method stub
-		return mDao.listbyOpenOrder(sqlSession);
+		return mDao.listbyOpenOrder(sqlSession, cpage);
 	}
 
 	@Override
-	public ArrayList<Movie> listbyNamePre() {
+	public ArrayList<Movie> listbyNamePre(int cpage) {
 		// TODO Auto-generated method stub
-		return mDao.listbyNamePre(sqlSession);
+		return mDao.listbyNamePre(sqlSession, cpage);
 	}
 	
 	// 검색 기능
@@ -112,6 +111,12 @@ public class MovieServiceImpl implements MovieService {
 	public Movie showDetail(int movieNo) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public int addMovie(Movie m) {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 
 	

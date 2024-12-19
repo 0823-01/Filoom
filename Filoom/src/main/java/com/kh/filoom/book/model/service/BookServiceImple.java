@@ -2,6 +2,7 @@ package com.kh.filoom.book.model.service;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.mybatis.spring.SqlSessionTemplate;
@@ -78,6 +79,13 @@ public class BookServiceImple implements BookService {
 		return bookDao.deleteBookingListList(sqlSession, abk);
 	}
 
+	@Override
+	public int movieSearch(HashMap<String, Object> map) {
+		// TODO Auto-generated method stub
+		return bookDao.movieSearch(sqlSession, map);
+	}
+	
+	
 	
 	
 	
@@ -154,7 +162,28 @@ public class BookServiceImple implements BookService {
 	public ArrayList<BookingSeat> selectListBookingSeat(ArrayList<BookingSeat> bookingSeatNoList) {
 		return bookDao.selectListBookingSeat(sqlSession,bookingSeatNoList);
 	}
+
+
+	//결제전 쿠폰 유효성 검사
+	@Override
+	public int selectCheckCoupon(List<Integer> couponNos,int userNo) { 
+		return bookDao.selectCheckCoupon(sqlSession,couponNos,userNo);
+	}
+
+	//쿠폰에 북넘버 추가하기
+	@Override
+	public int setCouponBookNo(List<Integer> couponNos, int userNo, int bookNo) {
+		return  bookDao.setCouponBookNo(sqlSession,couponNos,userNo,bookNo);
+		
+	}
+	//유효성 테스트 통과x, bookNo 지우기
+	@Override
+	public int deleteBookNo(int bookNo, int userNo) {
+		return bookDao.deleteBookNo(sqlSession,bookNo,userNo);
+	}
+
+
 	
-	
+
 	
 }
