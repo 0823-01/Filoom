@@ -24,6 +24,8 @@
 		<a href="/filoom/movielist_ad.mo">관리자 영화 관리 페이지 바로가기</a>
 	</div>
 	
+	<a href="${ pageContext.request.contextPath }/ad.li">관리자</a>
+	
 	<jsp:include page="common/footer.jsp" />
 </body>
 </html>

@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd" >
+<mapper namespace="adminMapper">
+
+	<resultMap id="adminResultSet" type="chart">
+		<result column="TWO_MONTH_LATER_MEMBER_COUNT" property="twoMonthLaterMemberCount"/>
+		<result column="ONE_MONTH_LATER_MEMBER_COUNT" property="oneMonthLaterMemberCount"/>
+		<result column="CURRENT_MONTH_MEMBER_COUNT" property="currentMonthMemberCount"/>
+		<result column="ONE_MONTH_AFTER_MEMBER_COUNT" property="oneMonthAfterMemberCount"/>
+		<result column="TWO_MONTH_AFTER_MEMBER_COUNT" property="twoMonthAfterMemberCount"/>
+		<result column="TWO_MONTH_LATER_BOOK_COUNT" property="twoMonthLaterBookCount"/>
+		<result column="ONE_MONTH_LATER_BOOK_COUNT" property="oneMonthLaterBookCount"/>
+		<result column="CURRENT_MONTH_LATER_BOOK_COUNT" property="currentMonthLaterBookCount"/>
+		<result column="ONE_MONTH_AFTER_BOOK_COUNT" property="oneMonthAfterBookCount"/>
+		<result column="TWO_MONTH_AFTER_BOOK_COUNT" property="twoMonthAfterBookCount"/>
+		<result column="TEENAGER" property="teenager"/>
+		<result column="TWENTY" property="twenty"/>
+		<result column="THIRTY" property="thirty"/>
+		<result column="FOURTY" property="fourty"/>
+		<result column="FIFTY" property="fifty"/>
+		<result column="SIXTY" property="sixty"/>
+		<result column="ACTION" property="action"/>
+		<result column="HORROR" property="horror"/>
+		<result column="ROMANCE" property="romance"/>
+		<result column="DRAMA" property="drama"/>
+		<result column="DOCUMENTARY" property="documentary"/>
+		<result column="ANIMATION" property="animation"/>
+		<result column="MOVIE_COUNT" property="movieCount"/>
+		<result column="PLAYING_MOVIE_COUNT" property="playingMovieCount"/>
+		<result column="MEMBER_COUNT" property="memberCount"/>
+		<result column="TOTAL_INPUT" property="totalInput"/>
+	</resultMap>
+	
+	<!-- 회원 나이 및 가입 날짜 -->
+	<select id = "adminListView" resultMap="adminResultSet">
+		SELECT 
+		    COUNT(CASE 
+		            WHEN EXTRACT(YEAR FROM SYSDATE) - SUBSTR(BIRTH, 1, 4) BETWEEN 10 AND 19 THEN 1 
+		          END) AS TEENAGER,
+		    COUNT(CASE 
+		            WHEN EXTRACT(YEAR FROM SYSDATE) - SUBSTR(BIRTH, 1, 4) BETWEEN 20 AND 29 THEN 1 
+		          END) AS TWENTY,
+		    COUNT(CASE 
+		            WHEN EXTRACT(YEAR FROM SYSDATE) - SUBSTR(BIRTH, 1, 4) BETWEEN 30 AND 39 THEN 1 
+		          END) AS THIRTY,
+		    COUNT(CASE 
+		            WHEN EXTRACT(YEAR FROM SYSDATE) - SUBSTR(BIRTH, 1, 4) BETWEEN 40 AND 49 THEN 1 
+		          END) AS FOURTY,
+		    COUNT(CASE 
+		            WHEN EXTRACT(YEAR FROM SYSDATE) - SUBSTR(BIRTH, 1, 4) BETWEEN 50 AND 59 THEN 1 
+		          END) AS FIFTY,
+		    COUNT(CASE 
+		            WHEN EXTRACT(YEAR FROM SYSDATE) - SUBSTR(BIRTH, 1, 4) >= 60 THEN 1 
+		          END) AS SIXTY,
+		    COUNT(CASE 
+		            WHEN TO_CHAR(ENROLL_DATE, 'YYYY-MM') = TO_CHAR(ADD_MONTHS(SYSDATE, -2), 'YYYY-MM') THEN 1 
+		          END) AS TWO_MONTH_LATER_MEMBER_COUNT,
+		    COUNT(CASE 
+		            WHEN TO_CHAR(ENROLL_DATE, 'YYYY-MM') = TO_CHAR(ADD_MONTHS(SYSDATE, -1), 'YYYY-MM') THEN 1 
+		          END) AS ONE_MONTH_LATER_MEMBER_COUNT,
+		    COUNT(CASE 
+		            WHEN TO_CHAR(ENROLL_DATE, 'YYYY-MM') = TO_CHAR(SYSDATE, 'YYYY-MM') THEN 1 
+		          END) AS CURRENT_MONTH_MEMBER_COUNT,
+		    COUNT(CASE 
+		            WHEN TO_CHAR(ENROLL_DATE, 'YYYY-MM') = TO_CHAR(ADD_MONTHS(SYSDATE, 1), 'YYYY-MM') THEN 1 
+		          END) AS ONE_MONTH_AFTER_MEMBER_COUNT,
+		    COUNT(CASE 
+		            WHEN TO_CHAR(ENROLL_DATE, 'YYYY-MM') = TO_CHAR(ADD_MONTHS(SYSDATE, 2), 'YYYY-MM') THEN 1 
+		          END) AS TWO_MONTH_AFTER_MEMBER_COUNT
+		FROM MEMBER
+	</select>
+	
+	<!-- 등록된 영화 개수, 상영중인 영화 개수  -->
+	<select id = "adminMovieList" resultMap = "adminResultSet">
+		SELECT COUNT(*) AS MOVIE_COUNT
+		FROM MOVIE
+	</select>
+	
+	<!-- 등록된 영화 개수, 상영중인 영화 개수  -->
+	<select id = "adminPlayingMovieList" resultMap = "adminResultSet">
+		SELECT COUNT(*) AS PLAYING_MOVIE_COUNT
+		FROM MOVIE
+		WHERE STATUS = 'Y'
+	</select>
+	
+	<!-- 회원 수 -->
+	<select id = "adminMemberCount" resultMap = "adminResultSet">
+		SELECT COUNT(*) AS MEMBER_COUNT
+		FROM MEMBER
+		WHERE STATUS = 'Y'
+		
+	</select>
+	
+	<!-- 월별 예메 수 -->
+	<select id = "adminTotalInput" resultMap = "adminResultSet">
+		SELECT
+		    COUNT(CASE WHEN TRUNC(MODIFY_DATE, 'MM') = ADD_MONTHS(TRUNC(SYSDATE, 'MM'), -2) THEN 1 END) AS TWO_MONTH_LATER_BOOK_COUNT,
+		    COUNT(CASE WHEN TRUNC(MODIFY_DATE, 'MM') = ADD_MONTHS(TRUNC(SYSDATE, 'MM'), -1) THEN 1 END) AS ONE_MONTH_LATER_BOOK_COUNT,
+		    COUNT(CASE WHEN TRUNC(MODIFY_DATE, 'MM') = TRUNC(SYSDATE, 'MM') THEN 1 END) AS CURRENT_MONTH_BOOK_COUNT,
+		    COUNT(CASE WHEN TRUNC(MODIFY_DATE, 'MM') = ADD_MONTHS(TRUNC(SYSDATE, 'MM'), 1) THEN 1 END) AS ONE_MONTH_AFTER_BOOK_COUNT,
+		    COUNT(CASE WHEN TRUNC(MODIFY_DATE, 'MM') = ADD_MONTHS(TRUNC(SYSDATE, 'MM'), 2) THEN 1 END) AS TWO_MONTH_AFTER_BOOK_COUNT
+		FROM 
+		    BOOKING
+		WHERE 
+		    STATUS = 'Y'
+	</select>
+	
+	<!-- 영화 장르  -->
+	<select id = "adminGenreCount" resultMap ="adminResultSet">
+		SELECT
+		    COUNT(CASE WHEN GENRE = '액션' THEN 1 END) AS ACTION,
+		    COUNT(CASE WHEN GENRE = '공포' THEN 1 END) AS HORROR,
+		    COUNT(CASE WHEN GENRE = '로맨스' THEN 1 END) AS ROMANCE,
+		    COUNT(CASE WHEN GENRE = '드라마' THEN 1 END) AS DRAMA,
+		    COUNT(CASE WHEN GENRE = '다큐멘터리' THEN 1 END) AS DOCUMENTARY,
+		    COUNT(CASE WHEN GENRE = '애니메이션' THEN 1 END) AS ANIMATION
+		FROM 
+		    MOVIE
+	</select>
+	
+	<select id = "adminTodayInput" resultMap="adminResultSet">
+		SELECT 
+		    SUM(BOOK_COST) AS TOTAL_INPUT
+		FROM 
+		    BOOKING
+		WHERE 
+		    STATUS = 'Y'
+		    OR (STATUS = 'Y' AND TRUNC(MODIFY_DATE) = TRUNC(SYSDATE))
+	
+	</select>
+	
+</mapper>

@@ -317,7 +317,7 @@
 					            $("input[name='movieDetailNo']").val(mainMovie.movieNo);
 
 					            // 3. 서브 이미지 출력 (fileLevel = 2)
-					             const subImgContainer = document.getElementById("selectMovie_subImg");
+					            const subImgContainer = document.getElementById("selectMovie_subImg");
             					subImgContainer.innerHTML = "";
 					
 					            let subImages = data.filter(item => item.fileLevel === 2);
@@ -326,7 +326,7 @@
 
 					                subImages.forEach(function (img, index) {
 					                    let subImagePath = contextPath + "/resources/images/posters/" + img.fileCodename;
-
+					                    //console.log(subImagePath);
 					                    // 새로운 div 생성
 					                    let imgDiv = document.createElement("div");
 					                    imgDiv.classList.add("subImg");
@@ -359,31 +359,7 @@
 
             </div>
             
-            <script>
-	            function loadMovieDetail(movieNo) {
-	               
-	                fetch(`/getMovieDetail?movieNo=${movieNo}`)
-	                    .then(response => response.json())
-	                    .then(data => {
-	                        
-	                        document.querySelector('#thumbnail_img img').src = data.moviePoster;
-	                        document.querySelector('#selectMovie_title a').textContent = data.movieTitle;
-	                        document.querySelector('#selectMovie_summary a').textContent = data.summary;
-	
-	                        
-	                        const subImgContainer = document.querySelectorAll('#subImg');
-	                        subImgContainer.forEach((element, index) => {
-	                            if (data.subImages[index]) {
-	                                element.innerHTML = `<img src="${data.subImages[index]}" alt="sub image">`;
-	                            } else {
-	                                element.innerHTML = '';
-	                            }
-	                        });
-	                    })
-	                    .catch(error => console.error('Error fetching movie detail:', error));
-	            }
-            
-            </script>
+           
 
             
             <div id = "buttonArea_1">
@@ -402,12 +378,21 @@
 	               
 	                
 	            ];
-
+	            
+	            function formatDateTime(date) {
+	                let yyyy = date.getFullYear();
+	                let mm = String(date.getMonth() + 1).padStart(2, '0');
+	                let dd = String(date.getDate()).padStart(2, '0');
+	                let hh = String(date.getHours()).padStart(2, '0');
+	                let mi = String(date.getMinutes()).padStart(2, '0');
+	                let ss = String(date.getSeconds()).padStart(2, '0');
+	                return yyyy + "-" + mm + "-" + dd + " " + hh + ":" + mi + ":" + ss;
+	            }
 
 	        
 	         $(document).on("click", ".movie_selection", function () {
 	             selectedMovieNo = $(this).data("movie-no"); 
-	             // console.log("movieNo:", selectedMovieNo);
+	             console.log("movieNo:", selectedMovieNo);
 
 	             $(".movie_selection").removeClass("selected"); 
 	             $(this).addClass("selected"); 
@@ -428,12 +413,13 @@
 	                     
 	                     movieData.length = 0;	
 	                     
-	                     console.log(result[0].movieTitle);
+	                     
+	                     //console.log(result[0].movieTitle);
 	                     
 	                     
 	                     let newMovies = result.map(item => ({
 	                         playingNo: item.playingNo,
-	                         playTime: item.playTime,
+	                         playTime: formatDateTime(new Date(item.playTime)),
 	                         movieNo: item.movieNo,
 	                         screenNo: item.screenNo,
 	                         status: item.status,
@@ -445,6 +431,9 @@
 
 	                     movieData.push(...newMovies);
 
+	                     //console.log("movieData:", movieData);
+	                     // 여기 출력 문구 playTime "2024-12-25 13:00:00"
+	                 
 	                     renderCalendar();
 	                 },
 	                 error: function () {
@@ -468,7 +457,7 @@
             //console.log(today);
             //현재년월
             let currentYear = today.getFullYear();
-            let currentMonth = today.getMonth(); // -1
+            let currentMonth = today.getMonth() ; // -1
             //월 배열
             const months = ["01", "02", "03", "04", "05", "06",
                             "07", "08", "09", "10", "11", "12"]; // months[현재월인덱스] =>
@@ -483,11 +472,13 @@
                 let firstDay = new Date(year, month, 1).getDay(); //요일 일:0~토:6
                 let tbody = $("#calendar_body");
                 tbody.html("");
+               
                 //상단에 년,월
-    			yearAndMonthDiv.text(year+" - "+month);
+    			yearAndMonthDiv.text(year+" - "+ (month + 1 ));
                 let date = 1;
                 let totalDays = daysInMonth(year,month);
                 for(let i=0;i<6; i++){
+                	
                     // let row = document.createElement("tr");
                     let row = $("<tr></tr>");
                     //console.log(row);
@@ -502,7 +493,7 @@
                                 cell.css("color","red");  //오늘날짜인경우
                             }
                             let fullDate = formatDate(new Date(year, month, date));
-                            if(movieData.some(movie=>movie.playTime.includes(fullDate))){   //선택한 날짜에 상영하는 영화가 있는지
+                            if(movieData.some(movie=>movie.playTime.startsWith(fullDate))){   
                                 cell.addClass('has_movie');  //클래스속성추가 (달력에 영화가 있는날 표시)
                             }else{
                                 cell.addClass('no_movie');  //클래스속성추가 (달력에 영화가 있는날 표시)
@@ -516,7 +507,8 @@
                             });
                             row.append(cell);
                             date++;
-                        }
+                            
+                           }
                     }
                     $("#calendar_body").append(row);
                     if(date>totalDays){
@@ -537,31 +529,35 @@
             }
             //날짜를 클릭했을경우 상영정보 띄어주는 메소드
             function showMovieInfo(date) {
-		    $("#time").html(""); // 기존 내용을 초기화
-		    const selectDate = formatDate(date);
-		    let movieInfo = "";
-		    let movieTitle = ""; // 영화 제목을 저장할 변수
-		
-		    for (let i = 0; i < movieData.length; i++) {
-		        if (movieData[i].playTime.includes(selectDate)) { // 해당 날짜에 상영되는 영화가 있다면
-		            
-		            let startEndTime = calculationTime(movieData[i].playTime, movieData[i].runTime);
-		
-		            // 첫 번째 상영되는 영화의 제목을 가져옴
-		            if (!movieTitle) {
-		                movieTitle = movieData[i].title; // 영화 제목 저장
-		            }
-		
-		            let playingNo = movieData[i].playingNo;
-		
-		            movieInfo += "<div onclick='movieInfoClick()'>" +
-		                            "<label for='input" + i + "'>" + startEndTime[0] + " ~ " + startEndTime[1] + 
-		                            " " + movieData[i].screenNo + "관 " + 
-		                            String(movieData[i].seatCount).padStart(2, '0') + "/" + movieData[i].totalCount + "</label>" +
-		                            "<input type='radio' id='input" + i + "' name='playingNo' value='" + playingNo + "' hidden>" +
-		                         "</div>";
-		        }
-		    }
+			    $("#time").html(""); // 기존 내용을 초기화
+			    const selectDate = formatDate(date);
+			    
+			    //console.log("Selected Date:", selectDate);
+			    //console.log("Movie Data:", movieData);
+			    
+			    let movieInfo = "";
+			    let movieTitle = ""; // 영화 제목을 저장할 변수
+			
+			    for (let i = 0; i < movieData.length; i++) {
+			        if (movieData[i].playTime.includes(selectDate)) { // 해당 날짜에 상영되는 영화가 있다면
+			            
+			            let startEndTime = calculationTime(movieData[i].playTime, movieData[i].runTime);
+			
+			            // 첫 번째 상영되는 영화의 제목을 가져옴
+			            if (!movieTitle) {
+			                movieTitle = movieData[i].title; // 영화 제목 저장
+			            }
+			
+			            let playingNo = movieData[i].playingNo;
+			
+			            movieInfo += "<div onclick='movieInfoClick()'>" +
+			                            "<label for='input" + i + "'>" + startEndTime[0] + " ~ " + startEndTime[1] + 
+			                            " " + movieData[i].screenNo + "관 " + 
+			                            String(movieData[i].seatCount).padStart(2, '0') + "/" + movieData[i].totalCount + "</label>" +
+			                            "<input type='radio' id='input" + i + "' name='playingNo' value='" + playingNo + "' hidden>" +
+			                         "</div>";
+			        }
+			    }
 
 			    // time 영역에 상영정보 추가
 			    $("#time").append(movieInfo);
@@ -855,23 +851,39 @@
           	                data: { playingNo: selectedValue }, 
           	                success: function (response) {
           	                   
-          	                	//console.log("Response received:", response);
+          	                	
+          	                	
+          	                	console.log("Response received:", response);
 								
           	                	const movieTitle = response[0] && response[0].movieTitle ? response[0].movieTitle : "제목 없음";
           	                    inputField2.value = movieTitle; // input value 설정
           	                    inputField2.setAttribute("value", movieTitle);
           	                    
-          	                    
+
+          	                    //formatDateTime(new Date(item.playTime))
+          	                   
           	                    //console.log(movieTitle);
 	          	                    
           	                    const playTime = response[0] && response[0].playTime ? response[0].playTime : "00:00:00.0";
                                 const runtime = response[0] && response[0].runtime ? response[0].runtime : 0;
 
-                                const startTime = playTime.substring(11, 16); // "HH:mm"
+                                const timePart = playTime.split(",")[1].trim(); 
+                                
+                                
+                                console.log("플타임 : " +playTime);
+                                console.log("런타임 : " + runtime);
+                               
+                               
+                                
+                                
+                                const startTime = playTime.substring(13, 17); // "HH:mm"
                                 const startHours = parseInt(startTime.split(":")[0], 10);
                                 const startMinutes = parseInt(startTime.split(":")[1], 10);
                               
-	                            //console.log(startTime);
+	                            console.log("시작시간 : " +startTime);
+	                            console.log("시작시 : " + startHours);
+	                            console.log("시작분 : " + startMinutes);
+	                            
 	                            
 	                            let endHours = startHours;
 	                            let endMinutes = startMinutes + runtime;
@@ -886,11 +898,13 @@
 	                            
 	                            const endTime = (endHours < 10 ? "0" + endHours : endHours) + ":" + (endMinutes < 10 ? "0" + endMinutes : endMinutes);
 
+	                            console.log("playTime:", playTime, "Type:", typeof playTime);
+	                            
 	                            // movieDate 설정 (20xx-xx-xx HH:mm~HH:mm 형식)
 	                            const movieDate = playTime.substring(0, 10) + " " + startTime + "~" + endTime;
 	                            inputField3.value = movieDate; 
 	                            
-	                            console.log(movieDate);
+	                            console.log("무비데이터" + movieDate);
 	                            
 	                            inputField3.setAttribute("value", movieDate);
           	                	
