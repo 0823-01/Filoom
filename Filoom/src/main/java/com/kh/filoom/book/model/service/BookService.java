@@ -67,7 +67,15 @@ public interface BookService {
 	ArrayList<BookingSeat> selectListBookingSeat(ArrayList<BookingSeat> bookingSeatNoList);
 
 	//결제전 쿠폰 유효성 검사
-	int checkCoupons(int userNo, Map<String, List<String>> couponNos);
+	int selectCheckCoupon(List<Integer> couponNos, int userNo);
+
+	//쿠폰에 bookNo 추가하기(예비)
+	int setCouponBookNo(List<Integer> couponNos, int userNo, int bookNo);
+
+	//유효성 테스트 통과x, bookNo 지우기
+	int deleteBookNo(int bookNo, int userNo);
+
+
 
 	
 	

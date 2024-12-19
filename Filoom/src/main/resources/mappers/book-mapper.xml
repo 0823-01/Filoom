@@ -249,15 +249,17 @@
 	</update>
 	
 
+	<!-- 북킹 데이터 생성과 동시에 bookNo 반환 -->	
 	<insert id="setAndGetBookNo" parameterType="booking">
 		INSERT INTO BOOKING (BOOK_NO,USER_NO)
 		VALUES (SEQ_BNO.NEXTVAL, #{userNo})
 		
-		<selectKey keyProperty="bookNo" resultType="int" order="AFTER">
+		<selectKey keyProperty="bookNo" resultType="int" order="AFTER"> <!-- insert 하고, insert된 값 반환 -->
 			SELECT SEQ_BNO.CURRVAL FROM DUAL
 		</selectKey>
 	</insert>
 	
+	<!-- 예약할 좌석 데이터 조회 -->
 	<select id="selectListBookingSeat" parameterType="list" resultMap="bookingSeatResultSet">
 	   SELECT BOOKING_SEAT_NO, TIMElIMIT, SEAT_NO
 	     FROM BOOKING_SEAT
@@ -269,4 +271,10 @@
 		 </where>
 	</select>
 	
+	<!-- 데이터 삭제  -->
+	<delete id="deleteBookNo" parameterType="map">
+		DELETE FROM BOOKING
+		  WHERE USER_NO = #{userNo}
+		    AND BOOK_NO = #{bookNo}	
+	</delete>
 </mapper>

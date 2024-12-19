@@ -309,83 +309,87 @@ public class BookController {
 	
 	@ResponseBody
 	@PostMapping(value="beforePay.pm",produces="application/json; charset=UTF-8")
-	public String beforePay(@RequestBody Map<String,List<String>> couponNos,HttpSession session) {
+	public String beforePay(@RequestBody Map<String,Object>data,HttpSession session) {
 		
 		
 		log.debug("=====결제전 ajax 실행======");
 		
-		log.debug("쿠폰넘버스 => "+couponNos.toString());
+		
+		//유저번호
+		int userNo = ((Member)session.getAttribute("loginUser")).getUserNo();
+		log.debug("유저 번호 : " + userNo);
+		
+		//쿠폰 번호
+		List<Integer> couponNos = (List<Integer>) data.get("couponNos");
+		log.debug("beforePay 선택된 쿠폰번호 : " +couponNos);
+		
 		
 		//결제시 필요한 예매번호+유저번호 미리생성
-		int userNo = ((Member)session.getAttribute("loginUser")).getUserNo();
-		
-		log.debug("유저넘버 => "+ userNo);
-		/*
-	
+				
+		//booking 번호 생성(+userNo)
 		Booking booking = new Booking();
-		booking.setBookNo(bookNo);
-		log.debug("4==BOOKING_NO 생성,조회  booking = " + booking.toString());
-		
-		mv.addObject("booking = ",booking);
-		 */
-		
-		//1. booking 번호 생성(+userNo)
 		int bookNo = bookService.setBookNo(userNo);
-		
-		Booking booking = new Booking();
-		booking.setBookNo(bookNo);
-		booking.setUserNo(userNo);
-		
-		log.debug("생성된 booking 객체 => "+ booking.toString() );
+		log.debug("BOOKING_NO 생성  bookNo = " + bookNo);
 		
 		
-		//쿠폰이 있을경우 (없을경우 패스)
-		if(!couponNos.isEmpty()) { 
-		// 쿠폰유저에 booking 번호가 없는지 먼저 체크 
-			int couponResult = bookService.checkCoupons(userNo,couponNos);
-		// 	if(없는경우 통과)  -
-			if(couponResult==0) {
-				bookService.couponUpdateBookNo(bookNo,couponNos);
-			}else {
-				//다시 새로고침
-				return "redirect :/";
-			}
+		//==쿠폰있는경우==
+		if(!couponNos.isEmpty()) {
+			int couponResult = bookService.selectCheckCoupon(couponNos,userNo);
 			
+			log.debug("쿠폰 유효성 , 사용가능한 쿠폰 수 : " +couponResult);
+			
+			if(couponResult == couponNos.size()) {// 유효성테스트 통과
+				
+				//쿠폰에 북넘버 추가 하기 (처리행갯수)
+				//int result = bookService.setCouponBookNo(couponNos,userNo,bookNo);
+				
+				log.debug("[중지]쿠폰에 bookNo 추가하기 - 처리된행의갯수 : "/* + result */);
+				
+			}else { //유효성 테스트 실패
+				session.setAttribute("alertMsg", "[CouponError] 잘못된 접근입니다. ");
+				
+				//북넘버 제거하기
+				int deleteResult = bookService.deleteBookNo(bookNo,userNo);
+				log.debug("쿠폰유효성테스트실패 : 북넘버 제거 행갯수 " +deleteResult);
+				
+				return "redirect:/";
+			}
 			
 		}
 		
 		
+		//결제할 가격
+		int price = (int)(double)data.get("price");
+		log.debug("결제할 가격 : "+ price );
+
 		
-		//결제시 필요한 정보들 (상점키, 상점id,ediDate, hsahString ) hashMap 으로 가공하기
+		
+		
+		
 		
 		//String merchantKey 	 	상점키
 		//String merchantID 		상점아이디
 		
 		String ediDate 			= getyyyyMMddHHmmss();
+		log.debug("전문생성일시 : "+ediDate);
+
 		String hashString 		= sha256Enc.encrypt(ediDate + merchantID + price + merchantKey);
+		log.debug("hashString : "+hashString );
 		
-	
+		
+		
+
+		Map<String,Object> payInfo = new HashMap();
+		payInfo.put("bookNo", bookNo);
+		payInfo.put("merchantKey",merchantKey);
+		payInfo.put("merchantId", merchantID);
+		payInfo.put("ediDate", ediDate);
+		payInfo.put("hashString", hashString);
+		
+		
 		
 		//bookNo, , 결제 번호, 상점키, 상점아이디, 전문생성일시, 해쉬값
-		return ""; //결제정보 Map 으로
-		
-		//     쿠폰에 북넘버 붙이기.
-		
-		
-		//  else(있는경우 - 악용) - 다시 결제
-		//     
-		
-		//
-		// 쿠폰유저에 booking 번호 심기
-		// 
-		
-		
-		
-		
-		
-		
-		
-		
+		return new Gson().toJson(payInfo); 	
 	}
 
 	
@@ -399,12 +403,20 @@ public class BookController {
 	
 	///filoom/Resulttest.pm
 	//결제후 화면 테스트
-	@PostMapping("ResultTest.pm")
-	public String PaymentResultTest(String Amt) {
+	@PostMapping(value="payResult.pm")
+	public String PaymentResult(String payMethod,ModelAndView mv) {
 		
-		System.out.println("잘되나 ? 결제휴");
-		System.out.println(Amt);
+		
+		
+		log.debug("결제 후 !!! 컨트롤러 !!! ");
+		
+		log.debug("결제수단 " + payMethod);
+		
+		
+		
+		
 		return "book/paymentResult";
+		//return "book/payResult_utf";
 
 	}
 	
