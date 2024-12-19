@@ -17,4 +17,5 @@ public class Reply {
 	private String replyWriter;		//	REPLY_WRITER	NUMBER
 	private String createDate;		//	CREATE_DATE	DATE
 	private String status;			//	STATUS	VARCHAR2(1 BYTE)
+	private String drawingStatus; 
 }

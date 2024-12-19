@@ -232,7 +232,7 @@
         <h2 style="color : #F3F3F3; padding: 10px;">✨추천이벤트✨</h2>
         <div class="recommendEventArea">
         	<c:forEach var="event" items="${hotList}" varStatus="status">
-        		<c:if test="${status.index>3 }">
+        		<c:if test="${status.index < 3 }">
         			<div class="recommendCard">
 	                <a href="${pageContext.request.contextPath}/detail.ev?eno=${event.eventNo}" style="text-decoration: none;">
 	                    <img src="${pageContext.request.contextPath}${event.contentImg1}" alt="추천이미지" style="width : 100%; height : 200px;">

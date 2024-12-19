@@ -26,7 +26,7 @@
             gap : 10px;
         }
 
-        #no, #title, #applicants, #date, #winner {
+        #no, #title, #applicants, #date, #drawing {
             box-sizing: border-box;
             font-size: 25px;
             font-weight: bold;
@@ -50,7 +50,7 @@
             margin-left: 195px;
         }
 
-        #winner {
+        #drawing {
             margin-left: 126px;
         }
 
@@ -104,40 +104,78 @@
         }
 
         /*페이징영역*/
+        
+        .foot {
+        	box-sizing : border-box;
+        	display: flex;
+        	justify-content: center;
+        	align-items : center;
+        	flex-direction: column;
+        	position: relative;
+        
+        }
+        
         .pagingArea {
-            width : fit-content;
-            margin:auto;
-        }
-        .pagination {
-            list-style-type : none;
-        }
-        .pagination>li {
-            float : left;
-            font-size : 20px;
-            margin-left: 10px;
-            margin-right: 10px;
-            margin-top: 3px;
-        }
-        li>a {
-            text-decoration-line: none;
-            color : black;
-        }
-        li>a:active {
-            text-decoration-line: none;
-            color : #AB886D;
+		    display: flex;
+		    justify-content: center;
+		    padding : 20px;
+		    font-size: 20px;
+		    font-weight: bold;
+		
+		}
+		.pagination {
+		    list-style-type : none;
+		    display: flex;
+		    padding : 0;
+		    margin: 0;
+		    font-size: 20px;
+		    font-weight: bold;
+		}
+		.pagination>li {
+		    margin : 0 10px; /*리스트 항목 간의 간격*/
+		    cursor: pointer;
+		    transition: color 0.3s ease; /*색상 전환 효과*/
+		    font-size: 25px;
+		    font-weight: bold;
+		    color : #F3F3F3;
+		}
+		
+		.pagination>li>a {
+		    margin : 0 10px; /*리스트 항목 간의 간격*/
+		    cursor: pointer;
+		    transition: color 0.3s ease; /*색상 전환 효과*/
+		    font-size: 25px;
+		    font-weight: bold;
+		    color : #493628;
+		    text-decoration : none;
+		}
+		
+		.pagination>li>a:hover {
+		    text-decoration-line: none;
+		    color : #AB886D;
+		}
+		
+		.pagination > li>a.disabled {
+		    color: #AB886D;
+		    pointer-events: none;
+		}
+		
+		.pagination > li>a.active {
+		    color: #AB886D;
         }
 
         /*버튼*/
         .btn {
             padding-right : 13px;
-            text-align: right;
             box-sizing: border-box;
             display: flex;
             justify-content: flex-end;
             gap : 10px;
+            position: absolute; 
+            right: 0;
         }
 
-       #applicantBtn {
+       #back, #applicantBtn {
             width: 170px;
             height: 38px;
             border: none;
@@ -150,11 +188,11 @@
             cursor: pointer;
         }
 
-        #applicantBtn:hover {
+        #back:hover, #applicantBtn:hover {
             transform: scale(1.1em);
         }
 
-        #applicantBtn:active {
+        #back:active, #applicantBtn:active {
             background-color: #AB886D;
         }
         
@@ -187,10 +225,10 @@
                 <div id = "admin_title_content" style="box-sizing: border-box;">
                     <div class="menu">
                         <div id="no">번호</div>
-                        <div id="title">이벤트 제목</div>
+                        <div id="title">응모내용</div>
                         <div id="applicants">응모자</div>
                         <div id="date">응모날짜</div>
-                        <div id="winner">당첨여부</div>
+                        <div id="drawing">추첨여부</div>
                     </div>
                 </div>
 
@@ -209,40 +247,74 @@
                         	<c:forEach var="a" items="${requestScope.alist }">
 	                        	<tr id="list">
 		                            <td id="applicantNo" class="ano">${a.applicantNo }</td>
-		                            <td id="eventTitle">${requestScope.e.eventTitle }</td>
+		                            <td id="eventTitle">버튼클릭!</td>
 		                            <td id="applicant">${a.userNo}</td>
 		                            <td id="applicantDate">${a.applicationDate }</td>
-		                            <td id="winnerStatus">Y</td>
+		                            <td id="drawingStatus">${a.drawingStatus }</td>
 	                        	</tr>
                         	</c:forEach>
                         </tbody>
 
                     </table>
 
-                    <!--페이징바-->
-                    <div class="pagingArea">
-                        <ul class="pagination">
-                            <li class="page-item disabled"><a class="page-link" href="#">«</a></li>
-                            <li class="page-item"><a class="page-link" href="#">1</a></li>
-                            <li class="page-item"><a class="page-link" href="#">2</a></li>
-                            <li class="page-item"><a class="page-link" href="#">3</a></li>
-                            <li class="page-item"><a class="page-link" href="#">4</a></li>
-                            <li class="page-item"><a class="page-link" href="#">5</a></li>
-                            <li class="page-item"><a class="page-link" href="#">6</a></li>
-                            <li class="page-item"><a class="page-link" href="#">7</a></li>
-                            <li class="page-item"><a class="page-link" href="#">8</a></li>
-                            <li class="page-item"><a class="page-link" href="#">9</a></li>
-                            <li class="page-item"><a class="page-link" href="#">10</a></li>
-                            <li class="page-item"><a class="page-link" href="#">»</a></li>
-                        </ul>
-                    </div>
+                    <div class="foot" style="box-sizing: border-box;" >
+                        <!--페이징바-->
+                        <div class="pagingArea">
+			                <ul class="pagination" id="pagination">
+			                	<c:choose>
+			                		<c:when test="${requestScope.pi.currentPage eq 1 }">
+			                			<li class="page-item disabled">
+			                				<a class="page-link" href="#">«</a>
+		                				</li>
+			                		</c:when>
+			                		<c:otherwise>
+			                			<li class="page-item">
+			                				<a class="page-link" href="alist.ev?cpage=${requestScope.pi.currentPage-1 }">«</a>
+		                				</li>
+			                		</c:otherwise>
+			                	</c:choose>
+			                	<c:forEach var="p" begin="${requestScope.pi.startPage }"
+			                					   end="${requestScope.pi.endPage }"
+			                					   step="1">
+		                			<c:choose>
+		                				<c:when test="${p ne requestScope.pi.currentPage }">
+		                					<li class="page-item">
+		                						<a class="page-link" href="alist.ev?cpage=${p }">${p }</a>
+		                					</li>
+		                				</c:when>
+		                				<c:otherwise>
+		                					<li class="page-item disabled">
+		                						<a class="page-link" href="alist.ev?cpage=${p }">${p }</a>
+		                					</li>
+		                				</c:otherwise>
+		                			</c:choose>
+			                	</c:forEach>
+			                	
+			                	<c:choose>
+			                		<c:when test="${requestScope.pi.currentPage ne requestScope.pi.maxPage }">
+			                			<li class="page-item">
+	                						<a class="page-link" href="alist.ev?cpage=${requestSCope.pi.currentPage + 1 }">»</a>
+	                					</li>
+			                		</c:when>
+			                		<c:otherwise>
+			                			<li class="page-item disabled">
+	                						<a class="page-link" href="#">»</a>
+	                					</li>
+			                		</c:otherwise>
+			                	</c:choose>
+		                	</ul>
+           				</div>
+           				
+           				<!--버튼--> 
+	                    <div class="btn">
+	                    	<button id="back" onclick="history.back();">이전으로</button>
+	                        <button id="applicantBtn">당첨자 추첨</button>
+	                        <!--추첨이 완료된 경우, 버튼 조작 불가-->
+	                        
+	                    </div>
+           				
+		    		</div>
 
-                    <!--버튼--> 
-                    <div class="btn">
-                        <button id="applicantBtn">응모자 추첨</button>
-                        <!--추첨이 완료된 경우, 버튼 조작 불가-->
-                        
-                    </div>
                 </div>
 
 

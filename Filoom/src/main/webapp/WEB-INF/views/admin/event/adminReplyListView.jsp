@@ -26,7 +26,7 @@
             gap : 10px;
         }
 
-        #no, #content, #writer, #date, #status, #winner {
+        #no, #content, #writer, #date, #drawing {
             box-sizing: border-box;
             font-size: 25px;
             font-weight: bold;
@@ -50,11 +50,7 @@
             margin-left: 200px;
         }
 
-        #status {
-            margin-left: 120px;
-        }
-
-        #winner {
+        #drawing {
             margin-left: 35px;
         }
 
@@ -89,7 +85,7 @@
         }
 
         #replyContent {
-            width : 40%;
+            width : 50%;
             text-align: left;
             cursor: pointer;
         }
@@ -103,11 +99,21 @@
             width : 20%;
         }
 
-        #replyStatus, #winnerStatus {
+        #drawingStatus {
             width : 10%;
         }
 
         /*페이징영역*/
+        
+        .foot {
+        	box-sizing : border-box;
+        	display: flex;
+        	justify-content: center;
+        	align-items : center;
+        	flex-direction: column;
+        	position: relative;
+        
+        }
 		.pagingArea {
 		    display: flex;
 		    justify-content: center;
@@ -160,14 +166,15 @@
         /*버튼*/
         .btn {
             padding-right : 13px;
-            text-align: right;
             box-sizing: border-box;
             display: flex;
             justify-content: flex-end;
             gap : 10px;
+            position: absolute; 
+            right: 0;
         }
 
-        #enrollForm, #applicant {
+        #back, #applicant {
             width: 170px;
             height: 38px;
             border: none;
@@ -180,11 +187,11 @@
             cursor: pointer;
         }
 
-        #enrollForm:hover, #applicant:hover {
+        #back:hover, #applicant:hover {
             transform: scale(1.1em);
         }
 
-        #enrollForm:active, #applicant:active {
+        #back:active, #applicant:active {
             background-color: #AB886D;
         }
         
@@ -220,8 +227,7 @@
                         <div id="content">댓글내용</div>
                         <div id="writer">작성자</div>
                         <div id="date">날짜</div>
-                        <div id="status">삭제여부</div>
-                        <div id="winner">당첨여부</div>
+                        <div id="drawing">추첨여부</div>
                     </div>
                 </div>
 
@@ -243,8 +249,7 @@
 		                            <td id="replyContent">${r.replyContent }</td>
 		                            <td id="replyWriter">${r.replyWriter }</td>
 		                            <td id="replyDate">${r.createDate }</td>
-		                            <td id="replyStatus">N</td>
-		                            <td id="winnerStatus">Y</td>
+		                            <td id="drawingStatus">${r.drawingStatus }</td>
 	                        	</tr>
 	                       	</c:forEach>
                     	</tbody>
@@ -253,7 +258,7 @@
                     
                     
 
-                    <div style="box-sizing: border-box;" >
+                    <div class="foot" style="box-sizing: border-box;" >
                         <!--페이징바-->
                         <div class="pagingArea">
 			                <ul class="pagination" id="pagination">
@@ -300,14 +305,15 @@
 			                	</c:choose>
 		                	</ul>
            				</div>
+           				
+           				<!--버튼--> 
+	                    <div class="btn">
+	                    	<button id="back" onclick="history.back();">이전으로</button>
+	                        <button id="applicant">당첨자 추첨</button>
+	                        <!--추첨이 완료된 경우, 버튼 조작 불가-->
+	                    </div>
 		    		</div>
 
-                    <!--버튼--> 
-                    <div class="btn">
-                        <button id="enrollForm">응모자 추첨</button>
-                        <!--추첨이 완료된 경우, 버튼 조작 불가-->
-                        
-                    </div>
                 </div>
 
 

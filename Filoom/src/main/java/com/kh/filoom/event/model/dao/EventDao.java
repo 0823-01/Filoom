@@ -175,7 +175,7 @@ public class EventDao {
 	 * @param userNo
 	 * @return
 	 */
-	public boolean checkUserParticipated(SqlSessionTemplate sqlSession, int refEno, int userNo) {
+	public boolean checkUserParticipated(SqlSessionTemplate sqlSession, int refEno, String userNo) {
 		Integer result = sqlSession.selectOne("eventMapper.checkUserParticipated", 
 										   new HashMap<String, Object>() {{
 											   put("refEno", refEno);
@@ -314,7 +314,7 @@ public class EventDao {
 	 * @return
 	 */
 	public int aplistCount(SqlSessionTemplate sqlSession, int eventNo) {
-		return sqlSession.selectOne("evetnMapper.aplistCount", eventNo);
+		return sqlSession.selectOne("eventMapper.aplistCount", eventNo);
 	}
 
 	/**

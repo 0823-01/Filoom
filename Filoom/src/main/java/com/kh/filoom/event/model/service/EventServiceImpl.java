@@ -151,7 +151,7 @@ public class EventServiceImpl implements EventService {
 	 * 응모자 중복 확인 메소드 
 	 */
 	@Override
-	public boolean checkUserParticipated(int refEno, int userNo) {
+	public boolean checkUserParticipated(int refEno, String userNo) {
 		return eventDao.checkUserParticipated(sqlSession, refEno, userNo);
 	}
 

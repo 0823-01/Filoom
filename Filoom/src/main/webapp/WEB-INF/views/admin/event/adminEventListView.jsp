@@ -122,6 +122,17 @@
         }
 
         /*페이징영역*/
+        
+        .foot {
+        	box-sizing : border-box;
+        	display: flex;
+        	justify-content: center;
+        	align-items : center;
+        	flex-direction: column;
+        	position: relative;
+        
+        }
+        
 		.pagingArea {
 		    display: flex;
 		    justify-content: center;
@@ -174,11 +185,9 @@
         /*버튼*/
         .btn {
             padding-right : 13px;
-            text-align: right;
             box-sizing: border-box;
-            display: flex;
-            justify-content: flex-end;
-            gap : 10px;
+            position: absolute; 
+            right: 0;
         }
 
         #enrollForm, #applicant {
@@ -254,17 +263,17 @@
                     	<tbody>
 	                    	<c:forEach var="e" items="${requestScope.list }">
 		                        <tr id="list">
-		                            <td class=eno>${e.eventNo }</td>
+		                            <td class=eno>${e.eventNo}</td>
 		                            <td id="event-thumb">
 		                                <div id="img" style="box-sizing: border-box; margin-top : 3px;">
 		                                    <img id="contentImg1" src="${pageContext.request.contextPath}${e.contentImg1}" style="box-sizing: border-box; width : 90px; height : 115px; border-radius : 4px;">                      
 	                                    </div>
 		                            </td>
-		                            <td id="event-title">${e.eventTitle }</td>
-		                            <td id="event-startDate">${e.startDate }</td>
-		                            <td id="event-endDate">${e.endDate }</td>
+		                            <td id="event-title">${e.eventTitle}</td>
+		                            <td id="event-startDate">${e.startDate}</td>
+		                            <td id="event-endDate">${e.endDate}</td>
 		                            <td id="event-status">${e.eventStatus}</td>
-		                            <td id="estatus">${e.status }</td>
+		                            <td id="estatus">${e.status}</td>
 		                        </tr>
 	                        </tbody>
                         </c:forEach>
@@ -285,7 +294,7 @@
                     	});
                     </script>
 
-                    <div style="box-sizing: border-box;" >
+                    <div class="foot" style="box-sizing: border-box;">
                         <!--페이징바-->
                         <div class="pagingArea">
 			                <ul class="pagination" id="pagination">
@@ -331,14 +340,16 @@
 			                		</c:otherwise>
 			                	</c:choose>
 		                	</ul>
+		                
            				</div>
+           					<!--버튼--> 
+	                        <div class="btn">
+	                        	<a href="enrollForm.ev"><button id="enrollForm">이벤트 등록</button></a>
+	                        </div>
+           				
+           				
 		    		</div>
-
-                        <!--버튼--> 
-                        <div class="btn">
-                        	<a href="enrollForm.ev"><button id="enrollForm">이벤트 등록</button></a>
-                            
-                        </div>
+                        
                     </div>
 
                 </div>

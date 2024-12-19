@@ -395,6 +395,17 @@
         background-color : #493628;
         cursor: pointer;
     }
+    
+    #disabledBtn {
+    	height : 70px;
+    	width : 500px;
+    	color : #E4E0E1;
+    	background-color : #AB886D;
+    	border-radius : 4px;
+    	font-size : 30px;
+    	font-weight : bold;
+    	border : none;
+    }
 
 </style>
 </head>
@@ -552,16 +563,23 @@
             			<input type="hidden" name="refEno" value="${requestScope.e.eventNo != null ? requestScope.e.eventNo : 0  }"; />
             			<input type="hidden" name="userNo" value="${sessionScope.loginUser.userNo != null ? sessionScope.loginUser.userNo : 0  }"; />
             			<input type="hidden" name="applicationDate" value="${requestScope.a.applicationDate }" />
-            			<input type="hidden" name="winStatus" value="${requestScope.a.winStatus }" />
+            			<input type="hidden" name="drawingStatus" value="${requestScope.a.drawingStatus }" />
             			<input type="hidden" id="endDate" name="endDate" value="${requestScope.e.endDate }" />
 	            		<div class="apply">
-	            			<button type="submit" id="applyBtn">응모하기</button>
+	            			<c:if test="${sessionScope.loginUser != null }">
+	            				<!-- 로그인 유저가 있을 경우 응모 가능 -->
+								<button type="submit" id="applyBtn">응모하기</button>
+	            			</c:if>
+	            			
+	            			<c:if test="${sessionScope.loginUser == null }">
+	            				<!-- 로그인하지 않은 경우 메세지 표시 또는 비활성화-->
+								<button id="disabledBtn" disabled>로그인 후 응모가능합니다.</button>
+	            			</c:if>
+	            			
 	            		</div>
             		</form>
             	</c:when>
-            	<c:otherwise>
-            		
-            	</c:otherwise>
+            	<c:otherwise></c:otherwise>
             </c:choose>
         
         </div>
@@ -576,6 +594,14 @@
         selectReplyList(1); // 페이지 첫 로딩시 댓글 목록 조회
         // setInterval(selectReplyList, 10000); // 10초마다 댓글 목록 갱신
     });
+    
+	 // 댓글 작성자 가공 함수
+	    function maskUsername(loginUser) {
+	        if (loginUser.length <= 3) {
+	            return loginUser[0] + '*'.repeat(loginUser.length - 1);
+	        }
+	        return loginUser.substring(0, 3) + '*'.repeat(loginUser.length - 3);
+	    }
 
     // 댓글 목록 조회
     function selectReplyList(cpage = 1) {
@@ -589,7 +615,11 @@
                 if (response.list && Array.isArray(response.list)) {
                     response.list.forEach(function(reply) {
                         resultStr += "<tr data-reply-no='" + reply.replyNo + "'>";
-                        resultStr += "<td id='replyWriter'>" + reply.replyWriter + "</td>";
+                        
+                     	// 댓글 작성자 마스킹 처리
+                        var maskedWriter = maskUsername(reply.replyWriter);
+                        resultStr += "<td id='replyWriter'>" + maskedWriter + "</td>";
+                        
                         resultStr += "<td id='replyContent'>" + reply.replyContent + "</td>";
 
                         // 댓글 작성자와 로그인 유저가 같으면 수정 및 삭제 버튼 추가
@@ -696,6 +726,31 @@
         $(".pagination").html(paginationHtml);
     }
     
+ 	// 이벤트 종료일에 따라 댓글 작성창 비활성화
+    $(document).ready(function () {
+        // 종료일 값을 가져오기
+        var eventEndDateStr = "${e.endDate}"; // 서버에서 전달된 종료일
+        // console.log("Original Event End Date String:", eventEndDateStr);
+
+        // 문자열을 Date 객체로 변환 (yyyy-MM-dd 형식 가정)
+        var eventEndDate = new Date(eventEndDateStr);
+        // console.log("Parsed Event End Date:", eventEndDate);
+
+        // 자정 기준으로 설정 (종료일 다음날 00:00:00)
+        eventEndDate.setDate(eventEndDate.getDate() + 1); // 종료일 다음날로 이동
+        eventEndDate.setHours(0, 0, 0, 0); // 자정 시점으로 설정
+        // console.log("Adjusted Event End Date:", eventEndDate);
+
+        // 현재 시간과 비교
+        var currentDate = new Date();
+        // console.log("Current Date:", currentDate);
+
+        if (currentDate >= eventEndDate) {
+            alert("이미 종료된 이벤트입니다.");
+            $("#replyInput").prop("disabled", true); // 버튼 비활성화
+        }
+    });
+    
  	// 응모버튼 스크립트 
     $('#applyBtn').click(function (e) {
         e.preventDefault(); // 기본 동작 방지
@@ -704,7 +759,7 @@
         const refEno = $('input[name="refEno"]').val();
         const userNo = $('input[name="userNo"]').val();
         const applicationDate = $('input[name="applicationDate"]').val();
-        const winStatus = $('input[name="winStatus"]').val();
+        const drawingStatus = $('input[name="drawingStatus"]').val();
 
         $.ajax({
             type: 'POST',
@@ -714,7 +769,7 @@
                 refEno: refEno, 
                 userNo: userNo, 
                 applicationDate: applicationDate, 
-                winStatus: winStatus
+                drawingStatus: drawingStatus
             }),
             dataType: 'json',
             success: function (response) {
@@ -731,20 +786,30 @@
         });
     });
  	
- 	// 종료일에 따른 응모 버튼 비활성화
+ 	// 이벤트 종료일에 따라 버튼 비활성화
     $(document).ready(function () {
-        // 종료일 값을 자정 기준으로 설정 (종료일 다음날 00:00:00)
-        var eventEndDate = new Date('${event.endDate}'); // 서버에서 받은 종료일
-        eventEndDate.setHours(24, 0, 0, 0); // 자정 시점으로 설정
+        // 종료일 값을 가져오기
+        var eventEndDateStr = "${e.endDate}"; // 서버에서 전달된 종료일
+        // console.log("Original Event End Date String:", eventEndDateStr);
+
+        // 문자열을 Date 객체로 변환 (yyyy-MM-dd 형식 가정)
+        var eventEndDate = new Date(eventEndDateStr);
+        // console.log("Parsed Event End Date:", eventEndDate);
+
+        // 자정 기준으로 설정 (종료일 다음날 00:00:00)
+        eventEndDate.setDate(eventEndDate.getDate() + 1); // 종료일 다음날로 이동
+        eventEndDate.setHours(0, 0, 0, 0); // 자정 시점으로 설정
+        // console.log("Adjusted Event End Date:", eventEndDate);
 
         // 현재 시간과 비교
         var currentDate = new Date();
+        // console.log("Current Date:", currentDate);
+
         if (currentDate >= eventEndDate) {
             alert("이미 종료된 이벤트입니다.");
             $("#applyBtn").prop("disabled", true); // 버튼 비활성화
         }
     });
-	 
  
 </script>
 

@@ -46,7 +46,7 @@ public interface EventService {
 	
 	// 응모 버튼 
 	// 응모자 중복 확인(Ajax)
-	boolean checkUserParticipated(int refEno, int userNo);
+	boolean checkUserParticipated(int refEno, String userNo);
 
 	// 응모자 추가(Ajax) 
 	void insertParticipant(Applicant a);
