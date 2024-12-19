@@ -60,7 +60,7 @@
 		SELECT M.MOVIE_NO
 		     , M.MOVIE_TITLE
 		     , M.PREMIERE
-		     , M.OPEN_DATE
+		     , TO_CHAR(M.OPEN_DATE, 'YYYY MM DD') AS OPEN_DATE
 		     , M.RUNTIME
 		     , M.SCREEN_TYPE
 		     , M.FILM_RATE
@@ -73,6 +73,7 @@
 		LEFT JOIN POSTER P
 		ON M.MOVIE_NO = P.MOVIE_NO
 		   AND P.FILE_LEVEL = 1
+	   WHERE M.STATUS = 'Y'
 	</select>
 	
 	<select id = "selectFirstMovie" resultMap="movieResultSet">
@@ -124,6 +125,15 @@
 	
 	</select>
 
+	<!-- 예매페이지 검색 기능 -->
+	<select id = "movieSearch" parameterType="hashmap" resultMap="movieResultSet">
+		
+		SELECT MOVIE_NO
+		FROM MOVIE
+		WHERE MOVIE_TITLE LIKE #{searchMovieKeyword}
+		AND STATUS = 'Y'
+	
+	</select>
 
 
 	<!-- 결제페이지 : 영화,상영정보 조회 -->

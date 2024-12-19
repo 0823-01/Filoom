@@ -56,6 +56,7 @@ public class BookDao {
 	}
 
 	public int deleteBookingListList(SqlSessionTemplate sqlSession, ArrayList<BookingSeat> abk) {
+		
 		Map<String, Object> paramMap = new HashMap<>();
 		paramMap.put("list", abk);
 		
@@ -64,8 +65,11 @@ public class BookDao {
 		return sqlSession.delete("bookMapper.deleteBookingListList", paramMap);
 	}
 
-
-
+	
+	public int movieSearch(SqlSessionTemplate sqlSession, HashMap<String, Object> map) {
+		// TODO Auto-generated method stub
+		return sqlSession.selectOne("movieMapper.movieSearch", map);
+	}
 
 	
 	
@@ -134,4 +138,7 @@ public class BookDao {
 	public ArrayList<CouponUser> selectListCouponUser(SqlSessionTemplate sqlSession, int userNo) {
 		return (ArrayList)sqlSession.selectList("couponMapper.selectListCouponUser",userNo);
 	}
+
+	
+
 }

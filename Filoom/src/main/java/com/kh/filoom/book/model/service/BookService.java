@@ -1,6 +1,7 @@
 package com.kh.filoom.book.model.service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import com.kh.filoom.book.model.vo.BookingSeat;
 import com.kh.filoom.book.model.vo.Playing;
@@ -39,7 +40,9 @@ public interface BookService {
 	// 뒤로가기 및 이전 시 값 삭제
 	int deleteBookingListList(ArrayList<BookingSeat> abk);
 
-
+	// 영화 검색 기능
+	int movieSearch(HashMap<String, Object> map);
+	
 	
 	//결제============================================================
 	

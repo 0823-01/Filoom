@@ -25,7 +25,10 @@ public class BookingSeat {
 	private String seatId;
 	
 	private String seatNo;
-
+	private String playTime;
+	private int movieNo;
+	private int screenNo;
+	private int runtime;
 
 	
 	

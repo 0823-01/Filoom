@@ -56,12 +56,12 @@ public class AdminMainController {
 		model.addAttribute("ch6", ch6);
 		model.addAttribute("ch7", ch7);
 		
-		System.out.println(ch1);
-		System.out.println(ch2);
-		System.out.println(ch3);
-		System.out.println(ch4);
-		System.out.println(ch5);
-		System.out.println(ch6);
+		//System.out.println(ch1);
+		//System.out.println(ch2);
+		//System.out.println(ch3);
+		//System.out.println(ch4);
+		//System.out.println(ch5);
+		//System.out.println(ch6);
 		
 		return "admin/adminMain";
 	}
