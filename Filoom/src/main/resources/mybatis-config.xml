@@ -27,6 +27,7 @@
 		
 		<!-- 개인 사용을 위한 typeAlias -->
 		<typeAlias type = "com.kh.filoom.movie.model.vo.MovieWithPoster" alias="moviewithposter"/>		
+		<typeAlias type = "com.kh.filoom.common.model.vo.Chart" alias="chart"/>
 		
 	</typeAliases>
 	
@@ -36,6 +37,7 @@
 		<mapper resource = "/mappers/movie-mapper.xml"/>
 		<mapper resource = "/mappers/book-mapper.xml"/>
 		<mapper resource = "/mappers/coupon-mapper.xml"/>
+		<mapper resource = "/mappers/admin-mapper.xml"/>
 	
 	</mappers>
 	

@@ -44,7 +44,7 @@ public class BookController {
 		
 		model.addAttribute("firstMovie", firstMovie);
 		
-		System.out.println(list);
+		//System.out.println(list);
 		
 		return "book/book";
 		

@@ -22,6 +22,8 @@
 		<a href="/filoom/boxoffice.mo">박스오피스 테스트</a>
 	</div>
 	
+	<a href="${ pageContext.request.contextPath }/ad.li">관리자</a>
+	
 	<jsp:include page="common/footer.jsp" />
 </body>
 </html>

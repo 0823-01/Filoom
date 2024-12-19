@@ -468,7 +468,7 @@
             //console.log(today);
             //현재년월
             let currentYear = today.getFullYear();
-            let currentMonth = today.getMonth(); // -1
+            let currentMonth = today.getMonth() ; // -1
             //월 배열
             const months = ["01", "02", "03", "04", "05", "06",
                             "07", "08", "09", "10", "11", "12"]; // months[현재월인덱스] =>
@@ -484,7 +484,7 @@
                 let tbody = $("#calendar_body");
                 tbody.html("");
                 //상단에 년,월
-    			yearAndMonthDiv.text(year+" - "+month);
+    			yearAndMonthDiv.text(year+" - "+ (month + 1 ));
                 let date = 1;
                 let totalDays = daysInMonth(year,month);
                 for(let i=0;i<6; i++){
