@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %> 
 <!DOCTYPE html>
 <html>
 <head>
@@ -203,95 +204,19 @@
                     <input type ="text" id ="text_sample">
                     <input type="button" id ="button_sample" value="샘플">-->
 
-                    <table>
-                        <tr id="list">
-                            
-                            <td id="applicantNo">1</td>
-                            <td id="eventTitle">[대가족] 22024.12.31 대가족 시사회</td>
-                            <td id="applicant">user**</td>
-                            <td id="applicantDate">2024-12-29</td>
-                            <td id="winnerStatus">Y</td>
+                    <table id="applicantList">
+                        <tbody>
+                        	<c:forEach var="a" items="${requestScope.alist }">
+	                        	<tr id="list">
+		                            <td id="applicantNo" class="ano">${a.applicantNo }</td>
+		                            <td id="eventTitle">${requestScope.e.eventTitle }</td>
+		                            <td id="applicant">${a.userNo}</td>
+		                            <td id="applicantDate">${a.applicationDate }</td>
+		                            <td id="winnerStatus">Y</td>
+	                        	</tr>
+                        	</c:forEach>
+                        </tbody>
 
-                        <tr id="list">
-                            
-                            <td id="applicantNo">1</td>
-                            <td id="eventTitle">[대가족] 22024.12.31 대가족 시사회</td>
-                            <td id="applicant">user**</td>
-                            <td id="applicantDate">2024-12-29</td>
-                            <td id="winnerStatus">Y</td>
-                        </tr>
-
-                        <tr id="list">
-                            
-                            <td id="applicantNo">1</td>
-                            <td id="eventTitle">[대가족] 22024.12.31 대가족 시사회</td>
-                            <td id="applicant">user**</td>
-                            <td id="applicantDate">2024-12-29</td>
-                            <td id="winnerStatus">Y</td>
-                        </tr>
-
-                        <tr id="list">
-                            
-                            <td id="applicantNo">1</td>
-                            <td id="eventTitle">[대가족] 22024.12.31 대가족 시사회</td>
-                            <td id="applicant">user**</td>
-                            <td id="applicantDate">2024-12-29</td>
-                            <td id="winnerStatus">Y</td>
-                        </tr>
-
-                        <tr id="list">
-                            
-                            <td id="applicantNo">1</td>
-                            <td id="eventTitle">[대가족] 22024.12.31 대가족 시사회</td>
-                            <td id="applicant">user**</td>
-                            <td id="applicantDate">2024-12-29</td>
-                            <td id="winnerStatus">Y</td>
-                        </tr>
-
-                        <tr id="list">
-                            
-                            <td id="applicantNo">1</td>
-                            <td id="eventTitle">[대가족] 22024.12.31 대가족 시사회</td>
-                            <td id="applicant">user**</td>
-                            <td id="applicantDate">2024-12-29</td>
-                            <td id="winnerStatus">N</td>
-                        </tr>
-
-                        <tr id="list">
-                            
-                            <td id="applicantNo">1</td>
-                            <td id="eventTitle">[대가족] 22024.12.31 대가족 시사회</td>
-                            <td id="applicant">user**</td>
-                            <td id="applicantDate">2024-12-29</td>
-                            <td id="winnerStatus">N</td>
-                        </tr>
-
-                        <tr id="list">
-                            
-                            <td id="applicantNo">1</td>
-                            <td id="eventTitle">[대가족] 22024.12.31 대가족 시사회</td>
-                            <td id="applicant">user**</td>
-                            <td id="applicantDate">2024-12-29</td>
-                            <td id="winnerStatus">N</td>
-                        </tr>
-                        <tr id="list">
-                            
-                            <td id="applicantNo">1</td>
-                            <td id="eventTitle">[대가족] 22024.12.31 대가족 시사회</td>
-                            <td id="applicant">user**</td>
-                            <td id="applicantDate">2024-12-29</td>
-                            <td id="winnerStatus">N</td>
-                        </tr>
-                        <tr id="list">
-                            
-                            <td id="applicantNo">1</td>
-                            <td id="eventTitle">[대가족] 22024.12.31 대가족 시사회</td>
-                            <td id="applicant">user**</td>
-                            <td id="applicantDate">2024-12-29</td>
-                            <td id="winnerStatus">N</td>
-                        </tr>
-
-                        
                     </table>
 
                     <!--페이징바-->

@@ -236,7 +236,7 @@
                 <!-- 혜원 - 관리자 이벤트 상세조회 -->
                 <div id = "admin_title_content" >
                     <div id="boardTitle" >이벤트 게시글 상세조회</div>
-                    <div><a href="apply.ev"><button class="btn" id="applicant">응모자 확인</button></a></div>
+                    <div><a href="#" onclick="location.href='aplist.ev?eventNo=' + eventNo + '&eventType=' + eventType + '&cpage=1'"><button class="btn" id="applicant">응모자 확인</button></a></div>
                 </div>
             </div>
 

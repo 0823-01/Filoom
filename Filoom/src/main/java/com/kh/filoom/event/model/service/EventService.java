@@ -2,8 +2,10 @@ package com.kh.filoom.event.model.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import com.kh.filoom.common.model.vo.PageInfo;
+import com.kh.filoom.event.model.vo.Applicant;
 import com.kh.filoom.event.model.vo.Event;
 import com.kh.filoom.event.model.vo.EventAttachment;
 import com.kh.filoom.event.model.vo.Reply;
@@ -42,6 +44,14 @@ public interface EventService {
 	// 댓글 삭제 서비스 (Ajax) 
 	int deleteReply(int replyNo);
 	
+	// 응모 버튼 
+	// 응모자 중복 확인(Ajax)
+	boolean checkUserParticipated(int refEno, int userNo);
+
+	// 응모자 추가(Ajax) 
+	void insertParticipant(Applicant a);
+
+	
 	
 	// ----------------------------------------------------------------관리자
 	// 게시글 작성하기 서비스
@@ -67,6 +77,22 @@ public interface EventService {
 	
 	// 관리자용 게시글 첨부파일 상세조회 서비스 
 	ArrayList<EventAttachment> adminSelectEventAttachment(int eventNo);
+ 
+	// 댓글 목록 수 
+	int rlistCount(int eventNo);
+	
+	// 댓글 작성자 목록조회 서비스
+	List<Reply> adminSelectReplyList(Map<String, Object> params);
+	
+	// 버튼 응모자 수
+	int aplistCount(int eventNo);
+	
+	// 버튼 응모자 목록조회 서비스 
+	List<Applicant> adminSelectApplicantList(Map<String, Object> params);
+
+
+
+
 
 
 

@@ -237,7 +237,7 @@
 
                     <table id="replyList">
                     	<tbody>
-	                    	<c:forEach var="r" items="${requestScope.list }">
+	                    	<c:forEach var="r" items="${requestScope.rlist }">
 	                    		<tr id="list">
 		                            <td id="replyNo" class="rno">${r.replyNo }</td>
 		                            <td id="replyContent">${r.replyContent }</td>
@@ -251,19 +251,7 @@
                     	
                     </table>
                     
-                    <script>
-                    	$(function() {
-                    		$("#replyList>tbody>tr").click(function() {
-                    			
-                    			// 글번호 뽑기 
-                    			let eno = $(this).children(".rno").text();
-                    			console.log(eno);
-                    			
-                    			location.href = "ardetail.ev?eno=" + eno;
-                    		});
-                    		
-                    	});
-                    </script>
+                    
 
                     <div style="box-sizing: border-box;" >
                         <!--페이징바-->

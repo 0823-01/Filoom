@@ -9,6 +9,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>이벤트 상세조회</title>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <style>
 
     body{
@@ -546,17 +547,23 @@
 		            </div>
             	</c:when>
             	<c:when test="${requestScope.e.eventType == 2 }">
-            		<div class="apply">
-            			<button id="applyBtn">응모하기</button>
-            		</div>
+            		<form id="participateForm">
+            			<input type="hidden" name="applicantNo" value="${requestScope.a.applicantNo }" />
+            			<input type="hidden" name="refEno" value="${requestScope.e.eventNo != null ? requestScope.e.eventNo : 0  }"; />
+            			<input type="hidden" name="userNo" value="${sessionScope.loginUser.userNo != null ? sessionScope.loginUser.userNo : 0  }"; />
+            			<input type="hidden" name="applicationDate" value="${requestScope.a.applicationDate }" />
+            			<input type="hidden" name="winStatus" value="${requestScope.a.winStatus }" />
+            			<input type="hidden" id="endDate" name="endDate" value="${requestScope.e.endDate }" />
+	            		<div class="apply">
+	            			<button type="submit" id="applyBtn">응모하기</button>
+	            		</div>
+            		</form>
             	</c:when>
             	<c:otherwise>
             		
             	</c:otherwise>
             </c:choose>
         
-            
-
         </div>
 
     </div>
@@ -688,6 +695,57 @@
         // 페이징 영역 갱신
         $(".pagination").html(paginationHtml);
     }
+    
+ 	// 응모버튼 스크립트 
+    $('#applyBtn').click(function (e) {
+        e.preventDefault(); // 기본 동작 방지
+
+        // hidden 필드의 값 가져오기
+        const refEno = $('input[name="refEno"]').val();
+        const userNo = $('input[name="userNo"]').val();
+        const applicationDate = $('input[name="applicationDate"]').val();
+        const winStatus = $('input[name="winStatus"]').val();
+
+        $.ajax({
+            type: 'POST',
+            url: 'apply.ev',
+            contentType: 'application/json; charset=UTF-8',
+            data: JSON.stringify({ 
+                refEno: refEno, 
+                userNo: userNo, 
+                applicationDate: applicationDate, 
+                winStatus: winStatus
+            }),
+            dataType: 'json',
+            success: function (response) {
+                if (response.success) {
+                    alert("응모가 완료되었습니다!");
+                } else {
+                    alert(response.message);
+                }
+            },
+            error: function (error) {
+                console.error('Error:', error);
+                alert('응모 처리 중 오류가 발생했습니다.');
+            }
+        });
+    });
+ 	
+ 	// 종료일에 따른 응모 버튼 비활성화
+    $(document).ready(function () {
+        // 종료일 값을 자정 기준으로 설정 (종료일 다음날 00:00:00)
+        var eventEndDate = new Date('${event.endDate}'); // 서버에서 받은 종료일
+        eventEndDate.setHours(24, 0, 0, 0); // 자정 시점으로 설정
+
+        // 현재 시간과 비교
+        var currentDate = new Date();
+        if (currentDate >= eventEndDate) {
+            alert("이미 종료된 이벤트입니다.");
+            $("#applyBtn").prop("disabled", true); // 버튼 비활성화
+        }
+    });
+	 
+ 
 </script>
 
 

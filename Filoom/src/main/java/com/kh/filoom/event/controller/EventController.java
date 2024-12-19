@@ -28,6 +28,7 @@ import com.google.gson.Gson;
 import com.kh.filoom.common.model.vo.PageInfo;
 import com.kh.filoom.common.template.Pagination;
 import com.kh.filoom.event.model.service.EventService;
+import com.kh.filoom.event.model.vo.Applicant;
 import com.kh.filoom.event.model.vo.Event;
 import com.kh.filoom.event.model.vo.EventAttachment;
 import com.kh.filoom.event.model.vo.Reply;
@@ -76,11 +77,11 @@ public class EventController {
 		model.addAttribute("statusTitle", statusTitle);  // 제목을 모델에 전달
 		model.addAttribute("hotList", hotList);
 		
-		System.out.println(list);
+		 // System.out.println(list);
 		// System.out.println("list size : " + list.size());
 		// System.out.println(statusTitle);
 		// System.out.println(eventStatus);
-		System.out.println(hotList);
+		// System.out.println(hotList);
 		
 		return "event/eventListView";
 	}
@@ -151,8 +152,8 @@ public class EventController {
 		response.put("list", list);
 		response.put("pi", pi);
 		
-		 System.out.println(list);
-		 System.out.println(pi);
+		// System.out.println(list);
+		// System.out.println(pi);
 		return new Gson().toJson(response);
 		
 	}
@@ -218,7 +219,32 @@ public class EventController {
         }
 	}
 	
-
+	// 응모버튼 
+	/**
+	 * 241219 한혜원
+	 * 응모 버튼 중복 체크 및 응모하기 
+	 * @param a
+	 * @return
+	 */
+	@ResponseBody
+	@PostMapping(value="apply.ev", produces="application/json; charset=UTF-8")
+	public Map<String, Object> ajaxParticipateInButton(@RequestBody Applicant a) {
+		// System.out.println("요청 보낼 데이터 : " + a);
+		
+		Map<String, Object> response = new HashMap<>();
+		if(eventService.checkUserParticipated(a.getRefEno(), a.getUserNo())) {
+			response.put("success", false);
+			response.put("message", "이미 이 이벤트를 응모하셨습니다!");
+		} else {
+			eventService.insertParticipant(a); // 응모 처리
+			response.put("success", true);
+			response.put("message", "응모가 완료되었습니다!");
+		}
+		
+		return response;
+		
+	}
+	
 	// ------------------------------------------------------------------------------------------------- 관리자용 
 	/**
 	 * 241211 한혜원 
@@ -310,8 +336,8 @@ public class EventController {
 		// 게시글 목록조회 후 페이징 처리 변수 필요 
 		int listCount = eventService.selectListCount();
 		
-		int pageLimit = 5;
-		int boardLimint = 10;
+		int pageLimit = 10;
+		int boardLimint = 5;
 		PageInfo pi = Pagination.getPageInfo(listCount, currentpage, pageLimit, boardLimint);
 		
 		ArrayList<Event> list = eventService.adminSelectList(pi);
@@ -365,7 +391,67 @@ public class EventController {
 	
 	// 게시글 삭제 
 	
+	// 응모자 확인 (댓글+버튼)
 	
+	/**
+	 * 241219 한혜원
+	 * 응모자 확인 버튼 클릭시, 해당 타입에 맞는 응모자 목록조회 페이지 요청 
+	 * 1이면 댓글 목록
+	 * 2이면 버튼 응모 목록
+	 * 페이징처리
+	 * @param eventNo
+	 * @param eventType
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping("aplist.ev")
+	public String selectApplicantList(@RequestParam("eventNo")int eventNo, 
+									  @RequestParam("eventType")int eventType, 
+									  @RequestParam(value="cpage", defaultValue="1")int currentpage,
+									  Model model) {
+		
+		
+		// 페이지 정보를 계산하기 위한 코드 
+		int listCount = 0; 
+		int pageLimit = 10;
+		int boardLimit = 10;
+		PageInfo pi = null;
+		
+		
+		// eventNo, eventType 만 사용하여 특정 기능 실행 
+		if(eventType == 1) {
+			// 댓글 목록일 경우
+			listCount = eventService.rlistCount(eventNo); // 댓글 개수 조회 
+			pi = Pagination.getPageInfo(listCount, currentpage, pageLimit, boardLimit);
+			
+			// 페이징 적용하여 댓글 목록 조회 
+			Map<String, Object> params = new HashMap<>();
+			params.put("eventNo", eventNo);
+			
+			List<Reply> rlist = eventService.adminSelectReplyList(params);
+			model.addAttribute("rlist", rlist);
+			model.addAttribute("pi", pi); // 페이징 정보 넘기기
+			return "admin/event/adminReplyListView"; // 댓글 목록 페이지
+			
+		} else if(eventType == 2) {
+			// 버튼 응모자 목록조회 
+			listCount = eventService.aplistCount(eventNo); // 응모자 수 조회 
+			pi = Pagination.getPageInfo(listCount, currentpage, pageLimit, boardLimit);
+			
+			// 페이징 적용하여 응모자 목록 조회 
+			Map<String, Object> params = new HashMap<>();
+			params.put("eventNo", eventNo);
+			
+			List<Applicant> alist = eventService.adminSelectApplicantList(params);
+			model.addAttribute("alist", alist);
+			model.addAttribute("pi", pi); // 페이징 정보 넘기기
+			return "admin/event/applicantListView"; // 버튼 응모자 목록 페이지
+		} else {
+			model.addAttribute("errorMsg", "해당 이벤트는 오프라인 타입입니다.");
+			return "common/errorPage"; // 에러 페이지로 이동
+		}
+		
+	}
 	
 	
 	

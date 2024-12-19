@@ -36,6 +36,15 @@
 	<result column="FILE_LEVEL" property="fileLevel" />
 </resultMap>
 
+<!-- Applicant 테이블로부터 조회된 ResultSet을 Applicant VO 타입으로 옮겨주는 ResultMap -->
+<resultMap id="applicantResultSet" type="applicant">
+	<id column="APPLICANT_NO" property="applicantNo" />
+	<result column="REF_ENO" property="refEno" />
+	<result column="USER_NO" property="userNo" />
+	<result column="APPLICATION_DATE" property="applicationDate" />
+	<result column="WIN_STATUS" property="winStatus" />
+</resultMap>
+
 
 <!-- 사용자 -->
 <!-- 241218 한혜원, 이벤트 추천게시글 목록조회 -->
@@ -149,6 +158,21 @@
 	 WHERE REPLY_NO = #{replyNo}  
 </update>
 
+<!-- 응모버튼 -->
+<!-- 241219 한혜원 이벤트 게시판 응모자 중복확인 -->
+<select id="checkUserParticipated" parameterType="map" resultType="Integer">
+	SELECT COUNT(*)
+	  FROM APPLICANT
+	 WHERE REF_ENO = #{refEno}
+	   AND USER_NO = #{userNo}
+</select>
+
+<!-- 241219 한혜원 이벤트 게시판 응모자 추가 -->
+<insert id="insertParticipant" parameterType="applicant">
+	INSERT INTO APPLICANT(APPLICANT_NO, REF_ENO, USER_NO, APPLICATION_DATE, WIN_STATUS)
+	VALUES(SEQ_ANO.NEXTVAL, #{refEno}, #{userNo}, SYSDATE, 'W')
+</insert>
+
 
 <!-- 관리자 -->
 <!-- 241211 한혜원, 이벤트 게시글 등록 -->
@@ -211,5 +235,44 @@
 	   AND FILE_LEVEL = 2
 </select>
 
+<!-- 응모확인 -->
+<!-- 241219 한혜원, 댓글 개수 확인 -->
+<select id="rlistCount" resultType="_int">
+	SELECT COUNT(*)
+	  FROM REPLY
+	 WHERE REF_ENO = #{eventNo}
+</select>
+
+<!-- 241219 한혜원, 댓글 목록조회 -->
+<select id="adminSelectReplyList" resultMap="replyResultSet">
+	SELECT REPLY_NO
+	     , USER_ID AS "REPLY_WRITER"
+	     , REPLY_CONTENT
+	     , TO_CHAR(CREATE_DATE, 'YYYY-MM-DD AM HH:MI:SS') AS "CREATE_DATE"
+	  FROM REPLY R
+	  JOIN MEMBER ON (REPLY_WRITER = USER_NO)
+	 WHERE REF_ENO = #{eventNo}
+	   AND R.STATUS = 'Y'
+</select>
+
+<!-- 241219 한혜원, 응모 개수 확인 -->
+<select id="aplistCount" resultType="_int">
+	SELECT COUNT(*)
+	  FROM APPLICANT
+	 WHERE REF_ENO = #{eventNo}
+</select>
+
+<!-- 241219 한혜원, 응모목록조회 -->
+<select id="adminSeletApplicantList" resultMap="applicantResultSet">
+	SELECT APPLICANT_NO
+	     , EVENT_TITLE
+	     , USER_ID AS "USER_NO"
+	     , TO_CHAR(APPLICATION_DATE, 'YYYY-MM-DD AM HH:MI:SS') AS "APPLICATION_DATE"
+	  FROM APPLICANT A
+	  JOIN MEMBER M ON (A.USER_NO = M.USER_NO)
+	  JOIN EVENT E ON (A.REF_ENO = E.EVENT_NO)
+	 WHERE REF_ENO = #{eventNo}
+	   AND WIN_STATUS = 'W'
+</select>
 
 </mapper>
