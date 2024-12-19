@@ -63,4 +63,7 @@ public interface MovieService {
 	Movie showDetail(int movieNo); // 상세 정보 조회
 	// listScenes(); // 스틸컷 목록 조회
 	// selectReviewList(); // 리뷰 목록 조회
+	
+	// === 관리자 영화 추가 페이지 ===
+	int addMovie(Movie m);
 }

@@ -113,6 +113,12 @@ public class MovieServiceImpl implements MovieService {
 		return null;
 	}
 
+	@Override
+	public int addMovie(Movie m) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
 	
 	
 	

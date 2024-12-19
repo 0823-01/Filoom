@@ -449,8 +449,6 @@
 
         </div>
         
-<%--         <input type="hidden" value="${meosigi } id="meosigi"> --%>
-        
         <script>
         	$(function() {
         		//refreshPagingBar(??);
