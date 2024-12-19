@@ -104,7 +104,7 @@
         <div id = "navbar">
             
             <div id = "logo">
-                <img src="../main/Filoom.png">
+                <img src="resources/images/icons/Filoom.png">
             </div>
            
             <div id = "nav">
@@ -162,7 +162,7 @@
                                 <tr>
                                     <th>상영 등급</th>
                                     <td width="160">
-                                        <label for="rateA"><img class="filmrate" src="resources/images/posters/all.svg" alt="ALL"></label>
+                                        <label for="rateA"><img class="filmrate" src="resources/images/posters/3.svg" alt="ALL"></label>
                                     </td>
                                     <td width="160">
                                         <label for="rate12"><img class="filmrate" src="resources/images/posters/12.svg" alt="12"></label>

@@ -114,10 +114,21 @@
    
 }
 
+#header_bottom li>a {
+	text-decoration: none; 
+   	color: #8B8B8B;
+}
+
 
 #header_bottom li:hover {
    color: #493628; 
    transform: scale(1.1); 
+}
+
+#header_bottom li>a:hover {
+	text-decoration: none; 
+   	color: #493628;
+   	transform: scale(1.1); 
 }
 
 
@@ -172,9 +183,9 @@
 
         <div id = "header_bottom">
             <ul>
-                <li>영화</li>
+                <li><a href="${ pageContext.request.contextPath }/movies.mo">영화</a></li>
                 <li><a href="${ pageContext.request.contextPath }/book.do">예매</a></li>
-                <li>이벤트</li>
+                <li><a href="${ pageContext.request.contextPath }/list.ev">이벤트</a></li>
 
             </ul>
         </div>

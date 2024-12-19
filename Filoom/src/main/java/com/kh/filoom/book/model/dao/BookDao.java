@@ -111,10 +111,6 @@ public class BookDao {
 		return	booking.getBookNo(); 
 	}
 
-	//쿠폰조회
-	public ArrayList<CouponUser> selectListCouponUser(SqlSessionTemplate sqlSession, int userNo) {
-		return (ArrayList)sqlSession.selectList("couponMapper.selectListCouponUser",userNo);
-	}
 
 	//회원정보조회
 	public Member selectMember(SqlSessionTemplate sqlSession, int userNo) {
@@ -134,4 +130,8 @@ public class BookDao {
 		return (ArrayList)sqlSession.selectList("bookMapper.selectListBookingSeat",bookingSeatNoList);
 	}
 
+	//쿠폰조회
+	public ArrayList<CouponUser> selectListCouponUser(SqlSessionTemplate sqlSession, int userNo) {
+		return (ArrayList)sqlSession.selectList("couponMapper.selectListCouponUser",userNo);
+	}
 }

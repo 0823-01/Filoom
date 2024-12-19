@@ -1,11 +1,12 @@
 package com.kh.filoom.movie.model.vo;
 
-import java.util.Date;
+
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import java.sql.Timestamp;
 
 @NoArgsConstructor
 @Getter
@@ -51,7 +52,7 @@ public class Movie {
 	
     //상영정보(형문)
     private int playingNo;
-    private Date playTime;
+    private Timestamp playTime;
     private String screenName;
     private String screenInfo;
     

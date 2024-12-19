@@ -6,13 +6,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.mail.internet.MimeMessage;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -25,6 +26,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.kh.filoom.member.model.service.MemberService;
 import com.kh.filoom.member.model.vo.Member;
+import com.kh.filoom.member.model.vo.Reserve;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -67,9 +69,9 @@ public class MemberController {
 	 * @param response
 	 * @return
 	 */
-	@PostMapping(value="login.me")
-	public ModelAndView loginMember(Member m,
-								    ModelAndView mv,
+	@ResponseBody
+	@PostMapping(value="login.me", produces = "text/plain; charset=UTF-8")
+	public String loginMember(Member m,
 								    HttpSession session,
 								    String saveId,
 								    HttpServletResponse response) {
@@ -103,18 +105,13 @@ public class MemberController {
 			// 로그인 성공일 경우
 			
 			session.setAttribute("loginUser", loginUser);
-			session.setAttribute("alertMsg", "로그인 성공");
 			
-			mv.setViewName("redirect:/");
+			return "로그인 성공";
 			
 		} else { // 로그인 실패일 경우
 			
-			mv.addObject("errorMsg", "로그인 실패");
-			
-			mv.setViewName("common/errorPage");
+			return "아이디 또는 비밀번호를 잘못 입력했습니다.";
 		}
-		
-		return mv;
 	}
 	
 	/**
@@ -178,7 +175,7 @@ public class MemberController {
 			
 			session.setAttribute("alertMsg", "회원가입 성공");
 			
-			return "redirect:/";
+			return "redirect:/loginForm.me";
 			
 		} else { // 실패
 			
@@ -235,25 +232,67 @@ public class MemberController {
 	 * @return
 	 */
 	@ResponseBody
-	@PostMapping(value="cert.do", 
-				 produces="text/html; charset=UTF-8")
+	@PostMapping(value = "cert.do", produces = "text/html; charset=UTF-8")
 	public String sendCertNo(String email) {
-		
-		int random = (int)(Math.random() * 900000 + 100000);
-		
-		certNoList.put(email, String.valueOf(random));
-		
-		SimpleMailMessage message = new SimpleMailMessage();
-		
-		message.setFrom("dahoon0823@gmail.com"); // 보여질 이메일 주소
-		message.setSubject("[Filoom] 이메일 인증 번호입니다.");
-		message.setText("<h1>인증 번호 : </h1>" + random);
-		message.setTo(email);
-		
-		mailSender.send(message);
-		
-		return "인증번호 발급 완료";
+	    // 인증번호 생성
+	    int random = (int) (Math.random() * 900000 + 100000);
+	    certNoList.put(email, String.valueOf(random)); // 인증번호 저장
+
+	    try {
+	        // 이메일 생성
+	        MimeMessage message = mailSender.createMimeMessage();
+	        MimeMessageHelper helper = new MimeMessageHelper(message, "utf-8");
+
+	        // HTML 내용 생성
+	        String htmlContent = 
+        	    "<!DOCTYPE html>" +
+        	    "<html lang=\"en\">" +
+        	    "<head>" +
+        	        "<meta charset=\"UTF-8\">" +
+        	        "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">" +
+        	        "<title>인증번호 이메일</title>" +
+        	    "</head>" +
+        	    "<body style=\"font-family: Arial, sans-serif; background-color: #f4f4f9; margin: 0; padding: 0;\">" +
+        	        "<div style=\"max-width: 600px; margin: 20px auto; background-color: #ffffff; border-radius: 10px; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); overflow: hidden;\">" +
+        	            "<div style=\"background-color: #493628; color: #ffffff; text-align: center; padding: 20px; font-size: 24px; font-weight: bold;\">" +
+        	                "Filoom 인증번호 안내" +
+        	            "</div>" +
+        	            "<div style=\"padding: 30px; color: #333333; line-height: 1.6;\">" +
+        	                "<p>안녕하세요,</p>" +
+        	                "<p>Filoom을 이용해 주셔서 감사합니다. 아래 인증번호를 입력하여 이메일 인증을 완료해 주세요:</p><br>" +
+        	                "<div style=\"font-size: 24px; font-weight: bold; color: #493628; text-align: center; padding: 10px 10px 10px 25px; border: 2px solid #493628; border-radius: 5px; margin: 20px auto; width: fit-content; letter-spacing: 15px; white-space: nowrap;\">" +
+        	                    random +
+        	                "</div>" +
+        	                "<p align=\"right\"><strong>중요: </strong>인증번호는 5분후에 만료됩니다.</p><br><br>" +
+        	                "<p><strong>\"영화처럼 특별한 하루를 Filoom에서 만나보세요!\"</strong></p>" +
+        	                "<p>Filoom by backlight</p>" +
+        	            "</div>" +
+        	            "<div style=\"text-align: center; background-color: #f4f4f9; color: #888888; padding: 20px; font-size: 14px;\">" +
+        	                "&copy; 2024 Filoom. All rights reserved." +
+        	            "</div>" +
+        	        "</div>" +
+        	    "</body>" +
+        	    "</html>";
+
+
+
+	        // 이메일 설정
+	        helper.setFrom("dahoon0823@gmail.com");
+	        helper.setTo(email);
+	        helper.setSubject("[Filoom] 이메일 인증 번호입니다.");
+	        helper.setText(htmlContent, true); // true는 HTML 형식임을 명시
+
+	        // 이메일 전송
+	        mailSender.send(message);
+
+	        return "인증번호 발급 완료";
+
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        return "인증번호 발급 중 오류가 발생했습니다.";
+	    }
 	}
+
 	
 	/**
 	 * 2024.12.12 김다훈
@@ -283,6 +322,17 @@ public class MemberController {
 		
 		return result;
 	}
+	
+	/**
+	 * 2024.12.15 김다훈
+	 * 마이페이지 접속 요청
+	 * @return
+	 */
+	@GetMapping("myPage.me")
+	public String myPage() {
+		
+		return "member/myPage";
+	}
 
 	/**
 	 * 2024.12.13 김다훈
@@ -306,16 +356,16 @@ public class MemberController {
 		return "member/coupon";
 	}
 	
-	/**
-	 * 2024.12.13 김다훈
-	 * 마이페이지(예매 내역 조회) 접속 요청
-	 * @return
-	 */
-	@GetMapping("reserve.me")
-	public String reserve() {
-		
-		return "member/reserve";
-	}
+//	/**
+//	 * 2024.12.13 김다훈
+//	 * 마이페이지(예매 내역 조회) 접속 요청
+//	 * @return
+//	 */
+//	@GetMapping("reserve.me")
+//	public String reserve() {
+//		
+//		return "member/reserve";
+//	}
 	
 	/**
 	 * 2024.12.13 김다훈
@@ -363,39 +413,258 @@ public class MemberController {
 	
 	
 	
-	
+	/**
+	 * 2024.12.14 김다훈
+	 * 12.17 비밀변호 변경 성공 시 로그아웃 후 로그인폼으로 이동 로직 추가
+	 * 비밀번호 변경 요청
+	 * @param currentPwd
+	 * @param newPwd
+	 * @param session
+	 * @param model
+	 * @return
+	 */
 	@ResponseBody
-	@PostMapping(value="changePassword.me",
-				 produces = "application/json; charset=UTF-8")
-	public Map<String, String> changePassword(@RequestBody Map<String, String> requestData,
-	                                          HttpSession session) {
+	@PostMapping(value = "changePwd.me", produces="text/plain; charset=UTF-8")
+	public String changePwd(@RequestParam("currentPwd") String currentPwd,
+	                        @RequestParam("newPwd") String newPwd,
+	                        HttpSession session, Model model) {
+		
+	    // 현재 로그인된 사용자 정보 가져오기
+		Member loginUser = (Member) session.getAttribute("loginUser");
 
-	    String currentPassword = requestData.get("currentPassword");
-	    String newPassword = requestData.get("newPassword");
-
-	    Member loginUser = (Member) session.getAttribute("loginUser");
-	    String encPwd = loginUser.getUserPwd();
-
-	    Map<String, String> response = new HashMap<>();
-
-	    if (!bcryptPasswordEncoder.matches(currentPassword, encPwd)) {
-	        response.put("result", "mismatch");
-	        return response;
+	    // 기존 비밀번호 확인
+	    if (!bcryptPasswordEncoder.matches(currentPwd, loginUser.getUserPwd())) {
+	    	
+	        return "현재 비밀번호가 일치하지 않습니다.";
 	    }
 
-	    String newEncPwd = bcryptPasswordEncoder.encode(newPassword);
-	    loginUser.setUserPwd(newEncPwd);
+	    // 새 비밀번호 암호화
+	    String encNewPwd = bcryptPasswordEncoder.encode(newPwd);
+	    
+	    loginUser.setUserPwd(encNewPwd);
 
-	    int result = memberService.updatePassword(loginUser);
+	    // 서비스 호출하여 DB 업데이트
+	    int result = memberService.changePwd(loginUser);
+
 	    if (result > 0) {
-	        session.setAttribute("loginUser", loginUser);
-	        response.put("result", "success");
+	    	
+	    	session.removeAttribute("loginUser");
+	    	
+	        return "비밀번호가 성공적으로 변경되었습니다. 로그인 페이지로 이동합니다.";
+	        
 	    } else {
-	        response.put("result", "error");
+	    	
+			return "비밀번호 변경에 실패하였습니다.";
 	    }
-
-	    return response;
 	}
+
+	/**
+	 * 2024.12.14 김다훈
+	 * 아이디 찾기 페이지 접속 요청
+	 * @return
+	 */
+	@GetMapping("findIdForm.me")
+	public String findIdForm() {
+		
+		return "member/findIdForm";
+	}
+	
+	/**
+	 * 2024.12.14 김다훈
+	 * 비밀번호 찾기 페이지 접속 요청
+	 * @return
+	 */
+	@GetMapping("findPwdForm.me")
+	public String findPwdForm() {
+		
+		return "member/findPwdForm";
+	}
+
+	/**
+	 * 2024.12.15 김다훈
+	 * 이름 변경 요청
+	 * @param newName
+	 * @param session
+	 * @return
+	 */
+	@ResponseBody
+	@PostMapping(value = "changeName.me", produces = "text/plain; charset=UTF-8")
+	public String changeName(@RequestParam("newName") String newName, HttpSession session) {
+		
+	    // 현재 로그인된 사용자 정보 가져오기
+	    Member loginUser = (Member) session.getAttribute("loginUser");
+
+	    // 사용자 이름 업데이트
+	    loginUser.setUserName(newName);
+	    
+	    int result = memberService.changeName(loginUser);
+
+	    if (result > 0) {
+	        // 세션 정보 업데이트
+	        session.setAttribute("loginUser", loginUser);
+	        
+	        return "이름이 성공적으로 변경되었습니다.";
+	        
+	    } else {
+	    	
+	        return "이름 변경에 실패하였습니다. 다시 시도해주세요.";
+	    }
+	}
+	
+	/**
+	 * 2024.12.15 김다훈
+	 * 성별 변경 요청
+	 * @param gender
+	 * @param session
+	 * @return
+	 */
+	@ResponseBody
+	@PostMapping(value = "changeGender.me", produces = "text/plain; charset=UTF-8")
+	public String changeGender(@RequestParam("gender") String gender, HttpSession session) {
+	    
+	    // 현재 로그인된 사용자 정보 가져오기
+	    Member loginUser = (Member) session.getAttribute("loginUser");
+	    
+	    // "선택 안함"일 경우 gender 값을 null로 설정
+	    if (gender.isEmpty()) {
+	        loginUser.setGender(null); // DB에 null 삽입
+	    } else {
+	        loginUser.setGender(gender); // 'M' 또는 'F'
+	    }
+	    
+	    // 업데이트 서비스 호출
+	    int result = memberService.changeGender(loginUser);
+
+	    if (result > 0) {
+	        // 세션 정보 업데이트
+	        session.setAttribute("loginUser", loginUser);
+	        return "성별이 성공적으로 변경되었습니다.";
+	    } else {
+	        return "성별 변경에 실패하였습니다. 다시 시도해주세요.";
+	    }
+	}
+	
+	/**
+	 * 2024.12.15 김다훈
+	 * 생년월일 변경 요청
+	 * @param birthDate
+	 * @param session
+	 * @return
+	 */
+	@ResponseBody
+	@PostMapping(value = "changeBirth.me", produces = "text/plain; charset=UTF-8")
+	public String changeBirth(@RequestParam("birthDate") String birthDate, HttpSession session) {
+	    // 현재 로그인된 사용자 정보 가져오기
+	    Member loginUser = (Member) session.getAttribute("loginUser");
+
+	    // 생년월일 업데이트
+	    loginUser.setBirth(birthDate);
+
+	    int result = memberService.changeBirth(loginUser);
+
+	    if (result > 0) {
+	        // 세션 정보 업데이트
+	        session.setAttribute("loginUser", loginUser);
+	        return "생년월일이 성공적으로 변경되었습니다.";
+	    } else {
+	        return "생년월일 변경에 실패하였습니다. 다시 시도해주세요.";
+	    }
+	}
+	
+	/**
+	 * 2024.12.15 김다훈
+	 * 마케팅 활용 동의 변경 요청
+	 * @param marketing
+	 * @param session
+	 * @return
+	 */
+	@ResponseBody
+	@PostMapping(value = "changeMarketing.me", produces = "text/plain; charset=UTF-8")
+	public String changeMarketing(@RequestParam("marketing") String marketing, HttpSession session) {
+	    // 현재 로그인된 사용자 정보 가져오기
+	    Member loginUser = (Member) session.getAttribute("loginUser");
+
+	    // 사용자 마케팅 정보 업데이트
+	    loginUser.setMarketing(marketing);
+	    
+	    int result = memberService.changeMarketing(loginUser);
+
+	    if (result > 0) {
+	        // 세션 정보 업데이트
+	        session.setAttribute("loginUser", loginUser);
+	        return "성공적으로 업데이트되었습니다.";
+	    } else {
+	        return "업데이트 실패. 다시 시도해주세요.";
+	    }
+	}
+
+	/**
+	 * 2024.12.17 김다훈
+	 * 회원탈퇴 비밀번호 확인용 컨트롤러
+	 * @param currentPwd
+	 * @param session
+	 * @return
+	 */
+	@ResponseBody
+	@PostMapping(value = "checkPwd.me", produces = "text/plain; charset=UTF-8")
+	public String checkPwd(@RequestParam("currentPwd") String currentPwd, HttpSession session) {
+		
+	    Member loginUser = (Member) session.getAttribute("loginUser");
+	    
+	    if (bcryptPasswordEncoder.matches(currentPwd, loginUser.getUserPwd())) {
+	    	
+	        return "비밀번호 일치";
+	    }
+	    
+	    return "비밀번호 불일치";
+	}
+	
+	/**
+	 * 2024.12.17 김다훈
+	 * 회원 탈퇴 처리 컨트롤러
+	 * @param session
+	 * @return
+	 */
+	@ResponseBody
+	@PostMapping(value = "withdraw.me", produces = "text/plain; charset=UTF-8")
+	public String withdrawMember(HttpSession session) {
+		
+	    Member loginUser = (Member) session.getAttribute("loginUser");
+	    
+	    int result = memberService.withdrawMember(loginUser.getUserId());
+	    
+	    if (result > 0) {
+	    	
+	        session.invalidate();
+	        
+	        return "탈퇴 성공";
+	    }
+	    
+	    return "탈퇴 실패";
+	}
+
+	@GetMapping("/reserve.me")
+    public String reserveList(HttpSession session, Model model) {
+		
+        // 로그인된 사용자 세션에서 가져오기
+        Member loginUser = (Member) session.getAttribute("loginUser");
+        
+        System.out.println("userNo = " + loginUser.getUserNo());
+        
+        // 예매 내역 조회
+        List<Reserve> reserveList = memberService.reserveList(loginUser.getUserNo());
+        
+        List<Reserve> cancelList = memberService.cancelList(loginUser.getUserNo());
+        
+        System.out.println("reserveList = " + reserveList);
+
+        // 모델에 예매 내역 데이터 담기
+        model.addAttribute("reserveList", reserveList);
+        
+        model.addAttribute("cancelList", cancelList);
+        
+        return "member/reserve"; // 예매 내역 화면으로 이동
+    }
 
 
 

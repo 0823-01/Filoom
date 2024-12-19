@@ -49,14 +49,87 @@
 	     WHERE USER_ID = #{userId}
 	</select>
 	
-	<update id="updatePassword" parameterType="member">
+	<update id="changePwd" parameterType="member">
 	    UPDATE MEMBER
 	       SET USER_PWD = #{userPwd}
 	     WHERE USER_ID = #{userId}
+	       AND STATUS = 'Y'
 	</update>
 	
+	<update id="changeName" parameterType="member">
+	    UPDATE MEMBER
+	       SET USER_NAME = #{userName}
+	     WHERE USER_ID = #{userId}
+	       AND STATUS = 'Y'
+	</update>
 	
+	<update id="changeGender" parameterType="member">
+	    UPDATE MEMBER
+	       SET GENDER = #{gender}
+	     WHERE USER_ID = #{userId}
+	       AND STATUS = 'Y'
+	</update>
 	
+	<update id="changeBirth" parameterType="member">
+	    UPDATE MEMBER
+	       SET BIRTH = #{birth}
+	     WHERE USER_ID = #{userId}
+	       AND STATUS = 'Y'
+	</update>
+	
+	<update id="changeMarketing" parameterType="member">
+	    UPDATE MEMBER
+	       SET MARKETING = #{marketing}
+	     WHERE USER_ID = #{userId}
+	       AND STATUS = 'Y'
+	</update>
+	
+	<update id="withdrawMember" parameterType="member">
+		UPDATE MEMBER
+		   SET STATUS = 'N'
+		 WHERE USER_ID = #{userId}
+		   AND STATUS = 'Y'
+	</update>
+	
+	<select id="reserveList" parameterType="int" resultType="reserve">
+		SELECT m.MOVIE_TITLE AS movieTitle,
+		       m.RUNTIME AS runtime,
+		       b.BOOK_NO AS bookNo,
+		       b.BOOK_COST AS bookCost,
+		       b.BOOK_TOTAL_COST AS bookTotalCost,
+		       b.COST_PROCESS AS costProcess,
+		       COUNT(*) AS totalTickets,
+		       s.SCREEN_NAME AS screenName,
+		       LISTAGG(ss.SEAT_NO, ',') WITHIN GROUP (ORDER BY ss.SEAT_NO) AS seatNo,
+		       p.PLAYTIME AS playtime,
+		       p.PLAYTIME + (m.RUNTIME / 1440) AS endTime
+		  FROM BOOKING b
+		  JOIN BOOKING_SEAT bs ON b.BOOK_NO = bs.BOOK_NO
+		  JOIN PLAYING p ON bs.PLAYING_NO = p.PLAYING_NO
+		  JOIN MOVIE m ON p.MOVIE_NO = m.MOVIE_NO
+		  JOIN SCREEN s ON p.SCREEN_NO = s.SCREEN_NO
+		  JOIN SCREEN_SEAT ss ON bs.SSEAT_NO = ss.SSEAT_NO
+		 WHERE b.STATUS = 'Y'
+		   AND b.USER_NO = #{userNo}
+		 GROUP BY m.MOVIE_TITLE, m.RUNTIME, b.BOOK_NO, b.BOOK_COST, b.BOOK_TOTAL_COST, b.COST_PROCESS, s.SCREEN_NAME, p.PLAYTIME, (p.PLAYTIME + (m.RUNTIME / 1440))
+		 ORDER BY p.PLAYTIME DESC
+	</select>
+	
+	<select id="cancelList" parameterType="int" resultType="reserve">
+		SELECT m.MOVIE_TITLE AS movieTitle,
+		       s.SCREEN_NAME AS screenName,
+		       p.PLAYTIME AS playtime,
+		       b.MODIFY_DATE AS modifyDate,
+		       b.BOOK_COST AS bookCost
+		  FROM BOOKING b
+		  JOIN BOOKING_SEAT bs ON b.BOOK_NO = bs.BOOK_NO
+		  JOIN PLAYING p ON bs.PLAYING_NO = p.PLAYING_NO
+		  JOIN MOVIE m ON p.MOVIE_NO = m.MOVIE_NO
+		  JOIN SCREEN s ON p.SCREEN_NO = s.SCREEN_NO
+		 WHERE b.STATUS = 'N'
+		   AND b.USER_NO = #{userNo}
+		 ORDER BY p.PLAYTIME DESC
+	</select>
 	
 	
 	

@@ -1,19 +1,34 @@
 package com.kh.filoom.event.model.dao;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import org.apache.ibatis.session.RowBounds;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
 
+import com.kh.filoom.common.model.vo.PageInfo;
 import com.kh.filoom.event.model.vo.Event;
 import com.kh.filoom.event.model.vo.EventAttachment;
+import com.kh.filoom.event.model.vo.Reply;
 
 @Repository
 public class EventDao {	
 	
 	
 	// 사용자
+	
+	/**
+	 * 241218 한혜원 
+	 * 게시글 추천이벤트 목록조회
+	 * @param sqlSession
+	 * @return
+	 */
+	public List<Event> selectHotEventList(SqlSessionTemplate sqlSession) {
+		return (List)sqlSession.selectList("eventMapper.selectHotEventList");
+	}
 	
 	/**
 	 * 241212 한혜원
@@ -67,6 +82,90 @@ public class EventDao {
 		
 		return (ArrayList)sqlSession.selectList("eventMapper.selectEventAttachment", eventNo);
 	}
+	
+	// 댓글
+	/**
+	 * 241218 한혜원
+	 * 댓글 갯수
+	 * @param eventNo
+	 * @return
+	 */
+	public int selectReplyListCount(SqlSessionTemplate sqlSession, int eventNo) {
+		return sqlSession.selectOne("eventMapper.selectReplyListCount", eventNo);
+	}
+	
+	/**
+	 * 241217 한혜원
+	 * 댓글 목록 조회용 
+	 * @param sqlSession
+	 * @param eventNo 게시글 번호
+	 * @return
+	 */
+	public ArrayList<Reply> selectReplyList(SqlSessionTemplate sqlSession, int eventNo, PageInfo pi) {
+		// select문(여러행) : selectList 메소드 
+		// 페이지 계산 
+		int offset = (pi.getCurrentPage()-1) * pi.getBoardLimit();
+		int limit = pi.getBoardLimit();
+		
+		RowBounds rowBounds = new RowBounds(offset, limit);
+		
+		Map<String, Object> paraMap = new HashMap<>();
+		paraMap.put("eventNo", eventNo);
+		
+		return (ArrayList)sqlSession.selectList("eventMapper.selectReplyList", paraMap, rowBounds);
+	}
+	
+	
+	/**
+	 * 241217 한혜원 
+	 * 댓글 작성여부 체크
+	 * @param eventNo
+	 * @param userNo
+	 * @return
+	 
+	public int checkIfReplyExists(SqlSessionTemplate sqlSession, int eventNo, String replyWriter) {
+		// select 문(단행) : selectOne 메소드 
+		return sqlSession.selectOne("eventMappter.selectCheckReply", eventNo, replyWriter);
+	} */
+	
+	/**
+	 * 241217 한혜원
+	 * 댓글 작성용 
+	 * @param sqlSession
+	 * @param r 댓글 객체 
+	 * @return
+	 */
+	public int insertReply(SqlSessionTemplate sqlSession, Reply r) {
+		// insert문 : insert 메소드 
+		return sqlSession.insert("eventMapper.insertReply", r);
+	}
+	
+	/**
+	 * 241217 한혜원
+	 * 댓글 수정용
+	 * @param sqlSession
+	 * @param r
+	 * @return
+	 */
+	public int updateReply(SqlSessionTemplate sqlSession, Reply r) {
+		// update문 : update 메소드 
+		return sqlSession.update("eventMapper.updateReply", r);
+	}
+	
+	/**
+	 * 241218 한혜원
+	 * 댓글 삭제용
+	 * @param sqlSession
+	 * @param replyNo
+	 * @return
+	 */
+	public int deleteReply(SqlSessionTemplate sqlSession, int replyNo) {
+		// update문 : update 메소드 
+		return sqlSession.update("eventMapper.deleteReply", replyNo);
+	}
+
+	
+
 
 
 	
@@ -96,6 +195,56 @@ public class EventDao {
 		return sqlSession.insert("eventMapper.insertEventAttachment", eventAttachment); // 첨부파일 저장
 	}
 
+	/**
+	 * 241218 한혜원
+	 * 관리자용 게시글 총 갯수
+	 * @param sqlSession
+	 * @return
+	 */
+	public int selectListCount(SqlSessionTemplate sqlSession) {
+		// 단일행 select문 
+		return sqlSession.selectOne("eventMapper.selectListCount");
+	}
+
+	/**
+	 * 241218 한혜원
+	 * 관리자용 게시글 목록조회
+	 * @param sqlSession
+	 * @param pi
+	 * @return
+	 */
+	public ArrayList<Event> adminSelectList(SqlSessionTemplate sqlSession, PageInfo pi) {
+		// 여러행 select문 
+		int offset = (pi.getCurrentPage()-1) * pi.getBoardLimit();
+		int limit = pi.getBoardLimit();
+		
+		RowBounds rowBounds = new RowBounds(offset, limit);
+		return (ArrayList)sqlSession.selectList("eventMapper.adminSelectList", null, rowBounds);
+	}
+
+	/**
+	 * 241218 한혜원
+	 * 관리자용 게시글 상세조회
+	 * @param sqlSession
+	 * @param eno
+	 * @return
+	 */
+	public Event adminSelectEvent(SqlSessionTemplate sqlSession, int eventNo) {
+		// select문 단행 
+		return sqlSession.selectOne("eventMapper.adminSelectEvent", eventNo);
+	}
+
+	/**
+	 * 241218 한혜원
+	 * 관리자 게시글 첨부파일 상세조회
+	 * @param sqlSession
+	 * @param eventNo
+	 * @return
+	 */
+	public ArrayList<EventAttachment> adminSelectEventAttachment(SqlSessionTemplate sqlSession, int eventNo) {
+		// 여러행 select문 
+		return (ArrayList)sqlSession.selectList("eventMapper.adminSelectEventAttachment", eventNo);
+	}
 
 
 	

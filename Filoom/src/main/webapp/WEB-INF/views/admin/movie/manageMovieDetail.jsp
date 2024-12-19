@@ -166,7 +166,7 @@
         <div id = "navbar">
             
             <div id = "logo">
-                <img src="./Filoom.png">
+                <img src="resources/images/icons/Filoom.png">
             </div>
            
             <div id = "nav">

@@ -285,12 +285,12 @@
                 <!-- 제목과 설명을 넣는 곳 -->
                 <div style="flex-grow: 1;">
                     <!-- <div>
-                        <img src="sauce/all.svg" class="filmrate">
+                        <img src="sauce/3.svg" class="filmrate">
                         <b>위키드</b>
                     </div> -->
                     <table>
                         <tr>
-                            <td><img src="sauce/all.svg" class="filmrate"></td>
+                            <td><img src="sauce/3.svg" class="filmrate"></td>
                             <td id="movieTitle">위키드</td>
                         </tr>
                     </table>

@@ -4,6 +4,9 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpSession;
 
@@ -12,6 +15,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
@@ -25,6 +30,9 @@ import com.kh.filoom.coupon.model.vo.CouponUser;
 import com.kh.filoom.member.model.vo.Member;
 import com.kh.filoom.movie.model.vo.Movie;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @Controller
 public class BookController {
 
@@ -53,11 +61,11 @@ public class BookController {
 	
 	@ResponseBody
 	@GetMapping(value = "movie.de", produces="application/json; charset=UTF-8")
-	public ArrayList<Movie> getMovieDetail(@RequestParam("movieNo") int movieNo, Model model) {
+	public Movie getMovieDetail(@RequestParam("movieNo") int movieNo, Model model) {
 		
 		//System.out.println(movieNo);
 		
-		ArrayList<Movie> movie = bookService.selectMovie(movieNo);
+		Movie movie = bookService.selectMovie(movieNo);
 		
 		model.addAttribute("movie", movie);
 		
@@ -103,28 +111,24 @@ public class BookController {
 		// System.out.println(playingNo);
 
 		Calendar calendar = Calendar.getInstance();
-		calendar.setTime(currentDate);
-		calendar.add(Calendar.MINUTE, 10);
+	    calendar.setTime(currentDate);
+	    calendar.add(Calendar.MINUTE, 10);
 
-		Date updatedTime = calendar.getTime();
-		System.out.println("10분 후 시간: " + updatedTime);
+	    Date updatedTime = calendar.getTime();
+	    // System.out.println("10분 후 시간: " + updatedTime);
+	    java.sql.Date sqlUpdatedTime = new java.sql.Date(updatedTime.getTime());
+	    
+	    BookingSeat bk = new BookingSeat();
+	    
+	    bk.setSeatNo(seatId);
+	    bk.setPlayingNo(playingNo);
+	    bk.setTimeLimit(sqlUpdatedTime);
 
-		// java.sql.Timestamp 사용
-		java.sql.Timestamp sqlUpdatedTime = new java.sql.Timestamp(updatedTime.getTime());
+	    // System.out.println("BookingSeat 객체: " + bk);
+	 
+	    int result = bookService.insertBookingSeat(bk);
 
-		System.out.println("sql시간 : " + sqlUpdatedTime);
-
-		BookingSeat bk = new BookingSeat();
-
-		bk.setSeatNo(seatId);
-		bk.setPlayingNo(playingNo);
-		bk.setTimeLimit(sqlUpdatedTime);
-
-		// System.out.println("BookingSeat 객체: " + bk);
-
-		int result = bookService.insertBookingSeat(bk);
-
-		return new Gson().toJson(bk);
+	    return new Gson().toJson(bk);
 	}
 	
 	@ResponseBody
@@ -142,7 +146,7 @@ public class BookController {
 
 	    // 10분 후의 시간을 구하고 java.sql.Date로 변환
 	    Date updatedTime = calendar.getTime();
-	    java.sql.Timestamp sqlUpdatedTime = new java.sql.Timestamp(updatedTime.getTime());
+	    java.sql.Date sqlUpdatedTime = new java.sql.Date(updatedTime.getTime());
 	    
 	    BookingSeat bkk = new BookingSeat();
 	    bkk.setSeatNo(seatId);
@@ -206,22 +210,26 @@ public class BookController {
 	@Autowired
 	private DataEncrypt sha256Enc;
 
-	
 
-	
-	
-
-	
-	
 	
 	@GetMapping("paymentForm.pm")
 	public ModelAndView paymentForm(ModelAndView mv,HttpSession session,int playingNo,  @RequestParam("seatNos")ArrayList<String> seatNos) {
 		
 		//session에서 회원번호 가져오기
 		//int userNo = session.getAttribute("loginUser.userNo");
-		int userNo = 1;
+		Member loginUser = new Member();
+		loginUser.setUserNo(1);
+		loginUser.setUserName("김형문");
+		loginUser.setEmail("hhhh@naver.com");
+		 
+		session.setAttribute("loginUser",loginUser);
 		
-		System.out.println("1==결제폼 요청(상영번호+좌석번호 seatNos : "+seatNos +"상영번호 : "+playingNo + " ,회원번호 : " +userNo );
+		
+		int userNo = loginUser.getUserNo();
+		
+		
+		  
+		log.debug("1==결제폼 요청(상영번호+좌석번호 seatNos : "+seatNos +"상영번호 : "+playingNo + " ,회원번호 : " +userNo );
 		
 		
 		//1.유효성검사 + 상영좌석일렬번호 구하기
@@ -231,72 +239,86 @@ public class BookController {
 		
 		bookingSeatNoList = bookService.getBookingSeatNoList(seatNos,playingNo);
 
-		System.out.println("상영좌석 일렬번호 리스트 " +bookingSeatNoList);
+		log.debug("상영좌석 일렬번호 리스트 " +bookingSeatNoList);
 		
 		if(bookingSeatNoList==null) { //유효성 실패
 			
-			System.out.println("2==유효성테스트 실패, 메인페이지로 ->");
+			log.debug("2==유효성테스트 실패, 메인페이지로 ->");
 			session.setAttribute("alertMsg", "죄송합니다. 시간이 오래 경과되어 다시 시도해주시기 바랍니다.");
 			mv.setViewName("redirect:/"); 
 			
 		}else {
 
-			System.out.println("2==유효성테스트 성공");
+			log.debug("2==유효성테스트 성공");
 			
 			//유효시간 5분 늘려주기
 			int updateTimeLimit = bookService.updateTimeLimit(bookingSeatNoList);
-			System.out.println("3==TimeLimit 늘려주기 : 처리된행의갯수"+updateTimeLimit);
+			log.debug("3==TimeLimit 늘려주기 : 처리된행의갯수" + updateTimeLimit);
 			 
 			
-		//3.결제화면에 넘길 정보
+		//3.결제화면에 넘길 정보 조회, mv에 담기
 			
+			/*
 			//결제시 필요한 예매번호+유저번호 미리생성
 			int bookNo = bookService.setBookNo(userNo);
-						
-			System.out.println("4==BOOKING_NO 생성,조회  bookNo = "+bookNo);
+			Booking booking = new Booking();
+			booking.setBookNo(bookNo);
+			log.debug("4==BOOKING_NO 생성,조회  booking = " + booking.toString());
 			
-			//*회원번호 -> 쿠폰리스트(쿠폰고유번호)
+			mv.addObject("booking = ",booking);
+			*/
 			
-			ArrayList<CouponUser> couponUserList = new ArrayList();
-			couponUserList = bookService.selectListCouponUser(userNo);
 			
-			System.out.println("5==사용가능한 쿠폰 조회 couponUserList : "+couponUserList);
 			
+			/*
 			//*회원번호 -> 회원정보(회원번호, 회원이름, 회원이메일, 회원전화번호)
 			Member member = bookService.selectMember(userNo);
+			log.debug("6==멤버 정보 member : " + member.toString());
 			
-			System.out.println("6==멤버 정보 member : " + member);
+			mv.addObject("member",member);
+			*/
 			
 			
 			//*상영번호 -> 영화정보,이미지,상영정보, 상영관정보 조회
 			Movie movie = bookService.selectMovieForPlayingNo(playingNo);
 			
-			System.out.println("7==영화정보(+포스터),상영정보,상영관 정보 movie : " + movie);
+			log.debug("4==영화정보(+포스터),상영정보,상영관 정보 movie : " + movie.toString());
+			mv.addObject("movie",movie);
 			
 			//*상영번호 -> 상영좌석, 상영관정보 조회
 			
 			ArrayList<BookingSeat> bookingSeatList = new ArrayList();			
 			bookingSeatList = bookService.selectListBookingSeat(bookingSeatNoList);
-
-			System.out.println("8==좌석정보, 상영관정보 : bookingSeatList : " + bookingSeatList );
+			log.debug("5==좌석정보, 상영관정보 : bookingSeatList : " + bookingSeatList.toString() );
 			
+			mv.addObject("bookingSeatList",bookingSeatList);
 	
-			//9.위의 데이터 model에 담기
 			
-			mv.addObject(bookNo);
+			
+		
 			//결제시 필요한 정보들 (상점키, 상점id,ediDate, hsahString ) hashMap 으로 가공하기
-			int price = 0;
 			
+			int price = 15000*bookingSeatList.size();
 			String merchantKey 		= "EYzu8jGGMfqaDEp76gSckuvnaHHu+bC4opsSN6lHv3b2lurNYkVXrZ7Z1AoqQnXI3eLuaUFyoRNC6FkrzVjceg=="; // 상점키
 			String merchantID 		= "nicepay00m"; 				// 상점아이디
 			
-			String ediDate 			= getyyyyMMddHHmmss();	
+			String ediDate 			= getyyyyMMddHHmmss();
 			String hashString 		= sha256Enc.encrypt(ediDate + merchantID + price + merchantKey);
+			
+			
+			Map<String,Object> paymentInfo = new HashMap<>();
+			
+			paymentInfo.put("merchantKey", merchantKey);
+			paymentInfo.put("merchantID", merchantID);
+			paymentInfo.put("ediDate", ediDate);
+			paymentInfo.put("hashString", hashString);
 			
 			
 			
 			session.setAttribute("alertMsg", "결제하자");	
 			mv.setViewName("book/paymentForm");
+			
+			
 		}
 
 		
@@ -304,6 +326,32 @@ public class BookController {
 		return mv;
 
 	}
+	
+	@ResponseBody
+	@PostMapping(value="couponList.co",produces="application/json; charset=UTF-8")
+	public String selectCouponList(int userNo){
+		
+		//*회원번호 -> 쿠폰리스트
+		ArrayList<CouponUser> couponUserList = new ArrayList();
+		couponUserList = bookService.selectListCouponUser(userNo);
+		log.debug("ajax==사용가능한 쿠폰 조회 couponUserList : "+couponUserList.toString());
+		
+		return new Gson().toJson(couponUserList);
+
+	}
+	
+	
+	
+	@ResponseBody
+	@PostMapping(value="beforePay.pm",produces="application/json; charset=UTF-8")
+	public String getBookNoAndCheckCoupon(@RequestBody Map<String,List<String>> couponNos) {
+		
+		log.debug("결제전 ajax 실행"+couponNos.toString());
+		
+//		ArrayList<CouponUser> CouponUserList = bookService.
+		return "";
+	}
+
 	
 	
 	
@@ -323,6 +371,8 @@ public class BookController {
 		return "book/paymentResult";
 
 	}
+	
+	
 	
 	
 }

@@ -185,7 +185,7 @@
 </head>
 <body>
 
-    <%@ jsp:include file="../common/header.jsp" %>
+    <jsp:include page="../common/header.jsp" />
 
     <div class="backStage">
         
@@ -252,7 +252,7 @@
                 <img src="sauce/dinosinzzang.jpg" class="poster"><br>
                 <table class="movie-info">
                     <tr>
-                        <td id="filmrate"><img src="sauce/all.svg" class="filmrate"></td>
+                        <td id="filmrate"><img src="sauce/3.svg" class="filmrate"></td>
                         <td><b>극장판 짱구는 못말..</b><br></td>
                     </tr>
                     <tr>
@@ -265,7 +265,7 @@
                 <img src="sauce/mufasa.jpg" class="poster"><br>
                 <table class="movie-info">
                         <tr>
-                            <td id="filmrate"><img src="sauce/all.svg" class="filmrate"></td>
+                            <td id="filmrate"><img src="sauce/3.svg" class="filmrate"></td>
                             <td><b>무파사: 라이온 킹</b><br></td>
                         </tr>
                         <tr>
@@ -305,7 +305,7 @@
                 <img src="sauce/sonic3.jpg" class="poster"><br>
                 <table class="movie-info">
                     <tr>
-                        <td id="filmrate"><img src="sauce/all.svg" class="filmrate"></td>
+                        <td id="filmrate"><img src="sauce/3.svg" class="filmrate"></td>
                         <td><b>수퍼 소닉3</b><br></td>
                     </tr>
                     <tr>
@@ -483,6 +483,6 @@
 
     <br><br>
 
-    <%@ jsp:include file="../footer.jsp"%>
+    <jsp:include page="../common/footer.jsp" />
 </body>
 </html>

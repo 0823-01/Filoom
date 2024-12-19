@@ -17,6 +17,7 @@
 	    width : 1900px;
 	    max-width: 1900px;
 	    /*padding : 20px;*/
+	    padding : 20px;
 	}
 	
 	/*목록조회 메뉴 영역*/
@@ -117,6 +118,7 @@
 	li>a {
 	    text-decoration-line: none;
 	    color : #F3F3F3;
+	    color : black;
 	}
 	
 	li>a:hover, li>a:active {
@@ -131,6 +133,15 @@
     <!--전체영역을 감싸는 container-->
     <div class="container">
     
+        <h2 style="color : #E4E0E1;">공지사항</h2>
+        <h3 style="color : #E4E0E1; ">FILOOM의 주요한 이슈 및 여러가지 소식들을 확인할 수 있습니다.</h3>
+        <div style="font-weight: bold; color : #E4E0E1; margin-bottom : 20px;">총<b style="color : #AB886D;">110</b>건</div>
+
+	<jsp include page="../header.jsp" />
+    
+    <!--전체영역을 감싸는 container-->
+    <div class="container">
+
         <h2 style="color : #E4E0E1;">공지사항</h2>
         <h3 style="color : #E4E0E1; ">FILOOM의 주요한 이슈 및 여러가지 소식들을 확인할 수 있습니다.</h3>
         <div style="font-weight: bold; color : #E4E0E1; margin-bottom : 20px;">총<b style="color : #AB886D;">110</b>건</div>
@@ -236,5 +247,26 @@
 
 
     <jsp:include page="../common/footer.jsp" />
+    </div>
+
+    <!--페이징바-->
+    <div class="pagingArea">
+        <ul class="pagination">
+            <li class="page-item disabled"><a class="page-link" href="#">«</a></li>
+            <li class="page-item"><a class="page-link" href="#">1</a></li>
+            <li class="page-item"><a class="page-link" href="#">2</a></li>
+            <li class="page-item"><a class="page-link" href="#">3</a></li>
+            <li class="page-item"><a class="page-link" href="#">4</a></li>
+            <li class="page-item"><a class="page-link" href="#">5</a></li>
+            <li class="page-item"><a class="page-link" href="#">6</a></li>
+            <li class="page-item"><a class="page-link" href="#">7</a></li>
+            <li class="page-item"><a class="page-link" href="#">8</a></li>
+            <li class="page-item"><a class="page-link" href="#">9</a></li>
+            <li class="page-item"><a class="page-link" href="#">10</a></li>
+            <li class="page-item"><a class="page-link" href="#">»</a></li>
+        </ul>
+    </div>
+
+    <jsp include page="../common/footer.jsp" />
 </body>
 </html>

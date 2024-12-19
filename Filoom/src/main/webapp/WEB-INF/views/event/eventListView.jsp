@@ -63,7 +63,7 @@
     .recommendEventArea {
         display: flex;
         justify-content : center;
-        gap : 50px;
+        gap : 30px;
         padding: 20px;
         border : 2px solid #F3F3F3;
         border-radius: 4px;
@@ -76,6 +76,7 @@
         border-radius: 4px;
         box-shadow: 3px 3px 4px;
         transition-duration: 0.3s; /*0.3초만에 돌아옴*/
+        overflow : hidden; /*이미지 넘침 방지*/
      
     }
 
@@ -138,7 +139,7 @@
     .card {
         display: flex;
         flex-wrap : wrap; /*줄바꿈 허용*/
-        gap : 20px; 
+        gap : 26px; 
         justify-content : flex-start; /*항상 왼쪽 정렬*/
         align-items : flex-start; /*카드가 왼쪽부터 순차적으로 채워짐*/
         padding: 20px;
@@ -230,38 +231,28 @@
         <!-- 추천 이벤트 영역 -->
         <h2 style="color : #F3F3F3; padding: 10px;">✨추천이벤트✨</h2>
         <div class="recommendEventArea">
-        	
-	            <div class="recommendCard">
-	                <a href="#" style="text-decoration: none;">
-	                    <img src="${pageContext.request.contextPath}/resources/eventUploadFiles/2024121214211983175.png" alt="추천이미지" style="width : 100%; height : 200px;">
+        	<c:forEach var="event" items="${hotList}" varStatus="status">
+        		<c:if test="${status.index>2 }">
+        			<div class="recommendCard">
+	                <a href="${pageContext.request.contextPath}/detail.ev?eno=${event.eventNo}" style="text-decoration: none;">
+	                    <img src="${pageContext.request.contextPath}${event.contentImg1}" alt="추천이미지" style="width : 100%; height : 200px;">
 	                    <div class="recommend-card-info" >
-	                        <div id="recommend-card-title">[필룸] 수험생 특별 할인 이벤트!</div>
-	                        <div id="recommend-card-date">2024.12.12 ~ 2024.12.31</div>
+	                        <div id="recommend-card-title">${event.eventTitle }</div>
+	                        <div id="recommend-card-date">
+	                        	<c:choose>
+	                       			<c:when test="${ empty event.startDate and empty event.endDate  }">
+	                       				상시진행
+	                       			</c:when>
+	                       			<c:otherwise>
+	                       				${event.startDate }~${event.endDate }
+	                       			</c:otherwise>
+	                        	</c:choose>
+                        	</div>
 	                    </div>
 	                </a>
 	            </div>
-         
-
-            <div class="recommendCard">
-                <a href="#" style="text-decoration: none;">
-                    <img src="${pageContext.request.contextPath}/resources/eventUploadFiles/2024121214211983175.png" alt="추천이미지" style="width : 100%; height : 200px;">
-                    <div class="recommend-card-info">
-                        <div id="recommend-card-title">[필룸] 수험생 특별 할인 이벤트!</div>
-                        <div id="recommend-card-date">상시 진행</div>
-                    </div>
-                </a>
-            </div>
-
-            <div class="recommendCard">
-                <a href="#" style="text-decoration: none;">
-                    <!--  <img src="${pageContext.request.contextPath}/resources/event_images/itmd.jpg" alt="추천 이벤트2"  style="width : 100%; height : 200px;">-->
-                    <img src="${pageContext.request.contextPath}/resources/eventUploadFiles/2024121214211983175.png" alt="추천이미지" style="width : 100%; height : 200px;">
-                    <div class="recommend-card-info" >
-                        <div id="recommend-card-title">[필룸] 수험생 특별 할인 이벤트!</div>
-                        <div id="recommend-card-date">~ 2024.12.31</div>
-                    </div>
-                </a>
-            </div>
+        		</c:if>
+        	</c:forEach>
         </div>
 
         <!--이벤트 목록 리스트-->
@@ -279,7 +270,16 @@
 	                    <img src="${pageContext.request.contextPath}${event.contentImg1}" alt="이벤트게시글" style="width : 100%; height : 350px;">
 	                    <div class="event-card-info" >
 	                        <div id="event-card-title">${event.eventTitle}</div>
-	                        <div id="event-card-date">${event.startDate }~${event.endDate } <b style="color : red;">D-2</b></div>
+	                        <div id="event-card-date">
+	                       		<c:choose>
+	                       			<c:when test="${ empty event.startDate and empty event.endDate  }">
+	                       				상시진행
+	                       			</c:when>
+	                       			<c:otherwise>
+	                       				${event.startDate }~${event.endDate } <b class="event-days-remaining" style="color : red;">D-2</b>
+	                       			</c:otherwise>
+	                        	</c:choose>
+                        	</div>
 	                    </div>
                    </a>
 	            </div>
@@ -294,7 +294,7 @@
     </div>
     
     <script>
-    	
+ 
     	/* 더보기 버튼 클릭시 발생하는 함수 */
     	let visibleCount = 12; //현재 표시된 리스트 수 
     	

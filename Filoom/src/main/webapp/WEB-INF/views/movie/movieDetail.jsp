@@ -295,13 +295,14 @@
     
     <jsp:include page="../common/header.jsp" />
     
-    <!-- 예시 : 위키드 -->
     <div class="backStage" align="center">
         <div class="inner">
             <!-- 아직 내부 div를 안 넣어서 이 위치에 끼워넣어야 하는데
             양끝 마진 약 67px(~=100 * (2/3)) 정도 주면 됨
             계산의 편의를 위해 최대 70px 까지는 줄 수 있을 듯
             -->
+            
+            <!--  예시 : <위키드> -->
             <div id="description" align="left">
                 <!-- 이미지 넣는 곳 -->
                 <div>
@@ -310,13 +311,9 @@
 
                 <!-- 제목과 설명을 넣는 곳 -->
                 <div style="flex-grow: 1;">
-                    <!-- <div>
-                        <img src="resources/images/posters/all.svg" class="filmrate">
-                        <b>위키드</b>
-                    </div> -->
                     <table>
                         <tr>
-                            <td><img src="resources/images/posters/all.svg" class="filmrate"></td>
+                            <td style="padding-right:5px;"><img src="resources/images/posters/3.svg" class="filmrate"></td>
                             <td id="movieTitle">위키드</td>
                         </tr>
                     </table>
@@ -358,6 +355,63 @@
                         </pre>
                     </div>
                 </div>
+                
+                <%-- <div id="description" align="left">
+                	// 여기에 이미지를 삽입이미지 넣는 곳
+                <div>
+                    <img src="resources/images/posters/${fileCodename}.jpg" alt="${movieTitle}" id="thumbnail">
+                </div>
+
+                제목과 설명을 넣는 곳
+                <div style="flex-grow: 1;">
+                    <table>
+                        <tr>
+                            <td style="padding-right:5px;"><img src="resources/images/posters/${filmrate}.svg" class="filmrate"></td>
+                            <td id="movieTitle">${movieTitle}</td>
+                        </tr>
+                    </table>
+                    <div>
+                        [여기에 여러모로 입력]
+                        <table style="width:100%;">
+                            <tr>
+                                <th>감독</th>
+                                <td>${director}</td>
+                            </tr>
+                            <tr>
+                                <th>배우</th>
+                                <td>${starring, 네 명까지만}</td>
+                            </tr>
+                            <tr>
+                                <th>장르</th>
+                                <td>${genre, 여러 개가 될 수 있음}</td>
+                            </tr>
+                            <tr>
+                                <th>상영시간</th>
+                                <td>${runtime}분</td>
+                            </tr>
+                            <tr>
+                                <th>${ premiere='y' ? '개봉' : '개봉예정' }</th>
+                                // 이것도 사실은 상영 종료 후에도 사이트에 남아 있는 영화들의 존재로 인해
+                                // 조건을 아래와 같이 적는 게 더 낫긴 함:
+                                // premiere = 'n' && open_date < today ? '개봉예정' : '개봉'
+                                // 설마 싶긴 한데 세미 시연 때 그 마인드로 놔뒀다가 피 본 적 있어서 미리 대비하는 게 맞음 
+                                <td>${open_date}</td>
+                            </tr>
+                        </table>
+
+                        <hr>
+                        ↓ 이거 길어지면 내부 스크롤 넣는 게 미관상으로도 좋아보임
+                        <pre>                
+    자신의 진정한 힘을 미처 발견하지 못한 '엘파바'(신시아 에리보)
+    자신의 진정한 본성을 아직 발견하지 못한 ‘글린다'(아리아나 그란데)
+    전혀 다른 두 사람은 마법 같은 우정을 쌓아간다.
+    그러던 어느 날, '마법사'의 초대를 받아 에메랄드 시티로 가게 되고
+    운명은 예상치 못한 위기와 모험으로 두 사람을 이끄는데…
+    
+    마법 같은 운명의 시작, 누구나 세상을 날아오를 수 있어
+                        </pre>
+                    </div>
+                </div> --%>
 
             </div>
 
@@ -372,6 +426,7 @@
                 <a href="" id="toBook">예매하기</a>
                 <a href="" id="like">♡ 1234</a>
                 <!-- 로그인 후 클릭시 ♥ 1235 으로 바뀌도록. 비로그인시 로그인하라고 얼럿함 -->
+                <!-- 좋아요 켜면 FAVORITE 테이블에 넣는 거니까 확인하고 넣을 것 -->
             </div>
 
 
@@ -431,7 +486,6 @@
             <br><br><hr>
 
             <div id="reviewTop">
-                <!-- 여기 어그러지는 거 아는데 이 페이지에 시간을 너무 많이 써서 일단 보류 -->
                 <div id="part-header">
                     <p class="category"><b>리뷰</b></p>
                     <div>
@@ -463,46 +517,17 @@
                     </div>
                     <div class="statistic">
                         <table>
-                            <tr>
-                                <td>5</td>
-                                <td>
-                                    <div class="graph-back">
-                                        <div class="graph" style="width:65%;"></div>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>4</td>
-                                <td>
-                                    <div class="graph-back">
-                                        <div class="graph" style="width:17%;"></div>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>3</td>
-                                <td>
-                                    <div class="graph-back">
-                                        <div class="graph" style="width:10%;"></div>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>2</td>
-                                <td>
-                                    <div class="graph-back">
-                                        <div class="graph" style="width:1%;"></div>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>1</td>
-                                <td>
-                                    <div class="graph-back">
-                                        <div class="graph" style="width:7%;"></div>
-                                    </div>
-                                </td>
-                            </tr>
+                        	<c:forEach var="s" begin="1" end="5" step="1">
+                        		<tr>
+	                                <td>${6-s}</td>
+	                                <td>
+	                                    <div class="graph-back">
+	                                        <div class="graph" style="width:30%;"></div>
+	                                    </div>
+	                                </td>
+	                            </tr>
+                        	</c:forEach>
+                        	<!-- dummy percentage : 5점부터 순서대로 65% 17% 10% 1% 7% -->
                         </table>
                     </div>
                 </div>
@@ -515,11 +540,14 @@
                 이로 인해 일부 예시가 2줄을 아슬아슬하게 넘어가는 화면크기 67%에
                 한하여 해당 div의 테이블이 어그러지는 현상이 있음
                 별일 없으면 실전에서 가로마진 뺄 예정 -->
+                
+                <!-- 그리고 여기도 AJAX로 넣어야 함 -->
 
 				<%-- SAMPLE
 					 <div id="review">
 					 	※ MEMBER 테이블에 닉네임 컬럼이 없는 관계로, 리뷰어 표기는 ID 앞 4글자 + '****'로 통일
-	                    <div id="reviewerName" style="float:left;">열글자한줄넘김기절함</div>
+					 	쿼리로 긁어올 때 SUBSTR(MEM.USER_ID,1,4) || '****' 로 적으면 됨
+	                    <div id="reviewerName" style="float:left;">aaro****</div>
 	                    <div id="writtenDate" style="float:right;">${writtenDate}</div><br>
 	
 	                    <table>
@@ -664,7 +692,6 @@
 
                 <!-- Paging Bar -->
 				<div class="pagingbar" align="center">
-		            <!-- 나중에 currentPage에 대해서만 볼드 & btn disabled 적용할 예정 -->
 		            <!-- if i > 1 -->
 		            <c:if test="${ requestScope.pi.currentPage gt 1 }">
 		                <button onclick="location.href = 'boxoffice.mo?page=1';">&lt;&lt;</button> <!-- to Page1 -->

@@ -152,7 +152,7 @@
                                 <tr>
                                     <th>상영 등급</th>
                                     <td width="160">
-                                        <label for="rateA"><img class="filmrate" src="../sauce/all.svg" alt="ALL"></label>
+                                        <label for="rateA"><img class="filmrate" src="../sauce/3.svg" alt="ALL"></label>
                                     </td>
                                     <td width="160">
                                         <label for="rate12"><img class="filmrate" src="../sauce/12.svg" alt="12"></label>

@@ -1,6 +1,7 @@
 package com.kh.filoom.book.model.vo;
 
 import java.sql.Date;
+import java.sql.Timestamp;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,7 +15,7 @@ import lombok.ToString;
 public class Playing {
 
 	private int playingNo;
-	private String playTime;
+	private java.sql.Timestamp playTime;
 	private String status;
 	private int movieNo;
 	private int screenNo;

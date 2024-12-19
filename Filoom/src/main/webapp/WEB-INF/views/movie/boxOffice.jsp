@@ -43,7 +43,7 @@
         }
 
         .backStage h1 {
-            font-size:50px;
+            font-size:45px;
             padding-left:40px;
             margin-top:20px;
         }
@@ -131,10 +131,11 @@
 
         .poster {
             width:240px;
-            /* height:480px; */
-            /*  */
             border-radius:5px;
             margin-bottom:5px;
+        }
+        .poster:hover {
+        	cursor:pointer;
         }
 
         #filmrate {
@@ -157,10 +158,6 @@
         .movie-info {
             font-size:20px;
             
-        }
-        
-        .test {
-            display:block;
         }
 
         /* 페이징바 */
@@ -200,7 +197,7 @@
                 <div class="left" style="padding-left:30px;">
                     <label for="openedOnly">상영중인 영화만 표시</label>    
                         <label class="switch">
-                            <input id="openedOnly" type="checkbox">
+                            <input id="openedOnly" type="checkbox" onchange="toggleSwitch();">
                             <span class="slider round"></span>
                         </label>
                 </div>
@@ -216,289 +213,386 @@
                 <div class="middle">
                     <!-- <p>정렬 기준 |</p> -->
                     정렬 기준 |
-                    <a href="#">개봉순</a>
+                    <a href="javascript:listbyOpenedOrder();">개봉순</a>
                     <a href="javascript:listbyCritics();">평점순</a>
                     <a href="javascript:listbyName();">이름순</a>
                 </div>
                 <div class="right" style="padding-right:30px;">
-                    <input type="search" class="search-bar" placeholder="제목으로 검색...">
-                    <!-- <i class="fa-solid fa-magnifying-glass" onclick="window.alert('검색 기능은 준비중입니다.')"></i> -->
+                    <input type="search" class="search-bar" placeholder="제목으로 검색..."
+                    	name="keyword" value="${requestScope.keyword}">
+                    <i class="fa-solid fa-magnifying-glass"
+                    	onclick="searchMovie();"></i>
                     <!-- ↑ 이게 검색 아이콘인데 횟수 절약을 위해 잠시 비활성화 처리하였음 -->
                 </div>
             </div>
-    
-    
             <br>
-            <!-- 실제 jsp 파일에서는 반복문 돌려서 구현할 계획
-                <.filmrate> <b>MovieName</b><br>
-                <open_date> <if_premiere ? '개봉' : '개봉예정'>
-            -->
+
+            <div class="movie-list">
             
-            <!-- 나중에 DB에 영화 목록 넣을 때 별일 없으면 이 아래 목록 그대로 넣을 생각임 -->
-    
-            <!-- 초안은 width 360px + 4x4에 margin 45px 0px 였는데
-             (피드백 받고 세로 margin 10px로 바꾸긴 했음)
-             이렇게 하면 화면 크기 100% 기준으로 화면이 꽉 차는 문제가 있음
-             당장 한 줄에 영화 4개 들어가면 margin 포함 1800px인데
-             뒷판떼기의 width 초안이 1900px이고 이 마저도 꽉차 보인단 피드백 있었음
-             (2/3 정도로 줄이는 게 적합하다는 의견)
-             전체적으로 2/3으로 width 240px에 margin 30px 10px가 나을 듯  -->
-             
-             
-<%--             <c:forEach var="" items=""> --%>
-<!--             	<div class="movie"> -->
-<!-- 	                <img src="resources/images/posters/moana.jpg" class="poster"> -->
-<!-- 	                <table class="movie-info"> -->
-<!-- 	                    <tr> -->
-<!-- 	                        <td id="filmrate"><img src="resources/images/posters/all.svg" class="filmrate"></td> -->
-<!-- 	                        <td><b>${movieTitle}</b><br></td> -->
-<!-- 	                    </tr> -->
-<!-- 	                    <tr> -->
-<!-- 	                        <td colspan="2">${openDate} ${premiere}</td> -->
-								<!--${premiere}: Y면 '개봉', N이면 '개봉예정' -->
-<!-- 	                    </tr> -->
-<!-- 	                </table> -->
-<!--             	</div> -->
-<%--             </c:forEach> --%>
-            
-            <div class="movie">
-                <img src="resources/images/posters/moana.jpg" class="poster">
-                <table class="movie-info">
-                    <tr>
-                        <td id="filmrate"><img src="resources/images/posters/all.svg" class="filmrate"></td>
-                        <td><b>모아나 2</b><br></td>
-                    </tr>
-                    <tr>
-                        <td colspan="2">2024.11.27 개봉예정</td>
-                    </tr>
-                </table>
-            </div>
-            <!-- 300 x 400, column margin 25px로 5x3으로 조정
-            row margin은 확인해보고 결정
-            참고로 현재 column margin은 45px -->
-
-            <div class="movie" onclick="location.href='detail.mo';">
-                <img src="resources/images/posters/wicked2.jpg" class="poster"><br>
-                <table class="movie-info">
-                    <tr>
-                        <td id="filmrate"><img src="resources/images/posters/all.svg" class="filmrate"></td>
-                        <td><b>위키드</b><br></td>
-                    </tr>
-                    <tr>
-                        <td colspan="2">2024.11.20 개봉</td>
-                    </tr>
-                </table>
-            </div>
-
-            <div class="movie">
-                <img src="resources/images/posters/1win.jpg" class="poster"><br>
-                <table class="movie-info">
-                        <tr>
-                            <td id="filmrate"><img src="resources/images/posters/12.svg" class="filmrate"></td>
-                            <td><b>1승</b><br></td>
-                        </tr>
-                        <tr>
-                            <td colspan="2">2024.12.4 개봉예정</td>
-                        </tr>
-                </table>
-            </div>
-
-            <div class="movie">
-                <img src="resources/images/posters/hiddenface.jpg" class="poster"><br>
-                <table class="movie-info">
-                    <tr>
-                        <td id="filmrate"><img src="resources/images/posters/19.svg" class="filmrate"></td>
-                        <td><b>히든페이스</b><br></td>
-                    </tr>
-                    <tr>
-                        <td colspan="2">2024.11.20 개봉</td>
-                    </tr>
-                </table>
-            </div>
-
-            
-            <div class="movie">
-                <img src="resources/images/posters/firefighter.jpg" class="poster"><br>
-                <table class="movie-info">
-                    <tr>
-                        <td id="filmrate"><img src="resources/images/posters/12.svg" class="filmrate"></td>
-                        <td><b>소방관</b><br></td>
-                    </tr>
-                    <tr>
-                        <td colspan="2">2024.12.4 개봉예정</td>
-                    </tr>
-                </table>
-            </div>
-
-            <div class="movie">
-                <img src="resources/images/posters/rm.jpg" class="poster"><br>
-                <!-- 알엠 : 라이트 피플, 롱 플레이스 (RM : Right People, Wrong Place) -->
-                <table class="movie-info">
-                    <tr>
-                        <td id="filmrate"><img src="resources/images/posters/12.svg" class="filmrate"></td>
-                        <td><b>알엠 : 라이트...</b><br></td>
-                    </tr>
-                    <tr>
-                        <td colspan="2">2024.12.5 개봉예정</td>
-                    </tr>
-                </table>
-            </div>
-
-            <div class="movie">
-                <img src="resources/images/posters/1jungbilla.jpg" class="poster"><br>
-                <table class="movie-info">
-                    <tr>
-                        <td id="filmrate"><img src="resources/images/posters/15.svg" class="filmrate"></td>
-                        <td><b>원정빌라</b></td>
-                    </tr>
-                    <tr>
-                        <td colspan="2">2024.12.4 개봉예정</td>
-                    </tr>
-                </table>
-            </div>
-
-            <div class="movie">
-                <img src="resources/images/posters/chungsul.jpg" class="poster"><br>
-                <table class="movie-info">
-                    <tr>
-                        <td id="filmrate"><img src="resources/images/posters/all.svg" class="filmrate"></td>
-                        <td><b>청설</b></td>
-                    </tr>
-                    <tr>
-                        <td colspan="2">2024.11.6 개봉</td>
-                    </tr>
-                </table>
-            </div>
-
-            <div class="movie">
-                <img src="resources/images/posters/bigfamily.jpg" class="poster"><br>
-                <table class="movie-info">
-                    <tr>
-                        <td id="filmrate"><img src="resources/images/posters/12.svg" class="filmrate"></td>
-                        <td><b>대가족</b></td>
-                    </tr>
-                    <tr>
-                        <td colspan="2">2024.11.27 개봉</td>
-                    </tr>
-                </table>
-            </div>
-
-            <div class="movie">
-                <img src="resources/images/posters/morningseagull.jpg" class="poster"><br>
-                <!-- 아침바다 갈매기는 -->
-                <table class="movie-info">
-                    <tr>
-                        <td id="filmrate"><img src="resources/images/posters/12.svg" class="filmrate"></td>
-                        <td><b>아침바다 갈매기는</b></td>
-                    </tr>
-                    <tr>
-                        <td colspan="2">2024.11.27 개봉</td>
-                    </tr>
-                </table>
-            </div>
-
-            <div class="movie">
-                <img src="resources/images/posters/lemongrass.jpg" class="poster"><br>
-                <!-- 여름날의 레몬그라스 -->
-                <table class="movie-info">
-                    <tr>
-                        <td id="filmrate"><img src="resources/images/posters/12.svg" class="filmrate"></td>
-                        <td><b>여름날의 레몬그...</b></td>
-                    </tr>
-                    <tr>
-                        <td colspan="2">2024.11.27 개봉</td>
-                    </tr>
-                </table>
-            </div>
-
-            <div class="movie">
-                <img src="resources/images/posters/gladiator2.jpg" class="poster"><br>
-                <table class="movie-info">
-                    <tr>
-                        <td id="filmrate"><img src="resources/images/posters/19.svg" class="filmrate"></td>
-                        <td><b>글레디에이터 II</b></td>
-                    </tr>
-                    <tr>
-                        <td colspan="2">2024.12.13 개봉</td>
-                    </tr>
-                </table>
-            </div>
-
-            <div class="movie">
-                <img src="resources/images/posters/knivesout.jpg" class="poster"><br>
-                <table class="movie-info">
-                    <tr>
-                        <td id="filmrate"><img src="resources/images/posters/15.svg" class="filmrate"></td>
-                        <td><b>나이브스 아웃</b></td>
-                    </tr>
-                    <tr>
-                        <td colspan="2">2019.12.4 개봉</td>
-                        <!-- ※ 재개봉일 : 2024-12-04 -->
-                    </tr>
-                </table>
-            </div>
-
-            <div class="movie">
-                <img src="resources/images/posters/thecrow.jpg" class="poster"><br>
-                <table class="movie-info">
-                    <tr>
-                        <td id="filmrate"><img src="resources/images/posters/19.svg" class="filmrate"></td>
-                        <td><b>더 크로우</b></td>
-                    </tr>
-                    <tr>
-                        <td colspan="2">2024.12.11 개봉예정</td>
-                    </tr>
-                </table>
-            </div>
-
-            <div class="movie">
-                <img src="resources/images/posters/carol.jpg" class="poster"><br>
-                <table class="movie-info">
-                    <tr>
-                        <td id="filmrate"><img src="resources/images/posters/19.svg" class="filmrate"></td>
-                        <td><b>캐롤</b></td>
-                    </tr>
-                    <tr>
-                        <td colspan="2">2016.2.4 개봉</td>
-                        <!-- ※ 재개봉일 = 2024-11-20 -->
-                    </tr>
-                </table>
-            </div>
-
-            <div class="movie">
-                <img src="resources/images/posters/joker.jpg" class="poster"><br>
-                <table class="movie-info">
-                    <tr>
-                        <td id="filmrate"><img src="resources/images/posters/15.svg" class="filmrate"></td>
-                        <td><b>조커</b>
-                    </tr>
-                    <tr>
-                        <td colspan="2">2019.10.2 개봉</td>
-                        <!-- ※ 재개봉일 = 2023-11-01 -->
-                    </tr>
-                </table>
+	            <div class="movie">
+	                <img src="resources/images/posters/moana.jpg" class="poster">
+	                <table class="movie-info">
+	                    <tr>
+	                        <td id="filmrate"><img src="resources/images/posters/3.svg" class="filmrate"></td>
+	                        <td><b>모아나 2</b><br></td>
+	                    </tr>
+	                    <tr>
+	                        <td colspan="2">2024.11.27 개봉예정</td>
+	                    </tr>
+	                </table>
+	            </div>
+	            	
+	            <div class="movie" onclick="location.href='detail.mo';">
+	                <img src="resources/images/posters/wicked2.jpg" class="poster"><br>
+	                <table class="movie-info">
+	                    <tr>
+	                        <td id="filmrate"><img src="resources/images/posters/3.svg" class="filmrate"></td>
+	                        <td><b>위키드</b><br></td>
+	                    </tr>
+	                    <tr>
+	                        <td colspan="2">2024.11.20 개봉</td>
+	                    </tr>
+	                </table>
+	            </div>
+	
+	            <div class="movie">
+	                <img src="resources/images/posters/1win.jpg" class="poster"><br>
+	                <table class="movie-info">
+	                        <tr>
+	                            <td id="filmrate"><img src="resources/images/posters/12.svg" class="filmrate"></td>
+	                            <td><b>1승</b><br></td>
+	                        </tr>
+	                        <tr>
+	                            <td colspan="2">2024.12.4 개봉예정</td>
+	                        </tr>
+	                </table>
+	            </div>
+	
+	            <div class="movie">
+	                <img src="resources/images/posters/hiddenface.jpg" class="poster"><br>
+	                <table class="movie-info">
+	                    <tr>
+	                        <td id="filmrate"><img src="resources/images/posters/19.svg" class="filmrate"></td>
+	                        <td><b>히든페이스</b><br></td>
+	                    </tr>
+	                    <tr>
+	                        <td colspan="2">2024.11.20 개봉</td>
+	                    </tr>
+	                </table>
+	            </div>
+	
+	            
+	            <div class="movie">
+	                <img src="resources/images/posters/firefighter.jpg" class="poster"><br>
+	                <table class="movie-info">
+	                    <tr>
+	                        <td id="filmrate"><img src="resources/images/posters/12.svg" class="filmrate"></td>
+	                        <td><b>소방관</b><br></td>
+	                    </tr>
+	                    <tr>
+	                        <td colspan="2">2024.12.4 개봉예정</td>
+	                    </tr>
+	                </table>
+	            </div>
+	
+	            <div class="movie">
+	                <img src="resources/images/posters/rm.jpg" class="poster"><br>
+	                <!-- 알엠 : 라이트 피플, 롱 플레이스 (RM : Right People, Wrong Place) -->
+	                <table class="movie-info">
+	                    <tr>
+	                        <td id="filmrate"><img src="resources/images/posters/12.svg" class="filmrate"></td>
+	                        <td><b>알엠: 라이트 피플...</b><br></td>
+	                    </tr>
+	                    <tr>
+	                        <td colspan="2">2024.12.5 개봉예정</td>
+	                    </tr>
+	                </table>
+	            </div>
+	
+	            <div class="movie">
+	                <img src="resources/images/posters/1jungbilla.jpg" class="poster"><br>
+	                <table class="movie-info">
+	                    <tr>
+	                        <td id="filmrate"><img src="resources/images/posters/15.svg" class="filmrate"></td>
+	                        <td><b>원정빌라</b></td>
+	                    </tr>
+	                    <tr>
+	                        <td colspan="2">2024.12.4 개봉예정</td>
+	                    </tr>
+	                </table>
+	            </div>
+	
+	            <div class="movie">
+	                <img src="resources/images/posters/chungsul.jpg" class="poster"><br>
+	                <table class="movie-info">
+	                    <tr>
+	                        <td id="filmrate"><img src="resources/images/posters/3.svg" class="filmrate"></td>
+	                        <td><b>청설</b></td>
+	                    </tr>
+	                    <tr>
+	                        <td colspan="2">2024.11.6 개봉</td>
+	                    </tr>
+	                </table>
+	            </div>
+	
+	            <div class="movie">
+	                <img src="resources/images/posters/bigfamily.jpg" class="poster"><br>
+	                <table class="movie-info">
+	                    <tr>
+	                        <td id="filmrate"><img src="resources/images/posters/12.svg" class="filmrate"></td>
+	                        <td><b>대가족</b></td>
+	                    </tr>
+	                    <tr>
+	                        <td colspan="2">2024.11.27 개봉</td>
+	                    </tr>
+	                </table>
+	            </div>
+	
+	            <div class="movie">
+	                <img src="resources/images/posters/morningseagull.jpg" class="poster"><br>
+	                <!-- 아침바다 갈매기는 -->
+	                <table class="movie-info">
+	                    <tr>
+	                        <td id="filmrate"><img src="resources/images/posters/12.svg" class="filmrate"></td>
+	                        <td><b>아침바다 갈매기는</b></td>
+	                    </tr>
+	                    <tr>
+	                        <td colspan="2">2024.11.27 개봉</td>
+	                    </tr>
+	                </table>
+	            </div>
+	
+	            <div class="movie">
+	                <img src="resources/images/posters/lemongrass.jpg" class="poster"><br>
+	                <!-- 여름날의 레몬그라스 -->
+	                <table class="movie-info">
+	                    <tr>
+	                        <td id="filmrate"><img src="resources/images/posters/12.svg" class="filmrate"></td>
+	                        <td><b>여름날의 레몬그...</b></td>
+	                    </tr>
+	                    <tr>
+	                        <td colspan="2">2024.11.27 개봉</td>
+	                    </tr>
+	                </table>
+	            </div>
+	
+	            <div class="movie">
+	                <img src="resources/images/posters/gladiator2.jpg" class="poster"><br>
+	                <table class="movie-info">
+	                    <tr>
+	                        <td id="filmrate"><img src="resources/images/posters/19.svg" class="filmrate"></td>
+	                        <td><b>글레디에이터 II</b></td>
+	                    </tr>
+	                    <tr>
+	                        <td colspan="2">2024.12.13 개봉</td>
+	                    </tr>
+	                </table>
+	            </div>
+	
+	            <div class="movie">
+	                <img src="resources/images/posters/knivesout.jpg" class="poster"><br>
+	                <table class="movie-info">
+	                    <tr>
+	                        <td id="filmrate"><img src="resources/images/posters/15.svg" class="filmrate"></td>
+	                        <td><b>나이브스 아웃</b></td>
+	                    </tr>
+	                    <tr>
+	                        <td colspan="2">2019.12.4 개봉</td>
+	                        <!-- ※ 재개봉일 : 2024-12-04 -->
+	                    </tr>
+	                </table>
+	            </div>
+	
+	            <div class="movie">
+	                <img src="resources/images/posters/thecrow.jpg" class="poster"><br>
+	                <table class="movie-info">
+	                    <tr>
+	                        <td id="filmrate"><img src="resources/images/posters/19.svg" class="filmrate"></td>
+	                        <td><b>더 크로우</b></td>
+	                    </tr>
+	                    <tr>
+	                        <td colspan="2">2024.12.11 개봉예정</td>
+	                    </tr>
+	                </table>
+	            </div>
+	
+	            <div class="movie">
+	                <img src="resources/images/posters/carol.jpg" class="poster"><br>
+	                <table class="movie-info">
+	                    <tr>
+	                        <td id="filmrate"><img src="resources/images/posters/19.svg" class="filmrate"></td>
+	                        <td><b>캐롤</b></td>
+	                    </tr>
+	                    <tr>
+	                        <td colspan="2">2016.2.4 개봉</td>
+	                        <!-- ※ 재개봉일 = 2024-11-20 -->
+	                    </tr>
+	                </table>
+	            </div>
+	
+	            <div class="movie">
+	                <img src="resources/images/posters/joker.jpg" class="poster"><br>
+	                <table class="movie-info">
+	                    <tr>
+	                        <td id="filmrate"><img src="resources/images/posters/15.svg" class="filmrate"></td>
+	                        <td><b>조커</b>
+	                    </tr>
+	                    <tr>
+	                        <td colspan="2">2019.10.2 개봉</td>
+	                        <!-- ※ 재개봉일 = 2023-11-01 -->
+	                    </tr>
+	                </table>
+	            </div>
             </div>
 
         </div>
         
         <script>
         	$(function() {
-        		//
+        		// openedOnly();
         	});
         	
+        	function toggleSwitch() {
+        		// alert($("#openedOnly").prop("checked"));
+        		if(!$("#openedOnly").prop("checked")) {
+        			viewAll();
+        		} else {
+        			openedOnly();
+        		}
+        	}
+        	
+        	// 별도의 jsp에 JSTL을 적용한 것을 AJAX로 띄우는 방식
+        	// 출처: https://velog.io/@hana78786/Ajax를-활용하여-jstl-적용하기
+        	// 긴 제목이 들어갈 경우 자르는 로직이 아직 안 들어가서 어그러지는 게 정상임
+        	function viewAll() {
+        		$.ajax({
+    				url: "viewall.mo",
+    				type: "get",
+    				dataType:"html",
+    				
+    				success: function(result) {
+    					$(".movie-list").empty();
+    					$(".movie-list").append(result);
+    				},
+    				error: function() {
+    					alert("Mission Failure");
+    				}
+    			});	
+        	}
+        	
+        	function openedOnly() {
+        		$.ajax({
+    				url: "viewopened.mo",
+    				type: "get",
+    				dataType:"html",
+    				
+    				success: function(result) {    					
+    					$(".movie-list").empty();
+    					$(".movie-list").append(result);
+    				},
+    				error: function() {
+    					alert("Mission Failure");
+    				}
+    			});
+        	}
+        	
+        	// mapper 때문에 공사 중입니다.
+        	// 상영작 한정 스위치 체크 여부에 따라 함수 나누고 싶은데 고민 중
+        	function listbyOpenedOrder() {
+        		$.ajax({
+    				url: "openorder.mo",
+    				type: "get",
+    				dataType:"html",
+    				
+    				success: function(result) {    					
+    					$(".movie-list").empty();
+    					$(".movie-list").append(result);
+    				},
+    				error: function() {
+    					alert("Mission Failure");
+    				}
+    			});
+        	}
+        	
         	function listbyCritics() {
+//         		$.ajax({
+//     				url: "criticchoice.mo",
+//     				type: "get",
+//     				dataType:"html",
+    				
+//     				success: function(result) {    					
+//     					$(".movie-list").empty();
+//     					$(".movie-list").append(result);
+    					
+//     				},
+//     				error: function() {
+//     					alert("Mission Failure");
+//     				}
+//     			});
         		alert("공사중입니다.");
         	}
         	
+        	// '이름순'을 눌렀을 때, '상영중인 영화만 표시' 스위치가 켜져 있으면 상영중인 영화만 가지고 정렬함 
         	function listbyName() {
-        		alert("공사중입니다.");
+        		if($("#openedOnly").prop("checked")) {
+   		        	$.ajax({
+	    				url: "nameorderplaying.mo",
+	    				type: "get",
+	    				dataType:"html",
+	    				
+	    				success: function(result) {
+	    					$(".movie-list").empty();
+	    					$(".movie-list").append(result);
+	    				},
+	    				error: function() {
+	    					alert("Mission Failure");
+	    				}
+	    			});		
+        		} else {
+	        		$.ajax({
+	    				url: "nameorder.mo",
+	    				type: "get",
+	    				dataType:"html",
+	    				
+	    				success: function(result) {
+	    					$(".movie-list").empty();
+	    					$(".movie-list").append(result);
+	    				},
+	    				error: function() {
+	    					alert("Mission Failure");
+	    				}
+	    			});
+        		}
+
+        	}
+        	
+        	function searchMovie() {
+        		let keyword = $("input[name=keyword]").val();
+        		console.log(keyword);
+        		// status = '상영중인 영화만 표시' 스위치 체크 여부
+        		let status = $("#openedOnly").prop("checked") ? 1 : 0;
+        		if(keyword != "") {
+        			$.ajax({
+	        			url: "searchMovie.mo",
+	        			type: "get",
+	        			data: {"keyword" : keyword, "status" : status},
+	        			dataType:"html",
+	        			
+	        			success: function(result) {
+	    					$(".movie-list").empty();
+	    					$(".movie-list").append(result);
+	    				},
+	    				error: function() {
+	    					alert("Mission Failure");
+	    				}
+        			});
+        		}
         	}
         </script>
         <br><br>
 
         <!-- Paging Bar -->
         <div class="pagingbar" align="center">
-            <!-- 나중에 currentPage에 대해서만 볼드 & btn disabled 적용할 예정 -->
             <!-- if i > 1 -->
             <c:if test="${ requestScope.pi.currentPage gt 1 }">
                 <button onclick="location.href = 'boxoffice.mo?page=1';">&lt;&lt;</button> <!-- to Page1 -->

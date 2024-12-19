@@ -5,7 +5,9 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpSession;
 
@@ -14,13 +16,21 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.google.gson.Gson;
+import com.kh.filoom.common.model.vo.PageInfo;
+import com.kh.filoom.common.template.Pagination;
 import com.kh.filoom.event.model.service.EventService;
 import com.kh.filoom.event.model.vo.Event;
 import com.kh.filoom.event.model.vo.EventAttachment;
+import com.kh.filoom.event.model.vo.Reply;
 
 @Controller
 public class EventController {
@@ -46,6 +56,9 @@ public class EventController {
 		ArrayList<Event> list;
 		String statusTitle = "전체 이벤트"; // 기본제목
 		
+		// 추천 이벤트 따로 가져오는 로직 추가 
+		List<Event> hotList = eventService.selectHotEventList(); // 추천 이벤트 가져오기 
+		
 		
 		// eventStatus 값이 있으면 해당하는 목록만 조회
 		if("N".equals(eventStatus)) {
@@ -61,11 +74,13 @@ public class EventController {
 		}
 		model.addAttribute("list", list);
 		model.addAttribute("statusTitle", statusTitle);  // 제목을 모델에 전달
+		model.addAttribute("hotList", hotList);
 		
-		// System.out.println(list);
+		System.out.println(list);
 		// System.out.println("list size : " + list.size());
 		// System.out.println(statusTitle);
 		// System.out.println(eventStatus);
+		System.out.println(hotList);
 		
 		return "event/eventListView";
 	}
@@ -80,7 +95,7 @@ public class EventController {
 	@GetMapping("detail.ev")
 	public ModelAndView selectEvent(int eno, ModelAndView mv) {
 		
-		System.out.println(eno);
+		// System.out.println(eno);
 		
 		// 게시글 정보, 첨부파일 정보 조회해오기 
 		Event e = eventService.selectEvent(eno);
@@ -100,30 +115,111 @@ public class EventController {
 		mv.addObject("list", list);
 		mv.setViewName("event/eventDetailView");
 		
-		System.out.println(e);
-		System.out.println(list);
+		// System.out.println(e);
+		// System.out.println(list);
 		
 		
 		return mv;
 		
+	}
+	
+	
+	/**
+	 * 241217 한혜원 
+	 * 댓글 목록조회 요청 (ajax)
+	 * @return
+	 */
+	@ResponseBody
+	@GetMapping(value="rlist.ev", produces="application/json; charset=UTF-8")
+	public String ajaxSelectReplyList(int eno, @RequestParam(value="cpage", defaultValue="1") int currentpage) {
+		// System.out.println(eno);
 		
+		// 댓글 목록의 총 개수 조회 
+		int listCount = eventService.seletReplyListCount(eno);
+		
+		// 페이지당 댓글 수와 페이지번호 설정
+		int pageLimit = 10;
+		int boardLimit = 10; 
+		
+		PageInfo pi = Pagination.getPageInfo(listCount, currentpage, pageLimit, boardLimit);
+		
+		// 페이징된 댓글 목록 조회
+		ArrayList<Reply> list = eventService.selectReplyList(eno, pi);
+		
+		// 응답 데이터 JSON 형식으로 반환할 객체 
+		Map<String, Object> response = new HashMap<>();
+		response.put("list", list);
+		response.put("pi", pi);
+		
+		 System.out.println(list);
+		 System.out.println(pi);
+		return new Gson().toJson(response);
+		
+	}
+	
+	/**
+	 * 241217 댓글 작성용 요청
+	 * @param r
+	 * @return
+	 */
+	@ResponseBody
+	@PostMapping(value="rinsert.ev", produces="text/html; charset=UTF-8")
+	public String ajaxInsertReply(Reply r) {
+		// System.out.println(r);
+		
+		// 댓글 작성
+		int result = eventService.insertReply(r);
+		
+		return (result>0) ? "success" : "fail";
+	}
+	
+	/**
+	 * 241217~18 댓글 수정용 요청
+	 * @param r (replyNo, replyContent, replyWriter)
+	 * @return
+	 */
+	@ResponseBody
+	@PostMapping(value="rupdate.ev")
+	public Map<String, String> ajaxUpdateReply(@RequestBody Reply r) {
+		System.out.println("수정 요청 데이터 : " + r);
+		
+		// 댓글 수정 결과로 반환하기 
+		int result = eventService.updateReply(r);
+		
+		// 결과를 JSON 형식으로 반환 
+		Map<String, String> response = new HashMap<>();
+		if(result>0) {
+			response.put("status", "success");
+			response.put("message", "댓글이 수정되었습니다.");
+		} else {
+			response.put("status", "fail");
+			response.put("message", "댓글 수정에 실패했습니다.");
+		}
+		
+		return response;
 	}
 	
 	
 	
+	/**
+	 * 241218 한혜원 댓글 삭제요청
+	 * @param replyNo
+	 * @return
+	 */
+	@RequestMapping(value="rdelete.ev", method=RequestMethod.POST)
+	@ResponseBody
+	public String ajaxDeleteReply(@RequestParam("replyNo") int replyNo) {
+		int result = eventService.deleteReply(replyNo);
+		
+		if (result>0) {
+            return "success"; // 삭제 성공
+        } else {
+            return "failure"; // 삭제 실패
+        }
+	}
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	// 관리자용 
-	
+
+	// ------------------------------------------------------------------------------------------------- 관리자용 
 	/**
 	 * 241211 한혜원 
 	 * 게시글 작성페이지 요청 
@@ -200,7 +296,97 @@ public class EventController {
 	    // System.out.println("Attachments: " + eventAttachmentList);
 	    return mv;
 	}
-
+	
+	
+	/**
+	 * 241218 한혜원
+	 * 관리자용 이벤트게시글 목록조회 요청 
+	 * @param currentpage
+	 * @param model
+	 * @return
+	 */
+	@GetMapping("alist.ev")
+	public String adminSelectList(@RequestParam(value="cpage", defaultValue="1")int currentpage, Model model) {
+		// 게시글 목록조회 후 페이징 처리 변수 필요 
+		int listCount = eventService.selectListCount();
+		
+		int pageLimit = 5;
+		int boardLimint = 10;
+		PageInfo pi = Pagination.getPageInfo(listCount, currentpage, pageLimit, boardLimint);
+		
+		ArrayList<Event> list = eventService.adminSelectList(pi);
+		
+		// 응답데이터로 목록 및 페이징 관련 객체 넘기로 페이지 포워딩
+		model.addAttribute("list", list);
+		model.addAttribute("pi", pi);
+		
+		// System.out.println(list);
+		
+		return "admin/event/adminEventListView";
+	}
+	
+	/**
+	 * 241218 한혜원
+	 * 관리자 이벤트 게시글 상세조회 페이지 (쿼리스트링) 
+	 * @param eno
+	 * @param mv
+	 * @return
+	 */
+	@GetMapping("adetail.ev")
+	public ModelAndView adminSelectEvent(int eno, ModelAndView mv) {
+		// System.out.println(eno);
+		
+		// 게시글정보, 첨부파일 정보 조회 
+		Event e = eventService.adminSelectEvent(eno);
+		
+		// 게시글이 없는 경우 에러페이지로 포워딩 
+		if(e == null) {
+			mv.setViewName("common/errorPage");
+			mv.addObject("errorMsg", "해당 게시글을 찾을 수 없습니다.");
+			return mv;
+		}
+		
+		// 게시글 정보와 첨부파일 정보 조회 후 상세페이지 포워딩 
+		ArrayList<EventAttachment> list = eventService.selectEventAttachment(eno);
+		
+		// 조회된 데이터드 담아서 응답페이지로 포워딩 
+		mv.addObject("e", e);
+		mv.addObject("list", list);
+		mv.setViewName("admin/event/adminEventDetailView");
+		
+		// System.out.println(e);
+		// System.out.println(list);
+				
+				
+		return mv;
+	}
+	
+	// 게시글 수정 
+	
+	// 게시글 삭제 
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	// ------------------------------------------ 파일 저장 메소드
 	public String saveFile(MultipartFile upfile, HttpSession session) {
 	    // 1. 원본파일명 얻어오기
