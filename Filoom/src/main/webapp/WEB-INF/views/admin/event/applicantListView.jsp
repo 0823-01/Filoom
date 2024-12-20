@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %> 
 <!DOCTYPE html>
 <html>
 <head>
@@ -25,7 +26,7 @@
             gap : 10px;
         }
 
-        #no, #title, #applicants, #date, #winner {
+        #no, #title, #applicants, #date, #drawing {
             box-sizing: border-box;
             font-size: 25px;
             font-weight: bold;
@@ -49,7 +50,7 @@
             margin-left: 195px;
         }
 
-        #winner {
+        #drawing {
             margin-left: 126px;
         }
 
@@ -98,45 +99,95 @@
             width : 20%;
         }
 
-        #winnerStatus {
+        #drawingStatus {
             width : 10%;
         }
 
         /*페이징영역*/
-        .pagingArea {
-            width : fit-content;
-            margin:auto;
+        
+        .foot {
+        	box-sizing : border-box;
+        	display: flex;
+        	justify-content: center;
+        	align-items : center;
+        	flex-direction: column;
+        	position: relative;
+        
         }
-        .pagination {
-            list-style-type : none;
-        }
-        .pagination>li {
-            float : left;
-            font-size : 20px;
-            margin-left: 10px;
-            margin-right: 10px;
-            margin-top: 3px;
-        }
-        li>a {
-            text-decoration-line: none;
-            color : black;
-        }
-        li>a:active {
-            text-decoration-line: none;
-            color : #AB886D;
-        }
+        
+		.pagingArea {
+		    display: flex;
+		    justify-content: center;
+		    padding : 20px;
+		    font-size: 20px;
+		    font-weight: bold;
+		
+		}
+		.pagination {
+		    list-style-type : none;
+		    display: flex;
+		    padding : 0;
+		    margin: 0;
+		    font-size: 20px;
+		    font-weight: bold;
+		}
+		.pagination>li {
+		    margin : 0 10px; /*리스트 항목 간의 간격*/
+		    cursor: pointer;
+		    transition: color 0.3s ease; /*색상 전환 효과*/
+		    font-size: 25px;
+		    font-weight: bold;
+		    color : #F3F3F3;
+		}
+		
+		.pagination>li>a {
+		    margin : 0 10px; /*리스트 항목 간의 간격*/
+		    cursor: pointer;
+		    transition: color 0.3s ease; /*색상 전환 효과*/
+		    font-size: 25px;
+		    font-weight: bold;
+		    color : #493628;
+		    text-decoration : none;
+		}
+		
+		.pagination>li>a:hover {
+		    text-decoration-line: none;
+		    color : #AB886D;
+		}
+
+		.pagination > li>a.active {
+		    color: #493628; 
+		}
+		
+		.pagination .active .page-link {
+	
+		    color: #AB886D;
+	
+		}
+		
+		.pagination .page-link {
+		    color: #493628; 
+		    text-decoration: none;
+		}
+		
+		.pagination .disabled .page-link {
+		    color: #ccc;
+		    pointer-events: none;
+		    cursor: default;
+		}
 
         /*버튼*/
         .btn {
             padding-right : 13px;
-            text-align: right;
             box-sizing: border-box;
             display: flex;
             justify-content: flex-end;
             gap : 10px;
+            position: absolute; 
+            right: 0;
         }
 
-       #applicantBtn {
+       #back, #applicantBtn {
             width: 170px;
             height: 38px;
             border: none;
@@ -145,15 +196,15 @@
             font-size: 20px;
             font-weight: bolder;
             box-shadow: 3px 3px 3px rgb(0, 0, 0, 0.2);
-            background-color: #493628;
+            background-color: #493628;1
             cursor: pointer;
         }
 
-        #applicantBtn:hover {
+        #back:hover, #applicantBtn:hover {
             transform: scale(1.1em);
         }
 
-        #applicantBtn:active {
+        #back:active, #applicantBtn:active {
             background-color: #AB886D;
         }
         
@@ -186,10 +237,11 @@
                 <div id = "admin_title_content" style="box-sizing: border-box;">
                     <div class="menu">
                         <div id="no">번호</div>
-                        <div id="title">이벤트 제목</div>
+                        <div id="title">응모내용</div>
                         <div id="applicants">응모자</div>
                         <div id="date">응모날짜</div>
-                        <div id="winner">당첨여부</div>
+                        <div id="drawing">추첨여부</div>
+                        <div id="win">당첨여부</div>
                     </div>
                 </div>
 
@@ -203,121 +255,73 @@
                     <input type ="text" id ="text_sample">
                     <input type="button" id ="button_sample" value="샘플">-->
 
-                    <table>
-                        <tr id="list">
-                            
-                            <td id="applicantNo">1</td>
-                            <td id="eventTitle">[대가족] 22024.12.31 대가족 시사회</td>
-                            <td id="applicant">user**</td>
-                            <td id="applicantDate">2024-12-29</td>
-                            <td id="winnerStatus">Y</td>
+                    <table id="applicantList">
+                        <tbody>
+                        	<c:forEach var="a" items="${requestScope.alist }">
+	                        	<tr id="list" class="applicant-item">
+		                            <td id="applicantNo" class="ano">${a.applicantNo }</td>
+		                            <td id="eventTitle">버튼클릭!</td>
+		                            <td id="applicant">${a.userNo}</td>
+		                            <td id="applicantDate">${a.applicationDate }</td>
+		                            <td id="drawingStatus">${a.drawingStatus }</td>
+		                            <td id="winStatus">${w.winStatus }</td>
+	                        	</tr>
+                        	</c:forEach>
+                        </tbody>
 
-                        <tr id="list">
-                            
-                            <td id="applicantNo">1</td>
-                            <td id="eventTitle">[대가족] 22024.12.31 대가족 시사회</td>
-                            <td id="applicant">user**</td>
-                            <td id="applicantDate">2024-12-29</td>
-                            <td id="winnerStatus">Y</td>
-                        </tr>
-
-                        <tr id="list">
-                            
-                            <td id="applicantNo">1</td>
-                            <td id="eventTitle">[대가족] 22024.12.31 대가족 시사회</td>
-                            <td id="applicant">user**</td>
-                            <td id="applicantDate">2024-12-29</td>
-                            <td id="winnerStatus">Y</td>
-                        </tr>
-
-                        <tr id="list">
-                            
-                            <td id="applicantNo">1</td>
-                            <td id="eventTitle">[대가족] 22024.12.31 대가족 시사회</td>
-                            <td id="applicant">user**</td>
-                            <td id="applicantDate">2024-12-29</td>
-                            <td id="winnerStatus">Y</td>
-                        </tr>
-
-                        <tr id="list">
-                            
-                            <td id="applicantNo">1</td>
-                            <td id="eventTitle">[대가족] 22024.12.31 대가족 시사회</td>
-                            <td id="applicant">user**</td>
-                            <td id="applicantDate">2024-12-29</td>
-                            <td id="winnerStatus">Y</td>
-                        </tr>
-
-                        <tr id="list">
-                            
-                            <td id="applicantNo">1</td>
-                            <td id="eventTitle">[대가족] 22024.12.31 대가족 시사회</td>
-                            <td id="applicant">user**</td>
-                            <td id="applicantDate">2024-12-29</td>
-                            <td id="winnerStatus">N</td>
-                        </tr>
-
-                        <tr id="list">
-                            
-                            <td id="applicantNo">1</td>
-                            <td id="eventTitle">[대가족] 22024.12.31 대가족 시사회</td>
-                            <td id="applicant">user**</td>
-                            <td id="applicantDate">2024-12-29</td>
-                            <td id="winnerStatus">N</td>
-                        </tr>
-
-                        <tr id="list">
-                            
-                            <td id="applicantNo">1</td>
-                            <td id="eventTitle">[대가족] 22024.12.31 대가족 시사회</td>
-                            <td id="applicant">user**</td>
-                            <td id="applicantDate">2024-12-29</td>
-                            <td id="winnerStatus">N</td>
-                        </tr>
-                        <tr id="list">
-                            
-                            <td id="applicantNo">1</td>
-                            <td id="eventTitle">[대가족] 22024.12.31 대가족 시사회</td>
-                            <td id="applicant">user**</td>
-                            <td id="applicantDate">2024-12-29</td>
-                            <td id="winnerStatus">N</td>
-                        </tr>
-                        <tr id="list">
-                            
-                            <td id="applicantNo">1</td>
-                            <td id="eventTitle">[대가족] 22024.12.31 대가족 시사회</td>
-                            <td id="applicant">user**</td>
-                            <td id="applicantDate">2024-12-29</td>
-                            <td id="winnerStatus">N</td>
-                        </tr>
-
-                        
                     </table>
 
-                    <!--페이징바-->
-                    <div class="pagingArea">
-                        <ul class="pagination">
-                            <li class="page-item disabled"><a class="page-link" href="#">«</a></li>
-                            <li class="page-item"><a class="page-link" href="#">1</a></li>
-                            <li class="page-item"><a class="page-link" href="#">2</a></li>
-                            <li class="page-item"><a class="page-link" href="#">3</a></li>
-                            <li class="page-item"><a class="page-link" href="#">4</a></li>
-                            <li class="page-item"><a class="page-link" href="#">5</a></li>
-                            <li class="page-item"><a class="page-link" href="#">6</a></li>
-                            <li class="page-item"><a class="page-link" href="#">7</a></li>
-                            <li class="page-item"><a class="page-link" href="#">8</a></li>
-                            <li class="page-item"><a class="page-link" href="#">9</a></li>
-                            <li class="page-item"><a class="page-link" href="#">10</a></li>
-                            <li class="page-item"><a class="page-link" href="#">»</a></li>
-                        </ul>
-                    </div>
+                    <div class="foot" style="box-sizing: border-box;" >
+                        <!-- 페이징바 -->
+					    <div class="pagingArea">
+					        <ul class="pagination" id="pagination">
+					            <!-- 이전 페이지 버튼 -->
+					            <c:choose>
+					                <c:when test="${requestScope.pi.currentPage == 1}">
+					                    <li class="page-item disabled">
+					                        <a class="page-link" href="#">«</a>
+					                    </li>
+					                </c:when>
+					                <c:otherwise>
+					                    <li class="page-item">
+					                        <a class="page-link" href="alist.ev?cpage=${requestScope.pi.currentPage - 1}">«</a>
+					                    </li>
+					                </c:otherwise>
+					            </c:choose>
+					
+					            <!-- 페이지 번호 출력 -->
+					            <c:forEach var="p" begin="${requestScope.pi.startPage}" end="${requestScope.pi.endPage}">
+					                <li class="page-item ${p == requestScope.pi.currentPage ? 'active' : ''}">
+					                    <a class="page-link" href="alist.ev?cpage=${p}">${p}</a>
+					                </li>
+					            </c:forEach>
+					
+					            <!-- 다음 페이지 버튼 -->
+					            <c:choose>
+					                <c:when test="${requestScope.pi.currentPage < requestScope.pi.maxPage}">
+					                    <li class="page-item">
+					                        <a class="page-link" href="alist.ev?cpage=${requestScope.pi.currentPage + 1}">»</a>
+					                    </li>
+					                </c:when>
+					                <c:otherwise>
+					                    <li class="page-item disabled">
+					                        <a class="page-link" href="#">»</a>
+					                    </li>
+					                </c:otherwise>
+					            </c:choose>
+					        </ul>
+					    </div>
+           				
+           				<!--버튼--> 
+	                    <div class="btn">
+	                    	<button id="back" onclick="history.back();">이전으로</button>
+	                        <button id="applicantBtn">당첨자 추첨</button>
+	                        <!--추첨이 완료된 경우, 버튼 조작 불가-->
+	                        
+	                    </div>
+           				
+		    		</div>
 
-                    <!--버튼--> 
-                    <div class="btn">
-                        <button id="applicantBtn">응모자 추첨</button>
-                        <!--추첨이 완료된 경우, 버튼 조작 불가-->
-                        
-                    </div>
                 </div>
 
 
@@ -337,6 +341,51 @@
                 this.classList.add("selected");
             });
         });
+    });
+    
+ 	// 당첨자 추첨 
+    document.getElementById("applicantBtn").addEventListener("click", function() {
+        // 화면에 출력된 목록에서 데이터 추출 (클래스명에 따라 대상 선택)
+        const applicants = document.querySelectorAll(".applicant-item"); // 응모자 데이터 탐색 (tr 태그)
+
+        // 댓글 작성자명 추출
+        const names = Array.from(applicants).map(item => {
+            return item.querySelector("#applicant").textContent.trim(); // 응모자 이름 가져오기
+        });
+        
+        if (names.length === 0) {
+            alert("추첨 가능한 응모자가 없습니다.");
+            return;
+        }
+
+        const winnerCount = 10; // 당첨자 수
+        const winners = []; // 당첨자 목록
+
+        // 중복되지 않게 당첨자 10명 뽑기
+        while (winners.length < winnerCount && names.length > 0) {
+            const randomIndex = Math.floor(Math.random() * names.length);
+            const winner = names[randomIndex];
+            winners.push(winner);
+            names.splice(randomIndex, 1); // 뽑은 사람을 배열에서 제거
+        }
+
+     	// 당첨자 출력
+        if (winners.length > 0) {
+            alert("🎉 당첨자: " + winners.join(", "));
+            
+	        // 추첨 후 버튼 비활성화 및 텍스트 변경
+	        const enrollButton = document.getElementById("applicantBtn");
+	        enrollButton.disabled = true;  // 버튼 비활성화
+	        enrollButton.textContent = "당첨자 추첨 완료";  // 버튼 텍스트 변경
+	
+	        // 추첨 후 상태 업데이트 (서버로 상태 보내기)
+	        updateDrawingStatus(eventNo);
+	        
+	        // 쿠폰 발송 로직 호출 (추첨된 사람들에게 쿠폰 발급)
+	        sendCoupons(winners);
+	    } else {
+	        alert("추첨 가능한 인원이 부족합니다.");
+	    }
     });
     </script>
     

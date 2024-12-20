@@ -2,6 +2,7 @@ package com.kh.filoom.event.model.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.kh.filoom.common.model.vo.PageInfo;
 import com.kh.filoom.event.model.dao.EventDao;
+import com.kh.filoom.event.model.vo.Applicant;
 import com.kh.filoom.event.model.vo.Event;
 import com.kh.filoom.event.model.vo.EventAttachment;
 import com.kh.filoom.event.model.vo.Reply;
@@ -141,6 +143,33 @@ public class EventServiceImpl implements EventService {
 	public int deleteReply(int replyNo) {
 		return eventDao.deleteReply(sqlSession, replyNo);
 	}
+	
+	// 응모 버튼 
+	
+	/**
+	 * 241219 한혜원
+	 * 응모자 중복 확인 메소드 
+	 */
+	@Override
+	public boolean checkUserParticipated(int refEno, String userNo) {
+		return eventDao.checkUserParticipated(sqlSession, refEno, userNo);
+	}
+
+	/**
+	 * 241219 한혜원
+	 * 응모자 추가 메소드
+	 */
+	@Override
+	public void insertParticipant(Applicant a) {
+		eventDao.insertParticipant(sqlSession, a);
+		
+	}
+	
+	
+	
+	
+	
+	
 
 	
 	// 관리자 --------------------------------------------------------------------------------
@@ -216,6 +245,58 @@ public class EventServiceImpl implements EventService {
 		return 0;
 	}
 
+	/**
+	 * 241219 한혜원
+	 * 댓글 수 
+	 */
+	@Override
+	public int rlistCount(int eventNo) {
+		return eventDao.rlistCount(sqlSession, eventNo);
+	}
+
+	/**
+	 * 241219 한혜원
+	 * 댓글 목록 조회
+	 */
+	@Override
+	public List<Reply> adminSelectReplyList(Map<String, Object> params) {
+		return eventDao.adminSelectReplyList(sqlSession, params);
+	}
+
+	/**
+	 * 241219 한혜원
+	 * 응모자수
+	 */
+	@Override
+	public int aplistCount(int eventNo) {
+		return eventDao.aplistCount(sqlSession, eventNo);
+	}
+
+	/**
+	 * 241219 한혜원
+	 * 응모자 목록 조회
+	 */
+	@Override
+	public List<Applicant> adminSelectApplicantList(Map<String, Object> params) {
+		return eventDao.amdinSelectApplicantList(sqlSession, params);
+	}
+
+	/**
+	 * 241220 한혜원
+	 * 당첨자 정보 추가
+	 */
+	@Override
+	public int insertWinners(Map<String, Object> params) {
+		return eventDao.insertWinners(sqlSession, params);
+	}
+	
+	
+
+	
+
+	
+
+	
 
 	
 	

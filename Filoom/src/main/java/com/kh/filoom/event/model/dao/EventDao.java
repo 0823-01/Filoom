@@ -10,6 +10,7 @@ import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
 
 import com.kh.filoom.common.model.vo.PageInfo;
+import com.kh.filoom.event.model.vo.Applicant;
 import com.kh.filoom.event.model.vo.Event;
 import com.kh.filoom.event.model.vo.EventAttachment;
 import com.kh.filoom.event.model.vo.Reply;
@@ -163,13 +164,42 @@ public class EventDao {
 		// update문 : update 메소드 
 		return sqlSession.update("eventMapper.deleteReply", replyNo);
 	}
+	
+	// 응모버튼 
+	
+	/**
+	 * 241219 한혜원
+	 * 응모자 중복확인
+	 * @param sqlSession
+	 * @param refEno
+	 * @param userNo
+	 * @return
+	 */
+	public boolean checkUserParticipated(SqlSessionTemplate sqlSession, int refEno, String userNo) {
+		Integer result = sqlSession.selectOne("eventMapper.checkUserParticipated", 
+										   new HashMap<String, Object>() {{
+											   put("refEno", refEno);
+											   put("userNo", userNo);																	   
+										  }});
+		return result != null && result>0; // 응모자가 있으면 true;
+	}
+
+	/**
+	 * 241219 한혜원
+	 * 응모 추가
+	 * @param a
+	 */
+	public void insertParticipant(SqlSessionTemplate sqlSession, Applicant a) {
+		sqlSession.insert("eventMapper.insertParticipant", a);
+		
+	}
 
 	
 
 
 
 	
-	// 관리자용
+	// 관리자용 ---------------------------------------------------------------------------
 	
 	/**
 	 * 241211 한혜원 
@@ -246,6 +276,76 @@ public class EventDao {
 		return (ArrayList)sqlSession.selectList("eventMapper.adminSelectEventAttachment", eventNo);
 	}
 
+	/**
+	 * 241219 한혜원
+	 * 댓글 목록 수 
+	 * @param sqlSession
+	 * @param eventNo
+	 * @return
+	 */
+	public int rlistCount(SqlSessionTemplate sqlSession, int eventNo) {
+		return sqlSession.selectOne("eventMapper.rlistCount", eventNo);
+	}
+
+	/**
+	 * 241219 한혜원
+	 * 관리자 댓글 목록조회
+	 * @param sqlSession
+	 * @param params
+	 * @return
+	 */
+	public List<Reply> adminSelectReplyList(SqlSessionTemplate sqlSession, Map<String, Object> params) {
+		
+		// PageInfo 를 통해 페이징 정보도 포함시키기 위해 RowBounds 사용 
+		PageInfo pi = (PageInfo) params.get("pi");
+		int offset = (pi.getCurrentPage() - 1) * pi.getBoardLimit();
+	    int limit = pi.getBoardLimit();
+	    
+	    RowBounds rowBounds = new RowBounds(offset, limit);
+		
+		return (List)sqlSession.selectList("eventMapper.adminSelectReplyList", params, rowBounds);
+	}
+
+	/**
+	 * 241219 한혜원
+	 * 응모자 수 
+	 * @param sqlSession
+	 * @param eventNo
+	 * @return
+	 */
+	public int aplistCount(SqlSessionTemplate sqlSession, int eventNo) {
+		return sqlSession.selectOne("eventMapper.aplistCount", eventNo);
+	}
+
+	/**
+	 * 241219 한혜원
+	 * 응모자 목록조회
+	 * @param sqlSession
+	 * @param params
+	 * @return
+	 */
+	public List<Applicant> amdinSelectApplicantList(SqlSessionTemplate sqlSession, Map<String, Object> params) {
+		
+		// PageInfo 를 통해 페이징 정보도 포함시키기 위해 RowBounds 사용 
+		PageInfo pi = (PageInfo) params.get("pi");
+		int offset = (pi.getCurrentPage() - 1) * pi.getBoardLimit();
+	    int limit = pi.getBoardLimit();
+	    
+	    RowBounds rowBounds = new RowBounds(offset, limit);
+		
+		return (List)sqlSession.selectList("eventMapper.adminSeletApplicantList", params, rowBounds);
+	}
+
+	/**
+	 * 241219 한혜원
+	 * 당첨자 정보 저장
+	 * @param sqlSession
+	 * @param params
+	 * @return
+	 */
+	public int insertWinners(SqlSessionTemplate sqlSession, Map<String, Object> params) {
+		return sqlSession.insert("eventMapper.insertWinners", params);
+	}
 
 	
 }

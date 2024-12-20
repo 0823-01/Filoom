@@ -236,9 +236,10 @@
                 <!-- 혜원 - 관리자 이벤트 상세조회 -->
                 <div id = "admin_title_content" >
                     <div id="boardTitle" >이벤트 게시글 상세조회</div>
-                    <div><a href="apply.ev"><button class="btn" id="applicant">응모자 확인</button></a></div>
+                    <div><a href="#" onclick="location.href='aplist.ev?eventNo=' + eventNo + '&eventType=' + eventType + '&cpage=1'"><button class="btn" id="applicant">응모자 확인</button></a></div>
                 </div>
             </div>
+            
 
             <div id = "admin_detail">
                 
@@ -253,14 +254,27 @@
                         <div class="title">
                             제목<b style="color : red;">*</b> <div id="title">${e.eventTitle }</div>
                         </div>
-
-                        <div class="startDate">
-                            이벤트 시작일<b style="color : red;">*</b> <div id="startDate">${e.startDate }</div>
-                        </div>
-
-                        <div class="endDate">
-                            이벤트 종료일<b style="color : red;">*</b><div id="endDate">${e.endDate }</div>
-                        </div>
+	                       <div class="startDate">
+	                       		<c:choose>
+	                       			<c:when test="${empty e.startDate and empty e.endDate }">
+	                       				이벤트 시작일<b style="color : red;">*</b> <div id="startDate">상시진행</div>
+	                       			</c:when>
+	                       			<c:otherwise>
+	                       				이벤트 시작일<b style="color : red;">*</b> <div id="startDate">${e.startDate }</div>
+	                       			</c:otherwise>
+	                       		</c:choose>
+	                       </div>
+	
+	                       <div class="endDate">
+	                       		<c:choose>
+	                       			<c:when test="${empty e.startDate and empty e.endDate }">
+	                       				이벤트 종료일<b style="color : red;">*</b><div id="endDate">상시진행</div>
+	                       			</c:when>
+	                       			<c:otherwise>
+	                       				이벤트 종료일<b style="color : red;">*</b><div id="endDate">${e.endDate }</div>
+	                       			</c:otherwise>
+	                       		</c:choose>
+	                       </div>
                     </div>
 
                     <!-- 내용 -->
@@ -356,6 +370,7 @@
         </div>
     </div>
     <script>
+    // 메뉴바
     document.addEventListener("DOMContentLoaded", function () {
         const navItems = document.querySelectorAll("#nav > ul > li");
     
@@ -369,7 +384,12 @@
             });
         });
     });
-    </script>
+    
+    // 응모자확인 링크 이동 변수
+    var eventNo = ${e.eventNo}; // JSP 변수에서 자바스크립트 변수로 전달
+    var eventType = ${e.eventType};
+	</script>
+
     
 </body>
 </html>

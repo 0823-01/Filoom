@@ -6,7 +6,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>리뷰 관리::Filoom</title>
+    <title>리뷰 관리:: Filoom</title>
     <link rel="stylesheet" href="resources/css/admin.css" />
 
     <style>

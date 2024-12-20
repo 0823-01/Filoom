@@ -26,7 +26,7 @@
             gap : 10px;
         }
 
-        #no, #content, #writer, #date, #status, #winner {
+        #no, #content, #writer, #date, #win {
             box-sizing: border-box;
             font-size: 25px;
             font-weight: bold;
@@ -50,11 +50,7 @@
             margin-left: 200px;
         }
 
-        #status {
-            margin-left: 120px;
-        }
-
-        #winner {
+        #win {
             margin-left: 35px;
         }
 
@@ -89,7 +85,7 @@
         }
 
         #replyContent {
-            width : 40%;
+            width : 50%;
             text-align: left;
             cursor: pointer;
         }
@@ -103,11 +99,22 @@
             width : 20%;
         }
 
-        #replyStatus, #winnerStatus {
+        #winStatus {
             width : 10%;
         }
 
         /*페이징영역*/
+        
+        .foot {
+        	box-sizing : border-box;
+        	display: flex;
+        	justify-content: center;
+        	align-items : center;
+        	flex-direction: column;
+        	position: relative;
+        
+        }
+        
 		.pagingArea {
 		    display: flex;
 		    justify-content: center;
@@ -147,27 +154,40 @@
 		    text-decoration-line: none;
 		    color : #AB886D;
 		}
-		
-		.pagination > li>a.disabled {
-		    color: #AB886D;
-		    pointer-events: none;
+
+		.pagination > li>a.active {
+		    color: #493628; 
 		}
 		
-		.pagination > li>a.active {
+		.pagination .active .page-link {
+	
 		    color: #AB886D;
+	
+		}
+		
+		.pagination .page-link {
+		    color: #493628; 
+		    text-decoration: none;
+		}
+		
+		.pagination .disabled .page-link {
+		    color: #ccc;
+		    pointer-events: none;
+		    cursor: default;
 		}
 
         /*버튼*/
         .btn {
             padding-right : 13px;
-            text-align: right;
             box-sizing: border-box;
             display: flex;
             justify-content: flex-end;
             gap : 10px;
+            position: absolute; 
+            right: 0;
         }
 
-        #enrollForm, #applicant {
+        #back, #applicant {
             width: 170px;
             height: 38px;
             border: none;
@@ -180,11 +200,11 @@
             cursor: pointer;
         }
 
-        #enrollForm:hover, #applicant:hover {
+        #back:hover, #applicant:hover {
             transform: scale(1.1em);
         }
 
-        #enrollForm:active, #applicant:active {
+        #back:active, #applicant:active {
             background-color: #AB886D;
         }
         
@@ -220,8 +240,7 @@
                         <div id="content">댓글내용</div>
                         <div id="writer">작성자</div>
                         <div id="date">날짜</div>
-                        <div id="status">삭제여부</div>
-                        <div id="winner">당첨여부</div>
+                        <div id="win">당첨여부</div>
                     </div>
                 </div>
 
@@ -237,89 +256,82 @@
 
                     <table id="replyList">
                     	<tbody>
-	                    	<c:forEach var="r" items="${requestScope.list }">
-	                    		<tr id="list">
-		                            <td id="replyNo" class="rno">${r.replyNo }</td>
-		                            <td id="replyContent">${r.replyContent }</td>
-		                            <td id="replyWriter">${r.replyWriter }</td>
-		                            <td id="replyDate">${r.createDate }</td>
-		                            <td id="replyStatus">N</td>
-		                            <td id="winnerStatus">Y</td>
-	                        	</tr>
-	                       	</c:forEach>
+                    		<c:choose>
+                    			<c:when test="${not empty requestScope.rlist }">
+                    				<c:forEach var="r" items="${requestScope.rlist }">
+			                    		<tr class="applicant-item" id="list" >
+				                            <td id="replyNo" class="rno">${r.replyNo }</td>
+				                            <td id="replyContent">${r.replyContent }</td>
+				                            <td id="replyWriter">${r.replyWriter }</td>
+				                            <td id="replyDate">${r.createDate }</td>
+				                            <td id="winStatus">${r.winStatus }</td>
+			                        	</tr>
+	                       			</c:forEach>
+                       			</c:when>
+                       		
+                       			<c:otherwise>
+                       				<tr>
+                       					<td colspan="5" style="text-align: center; color : black; font-size : 50px;">현재 응모자가 없습니다.</td>
+                       				<tr>
+                       			</c:otherwise>
+                    		</c:choose>
+                    	
+	                    	
                     	</tbody>
                     	
                     </table>
                     
-                    <script>
-                    	$(function() {
-                    		$("#replyList>tbody>tr").click(function() {
-                    			
-                    			// 글번호 뽑기 
-                    			let eno = $(this).children(".rno").text();
-                    			console.log(eno);
-                    			
-                    			location.href = "ardetail.ev?eno=" + eno;
-                    		});
-                    		
-                    	});
-                    </script>
+                    
 
-                    <div style="box-sizing: border-box;" >
-                        <!--페이징바-->
-                        <div class="pagingArea">
-			                <ul class="pagination" id="pagination">
-			                	<c:choose>
-			                		<c:when test="${requestScope.pi.currentPage eq 1 }">
-			                			<li class="page-item disabled">
-			                				<a class="page-link" href="#">«</a>
-		                				</li>
-			                		</c:when>
-			                		<c:otherwise>
-			                			<li class="page-item">
-			                				<a class="page-link" href="alist.ev?cpage=${requestScope.pi.currentPage-1 }">«</a>
-		                				</li>
-			                		</c:otherwise>
-			                	</c:choose>
-			                	<c:forEach var="p" begin="${requestScope.pi.startPage }"
-			                					   end="${requestScope.pi.endPage }"
-			                					   step="1">
-		                			<c:choose>
-		                				<c:when test="${p ne requestScope.pi.currentPage }">
-		                					<li class="page-item">
-		                						<a class="page-link" href="alist.ev?cpage=${p }">${p }</a>
-		                					</li>
-		                				</c:when>
-		                				<c:otherwise>
-		                					<li class="page-item disabled">
-		                						<a class="page-link" href="alist.ev?cpage=${p }">${p }</a>
-		                					</li>
-		                				</c:otherwise>
-		                			</c:choose>
-			                	</c:forEach>
-			                	
-			                	<c:choose>
-			                		<c:when test="${requestScope.pi.currentPage ne requestScope.pi.maxPage }">
-			                			<li class="page-item">
-	                						<a class="page-link" href="alist.ev?cpage=${requestSCope.pi.currentPage + 1 }">»</a>
-	                					</li>
-			                		</c:when>
-			                		<c:otherwise>
-			                			<li class="page-item disabled">
-	                						<a class="page-link" href="#">»</a>
-	                					</li>
-			                		</c:otherwise>
-			                	</c:choose>
-		                	</ul>
-           				</div>
+                    <div class="foot" style="box-sizing: border-box;" >
+                        <!-- 페이징바 -->
+					    <div class="pagingArea">
+					        <ul class="pagination" id="pagination">
+					            <!-- 이전 페이지 버튼 -->
+					            <c:choose>
+					                <c:when test="${requestScope.pi.currentPage == 1}">
+					                    <li class="page-item disabled">
+					                        <a class="page-link" href="#">«</a>
+					                    </li>
+					                </c:when>
+					                <c:otherwise>
+					                    <li class="page-item">
+					                        <a class="page-link" href="alist.ev?cpage=${requestScope.pi.currentPage - 1}">«</a>
+					                    </li>
+					                </c:otherwise>
+					            </c:choose>
+					
+					            <!-- 페이지 번호 출력 -->
+					            <c:forEach var="p" begin="${requestScope.pi.startPage}" end="${requestScope.pi.endPage}">
+					                <li class="page-item ${p == requestScope.pi.currentPage ? 'active' : ''}">
+					                    <a class="page-link" href="alist.ev?cpage=${p}">${p}</a>
+					                </li>
+					            </c:forEach>
+					
+					            <!-- 다음 페이지 버튼 -->
+					            <c:choose>
+					                <c:when test="${requestScope.pi.currentPage < requestScope.pi.maxPage}">
+					                    <li class="page-item">
+					                        <a class="page-link" href="alist.ev?cpage=${requestScope.pi.currentPage + 1}">»</a>
+					                    </li>
+					                </c:when>
+					                <c:otherwise>
+					                    <li class="page-item disabled">
+					                        <a class="page-link" href="#">»</a>
+					                    </li>
+					                </c:otherwise>
+					            </c:choose>
+					        </ul>
+					    </div>
+           				
+           				<!--버튼--> 
+	                    <div class="btn">
+	                    	<button id="back" onclick="history.back();">이전으로</button>
+	                        <button id="applicant">당첨자 추첨</button>
+	                        <!--추첨여부에 따라 버튼 비활성화기-->
+	                    </div>
 		    		</div>
 
-                    <!--버튼--> 
-                    <div class="btn">
-                        <button id="enrollForm">응모자 추첨</button>
-                        <!--추첨이 완료된 경우, 버튼 조작 불가-->
-                        
-                    </div>
                 </div>
 
 
@@ -339,6 +351,64 @@
                 this.classList.add("selected");
             });
         });
+    });
+    
+    // 당첨자 추첨 
+    document.getElementById("applicant").addEventListener("click", function() {
+        // 화면에 출력된 목록에서 데이터 추출 (클래스명에 따라 대상 선택)
+        const applicants = document.querySelectorAll(".applicant-item"); // 응모자 데이터 탐색 (tr 태그)
+
+        // 댓글 작성자명 추출
+        const names = Array.from(applicants).map(item => {
+            return item.querySelector("#replyWriter").textContent.trim(); // 응모자 이름 가져오기
+        });
+        
+        if (names.length === 0) {
+            alert("추첨 가능한 응모자가 없습니다.");
+            return;
+        }
+
+        const winnerCount = 10; // 당첨자 수
+        const winners = []; // 당첨자 목록
+
+        // 중복되지 않게 당첨자 10명 뽑기
+        while (winners.length < winnerCount && names.length > 0) {
+            const randomIndex = Math.floor(Math.random() * names.length);
+            const winner = names[randomIndex];
+            winners.push(winner);
+            names.splice(randomIndex, 1); // 뽑은 사람을 배열에서 제거
+        }
+
+     	// 당첨자 출력
+        if (winners.length > 0) {
+            alert("🎉 당첨자: " + winners.join(", "));
+            
+         	// 서버로 데이터 전송
+            const eventNo = document.getElementById("eventNo").value; // 이벤트 번호
+            const winnerType = document.getElementById("winnerType").value; // 당첨자 타입(1: 댓글 작성자, 2: 버튼 응모자)
+
+            fetch("insertWin.ev", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    eventNo: eventNo,
+                    winners: winners,
+                    winnerType: winnerType, // 댓글 작성자 또는 버튼 응모자
+                }),
+            })
+                .then((response) => {
+                    if (response.ok) {
+                        alert("당첨자가 성공적으로 저장되었습니다!");
+                    } else {
+                        alert("당첨자 저장에 실패했습니다.");
+                    }
+                })
+                .catch((error) => console.error("에러 발생:", error));
+        } else {
+            alert("당첨 가능한 인원이 없습니다.");
+        }
     });
     </script>
     

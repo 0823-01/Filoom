@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import com.kh.filoom.movie.model.vo.Movie;
+import com.kh.filoom.movie.model.vo.Poster;
 
 public interface MovieService {
 	// 작품 수 체크 - 전체
@@ -63,4 +64,14 @@ public interface MovieService {
 	Movie showDetail(int movieNo); // 상세 정보 조회
 	// listScenes(); // 스틸컷 목록 조회
 	// selectReviewList(); // 리뷰 목록 조회
+	
+	// 이미지 추가 - 영화 추가/수정 공통
+	int addPoster(Poster p); // 이미지 추가
+	int deletePoster(int imageId); // 이미지 삭제 - 이미지는 추가됐는데 영화 추가가 실패시 써먹을 목적
+	
+	// === 관리자 영화 추가 페이지 ===
+	int addMovie(Movie m);
+	
+	// === 관리자 영화 수정 페이지 ===
+	int updateMovie(Movie m);
 }

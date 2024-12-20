@@ -449,8 +449,6 @@
 
         </div>
         
-<%--         <input type="hidden" value="${meosigi } id="meosigi"> --%>
-        
         <script>
         	$(function() {
         		//refreshPagingBar(??);
@@ -581,6 +579,7 @@
 	        			success: function(result) {
 	    					$(".movie-list").empty();
 	    					$(".movie-list").append(result);
+	    					$(".pagingbar").empty();
 	    					//refreshPagingBar(??);
 	    					// 검색 결과가 두 페이지 넘을 일이 있을까? 적어도 더미에선 없을 것 같은데
 	    					// 그래서 대신 이걸 함: $("pagingbar").empty();

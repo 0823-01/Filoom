@@ -426,7 +426,7 @@
 	    	AND MOVIE_TITLE LIKE '%' || #{keyword} || '%'
 	    ORDER BY MOVIE_NO DESC
 	</select>
-	
+
 	<!-- 개봉 예정작 - 제목으로 영화 검색
 	<select id="searchFromPreOpen" parameterType="string" resultMap="movieResultSet">
 		SELECT MOVIE_NO,
@@ -464,4 +464,32 @@
 	
 	</select>
 
+
+	<!-- === 영화 추가 페이지 === -->
+	<update id="addMovie" parameterType="movie">
+		INSERT INTO MOVIE (
+			MOVIE_NO, MOVIE_TITLE, OPEN_DATE, DIRECTOR,
+			GENRE, RUNTIME, SCREEN_TYPE, FILM_RATE,
+			DESCRIPTION, STARRING, TRAILER
+		) VALUES (
+			SEQ_MOV.NEXTVAL, #{movieTitle}, #{openDate}, #{director},
+			#{genre}, #{runtime}, #{screenType}, #{filmRate},
+			#{description}, #{starring}, #{trailer}
+		)
+	</update>
+	
+	<!-- 이미지 추가 (영화 추가/수정 공통) -->
+	<!-- <update id="addPoster" parameterType="poster">
+	</update> -->
+	
+	<!-- === 영화 수정 페이지 === -->
+	<update id="updateMovie" parameterType="movie">
+		UPDATE MOVIE
+		SET MOVIE_TITLE = #{movieTitle}, OPEN_DATE = #{openDate},
+			DIRECTOR = #{director}, GENRE = #{genre},
+			RUNTIME = #{runtime}, SCREEN_TYPE = #{screenType},
+			DESCRIPTION = #{description}, STARRING = #{starring},
+			TRAILER = #{trailer}
+		WHERE STATUS = 'Y' AND MOVIE_NO = #{movieNo}
+	</update>
 </mapper>

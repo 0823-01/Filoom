@@ -180,10 +180,23 @@ public class BookServiceImple implements BookService {
 
 	//결제전 쿠폰 유효성 검사
 	@Override
-	public int checkCoupons(int userNo, Map<String, List<String>> couponNos) {
-		// TODO Auto-generated method stub
-		return 0;
+	public int selectCheckCoupon(List<Integer> couponNos,int userNo) { 
+		return bookDao.selectCheckCoupon(sqlSession,couponNos,userNo);
 	}
+
+	//쿠폰에 북넘버 추가하기
+	@Override
+	public int setCouponBookNo(List<Integer> couponNos, int userNo, int bookNo) {
+		return  bookDao.setCouponBookNo(sqlSession,couponNos,userNo,bookNo);
+		
+	}
+	//유효성 테스트 통과x, bookNo 지우기
+	@Override
+	public int deleteBookNo(int bookNo, int userNo) {
+		return bookDao.deleteBookNo(sqlSession,bookNo,userNo);
+	}
+
+
 
 	
 
