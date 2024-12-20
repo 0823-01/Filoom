@@ -89,13 +89,16 @@ public class BookDao {
 
 	
 	//유효성 검사 + 좌석일렬번호 검사
-	public ArrayList<BookingSeat> getBookingseatNoList(SqlSessionTemplate sqlSession, ArrayList<String> seatNos, int playingNo) {
+	public ArrayList<BookingSeat> getBookingseatNoList(SqlSessionTemplate sqlSession,
+														ArrayList<String> seatNos, 
+														int playingNo,
+														ArrayList<String> bookingSeatNos) {
 		
 		
 		HashMap<String,Object> map = new HashMap<>();
 		map.put("seatNos", seatNos);
 		map.put("playingNo", playingNo);
-		
+		map.put("bookingSeatNos", bookingSeatNos);
 		return (ArrayList)sqlSession.selectList("bookMapper.getBookingseatNoList",map); 
 										
 										
@@ -150,13 +153,6 @@ public class BookDao {
 		return sqlSession.selectOne("couponMapper.selectCheckCoupon",map);
 	}
 
-	public int setCouponBookNo(SqlSessionTemplate sqlSession, List<Integer> couponNos, int userNo, int bookNo) {
-		Map<String,Object> map = new HashMap();
-		map.put("couponNos", couponNos);
-		map.put("userNo", userNo);
-		map.put("bookNo", bookNo);
-		return sqlSession.update("couponMapper.setCouponBookNo",map);
-	}
 
 	public int deleteBookNo(SqlSessionTemplate sqlSession, int bookNo, int userNo) {
 		Map<String,Object> map = new HashMap();
@@ -164,4 +160,36 @@ public class BookDao {
 		map.put("userNo", userNo);
 		return sqlSession.delete("bookMapper.deleteBookNo",map);
 	}
+
+	public int checkBookingSeat(SqlSessionTemplate sqlSession, int playingNo, ArrayList<String> seatNos) {
+		Map<String,Object>map=new HashMap();
+		map.put("playingNo", playingNo);
+		map.put("seatNos", seatNos);
+		return sqlSession.selectOne("bookMapper.checkBookingSeat",map);
+	}
+
+	public int insertBookingSeats(SqlSessionTemplate sqlSession, int playingNo, ArrayList<String> seatNos) {
+		Map<String,Object>map=new HashMap();
+		map.put("playingNo", playingNo);
+		int insertResult =1;
+		for(String seatNo : seatNos) {
+			map.put("seatNo", seatNo);
+			insertResult *= sqlSession.insert("bookMapper.insertBookingSeats",map);
+		}
+
+		return insertResult; 
+		
+	}
+	
+	
+	
+	//쿠폰 업데이트 수정하기
+	public int setCouponBookNo(SqlSessionTemplate sqlSession, List<Integer> couponNos, int userNo, int bookNo) {
+		Map<String,Object> map = new HashMap();
+		map.put("couponNos", couponNos);
+		map.put("userNo", userNo);
+		map.put("bookNo", bookNo);
+		return sqlSession.update("couponMapper.setCouponBookNo",map);
+	}
+	
 }

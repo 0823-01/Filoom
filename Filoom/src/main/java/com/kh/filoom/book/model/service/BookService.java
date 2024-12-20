@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.transaction.annotation.Transactional;
 
 import com.kh.filoom.book.model.vo.BookingSeat;
 import com.kh.filoom.book.model.vo.Playing;
@@ -50,8 +51,14 @@ public interface BookService {
 	
 	//결제============================================================
 	
+	//좌석 등록전 유효성 검사
+	int checkBookingSeat(int playingNo, ArrayList<String> seatNos);
+	
+	//좌석등록하기
+	int insertBookingSeats(int playingNo, ArrayList<String> seatNos);
+
 	//상영좌석 번호 구하기+유효성검사
-	ArrayList<BookingSeat> getBookingSeatNoList(ArrayList<String> seatNoList, int playingNo);
+	ArrayList<BookingSeat> getBookingSeatNoList(ArrayList<String> seatNoList, int playingNo,ArrayList<String> bookingSeatNos);
 
 	//좌석 유효시간 늘려주기
 	int updateTimeLimit(ArrayList<BookingSeat> bookingSeatNoList);
@@ -74,15 +81,16 @@ public interface BookService {
 	//결제전 쿠폰 유효성 검사
 	int selectCheckCoupon(List<Integer> couponNos, int userNo);
 
-	//쿠폰에 bookNo 추가하기(예비)
-	int setCouponBookNo(List<Integer> couponNos, int userNo, int bookNo);
-
+	
+	
 	//유효성 테스트 통과x, bookNo 지우기
 	int deleteBookNo(int bookNo, int userNo);
 
-
+	
 
 	
+	//쿠폰에 bookNo 추가하기(예비) ///////쿠폰 업데이트에 사용하기
+	int setCouponBookNo(List<Integer> couponNos, int userNo, int bookNo);
 	
 
 }

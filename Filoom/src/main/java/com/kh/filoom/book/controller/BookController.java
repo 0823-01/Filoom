@@ -244,8 +244,12 @@ public class BookController {
 
 	
 	@GetMapping("paymentForm.pm")
-	public ModelAndView paymentForm(ModelAndView mv,HttpSession session,int playingNo,  @RequestParam("seatNos")ArrayList<String> seatNos) {
+	public ModelAndView paymentForm(ModelAndView mv,
+									HttpSession session,
+									int playingNo,  
+									@RequestParam("seatNos")ArrayList<String> seatNos) {
 		
+		System.out.println("결제창 오픈");
 		//session에서 회원번호 가져오기
 		Member loginUser = (Member)session.getAttribute("loginUser");
 
@@ -257,34 +261,58 @@ public class BookController {
 		log.debug("1==결제폼 요청(상영번호+좌석번호 seatNos : "+seatNos +"상영번호 : "+playingNo + " ,회원번호 : " +userNo );
 		
 		
-		//1.유효성검사 + 상영좌석일렬번호 구하기
+		//1.좌석유효성검사 + 좌석등록하기 + 상영좌석일렬번호 구하기
 		//좌석번호리스트, 영화상영번호 넘기면서, 유효성검사 (둘중하나라도 예약불가 / 둘다 예약가능일경우)
 		
-		ArrayList<BookingSeat> bookingSeatNoList = new ArrayList();
+		//좌석 검사하기 (선택된 좌석이 없는경우 통과 : 0 일경우 통과
+		int checkSeatResult = bookService.checkBookingSeat(playingNo,seatNos);
 		
-		bookingSeatNoList = bookService.getBookingSeatNoList(seatNos,playingNo);
-
-		log.debug("상영좌석 일렬번호 리스트 " +bookingSeatNoList);
+		log.debug("좌석유효성 검사 0 이어야 함 : " + checkSeatResult);
 		
-		if(bookingSeatNoList==null) { //유효성 실패
-			
-			log.debug("2==유효성테스트 실패, 메인페이지로 ->");
-			session.setAttribute("alertMsg", "죄송합니다. 시간이 오래 경과되어 다시 시도해주시기 바랍니다.");
+		if(checkSeatResult!=0) { //검사 통과 실패
+			log.debug("좌석 유효성 검사 통과 이미  x");
+			session.setAttribute("alertMsg", "죄송합니다. 다시 시도해주시기 바랍니다.");
 			mv.setViewName("redirect:/"); 
-			
 		}else {
-
-			log.debug("2==유효성테스트 성공");
-			
-			//유효시간 5분 늘려주기
-			int updateTimeLimit = bookService.updateTimeLimit(bookingSeatNoList);
-			log.debug("3==TimeLimit 늘려주기 : 처리된행의갯수" + updateTimeLimit);
-			 
-			
-		//3.결제화면에 넘길 정보 조회, mv에 담기
 			
 
-	
+
+			//좌석 등록하기 
+			int insertResult = bookService.insertBookingSeats(playingNo,seatNos);
+			
+			log.debug("좌석 등록하기+5분 , 1이어야함  : "+insertResult );
+			
+			
+			//등록한 좌석 번호 가져오기
+			ArrayList<BookingSeat> bookingSeatNoList = new ArrayList();
+			
+			bookingSeatNoList = bookService.getBookingSeatNoList(seatNos,playingNo,null); 
+			//좌석이름들과, 상영번호로 좌석번호 가져오기 
+
+			log.debug("상영좌석 일렬번호 리스트 " +bookingSeatNoList);
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////	
+			
+			/* 필요없어짐
+			if(bookingSeatNoList==null) { //유효성 실패
+				
+				log.debug("2==유효성테스트 실패, 메인페이지로 ->");
+				session.setAttribute("alertMsg", "죄송합니다. 시간이 오래 경과되어 다시 시도해주시기 바랍니다.");
+				mv.setViewName("redirect:/"); 
+				
+			}else {
+
+				log.debug("2==유효성테스트 성공");
+				
+				//유효시간 5분 늘려주기
+				int updateTimeLimit = bookService.updateTimeLimit(bookingSeatNoList);
+				log.debug("3==TimeLimit 늘려주기 : 처리된행의갯수" + updateTimeLimit);
+			*/
+///////////////////////////////////////////////////////////////////////////////////////////////////////				
+			//3.결제화면에 넘길 정보 조회, mv에 담기
+				
+
+		
 			//*상영번호 -> 영화정보,이미지,상영정보, 상영관정보 조회
 			Movie movie = bookService.selectMovieForPlayingNo(playingNo);
 			
@@ -307,7 +335,10 @@ public class BookController {
 			mv.setViewName("book/paymentForm");
 			
 			
+			
 		}
+		
+		
 
 		
 
@@ -354,33 +385,7 @@ public class BookController {
 		int bookNo = bookService.setBookNo(userNo);
 		log.debug("BOOKING_NO 생성  bookNo = " + bookNo);
 		
-		
-		//==쿠폰있는경우==
-		if(!couponNos.isEmpty()) {
-			int couponResult = bookService.selectCheckCoupon(couponNos,userNo);
-			
-			log.debug("쿠폰 유효성 , 사용가능한 쿠폰 수 : " +couponResult);
-			
-			if(couponResult == couponNos.size()) {// 유효성테스트 통과
-				
-				//쿠폰에 북넘버 추가 하기 (처리행갯수)
-				//int result = bookService.setCouponBookNo(couponNos,userNo,bookNo);
-				
-				log.debug("[중지]쿠폰에 bookNo 추가하기 - 처리된행의갯수 : "/* + result */);
-				
-			}else { //유효성 테스트 실패
-				session.setAttribute("alertMsg", "[CouponError] 잘못된 접근입니다. ");
-				
-				//북넘버 제거하기
-				int deleteResult = bookService.deleteBookNo(bookNo,userNo);
-				log.debug("쿠폰유효성테스트실패 : 북넘버 제거 행갯수 " +deleteResult);
-				
-				return "redirect:/";
-			}
-			
-		}
-		
-		
+
 		//결제할 가격
 		int price = (int)(double)data.get("price");
 		log.debug("결제할 가격 : "+ price );
@@ -415,30 +420,82 @@ public class BookController {
 		return new Gson().toJson(payInfo); 	
 	}
 
+
 	
-	
-	
-	//결제시 필요한 정보 암호화 메소드
-	public final synchronized String getyyyyMMddHHmmss(){
-		SimpleDateFormat yyyyMMddHHmmss = new SimpleDateFormat("yyyyMMddHHmmss");
-		return yyyyMMddHHmmss.format(new Date());
-	}
-	
-	
-	//결제 처리후 화면 띄어주기
+	//결제 처리
 	@PostMapping(value="payResult.pm")
-	public String PaymentResult(ModelAndView mv,@RequestParam Map<String, String> request) throws Exception {
+	public String PaymentResult(ModelAndView mv,
+								@RequestParam Map<String, String> request,
+								@RequestParam("couponNos")ArrayList<Integer> couponNos,
+								@RequestParam("bookingSeatNos")ArrayList<String> bookingSeatNos,
+								HttpSession session
+								) throws Exception {
 		
+		log.debug("결제 처리 메소드 실행");
+		
+		int userNo = ((Member)session.getAttribute("loginUser")).getUserNo();
+		int bookNo = Integer.parseInt(request.get("bookNo"));
+				
+				
 		//여기서는 유효성 검사 하기
-		//좌석, 
+		//좌석. 쿠폰
+		
+		//좌석 유효성 검사 + 좌석 정보 가져오기
+		ArrayList<BookingSeat> bookingSeatNoList = new ArrayList();
+		
+		int playingNo = Integer.parseInt(request.get("playingNo"));
+		
+		
+		
+		bookingSeatNoList = bookService.getBookingSeatNoList(null,playingNo,bookingSeatNos); 
+		mv.addObject(bookingSeatNoList);
+		
+		log.debug("좌석 유효성 검사+ 정보조회 bookingSeatNoList"+bookingSeatNoList.toString());
+	
+		
+		
+		
+		//쿠폰 유효성 검사
+		//==쿠폰있는경우==
+		if(!couponNos.isEmpty()) {
+			int couponResult = bookService.selectCheckCoupon(couponNos,userNo);
+			
+			log.debug("쿠폰 유효성 , 사용가능한 쿠폰 수 : " +couponResult);
+			
+			if(couponResult == couponNos.size()) {// 유효성테스트 통과
+				
+				
+				//쿠폰 유효성 통과 
+				log.debug("[중지]쿠폰에 bookNo 추가하기 - 처리된행의갯수 : "/* + result */);
+				
+			}else { //유효성 테스트 실패
+				session.setAttribute("alertMsg", "[CouponError] 잘못된 접근입니다. ");
+				
+				//북넘버 제거하기
+				int deleteResult = bookService.deleteBookNo(bookNo,userNo);
+				log.debug("쿠폰유효성테스트실패 : 북넘버 제거 행갯수 " +deleteResult);
+				
+				
+			}
+			
+		}
 		
 		
 		
 		
+		//좌석이름들과, 상영번호로 좌석번호 가져오기 
+		
+		
+		
+		int payResult = 0; //0실패 : 1성공
 		if(request.get("AuthResultCode")==null) { //결제금액이 0원인 경우
 			log.debug("결제금액이 없는 경우");
+			payResult = 1;
+			//{couponNos=10, GoodsName=조커, totalCost=2000, Amt=0, MID=nicepay00m, Moid=344, BuyerName=일이삼, BuyerEmail=123@naver.com, EdiDate=20241220111755, SignData=766615c5fe07628df16947e3a6b7447330eb862a0dbc0f61779f4538c7778591, bookNo=344, playingNo=1}
+			
 		}else { //결제 금액이 있을경우
 			log.debug("결제금액이 있는경우");
+			//{couponNos=10, PayMethod=CARD, GoodsName=조커, totalCost=2000, Amt=1000, MID=nicepay00m, Moid=345, BuyerName=일이삼, BuyerEmail=123@naver.com, EdiDate=20241220112035, SignData=51067061c6539cfa1a629d4bb3209978d72640d3cd725693411134d810ec3df1, bookNo=345, movieNo=1, VerifySType=S, EncGoodsName=, EncBuyerName=, NpDirectYn=N, NpDirectLayer=Y, NpForwardNew=Y, JsVer=nicepay-pgweb, NpSvcType=WEBSTD, DeployedVer=1.0.0, DeployedDate=241031, DeployedFileName=nicepay-pgweb, AuthResultCode=0000, AuthResultMsg=인증 성공, AuthToken=NICETOKNCD85572D024203D8A3938E800FF439E8, TxTid=nicepay00m01012412201120514170, NextAppURL=https://dc1-api.nicepay.co.kr/webapi/pay_process.jsp, NetCancelURL=https://dc1-api.nicepay.co.kr/webapi/cancel_process.jsp, AuthFlg=undefined, BuyerAuthNum=undefined, ServiceIDC=undefined, Signature=adba6a463b0f038e8ae35490cf6856b556d7f3d7c39d4bdf067cf305a74ee96d}
 
 			
 			/*
@@ -456,7 +513,7 @@ public class BookController {
 			String payMethod 		= (String)request.get("PayMethod"); 		// 결제수단
 			String mid 				= (String)request.get("MID"); 				// 상점 아이디
 			String moid 			= (String)request.get("Moid"); 			// 상점 주문번호
-			String amt 				= (String)request.get("Amt"); 				// 결제 금액
+			String amt 				= (String)request.get("Amt"); 				// 결제 금액o
 			String reqReserved 		= (String)request.get("ReqReserved"); 		// 상점 예약필드
 			String netCancelURL 	= (String)request.get("NetCancelURL"); 	// 망취소 요청 URL
 			//String authSignature = (String)request.getParameter("Signature");			// Nicepay에서 내려준 응답값의 무결성 검증 Data
@@ -470,7 +527,7 @@ public class BookController {
 			 */
 			DataEncrypt sha256Enc 	= new DataEncrypt();
 			String merchantKey 		= "EYzu8jGGMfqaDEp76gSckuvnaHHu+bC4opsSN6lHv3b2lurNYkVXrZ7Z1AoqQnXI3eLuaUFyoRNC6FkrzVjceg=="; // 상점키
-
+			
 			//인증 응답 Signature = hex(sha256(AuthToken + MID + Amt + MerchantKey)
 			//String authComparisonSignature = sha256Enc.encrypt(authToken + mid + amt + merchantKey);
 
@@ -558,7 +615,7 @@ public class BookController {
 					*/
 					if(PayMethod != null){
 						if(PayMethod.equals("CARD")){
-							if(ResultCode.equals("3001")) paySuccess = true; // 신용카드(정상 결과코드:3001)       	
+							if(ResultCode.equals("3001")) paySuccess = true; // 신용카드(정상 결과코드:3001)
 						}else if(PayMethod.equals("BANK")){
 							if(ResultCode.equals("4000")) paySuccess = true; // 계좌이체(정상 결과코드:4000)	
 						}else if(PayMethod.equals("CELLPHONE")){
@@ -587,9 +644,29 @@ public class BookController {
 		
 		
 		
-		return "book/paymentResult";
+		return "redirect:/resultForm.pm";
 		//return "book/payResult_utf";
 
+	}
+	
+	@GetMapping("resultForm.pm")
+	public ModelAndView payResultFrom(ModelAndView mv,HttpSession session) {
+		
+		log.debug("결제창 호출 메소드");
+
+		mv.setViewName("book/paymentResult");
+		return mv;
+		//return "book/payResult_utf";
+	}
+	
+	
+	
+	
+	
+	//결제시 필요한 정보 암호화 메소드
+	public final synchronized String getyyyyMMddHHmmss(){
+		SimpleDateFormat yyyyMMddHHmmss = new SimpleDateFormat("yyyyMMddHHmmss");
+		return yyyyMMddHHmmss.format(new Date());
 	}
 	
 	

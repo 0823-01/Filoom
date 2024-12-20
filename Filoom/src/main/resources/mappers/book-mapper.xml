@@ -150,7 +150,7 @@
 		    P.PLAYING_NO =  #{playingNo}
 	</select>
 	
-	
+
 	<select id = "insertBookingSeat" parameterType="bookingseat">
 		INSERT INTO BOOKING_SEAT VALUES (
             SEQ_BSNO.NEXTVAL,
@@ -231,11 +231,20 @@
 		 WHERE BS.BOOK_NO IS NULL
 		   AND BS.PLAYING_NO = #{playingNo}
 		   AND TIMELIMIT > SYSDATE
-		   AND
-		   	<foreach item="item" collection="seatNos" open="SEAT_NO IN (" separator="," close=")">
-		   		#{item}
-		   	</foreach>
-		   
+		   <choose>
+		   		<when test="seatNos != null" >
+				   AND
+				   	<foreach item="item" collection="seatNos" open="SEAT_NO IN (" separator="," close=")">
+				   		#{item}
+				   	</foreach>
+		   		</when>
+		   		<when test="bookingSeatNos != null">
+		   			And
+		   			<foreach item="item" collection="bookingSeatNos" open="BOOKING_SEAT_NO IN (" separator="," close=")">
+				   		#{item}
+				   	</foreach>
+		   		</when>
+		   </choose>
 		   
 	</select>
 	
@@ -277,4 +286,33 @@
 		  WHERE USER_NO = #{userNo}
 		    AND BOOK_NO = #{bookNo}	
 	</delete>
+	
+	<select id="checkBookingSeat" parameterType="map" resultType="int">
+		SELECT COUNT(BOOKING_SEAT_NO)
+		  FROM BOOKING_SEAT BS
+		  JOIN SCREEN_SEAT SS ON(BS.SSEAT_NO = SS.SSEAT_NO)
+		 WHERE PLAYING_NO=#{playingNo}
+		   AND TIMELIMIT &gt; SYSDATE
+		   AND
+			<foreach item="item" collection="seatNos" open="SS.SEAT_NO IN (" separator="," close=")" >
+				 #{item}
+			</foreach>
+			  	
+	</select>
+	
+ 	<insert id="insertBookingSeats" parameterType="map">
+		
+		INSERT INTO BOOKING_SEAT VALUES
+		           (SEQ_BSNO.NEXTVAL,
+		            SYSDATE+INTERVAL '5' MINUTE,
+		            (SELECT SSEAT_NO
+		               FROM SCREEN_SEAT
+		              WHERE SEAT_NO = #{seatNo}
+		                AND SCREEN_NO = (SELECT SCREEN_NO 
+		                                    FROM PLAYING
+		                                   WHERE PLAYING_NO = #{playingNo})
+					 ),
+		            #{playingNo},
+		            NULL)
+	</insert>
 </mapper>
