@@ -19,7 +19,7 @@
     <!-- fontawesome 연동 - 검색 아이콘 넣을 용도 -->
     <!-- ※ 계정을 파야 embed code를 제공해주던데
      혹시 다른 분들 자리에서도 검색 아이콘 뜨는지 확인바람 -->
-     <!-- <script src="https://kit.fontawesome.com/4c4be5559b.js" crossorigin="anonymous"></script> -->
+     <script src="https://kit.fontawesome.com/4c4be5559b.js" crossorigin="anonymous"></script>
 
     <style>
         #admin_page {
@@ -194,9 +194,9 @@
                      <!-- 목록이 임시로 사용자 페이지와 동일한 DB 기반으로 나오게 만든 관계로 검색 버튼을 임시로 상세관리 페이지로 이어놨음 -->
                     <div class="middle">
                         <input type="search" class="search-bar" placeholder="1승...">
-                        <!-- <i class="fa-solid fa-magnifying-glass" onclick="location.href = 'admin.managemovie.mo';"></i> -->
-                        <img class="fa-magnifying-glass" src="resources/images/posters/searchicon_pngtree.png"
-                            style="width:25px; height: 26px;" onclick="location.href = 'admin.managemovie.mo';">
+                        <i class="fa-solid fa-magnifying-glass" onclick="location.href = 'admin.managemovie.mo';"></i>
+                        <!-- <img class="fa-magnifying-glass" src="resources/images/posters/searchicon_pngtree.png"
+                            style="width:25px; height: 26px;" onclick="location.href = 'admin.managemovie.mo';"> -->
                     </div>
 
                     <div class="edge_right" style="padding-right:33px;">

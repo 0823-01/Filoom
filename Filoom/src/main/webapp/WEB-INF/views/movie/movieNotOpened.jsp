@@ -268,6 +268,7 @@
 	        			success: function(result) {
 	    					$(".movie-list").empty();
 	    					$(".movie-list").append(result);
+	    					$(".pagingbar").empty();
 	    				},
 	    				error: function() {
 	    					alert("Mission Failure");

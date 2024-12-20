@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.kh.filoom.movie.model.dao.MovieDao;
 import com.kh.filoom.movie.model.vo.Movie;
+import com.kh.filoom.movie.model.vo.Poster;
 
 @Service
 public class MovieServiceImpl implements MovieService {
@@ -116,7 +117,27 @@ public class MovieServiceImpl implements MovieService {
 	@Override
 	public int addMovie(Movie m) {
 		// TODO Auto-generated method stub
-		return 0;
+		return mDao.addMovie(sqlSession, m);
+	}
+
+	public int updateMovie(Movie m) {
+		// TODO Auto-generated method stub
+		return mDao.updateMovie(sqlSession, m);
+	}
+
+	// POSTER 테이블에 첨부한 이미지를 추가하는 용도 (영화 추가, 수정)
+	@Override
+	public int addPoster(Poster p) {
+		// TODO Auto-generated method stub
+		return mDao.addPoster(sqlSession, p);
+	}
+
+	// 영화 수정시 기존 이미지 삭제, 영화 삭제시 해당 이미지 삭제용 메소드
+	// + 영화 추가시 이미지 첨부는 성공했으나, 영화 추가에 실패시 남겨진 이미지 처리 용도로도 쓰임 
+	@Override
+	public int deletePoster(int imageId) {
+		// TODO Auto-generated method stub
+		return mDao.deletePoster(sqlSession, imageId);
 	}
 
 	
