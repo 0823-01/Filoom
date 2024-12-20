@@ -46,6 +46,17 @@
 	<result column="DRAWING_STATUS" property="drawingStatus" />
 </resultMap>
 
+<!-- Winners 테이블로부터 조회된 ResultSet을 winners VO 타입으로 옮겨주는 ResultMap -->
+<resultMap id="winnersResultSet" type="winners">
+	<id column="WINNER_NO" property="winnerNo" />
+	<result column="REF_ENO" property="refEno" />
+	<result column="WINNER" property="winner" />
+	<result column="WINNER_TYPE" property="winnerType" />
+	<result column="WIN_STATUS" property="winStatus" />
+	<result column="WIN_DATE" property="winDate" />
+	<result column="COUPON_NO" property="couponNo" />
+</resultMap>
+
 
 <!-- 사용자 -->
 <!-- 241218 한혜원, 이벤트 추천게시글 목록조회 -->
@@ -200,7 +211,7 @@
 	     , CHANGE_NAME AS "CONTENTIMG1"
 	     , EVENT_TITLE
 	     , TO_CHAR(START_DATE, 'YYYY-MM-DD') "START_DATE"
-	     , TO_CHAR(END_DATE, 'YYYY-MM-DD-') "END_DATE"
+	     , TO_CHAR(END_DATE, 'YYYY-MM-DD') "END_DATE"
 	     , E.EVENT_STATUS
 	     , E.STATUS
 	  FROM EVENT E
@@ -251,10 +262,13 @@
 	     , REPLY_CONTENT
 	     , TO_CHAR(CREATE_DATE, 'YYYY-MM-DD AM HH:MI:SS') AS "CREATE_DATE"
 	     , DRAWING_STATUS 
+	     , WIN_STATUS
 	  FROM REPLY R
 	  JOIN MEMBER ON (REPLY_WRITER = USER_NO)
-	 WHERE REF_ENO = #{eventNo}
+	  LEFT JOIN WINNERS W ON (R.REF_ENO = W.REF_ENO AND W.WINNER_TYPE = 1)
+	 WHERE R.REF_ENO = #{eventNo}
 	   AND R.STATUS = 'Y'
+	 ORDER BY REPLY_NO DESC
 </select>
 
 <!-- 241219 한혜원, 응모 개수 확인 -->
@@ -270,9 +284,19 @@
 	     , USER_ID AS "USER_NO"
 	     , TO_CHAR(APPLICATION_DATE, 'YYYY-MM-DD AM HH:MI:SS') AS "APPLICATION_DATE"
 	     , DRAWING_STATUS
+	     , WIN_STATUS
 	  FROM APPLICANT A
 	  JOIN MEMBER M ON (A.USER_NO = M.USER_NO)
-	 WHERE REF_ENO = #{eventNo}
+	  LEFT JOIN WINNERS W ON (A.REF_ENO = W.REF_ENO)
+	 WHERE A.REF_ENO = #{eventNo}
+	 ORDER BY APPLICANT_NO DESC
 </select>
+
+<!-- 당첨자 -->
+<!-- 241220 한혜원, 당첨자 추가 -->
+<insert id="insertWinners" parameterType="winners">
+	INSERT INTO WINNERS(WINNER_NO, REF_ENO, WINNER, WINNER_TYPE, WIN_STATUS, WIN_DATE)
+	VALUES(SEQ_WNO.NEXTVAL, #{refEno}, #{winner}, #{winnerType}, 'Y', SYSDATE)
+</insert>
 
 </mapper>

@@ -16,4 +16,5 @@ public class Applicant {
 	private String userNo; 	 			// 응모한 회원번호
 	private String applicationDate; 	// 응모한날짜
 	private String drawingStatus; 		// 추첨여부
+	private String winStatus; // 테이블에는 없지만 필요해서 만든거
 }

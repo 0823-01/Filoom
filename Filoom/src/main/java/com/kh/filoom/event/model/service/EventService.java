@@ -90,6 +90,9 @@ public interface EventService {
 	// 버튼 응모자 목록조회 서비스 
 	List<Applicant> adminSelectApplicantList(Map<String, Object> params);
 
+	// 당첨자 추가
+	int insertWinners(Map<String, Object> params);
+
 
 
 
