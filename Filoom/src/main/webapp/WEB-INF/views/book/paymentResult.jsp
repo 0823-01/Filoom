@@ -290,6 +290,53 @@ body{
                 </div>
             </div>
         </div>
+        
+        	<table>
+		<%-- <%if("9999".equals(resultJsonStr)){%> --%>
+		<tr>
+			<th>승인 통신 실패로 인한 망취소 처리 진행 결과</th>
+			<td>ResultCode</td>
+		</tr>
+		<%-- <%}else{%> --%>
+		<tr>
+			<th>결과 내용</th>
+			<td>ResultMsg</td>
+		</tr>
+		<tr>
+			<th>결제수단</th>
+			<td>PayMethod</td>
+		</tr>
+		<tr>
+			<th>상품명</th>
+			<td>GoodsName</td>
+		</tr>
+		<tr>
+			<th>결제 금액</th>
+			<td>Amt</td>
+		</tr>
+		<tr>
+			<th>거래 번호</th>
+			<td>TID</td>
+		</tr>
+		<%-- <%/*if(Signature.equals(paySignature)){%> --%>
+		<tr>
+			<th>Signature</th>
+			<td>Signature</td>
+		</tr>
+		<%-- <%}else{%> --%>
+		<tr>
+			<th>승인 Signature</th>
+			<td>Signature</td>
+		</tr>
+		<tr>
+			<th>생성 Signature</th>
+			<td>paySignature</td>
+		</tr> 
+		<%-- <%}*/}%> --%>
+	</table>
+        
+        
+        
 
         <!-- 버튼 영역 -->
 
