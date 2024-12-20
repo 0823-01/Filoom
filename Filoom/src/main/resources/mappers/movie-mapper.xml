@@ -84,7 +84,10 @@
 		     , M.RUNTIME
 		     , M.SCREEN_TYPE
 		     , M.FILM_RATE
-		     , M.DESCRIPTION
+		     , CASE 
+			        WHEN LENGTH(M.DESCRIPTION) > 120 THEN SUBSTR(M.DESCRIPTION, 1, 120) || '...'
+			        ELSE M.DESCRIPTION
+		       END AS DESCRIPTION
 		     , M.STARRING
 		     , M.STATUS
 		     , P.IMAGE_PATH
@@ -97,6 +100,37 @@
 		  AND M.MOVIE_NO = (SELECT MIN(MOVIE_NO)
 		                    FROM MOVIE
 		                    WHERE STATUS = 'Y')
+	
+	</select>
+	
+	<select id = "selectSearchFirstMovie" parameterType="hashmap" resultMap="movieResultSet">
+		
+		SELECT M.MOVIE_NO
+		     , M.MOVIE_TITLE
+		     , M.PREMIERE
+		     , M.OPEN_DATE
+		     , M.RUNTIME
+		     , M.SCREEN_TYPE
+		     , M.FILM_RATE
+		     , CASE 
+			        WHEN LENGTH(M.DESCRIPTION) > 120 THEN SUBSTR(M.DESCRIPTION, 1, 120) || '...'
+			        ELSE M.DESCRIPTION
+		       END AS DESCRIPTION
+		     , M.STARRING
+		     , M.STATUS
+		     , P.IMAGE_PATH
+		     , P.FILE_LEVEL
+		     , P.FILE_CODENAME
+		FROM MOVIE M
+		JOIN POSTER P 
+		    ON M.MOVIE_NO = P.MOVIE_NO
+		WHERE M.STATUS = 'Y'
+		  AND M.MOVIE_NO = (
+		        SELECT MIN(MOVIE_NO)
+		        FROM MOVIE
+		        WHERE STATUS = 'Y'
+		          AND MOVIE_TITLE LIKE '%' || #{searchMovieKeyword} || '%'
+		    )
 	
 	</select>
 	
@@ -128,16 +162,31 @@
 	<!-- 예매페이지 검색 기능 -->
 	<select id = "movieSearch" parameterType="hashmap" resultMap="movieResultSet">
 		
-		SELECT MOVIE_NO
-		FROM MOVIE
-		WHERE MOVIE_TITLE LIKE #{searchMovieKeyword}
-		AND STATUS = 'Y'
+		SELECT M.MOVIE_NO
+		     , M.MOVIE_TITLE
+		     , M.PREMIERE
+		     , TO_CHAR(M.OPEN_DATE, 'YYYY MM DD') AS OPEN_DATE
+		     , M.RUNTIME
+		     , M.SCREEN_TYPE
+		     , M.FILM_RATE
+		     , M.DESCRIPTION
+		     , M.STARRING
+		     , M.STATUS
+		     , P.IMAGE_PATH
+		     , P.FILE_CODENAME
+		FROM MOVIE M
+		LEFT JOIN POSTER P
+		ON M.MOVIE_NO = P.MOVIE_NO
+		   AND P.FILE_LEVEL = 1
+		WHERE M.MOVIE_TITLE LIKE '%' || #{searchMovieKeyword} || '%'
+		  AND M.STATUS = 'Y'
+		 
 	
 	</select>
 
 
 	<!-- 결제페이지 : 영화,상영정보 조회 -->
-	<select id="selectMovieForPlayingNo" parameterType="int" resultMap="movieResultSet">
+	<select id="selectMovieForPlayingNo" parameterType="hashmap" resultMap="movieResultSet">
 		SELECT MOVIE_NO, MOVIE_TITLE, DIRECTOR, GENRE, RUNTIME, FILM_RATE, FILE_CODENAME, IMAGE_PATH, PLAYING_NO, PLAYTIME,SCREEN_NAME, SCREEN_INFO
 		  FROM MOVIE M 
 		  JOIN POSTER  USING(MOVIE_NO)
@@ -393,5 +442,26 @@
 	    ORDER BY MOVIE_NO DESC
 	</select>
 	-->
+	
+	<!-- 영화 페이지 상세 보기 -->
+	<select id = "showDetail" parameterType="int" resultMap="movieResultSet">
+
+		SELECT MOVIE_NO,
+		    MOVIE_TITLE,
+		    OPEN_DATE,
+		    DIRECTOR,
+		    GENRE,
+		    RUNTIME,
+		    SCREEN_TYPE,
+		    FILM_RATE,
+		    DESCRIPTION,
+		    STARRING,
+		    STATUS,
+		    TRAILER
+		FROM MOVIE
+		WHERE MOVIE_NO = #{movieNo}
+	
+	
+	</select>
 
 </mapper>

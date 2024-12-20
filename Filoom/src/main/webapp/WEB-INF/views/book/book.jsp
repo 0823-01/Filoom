@@ -57,6 +57,7 @@
             text-decoration: none; /* 밑줄 제거 */
             color: inherit; /* 부모 색상 따라감 */
             display: block; /* 중앙 정렬을 위해 block으로 설정 */
+            cursor: default;
         }
 
         .transition {
@@ -77,6 +78,35 @@
         	width:20px;
         	height:20px;
         }
+        
+        #detailViewButton{
+        
+        	width:100px; 
+        	height:40px; 
+        	background-color: transparent;
+        	color:#D9D9D9;
+        	font-size : 25px;
+        	font-weight:600;
+        
+        }
+        
+        #detailViewButton>button{
+        	background-color: none;
+        
+        }
+        
+        #searchButton{
+        
+        	font-size:15px;
+        
+        }
+        
+        #searchButton:hover{
+        	background-color:#151515;
+        	color:white;
+        
+        }
+        
         
         
     </style>
@@ -152,7 +182,13 @@
 		                    <!-- 영화 제목 -->
 		                    <div id="selectMovie_title">
 		                        <a>${requestScope.firstMovie[0].movieTitle}</a>
+		                        <div style="float:right;">
+		                        	<button id="detailViewButton" onClick="location.href='detail.mo?movieno=${requestScope.firstMovie[0].movieNo}'">
+		                        		상세보기
+		                        	</button>
+		                        </div>
 		                    </div>
+		                    <br>
 		                    <!-- 영화 설명 -->
 		                    <div id="selectMovie_summary">
 		                        <a>${requestScope.firstMovie[0].description}</a>
@@ -252,9 +288,10 @@
             <div id = "detail_1">
                 
                 <div id = "searchMovie" style="width:500px; height:30px; margin:auto;">
-	                <input type="text" id = "searchMovieKeyword" style="width:400px; height:100%; margin:auto; margin-left:10px">
-	              
-	                <button id = "searchButton" style="width:75px; height:100%">검색</button>
+	                <form action="movie.sea" method="get">
+				        <input type="text" id="searchMovieKeyword" name="searchMovieKeyword" style="width:400px; height:30px; margin:auto; margin-left:10px">
+				        <button type="submit" id="searchButton" style="width:75px; height:30px">검색</button>
+				    </form>
                 </div>
                 
                 <div id = "detail_content">
@@ -276,6 +313,8 @@
 				</c:forEach>
                    
 				<script>
+				
+				
 					
 					$(document).ready(function (){
 						$("#past2").on("click", function () {
@@ -290,19 +329,31 @@
 					});
 					
 					$(document).ready(function () {
+
+						const titleElement = $("#selectMovie_title a");
+					    const movieTitle = titleElement.text();
+
+					    if (movieTitle.length > 10) {
+					        titleElement.css("font-size", "25px");
+					    } else {
+					        titleElement.css("font-size", "44px"); // 기본 크기
+					    }
+					});
+					
+					$(document).ready(function () {
 					    // 검색 버튼 클릭 이벤트
 					    $("#searchButton").on("click", function () {
 					    	
 					    	const searchMovieKeyword = $("#searchMovieKeyword").val();
 					    	
 					    	console.log(searchMovieKeyword);
-					    	
+					    	/*
 					    	$.ajax({
 								url : "movie.sea",
 								type : "GET",
 								data : { searchMovieKeyword : searchMovieKeyword },
 								success : function(data){
-									console.log(data);
+									renderMovies(data);
 								},
 								error : function(){
 									
@@ -314,9 +365,11 @@
 								}
 								
 					    	});
-					    	
+					    	*/
 					    });
 					});
+					
+					
 				
 					$(document).ready(function () {
 					    $(".movie_selection").on("click", function () {
@@ -349,12 +402,29 @@
 					                document.getElementById("thumbnail_img").innerHTML =
 					                    "<img src='" + mainImagePath + "' alt='메인 이미지'>";
 				                }
-
+					            
+					            
 					            // 2. 영화 타이틀, 설명, movieNo 출력
-					            $("#selectMovie_title a").text(mainMovie.movieTitle);
+					            const titleElement = $("#selectMovie_title a");
+
+							    // 영화 제목 업데이트
+							
+							    // 텍스트 길이에 따라 font-size 조정
+							    if (mainMovie.movieTitle.length > 10) {
+							        titleElement.css("font-size", "25px");
+							    } else {
+							        titleElement.css("font-size", "44px"); // 기본 크기로 설정 (필요 시 크기 지정)
+							    }
+							    titleElement.text(mainMovie.movieTitle);
 					            $("#selectMovie_summary a").text(mainMovie.description);
 					            $("input[name='movieDetailNo']").val(mainMovie.movieNo);
 
+					            const movieNo = mainMovie.movieNo;
+					            if (movieNo) {
+					            	$("#detailViewButton").attr("onClick", "location.href='detail.mo?movieno=" + movieNo + "'");
+					            }
+					            
+					            
 					            // 3. 서브 이미지 출력 (fileLevel = 2)
 					            const subImgContainer = document.getElementById("selectMovie_subImg");
             					subImgContainer.innerHTML = "";
@@ -857,24 +927,47 @@
 	    		        inputField.value = inputField.value
 	    		            ? inputField.value + ", " + seatId
 	    		            : seatId; 
-	    		       
+	    	
 	    		        $.ajax({
-	      	                url: "book.fb",         
-	      	                type: "GET",            
-	      	                data: { seatId: seatId,
-	      	                	playingNo: selectedValue
-	      	                }, 
-	      	                success: function (response) {
-	      	                	
-	      	                	
-	      	                },error:{
-	      	                	
-	      	                	
-	      	                },complete:{
-	      	                	
-	      	                	
-	      	                }
-	      	            });
+	    		            url: "book.err", // 중복 확인 URL
+	    		            type: "GET",
+	    		            data: { seatId: seatId, playingNo: selectedValue },
+	    		            success: function (response) {
+	    		            	
+	    		            	console.log("성공시 response" + response);
+	    		            	
+	    		                if (response === "SUCCESS") {
+	    		                   
+	    		                	// 중복이 없으면
+	    		                    $.ajax({
+	    		                        url: "book.fb",
+	    		                        type: "GET",
+	    		                        data: { seatId: seatId, playingNo: selectedValue },
+	    		                        success: function (response) {
+	    		                            
+	    		                            console.log("좌석 예약 성공:", response);
+	    		                        },
+	    		                        error: function (error) {
+	    		                            console.error("좌석 예약 오류:", error);
+	    		                        },complete: function(){
+	    		                        	
+	    		                        	console.log("book.fb 실행");	
+	    		                        }
+	    		                    });
+	    		                    
+	    		                    
+	    		                } else {
+	    		                   
+	    		                    alert(response); // "이미 값이 존재합니다! 다른 좌석을 선택해주세요!"
+	    		                    button.classList.remove("selected");
+	    		                }
+	    		            },
+	    		            error: function (error) {
+	    		                console.error("중복 확인 오류:", error);
+	    		            }
+	    		        });
+		    		        
+		    		        
 	    		    }
 	
 	    		    // inputField의 value 업데이트
@@ -884,11 +977,6 @@
 	    		
 
     		
-    		
-    		
-    		
-	          	
-					
     		
     		function refreshSeats(a) {
     		    // 좌석 테이블 초기화
@@ -1124,13 +1212,13 @@
 			    // #past3 클릭 이벤트 처리
 			    $("#past3").on("click", function (event) {
 			        event.preventDefault(); // 기본 동작 방지
-			        console.log("이전 버튼 클릭");
+			        // console.log("이전 버튼 클릭");
 			
 			        const seatId = $("#movieSeat").val();
 			        const playingNo = $("#time input[name='playingNo']:checked").val();
 			
-			        console.log("seatId:", seatId);
-			        console.log("playingNo:", playingNo);
+			        // console.log("seatId:", seatId);
+			        // console.log("playingNo:", playingNo);
 			
 			        sendAjaxForSeat(seatId, playingNo);
 			    });
@@ -1140,7 +1228,7 @@
 			        const seatId = $("#movieSeat").val();
 			        const playingNo = $("#time input[name='playingNo']:checked").val();
 			
-			        console.log("화면 벗어남 - seatId:", seatId, "playingNo:", playingNo);
+			        // console.log("화면 벗어남 - seatId:", seatId, "playingNo:", playingNo);
 			
 			        sendAjaxForSeat(seatId, playingNo);
 			    }

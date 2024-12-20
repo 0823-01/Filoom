@@ -21,7 +21,6 @@ public interface BookService {
 
 	// 첫페이지 대표 영화 조회
 	ArrayList<Movie> selectFirstMovie();
-	// -- 이후 전부 Ajax --
 	
 	// 첫페이지) AJAX 영화 조회후 선택시 영화 상세설명 조회
 	ArrayList<Movie> selectMovie(int movieNo);
@@ -38,6 +37,9 @@ public interface BookService {
 	// 좌석 클릭시 ajax로 실시간 잠그기
 	int insertBookingSeat(BookingSeat bk);
 
+	// 좌석 클릭시 유효한 좌석인지 확인하기
+	int isSeatAlreadyBooked(HashMap<String, Object> map);
+
 	// 좌석 클릭시 ajax 실시간 해제
 	int deleteBookingSeat(BookingSeat bk);
 
@@ -45,7 +47,10 @@ public interface BookService {
 	int deleteBookingListList(ArrayList<BookingSeat> abk);
 
 	// 영화 검색 기능
-	int movieSearch(HashMap<String, Object> map);
+	ArrayList<Movie> movieSearch(HashMap<String, Object> map);
+	
+	// 영화 검색 후 첫번째 영화
+	ArrayList<Movie> selectSearchFirstMovie(HashMap<String, Object> map);
 	
 	
 	//결제============================================================
@@ -73,6 +78,7 @@ public interface BookService {
 
 	//결제전 쿠폰 유효성 검사
 	int checkCoupons(int userNo, Map<String, List<String>> couponNos);
+
 
 	
 	

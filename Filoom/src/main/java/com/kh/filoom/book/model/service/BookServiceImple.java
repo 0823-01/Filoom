@@ -62,6 +62,7 @@ public class BookServiceImple implements BookService {
 	@Transactional
 	public int insertBookingSeat(BookingSeat bk) {
 		// TODO Auto-generated method stub
+		System.out.println("service 단에서 : " + bk);
 		return bookDao.insertBookingSeat(sqlSession, bk);
 	}
 
@@ -80,11 +81,24 @@ public class BookServiceImple implements BookService {
 	}
 
 	@Override
-	public int movieSearch(HashMap<String, Object> map) {
+	public ArrayList<Movie> movieSearch(HashMap<String, Object> map) {
 		// TODO Auto-generated method stub
 		return bookDao.movieSearch(sqlSession, map);
 	}
 	
+	
+	@Override
+	public ArrayList<Movie> selectSearchFirstMovie(HashMap<String, Object> map) {
+		// TODO Auto-generated method stub
+		return bookDao.selectSearchFirstMovie(sqlSession, map);
+	}
+	
+	@Override
+	@Transactional
+	public int isSeatAlreadyBooked(HashMap<String, Object> map) {
+		// TODO Auto-generated method stub
+		return bookDao.isSeatAlreadyBooked(sqlSession, map);
+	}
 	
 	
 	
@@ -170,7 +184,9 @@ public class BookServiceImple implements BookService {
 		// TODO Auto-generated method stub
 		return 0;
 	}
+
 	
+
 
 	
 }

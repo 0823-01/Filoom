@@ -203,15 +203,30 @@ public class MovieController {
 	// specific.mo?movieNo=XXX
 	// 임시로 하드코딩한 <위키드>의 상세 페이지로 연결해놨으며, 이에 따라 boxOffice.jsp의 <위키드>에만 상세페이지를 링크해놨음
 	// 도메인 미확정
+	/*
 	@GetMapping("detail.mo")
-	public String selectMovie() {
+	public String selectMovie(int movieNo, Model model) {
+		
+		
 		return "movie/movieDetail";
 	}
+	*/
 	
 	// 영화 상세 정보 조회 (스틸컷까지만)
-	public void showDetail(int movieNo) {
+	@GetMapping("detail.mo")
+	public String showDetail(int movieNo, Model model) {
+		
+		
+		Movie list = msi.showDetail(movieNo);
+		
+		System.out.println(list);
+		
+		model.addAttribute("list", list);
+		
+		
 		msi.showDetail(movieNo);
 		
+		return "movie/movieDetail";
 	}
 	
 	// 리뷰 목록 조회 (+ 페이징 처리) (AJAX 예상)

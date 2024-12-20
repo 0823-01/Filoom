@@ -110,8 +110,10 @@ public class MovieServiceImpl implements MovieService {
 	@Override
 	public Movie showDetail(int movieNo) {
 		// TODO Auto-generated method stub
-		return null;
+		return mDao.showDetail(sqlSession, movieNo);
 	}
+
+	
 
 	
 	

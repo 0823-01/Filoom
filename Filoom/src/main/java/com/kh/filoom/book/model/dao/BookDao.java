@@ -47,7 +47,7 @@ public class BookDao {
 
 	public int insertBookingSeat(SqlSessionTemplate sqlSession, BookingSeat bk) {
 		// TODO Auto-generated method stub
-		return sqlSession.update("bookMapper.insertBookingSeat", bk);
+		return sqlSession.insert("bookMapper.insertBookingSeat", bk);
 	}
 
 	public int deleteBookingSeat(SqlSessionTemplate sqlSession, BookingSeat bk) {
@@ -66,14 +66,22 @@ public class BookDao {
 	}
 
 	
-	public int movieSearch(SqlSessionTemplate sqlSession, HashMap<String, Object> map) {
+	public ArrayList<Movie> movieSearch(SqlSessionTemplate sqlSession, HashMap<String, Object> map) {
 		// TODO Auto-generated method stub
-		return sqlSession.selectOne("movieMapper.movieSearch", map);
+		return (ArrayList)sqlSession.selectList("movieMapper.movieSearch", map);
 	}
 
+	public ArrayList<Movie> selectSearchFirstMovie(SqlSessionTemplate sqlSession, HashMap<String, Object> map) {
+		// TODO Auto-generated method stub
+		return (ArrayList)sqlSession.selectList("movieMapper.selectSearchFirstMovie", map);
+	}
 	
 	
-	
+	public int isSeatAlreadyBooked(SqlSessionTemplate sqlSession, HashMap<String, Object> map) {
+		// TODO Auto-generated method stub
+		
+		return sqlSession.selectOne("bookMapper.isSeatAlreadyBooked", map);
+	}
 	
 	
 	
@@ -138,6 +146,9 @@ public class BookDao {
 	public ArrayList<CouponUser> selectListCouponUser(SqlSessionTemplate sqlSession, int userNo) {
 		return (ArrayList)sqlSession.selectList("couponMapper.selectListCouponUser",userNo);
 	}
+
+
+	
 
 	
 

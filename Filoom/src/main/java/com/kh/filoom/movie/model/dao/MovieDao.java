@@ -90,6 +90,11 @@ public class MovieDao {
 		return (ArrayList) sqlSession.selectList("movieMapper.listbyCritics", cpage);
 	}
 
+	public Movie showDetail(SqlSessionTemplate sqlSession, int movieNo) {
+		// TODO Auto-generated method stub
+		return sqlSession.selectOne("movieMapper.showDetail", movieNo);
+	}
+
 	
 
 }

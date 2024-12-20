@@ -106,7 +106,6 @@ public class BookController {
 		
 		System.out.println(list);
 		
-		
 		return new Gson().toJson(list);
 		
 	}
@@ -117,8 +116,8 @@ public class BookController {
 
 		Date currentDate = new Date();
 		
-		// System.out.println(seatId);
-		// System.out.println(playingNo);
+		System.out.println("book.fb 실행");
+		
 
 		Calendar calendar = Calendar.getInstance();
 	    calendar.setTime(currentDate);
@@ -130,15 +129,41 @@ public class BookController {
 	    
 	    BookingSeat bk = new BookingSeat();
 	    
-	    bk.setSeatNo(seatId);
+	    bk.setSeatId(seatId);
 	    bk.setPlayingNo(playingNo);
 	    bk.setTimeLimit(sqlUpdatedTime);
-
+	    System.out.println("입력받은 bk" + bk);
+	    
 	    // System.out.println("BookingSeat 객체: " + bk);
 	 
 	    int result = bookService.insertBookingSeat(bk);
 
 	    return new Gson().toJson(bk);
+	}
+
+	
+	
+	@ResponseBody
+	@GetMapping("book.err")
+	public String checkBooking(@RequestParam("seatId") String seatId, @RequestParam("playingNo") int playingNo) {
+	    // 중복 확인 로직
+
+	    HashMap<String, Object> map = new HashMap<>();
+		
+		map.put("seatId", seatId);
+		map.put("playingNo", playingNo);
+		
+		//System.out.println(seatId);
+		//System.out.println(playingNo);
+		//System.out.println("map :" + map);
+		
+		int isExist = bookService.isSeatAlreadyBooked(map);
+	    
+	    if (isExist == 1) {
+	        return "이미 값이 존재합니다! 다른 좌석을 선택해주세요!";
+	    } else {
+	        return "SUCCESS";
+	    }
 	}
 	
 	@ResponseBody
@@ -199,18 +224,28 @@ public class BookController {
 		return new Gson().toJson(abk);
 	}
 	
-	@ResponseBody
-	@GetMapping(value="movie.sea", produces="application/json; charset=UTF-8")
-	public int movieSearch(String searchMovieKeyword) {
+	
+	@GetMapping("movie.sea")
+	public String movieSearch(String searchMovieKeyword, Model model) {
 		
 		HashMap<String, Object> map = new HashMap<>();
+		
+		
 		map.put("searchMovieKeyword", searchMovieKeyword);
 		
-		int moiveNo = bookService.movieSearch(map);
+		//System.out.println(searchMovieKeyword);
+		//System.out.println(map);
 		
-		System.out.println(map);
 		
-		return moiveNo;
+		ArrayList<Movie> firstMovie = bookService.selectSearchFirstMovie(map);
+		ArrayList<Movie> list = bookService.movieSearch(map);
+		
+		model.addAttribute("list", list);
+		model.addAttribute("firstMovie", firstMovie);
+		
+		//System.out.println(moive);
+		
+		return "book/book";
 		
 	}
 	
@@ -316,109 +351,6 @@ public class BookController {
 		log.debug("ajax==사용가능한 쿠폰 조회 couponUserList : "+couponUserList.toString());
 		
 		return new Gson().toJson(couponUserList);
-
-	}
-	
-	
-	
-	@ResponseBody
-	@PostMapping(value="beforePay.pm",produces="application/json; charset=UTF-8")
-	public String beforePay(@RequestBody Map<String,List<String>> couponNos,HttpSession session) {
-		
-		
-		log.debug("=====결제전 ajax 실행======");
-		
-		log.debug("쿠폰넘버스 => "+couponNos.toString());
-		
-		//결제시 필요한 예매번호+유저번호 미리생성
-		int userNo = ((Member)session.getAttribute("loginUser")).getUserNo();
-		
-		log.debug("유저넘버 => "+ userNo);
-		/*
-	
-		Booking booking = new Booking();
-		booking.setBookNo(bookNo);
-		log.debug("4==BOOKING_NO 생성,조회  booking = " + booking.toString());
-		
-		mv.addObject("booking = ",booking);
-		 */
-		
-		//1. booking 번호 생성(+userNo)
-		int bookNo = bookService.setBookNo(userNo);
-		
-		Booking booking = new Booking();
-		booking.setBookNo(bookNo);
-		booking.setUserNo(userNo);
-		
-		log.debug("생성된 booking 객체 => "+ booking.toString() );
-		
-		
-		//쿠폰이 있을경우 (없을경우 패스)
-		if(!couponNos.isEmpty()) { 
-		// 쿠폰유저에 booking 번호가 없는지 먼저 체크 
-			int couponResult = bookService.checkCoupons(userNo,couponNos);
-		// 	if(없는경우 통과)  -
-			if(couponResult==0) {
-				bookService.couponUpdateBookNo(bookNo,couponNos);
-			}else {
-				//다시 새로고침
-				return "redirect :/";
-			}
-			
-			
-		}
-		
-		
-		
-		//결제시 필요한 정보들 (상점키, 상점id,ediDate, hsahString ) hashMap 으로 가공하기
-		
-		//String merchantKey 	 	상점키
-		//String merchantID 		상점아이디
-		
-		String ediDate 			= getyyyyMMddHHmmss();
-		String hashString 		= sha256Enc.encrypt(ediDate + merchantID + price + merchantKey);
-		
-	
-		
-		//bookNo, , 결제 번호, 상점키, 상점아이디, 전문생성일시, 해쉬값
-		return ""; //결제정보 Map 으로
-		
-		//     쿠폰에 북넘버 붙이기.
-		
-		
-		//  else(있는경우 - 악용) - 다시 결제
-		//     
-		
-		//
-		// 쿠폰유저에 booking 번호 심기
-		// 
-		
-		
-		
-		
-		
-		
-		
-		
-	}
-
-	
-	
-	
-	//결제시 필요한 정보 암호화 메소드
-	public final synchronized String getyyyyMMddHHmmss(){
-		SimpleDateFormat yyyyMMddHHmmss = new SimpleDateFormat("yyyyMMddHHmmss");
-		return yyyyMMddHHmmss.format(new Date());
-	}
-	
-	///filoom/Resulttest.pm
-	//결제후 화면 테스트
-	@PostMapping("ResultTest.pm")
-	public String PaymentResultTest(String Amt) {
-		
-		System.out.println("잘되나 ? 결제휴");
-		System.out.println(Amt);
-		return "book/paymentResult";
 
 	}
 	
