@@ -1,5 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -179,30 +181,30 @@
 	    font-weight: bold;
 	}
 	
-	.history-delete-btn {
-	    padding: 5px 10px;
+	.history-delete-btn, .review-plz {
 	    background-color: #49362800;
 	    color: #aaa;
 	    border: none;
-	    border-radius: 5px;
 	    cursor: pointer;
 	    font-size: 12px;
-	    font-weight: 600;
+	    text-decoration: none;
+	    transition: color 0.3s ease;
+	}
+	
+	.history-delete-btn:hover, .review-plz:hover {
+		color: #fff;
+	    font-weight: bold;
 	}
 	
 	/* 전체 예약 내용 컨테이너 */
 	.history-content {
-	    font-size: 13px;
+	    font-size: 14px;
 	}
 	
 	.history-content p {
 	    margin-bottom: 10px;
 	}
 	
-	.history-content a {
-	    text-decoration: none;
-	    color: #fff;
-	}
 </style>
 </head>
 <body>
@@ -246,134 +248,40 @@
                 <!-- 예매 내역들만 묶은 div -->
                 <div class="history-list">
 
+                    <c:choose>
+                    	<c:when test="${empty historyList}">
+						    <div class="no-history">
+						        관람 내역이 존재하지 않습니다.
+						    </div>
+						</c:when>
+							
+	                    <c:otherwise>
+							<c:forEach var="history" items="${historyList}">
+			                    <!-- 예매 내역 하나의 div -->
+			                    <div class="history-item">
+			                        <div class="box-info">
+			                            <div class="box-image">
+			                                <a href="#"><img src="${ pageContext.request.contextPath }/resources/images/posters/${ history.fileCodename }" class="poster"></a>
+			                            </div>
+			                            <div class="history-info">
+			                                <div class="title-delete">
+			                                    <div>
+			                                        <a href="#" class="movie-title">${ history.movieTitle }</a>
+			                                    </div>
+			                                    <div><button class="history-delete-btn">기록에서 삭제</button></div>
+			                                </div>
+			                                <div class="history-content">
+			                                    <p>${ history.playtime }</p>
+			                                    <p>${ history.screenName }관 / ${ history.totalTickets }명</p>
+			                                    <a class="review-plz" href="detail.mo?movieno=${requestScope.firstMovie[0].hisory.movieNo}">이 영화를 평가해주세요</a>
+			                                </div>
+			                            </div>
+			                        </div>
+			                    </div>
+		                    </c:forEach>
+	                    </c:otherwise>
+					</c:choose>
                     
-
-                    <!-- 예매 내역 하나의 div -->
-                    <div class="history-item">
-                        <div class="box-info">
-                            <div class="box-image">
-                                <a href="#"><img src="https://img.cgv.co.kr/Movie/Thumbnail/Poster/000088/88920/88920_185.jpg" class="poster"></a>
-                            </div>
-                            <div class="history-info">
-                                <div class="title-delete">
-                                    <div>
-                                        <a href="#" class="movie-title">히든페이스</a>
-                                    </div>
-                                    <div><button class="history-delete-btn">기록에서 삭제</button></div>
-                                </div>
-                                <div class="history-content">
-                                    <p>2024.12.02 (월) 20:10 ~ 22:15</p>
-                                    <p>3관 4층 / 2명</p>
-                                    <a href="#">이 영화를 평가해주세요</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="history-item">
-                        <div class="box-info">
-                            <div class="box-image">
-                                <a href="#"><img src="https://img.cgv.co.kr/Movie/Thumbnail/Poster/000088/88526/88526_185.jpg" class="poster"></a>
-                            </div>
-                            <div class="history-info">
-                                <div class="title-delete">
-                                    <div>
-                                        <a href="#" class="movie-title">베놈-라스트 댄스</a>
-                                    </div>
-                                    <div><button class="history-delete-btn">기록에서 삭제</button></div>
-                                </div>
-                                <div class="history-content">
-                                    <p>2024.10.27 (일) 22:40 ~ 24:39</p>
-                                    <p>IMAX관 7층 / 2명</p>
-                                    <a href="#">이 영화를 평가해주세요</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="history-item">
-                        <div class="box-info">
-                            <div class="box-image">
-                                <a href="#"><img src="https://img.cgv.co.kr/Movie/Thumbnail/Poster/000088/88920/88920_185.jpg" class="poster"></a>
-                            </div>
-                            <div class="history-info">
-                                <div class="title-delete">
-                                    <div>
-                                        <a href="#" class="movie-title">히든페이스</a>
-                                    </div>
-                                    <div><button class="history-delete-btn">기록에서 삭제</button></div>
-                                </div>
-                                <div class="history-content">
-                                    <p>2024.12.02 (월) 20:10 ~ 22:15</p>
-                                    <p>3관 4층 / 2명</p>
-                                    <a href="#">이 영화를 평가해주세요</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="history-item">
-                        <div class="box-info">
-                            <div class="box-image">
-                                <a href="#"><img src="https://img.cgv.co.kr/Movie/Thumbnail/Poster/000088/88526/88526_185.jpg" class="poster"></a>
-                            </div>
-                            <div class="history-info">
-                                <div class="title-delete">
-                                    <div>
-                                        <a href="#" class="movie-title">베놈-라스트 댄스</a>
-                                    </div>
-                                    <div><button class="history-delete-btn">기록에서 삭제</button></div>
-                                </div>
-                                <div class="history-content">
-                                    <p>2024.10.27 (일) 22:40 ~ 24:39</p>
-                                    <p>IMAX관 7층 / 2명</p>
-                                    <a href="#">이 영화를 평가해주세요</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="history-item">
-                        <div class="box-info">
-                            <div class="box-image">
-                                <a href="#"><img src="https://img.cgv.co.kr/Movie/Thumbnail/Poster/000088/88920/88920_185.jpg" class="poster"></a>
-                            </div>
-                            <div class="history-info">
-                                <div class="title-delete">
-                                    <div>
-                                        <a href="#" class="movie-title">히든페이스</a>
-                                    </div>
-                                    <div><button class="history-delete-btn">기록에서 삭제</button></div>
-                                </div>
-                                <div class="history-content">
-                                    <p>2024.12.02 (월) 20:10 ~ 22:15</p>
-                                    <p>3관 4층 / 2명</p>
-                                    <a href="#">이 영화를 평가해주세요</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="history-item">
-                        <div class="box-info">
-                            <div class="box-image">
-                                <a href="#"><img src="https://img.cgv.co.kr/Movie/Thumbnail/Poster/000088/88526/88526_185.jpg" class="poster"></a>
-                            </div>
-                            <div class="history-info">
-                                <div class="title-delete">
-                                    <div>
-                                        <a href="#" class="movie-title">베놈-라스트 댄스</a>
-                                    </div>
-                                    <div><button class="history-delete-btn">기록에서 삭제</button></div>
-                                </div>
-                                <div class="history-content">
-                                    <p>2024.10.27 (일) 22:40 ~ 24:39</p>
-                                    <p>IMAX관 7층 / 2명</p>
-                                    <a href="#">이 영화를 평가해주세요</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>

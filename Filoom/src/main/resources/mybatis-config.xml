@@ -13,6 +13,7 @@
 		
 		<typeAlias type = "com.kh.filoom.member.model.vo.Member" alias="member"/>
 		<typeAlias type = "com.kh.filoom.member.model.vo.Reserve" alias="reserve"/>
+		<typeAlias type = "com.kh.filoom.member.model.vo.History" alias="history"/>
 		<typeAlias type = "com.kh.filoom.book.model.vo.Booking" alias="booking"/>
 		<typeAlias type = "com.kh.filoom.book.model.vo.BookingSeat" alias="bookingseat"/>
 		<typeAlias type = "com.kh.filoom.book.model.vo.Playing" alias="playing"/>
