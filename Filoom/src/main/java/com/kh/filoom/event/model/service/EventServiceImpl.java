@@ -281,6 +281,17 @@ public class EventServiceImpl implements EventService {
 		return eventDao.amdinSelectApplicantList(sqlSession, params);
 	}
 
+	/**
+	 * 241220 한혜원
+	 * 당첨자 정보 추가
+	 */
+	@Override
+	public int insertWinners(Map<String, Object> params) {
+		return eventDao.insertWinners(sqlSession, params);
+	}
+	
+	
+
 	
 
 	

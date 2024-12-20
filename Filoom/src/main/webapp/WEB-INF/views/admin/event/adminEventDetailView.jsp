@@ -254,14 +254,27 @@
                         <div class="title">
                             제목<b style="color : red;">*</b> <div id="title">${e.eventTitle }</div>
                         </div>
-
-                        <div class="startDate">
-                            이벤트 시작일<b style="color : red;">*</b> <div id="startDate">${e.startDate }</div>
-                        </div>
-
-                        <div class="endDate">
-                            이벤트 종료일<b style="color : red;">*</b><div id="endDate">${e.endDate }</div>
-                        </div>
+	                       <div class="startDate">
+	                       		<c:choose>
+	                       			<c:when test="${empty e.startDate and empty e.endDate }">
+	                       				이벤트 시작일<b style="color : red;">*</b> <div id="startDate">상시진행</div>
+	                       			</c:when>
+	                       			<c:otherwise>
+	                       				이벤트 시작일<b style="color : red;">*</b> <div id="startDate">${e.startDate }</div>
+	                       			</c:otherwise>
+	                       		</c:choose>
+	                       </div>
+	
+	                       <div class="endDate">
+	                       		<c:choose>
+	                       			<c:when test="${empty e.startDate and empty e.endDate }">
+	                       				이벤트 종료일<b style="color : red;">*</b><div id="endDate">상시진행</div>
+	                       			</c:when>
+	                       			<c:otherwise>
+	                       				이벤트 종료일<b style="color : red;">*</b><div id="endDate">${e.endDate }</div>
+	                       			</c:otherwise>
+	                       		</c:choose>
+	                       </div>
                     </div>
 
                     <!-- 내용 -->

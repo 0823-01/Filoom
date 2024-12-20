@@ -336,5 +336,16 @@ public class EventDao {
 		return (List)sqlSession.selectList("eventMapper.adminSeletApplicantList", params, rowBounds);
 	}
 
+	/**
+	 * 241219 한혜원
+	 * 당첨자 정보 저장
+	 * @param sqlSession
+	 * @param params
+	 * @return
+	 */
+	public int insertWinners(SqlSessionTemplate sqlSession, Map<String, Object> params) {
+		return sqlSession.insert("eventMapper.insertWinners", params);
+	}
+
 	
 }

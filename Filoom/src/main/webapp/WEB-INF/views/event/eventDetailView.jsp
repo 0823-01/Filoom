@@ -726,30 +726,6 @@
         $(".pagination").html(paginationHtml);
     }
     
- 	// 이벤트 종료일에 따라 댓글 작성창 비활성화
-    $(document).ready(function () {
-        // 종료일 값을 가져오기
-        var eventEndDateStr = "${e.endDate}"; // 서버에서 전달된 종료일
-        // console.log("Original Event End Date String:", eventEndDateStr);
-
-        // 문자열을 Date 객체로 변환 (yyyy-MM-dd 형식 가정)
-        var eventEndDate = new Date(eventEndDateStr);
-        // console.log("Parsed Event End Date:", eventEndDate);
-
-        // 자정 기준으로 설정 (종료일 다음날 00:00:00)
-        eventEndDate.setDate(eventEndDate.getDate() + 1); // 종료일 다음날로 이동
-        eventEndDate.setHours(0, 0, 0, 0); // 자정 시점으로 설정
-        // console.log("Adjusted Event End Date:", eventEndDate);
-
-        // 현재 시간과 비교
-        var currentDate = new Date();
-        // console.log("Current Date:", currentDate);
-
-        if (currentDate >= eventEndDate) {
-            alert("이미 종료된 이벤트입니다.");
-            $("#replyInput").prop("disabled", true); // 버튼 비활성화
-        }
-    });
     
  	// 응모버튼 스크립트 
     $('#applyBtn').click(function (e) {
@@ -786,7 +762,7 @@
         });
     });
  	
- 	// 이벤트 종료일에 따라 버튼 비활성화
+ 	// 이벤트 종료일에 따라 댓글창, 응모버튼 비활성화
     $(document).ready(function () {
         // 종료일 값을 가져오기
         var eventEndDateStr = "${e.endDate}"; // 서버에서 전달된 종료일
@@ -807,7 +783,7 @@
 
         if (currentDate >= eventEndDate) {
             alert("이미 종료된 이벤트입니다.");
-            $("#applyBtn").prop("disabled", true); // 버튼 비활성화
+            $("#applyBtn").$("#replyInput").prop("disabled", true); // 버튼 비활성화
         }
     });
  

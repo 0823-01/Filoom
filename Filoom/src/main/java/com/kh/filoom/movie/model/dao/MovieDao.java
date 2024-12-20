@@ -7,6 +7,7 @@ import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
 
 import com.kh.filoom.movie.model.vo.Movie;
+import com.kh.filoom.movie.model.vo.Poster;
 
 @Repository
 public class MovieDao {
@@ -88,6 +89,36 @@ public class MovieDao {
 	public ArrayList<Movie> listbyCritics(SqlSessionTemplate sqlSession, int cpage) {
 		// TODO Auto-generated method stub
 		return (ArrayList) sqlSession.selectList("movieMapper.listbyCritics", cpage);
+	}
+
+
+	public Movie showDetail(SqlSessionTemplate sqlSession, int movieNo) {
+		// TODO Auto-generated method stub
+		return sqlSession.selectOne("movieMapper.showDetail", movieNo);
+
+	public int addMovie(SqlSessionTemplate sqlSession, Movie m) {
+		// TODO Auto-generated method stub
+		return sqlSession.update("movieMapper.addMovie", m);
+	}
+
+	public int updateMovie(SqlSessionTemplate sqlSession, Movie m) {
+		// TODO Auto-generated method stub
+		return sqlSession.update("movieMapper.updateMovie", m);
+	}
+
+	public int addPoster(SqlSessionTemplate sqlSession, Poster p) {
+		
+//		int influence = sqlSession.update("movieMapper.addPoster", p);
+//		if(influence > 0) {
+//			return -1;
+//		} else
+			return 0;
+	}
+
+	public int deletePoster(SqlSessionTemplate sqlSession, int imageId) {
+		// TODO Auto-generated method stub
+		return 0;
+
 	}
 
 	

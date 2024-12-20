@@ -18,4 +18,5 @@ public class Reply {
 	private String createDate;		//	CREATE_DATE	DATE
 	private String status;			//	STATUS	VARCHAR2(1 BYTE)
 	private String drawingStatus; 
+	private String winStatus; // 테이블에는 없지만 필요해서 가져온거 
 }

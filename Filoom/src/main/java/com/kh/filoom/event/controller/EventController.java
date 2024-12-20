@@ -403,48 +403,6 @@ public class EventController {
 	 * @param model
 	 * @return
 	 */
-	/**
-	 * @param eventNo
-	 * @param eventType
-	 * @param currentpage
-	 * @param model
-	 * @return
-	 */
-	/**
-	 * @param eventNo
-	 * @param eventType
-	 * @param currentpage
-	 * @param model
-	 * @return
-	 */
-	/**
-	 * @param eventNo
-	 * @param eventType
-	 * @param currentpage
-	 * @param model
-	 * @return
-	 */
-	/**
-	 * @param eventNo
-	 * @param eventType
-	 * @param currentpage
-	 * @param model
-	 * @return
-	 */
-	/**
-	 * @param eventNo
-	 * @param eventType
-	 * @param currentpage
-	 * @param model
-	 * @return
-	 */
-	/**
-	 * @param eventNo
-	 * @param eventType
-	 * @param currentpage
-	 * @param model
-	 * @return
-	 */
 	@RequestMapping("aplist.ev")
 	public String selectApplicantList(@RequestParam("eventNo")int eventNo, 
 									  @RequestParam("eventType")int eventType, 
@@ -504,12 +462,40 @@ public class EventController {
 			model.addAttribute("errorMsg", "해당 이벤트는 오프라인 타입입니다.");
 			return "admin/event/adminEventListView"; // 에러 페이지로 이동
 		}
-		
-	
-		
+				
 	}
 	
-	
+	/**
+	 * 241220 한혜원
+	 * 당첨자 목록 저장
+	 * @param winnerData
+	 * @return
+	 */
+	@ResponseBody
+	@PostMapping(value="insertWin.ev", produces="application/json; charset=UTF-8")
+	public String insertWinners(@RequestParam("eventNo") int eventNo, 
+	                            @RequestParam("eventType") int eventType, 
+	                            @RequestParam("winners") List<Integer> winners) {
+		
+		System.out.println(winners);
+	    // WINNER_TYPE은 eventType과 동일
+	    int winnerType = eventType; 
+	    
+	    // 서비스에 필요한 데이터 전달
+	    Map<String, Object> params = new HashMap<>();
+	    params.put("eventNo", eventNo);
+	    params.put("winnerType", winnerType);
+	    params.put("winners", winners);
+
+	    int result = eventService.insertWinners(params);
+
+	    if (result > 0) {
+	        return "redirect:/aplist.ev?eventNo=" + eventNo + "&eventType=" + eventType;
+	    } else {
+	        // 에러 페이지 처리
+	        return "error/adminEventErrorPage";
+	    }
+	}
 	
 	
 	

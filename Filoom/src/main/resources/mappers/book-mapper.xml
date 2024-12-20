@@ -79,6 +79,13 @@
 
 	</resultMap>
 	
+	<resultMap id = "insertBookingSeat" type="bookingseat">
+		<id column="PLAYING_NO" property="playingNo"/>
+		<result column="TIME_LIMIT" property="timeLimit"/>
+		<result column="SEAT_NO" property="seatNo"/>
+	
+	</resultMap>
+	
 	<resultMap id = "deleteBookingListList" type="bookingseat">
 		<id column="PLAYING_NO" property="playingNo"/>
 		<result column="SEAT_NO" property="seatNo"/>
@@ -155,18 +162,27 @@
 		INSERT INTO BOOKING_SEAT VALUES (
             SEQ_BSNO.NEXTVAL,
             #{timeLimit},
-            #{playingNo},
             (SELECT SSEAT_NO
              FROM SCREEN_SEAT
-             WHERE SEAT_NO = #{seatNo}
+             WHERE SEAT_NO = #{seatId}
                AND SCREEN_NO = (SELECT SCREEN_NO 
                                 FROM PLAYING
                                 WHERE PLAYING_NO = #{playingNo})),
+            #{playingNo},
             NULL
 		)
+	</insert>
+	
+	<select id="isSeatAlreadyBooked" parameterType="map" resultType="int">
+	    SELECT COUNT(*)
+		FROM BOOKING_SEAT BS
+		JOIN SCREEN_SEAT SS
+		  ON BS.SSEAT_NO = SS.SSEAT_NO
+		WHERE BS.PLAYING_NO = #{playingNo}
+	      AND SS.SEAT_NO = #{seatId}
 	</select>
 	
-	<select id = "deleteBookingSeat" parameterType="bookingseat">
+	<delete id = "deleteBookingSeat" parameterType="bookingseat">
 		DELETE FROM BOOKING_SEAT
 		WHERE PLAYING_NO = #{playingNo}
 		  AND SSEAT_NO = (
@@ -179,7 +195,7 @@
 		            WHERE PLAYING_NO = #{playingNo}
 		        )
 		  )
-	</select>
+	</delete>
 	
 	
 	<delete id="deleteBookingListList" parameterType="list">

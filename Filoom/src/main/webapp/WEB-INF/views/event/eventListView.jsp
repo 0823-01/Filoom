@@ -235,7 +235,7 @@
         		<c:if test="${status.index < 3 }">
         			<div class="recommendCard">
 	                <a href="${pageContext.request.contextPath}/detail.ev?eno=${event.eventNo}" style="text-decoration: none;">
-	                    <img src="${pageContext.request.contextPath}${event.contentImg1}" alt="추천이미지" style="width : 100%; height : 200px;">
+	                    <img src="${pageContext.request.contextPath}${event.contentImg1}" alt="추천이미지" style="width : 100%; height : 300px;">
 	                    <div class="recommend-card-info" >
 	                        <div id="recommend-card-title">${event.eventTitle }</div>
 	                        <div id="recommend-card-date">

@@ -115,7 +115,6 @@ public class BookController {
 		
 		System.out.println(list);
 		
-		
 		return new Gson().toJson(list);
 		
 	}
@@ -126,8 +125,8 @@ public class BookController {
 
 		Date currentDate = new Date();
 		
-		// System.out.println(seatId);
-		// System.out.println(playingNo);
+		System.out.println("book.fb 실행");
+		
 
 		Calendar calendar = Calendar.getInstance();
 	    calendar.setTime(currentDate);
@@ -139,15 +138,41 @@ public class BookController {
 	    
 	    BookingSeat bk = new BookingSeat();
 	    
-	    bk.setSeatNo(seatId);
+	    bk.setSeatId(seatId);
 	    bk.setPlayingNo(playingNo);
 	    bk.setTimeLimit(sqlUpdatedTime);
-
+	    System.out.println("입력받은 bk" + bk);
+	    
 	    // System.out.println("BookingSeat 객체: " + bk);
 	 
 	    int result = bookService.insertBookingSeat(bk);
 
 	    return new Gson().toJson(bk);
+	}
+
+	
+	
+	@ResponseBody
+	@GetMapping("book.err")
+	public String checkBooking(@RequestParam("seatId") String seatId, @RequestParam("playingNo") int playingNo) {
+	    // 중복 확인 로직
+
+	    HashMap<String, Object> map = new HashMap<>();
+		
+		map.put("seatId", seatId);
+		map.put("playingNo", playingNo);
+		
+		//System.out.println(seatId);
+		//System.out.println(playingNo);
+		//System.out.println("map :" + map);
+		
+		int isExist = bookService.isSeatAlreadyBooked(map);
+	    
+	    if (isExist == 1) {
+	        return "이미 값이 존재합니다! 다른 좌석을 선택해주세요!";
+	    } else {
+	        return "SUCCESS";
+	    }
 	}
 	
 	@ResponseBody
@@ -208,18 +233,28 @@ public class BookController {
 		return new Gson().toJson(abk);
 	}
 	
-	@ResponseBody
-	@GetMapping(value="movie.sea", produces="application/json; charset=UTF-8")
-	public int movieSearch(String searchMovieKeyword) {
+	
+	@GetMapping("movie.sea")
+	public String movieSearch(String searchMovieKeyword, Model model) {
 		
 		HashMap<String, Object> map = new HashMap<>();
+		
+		
 		map.put("searchMovieKeyword", searchMovieKeyword);
 		
-		int moiveNo = bookService.movieSearch(map);
+		//System.out.println(searchMovieKeyword);
+		//System.out.println(map);
 		
-		System.out.println(map);
 		
-		return moiveNo;
+		ArrayList<Movie> firstMovie = bookService.selectSearchFirstMovie(map);
+		ArrayList<Movie> list = bookService.movieSearch(map);
+		
+		model.addAttribute("list", list);
+		model.addAttribute("firstMovie", firstMovie);
+		
+		//System.out.println(moive);
+		
+		return "book/book";
 		
 	}
 	
@@ -361,6 +396,7 @@ public class BookController {
 	
 	
 	
+
 	@ResponseBody
 	@PostMapping(value="beforePay.pm",produces="application/json; charset=UTF-8")
 	public String beforePay(@RequestBody Map<String,Object>data,HttpSession session) {
@@ -753,5 +789,6 @@ public class BookController {
 		}
 		return dataMap;
 	}
+
 	
 }
