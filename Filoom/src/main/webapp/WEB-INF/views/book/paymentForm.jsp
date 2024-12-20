@@ -419,9 +419,9 @@ function nicepayClose(){
                     <div id="payMethods">
                         <div>
 
-                            <input type="radio" name="payMethod" id="pay1" value="CARD" required><label for="pay1">카드결제</label>
-                            <input type="radio" name="payMethod" id="pay2" value="BANK" ><label for="pay2">계좌이체</label>
-                            <input type="radio" name="payMethod" id="pay3" value="CELLPHONE"><label for="pay3">휴대폰결제</label>
+                            <input type="radio" name="PayMethod" id="pay1" value="CARD" required><label for="pay1">카드결제</label>
+                            <input type="radio" name="PayMethod" id="pay2" value="BANK" ><label for="pay2">계좌이체</label>
+                            <input type="radio" name="PayMethod" id="pay3" value="CELLPHONE"><label for="pay3">휴대폰결제</label>
 
                             
                         </div>
@@ -576,7 +576,7 @@ function nicepayClose(){
     <script>
    		
     	//영화금액
-    	const price = 15000;
+    	const price = 1000;
 
     	//쿠폰금액 (100%)
     	const couponPrice = price;
