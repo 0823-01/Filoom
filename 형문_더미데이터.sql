@@ -53,6 +53,16 @@ INSERT INTO "FILOOM"."COUPON_USER" (COUPON_NO, USER_NO, COUPON_USE) VALUES ('15'
 COMMIT;
 
 	
-DELETE FROM BOOKING
-  WHERE USER_NO = 1
-    AND BOOK_NO = 266;
+INSERT INTO BOOKING_SEAT
+     VALUES (SEQ_BSNO.NEXTVAL,
+             SYSDATE+INTERVAL '5' MINUTE,
+             (SELECT SSEAT_NO
+             FROM SCREEN_SEAT
+             WHERE SEAT_NO = 'L2-2'
+               AND SCREEN_NO = (SELECT SCREEN_NO 
+                                FROM PLAYING
+                                WHERE PLAYING_NO = 1)),
+            1,
+            NULL)
+     )             
+      

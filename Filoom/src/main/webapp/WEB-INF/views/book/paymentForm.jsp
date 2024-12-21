@@ -419,9 +419,9 @@ function nicepayClose(){
                     <div id="payMethods">
                         <div>
 
-                            <input type="radio" name="payMethod" id="pay1" value="CARD" required><label for="pay1">카드결제</label>
-                            <input type="radio" name="payMethod" id="pay2" value="BANK" ><label for="pay2">계좌이체</label>
-                            <input type="radio" name="payMethod" id="pay3" value="CELLPHONE"><label for="pay3">휴대폰결제</label>
+                            <input type="radio" name="PayMethod" id="pay1" value="CARD" required><label for="pay1">카드결제</label>
+                            <input type="radio" name="PayMethod" id="pay2" value="BANK" ><label for="pay2">계좌이체</label>
+                            <input type="radio" name="PayMethod" id="pay3" value="CELLPHONE"><label for="pay3">휴대폰결제</label>
 
                             
                         </div>
@@ -436,31 +436,6 @@ function nicepayClose(){
             <!-- 오른쪽 -->
             <div id="rightDiv">
 
-                <!-- 약관동의 -->
-                <!--  
-                <div id="checkArea">
-                    <div  class="infoTitle">약관동의</div>
-                    <div id="CheckBoxArea">
-                        <div>
-                            <input type="checkbox"><label for="">결제대행 서비스 약관에 모두 동의</label>
-                        </div>
-                        <div id="checkBoxArea2">
-                            <div>
-                                <div><input type="checkbox"><label for="">전자 금융거래 이용 약관</label></div>
-                                <div><input type="checkbox"><label for="">개인정보 수집 이용 약관</label></div>
-                                <div><input type="checkbox"><label for="">개인정보 제공 및 위탈 안내 약관</label></div>
-                            </div>
-                            <div>
-                                <div>약관보기</div>
-                                <div>약관보기</div>
-                                <div>약관보기</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-				-->
-				
-				
                 <!-- 총 결제 금액 -->
                 <div id="totalArea">
                     <div class="infoTitle" >결제금액</div>
@@ -545,13 +520,29 @@ function nicepayClose(){
 										
 							<!-- 변경 불가능 -->
 							<br>
-				            <input type="hidden" name="EdiDate" value="<%-- <%=ediDate%> --%>"/>전문 생성일시 (o)
+				            <input type="text" name="EdiDate" value="<%-- <%=ediDate%> --%>"/>전문 생성일시 (o)
 							<br>
-				            <input type="hidden" name="SignData" value="<%-- <%=hashString%> --%>"/>해쉬값(o) 
+				            <input type="text" name="SignData" value="<%-- <%=hashString%> --%>"/>해쉬값(o) 
 
 
+
+							<!-- db에 넣을 데이터 -->
+							<!--
+								영화예매번호 bookNo
+								영화 상영번호
+								상영좌석번호 리스트
+							 -->
+							<br>
+							<input type="text" name="bookNo" value=""> 예약번호 (o)
+							<br>
+							<input type="text" name="playingNo" value="${requestScope.movie.playingNo }"> playingNo (o)
+							<!-- <input type="text" name="bookingSeatNos" value=""> 좌석번호들 -->
+							<br>
+							 쿠폰 번호(o)  
 							
-							
+							<c:forEach var="seat" items="${requestScope.bookingSeatList}">
+								<br><input type="text" name="bookingSeatNos" value="${seat.bookingSeatNo}"> 좌석번호(o)
+							</c:forEach>
 							
 							
 							
@@ -560,9 +551,9 @@ function nicepayClose(){
 				             <!-- <input type="text" name="VbankExpDate" value="">가상계좌입금만료일(YYYYMMDD) -->
 				             <!-- 옵션 --> 
 							<!-- <input type="hidden" name="GoodsCl" value="0"/> -->						<!-- 상품구분(실물(1),컨텐츠(0)) -->
-							<input type="hidden" name="TransType" value="0"/>					<!-- 일반(0)/에스크로(1) --> 
+							<!-- <input type="hidden" name="TransType" value="0"/> -->					<!-- 일반(0)/에스크로(1) --> 
 							<br>
-				            <input type="hidden" name="CharSet" value="utf-8"/>					<!-- 응답 파라미터 인코딩 방식 -->
+				            <!-- <input type="hidden" name="CharSet" value="utf-8"/> -->					<!-- 응답 파라미터 인코딩 방식 -->
 							<!-- <input type="hidden" name="ReqReserved" value=""/> -->					<!-- 상점 예약필드 -->
     </form>
     
@@ -576,7 +567,7 @@ function nicepayClose(){
     <script>
    		
     	//영화금액
-    	const price = 15000;
+    	const price = 1000;
 
     	//쿠폰금액 (100%)
     	const couponPrice = price;
@@ -595,6 +586,8 @@ function nicepayClose(){
 		let Amt = ""; //결제할 금액
 		
 		
+		
+		
 		//전체 로드 다 된후 실행
     	$(function(){
 			
@@ -603,8 +596,7 @@ function nicepayClose(){
     		showPlayTime(playTime,runTime);		
     		showTotalPrice(); 					//총금액	
     		showCost();							//최종결재금액
-    		
-    		
+
     	});
 		
 		//카운트다운
@@ -723,7 +715,7 @@ function nicepayClose(){
 
 		});
 
-    		
+
     	
 		
 		/* 쿠폰 */
@@ -844,6 +836,7 @@ function nicepayClose(){
 					let hashString = payInfo.hashString;
 					
 					$("#submitData>input[name=Moid]").val(bookNo);
+					$("#submitData>input[name=bookNo]").val(bookNo);
 					$("#submitData>input[name=MID]").val(merchantId);
 					$("#submitData>input[name=EdiDate]").val(ediDate);
 					$("#submitData>input[name=SignData]").val(hashString);

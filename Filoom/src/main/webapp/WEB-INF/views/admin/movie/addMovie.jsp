@@ -5,7 +5,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>영화 추가:: Filoom</title>
     <link rel="stylesheet" href="resources/css/admin.css" />
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -91,6 +91,39 @@
             // background-origin: padding-box;
             // background-color: blueviolet;
         } */
+
+/* 		.screentype label { */
+/* 	        display:block; */
+/* 	        width:80px; */
+/* 	        height:80px; */
+/* 	    } */
+
+		.screentype {
+			display:none;
+		}
+		
+		.screentype+label {
+		    display:inline-block;
+	        width:120px;
+	        height:80px;
+	        margin: 0px 30px;
+	        filter:contrast(0%);
+	    }
+	    .screentype:checked+label {
+	        filter:contrast(100%);
+	    }
+	    .screentype#imax+label {
+	        background: no-repeat;
+	        background-image:url('resources/images/icons/IMAX_small.svg');
+	    }
+	    .screentype#fdx+label {
+	        background: no-repeat;
+	        background-image:url('resources/images/icons/4DX_small.svg');
+	    }
+	    .screentype#screenx+label {
+	        background: no-repeat;
+	        background-image:url('resources/images/icons/SCREENX_small.svg');
+	    }
 
         /* 나중에 admin.css 손볼 때 #movie_submit로 변경 예정 */
         #button_sample {
@@ -208,13 +241,20 @@
                                     <td><input type="number" id="runtime" value=""></td>
                                     <td colspan="3">분</td>
                                 </tr>
-                                <!-- 이 행만 width 구성을 달리할 방법이 없어 일단 보류
+                                
+                                <!-- 로고별 이미지가 외관상 정렬이 안 되어 있는데 내부적으로는 정렬한 거 맞음
+                                	원본 이미지들의 width만 120px로 통일한 거고 원본의 비율 차이 때문에 이건 어쩔 수 없음 -->
                                 <tr>
-                                    <th colspan="2" width="">추가 상영 방식</th>
-                                    <td><img src="resources/images/icons/IMAX_blue_logo.svg" alt="IMAX"></td>
-                                    <td><img src="resources/images/icons/4DX_2019_logo.svg" alt="4DX"></td>
-                                    <td><img src="resources/images/icons/ScreenX_Logo_(2019).svg" alt="SCREENX"></td>
-                                </tr> -->
+                                    <th>추가 상영 타입</th>
+                                    <td colspan="4"><div id="screentype">
+                                    	<input type="checkbox" class="screentype" id="imax" value="IMAX">
+								        <label for="imax" value="IMAX"></label>
+									<input type="checkbox" class="screentype" id="fdx" value="4DX">
+								        <label for="fdx"></label>
+									<input type="checkbox" class="screentype" id="screenx" value="SCREENX">
+								        <label for="screenx"></label>
+                                   	</div></td>
+                                </tr>
                                 <tr>
                                     <th>트레일러 링크</th>
                                     <td colspan="4"><input type="url" id="trailer_link"></td>
@@ -230,7 +270,7 @@
                     <!-- <button>1234</button> -->
 
                     <input type="button" id ="button_sample"
-                     name="movie_submit" value="추가 완료" onclick="console.log($(':radio:checked').val());">
+                     name="movie_submit" value="추가 완료" onclick="submitMovie();">
 
                 </div>
 
@@ -288,12 +328,63 @@
         // console.log(num);
         let target = $("label[for$="+num+"]");
         $("label *").removeAttr("border");
+        // screenType도 label을 쓰긴 하는데 얘네는 border를 안 쓰니까 괜찮음
         target.children().first().attr({
             "border":"3px solid red"
         });
         // 현재 border-style과 border-color가 적용되지 않는 이슈 있음
         // 즉, 현재 버튼 선택시 3px만 적용됨
     }
+    
+    function submitMovie() {
+
+    	let movieTitle = $("#title").val();
+    	let filmRate = parseInt($("input[name=filmrate]").val(), 10); // 10진수로 parseInt
+    	let director = $("#director").val();
+    	let starring = $("#cast").val();
+    	let genre = $("#genre").val();
+    	let runtime = $("#runtime").val(); // number로 받고 있어서 parseInt 필요 없음
+    	let trailer = $("#trailer_link").val();
+    	let description = $("#synopsis").val();
+    	
+    	// adding checkbox selection of 'screenType'
+    	let screenType = [];
+    	$(".screentype").each(function() {
+    		if($(this).is(":checked")) {
+    			screenType.push($(this).val());
+    		}
+    	});
+
+    	$.ajax({
+    		url:"admin.insertmovie.mo",
+    		type:"post",
+    		data: {
+    			"movieTitle" : movieTitle,
+    			"filmRate" : filmRate,
+    			"director" : director,
+    			"starring" : starring,
+    			"genre" : genre,
+    			"screenType" : screenType,
+    			"runtime" : runtime,
+    			"trailer" : trailer,
+    			"description" : description
+    		},
+
+    		success: function(result) {
+    			if (result == "success") {
+    				alert('added successfully');
+    				return "redirect:/admin/movie/manageMovieList";
+    			} else {
+    				// if result = "failure"
+    				alert('movie was not added');
+    			}
+    		},
+    		error: function(result) {
+    			alert('DAMN!');
+    		}	
+    	});
+
+   	}
     </script>
     
 </body>

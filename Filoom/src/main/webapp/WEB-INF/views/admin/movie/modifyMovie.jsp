@@ -5,7 +5,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>영화 수정::Filoom</title>
+    <title>영화 수정:: Filoom</title>
     <link rel="stylesheet" href="resources/css/admin.css" />
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -87,6 +87,33 @@
         #basicInfo .filmrate {
             width:60px; height:60px;
         }
+        
+        .screentype {
+			display:none;
+		}
+		
+		.screentype+label {
+		    display:inline-block;
+	        width:120px;
+	        height:80px;
+	        margin: 0px 30px;
+	        filter:contrast(0%);
+	    }
+	    .screentype:checked+label {
+	        filter:contrast(100%);
+	    }
+	    .screentype#imax+label {
+	        background: no-repeat;
+	        background-image:url('resources/images/icons/IMAX_small.svg');
+	    }
+	    .screentype#fdx+label {
+	        background: no-repeat;
+	        background-image:url('resources/images/icons/4DX_small.svg');
+	    }
+	    .screentype#screenx+label {
+	        background: no-repeat;
+	        background-image:url('resources/images/icons/SCREENX_small.svg');
+	    }
 
         /* 나중에 admin.css 손볼 때 #movie_submit로 변경 예정 */
         #button_sample {
@@ -141,7 +168,7 @@
                 <!-- 여기 안이 관리자 컨텐츠 영역이에요~-->
                 <div id ="admin_page" align="center">
                     <!-- align = "center" ?-->
-                    
+                    <input type="hidden" id="serial" value="1">
                     <div id="innerAdmin">
                         <div id="newPoster">
                             <img id="posterDisplay" src="resources/images/posters/moana.jpg">
@@ -161,19 +188,28 @@
                                 </tr>
                                 <tr>
                                     <th>상영 등급</th>
-                                    <td width="160">
-                                        <label for="rateA"><img class="filmrate" src="resources/images/posters/3.svg" alt="ALL"></label>
+                                    <!-- <td width="160">
+                                        <label for="rate3"><img class="filmrate" src="resources/images/posters/3.svg" onclick="rateFilm(3);" alt="ALL"></label>
                                     </td>
                                     <td width="160">
-                                        <label for="rate12"><img class="filmrate" src="resources/images/posters/12.svg" alt="12"></label>
+                                        <label for="rate12"><img class="filmrate" src="resources/images/posters/12.svg" onclick="rateFilm(12);" alt="12"></label>
                                     </td>
                                     <td width="160">
-                                        <label for="rate15"><img class="filmrate" src="resources/images/posters/15.svg" alt="15"></label>
+                                        <label for="rate15"><img class="filmrate" src="resources/images/posters/15.svg" onclick="rateFilm(15);" alt="15"></label>
                                     </td>
                                     <td width="60">
-                                        <label for="rate19"><img class="filmrate" src="resources/images/posters/19.svg" alt="19"></label>
+                                        <label for="rate19"><img class="filmrate" src="resources/images/posters/19.svg" onclick="rateFilm(19);" alt="19"></label>
+                                    </td> -->
+                                    <td colspan="4" width=540>
+                                    	<div style="display:flex; justify-content: space-between;">
+	                                    	<label for="rate3"><img class="filmrate" src="resources/images/posters/3.svg" onclick="rateFilm(3);" alt="ALL"></label>
+	                                    	<label for="rate12"><img class="filmrate" src="resources/images/posters/12.svg" onclick="rateFilm(12);" alt="12"></label>
+	                                    	<label for="rate15"><img class="filmrate" src="resources/images/posters/15.svg" onclick="rateFilm(15);" alt="15"></label>
+	                                    	<label for="rate19"><img class="filmrate" src="resources/images/posters/19.svg" onclick="rateFilm(19);" alt="19"></label>
+                                    	</div>
                                     </td>
                                 </tr>
+                                
                                 <tr style="display:none;">
                                     <th>확인용</th>
                                     <td><input type="radio" name="filmrate" value="3"  id="rateA"></td>
@@ -203,13 +239,20 @@
                                     <td><input type="number" id="runtime" value="100"></td>
                                     <td colspan="3">분</td>
                                 </tr>
-                                <!-- 이 행만 width 구성을 달리할 방법이 없어 일단 보류
+                                
+                                <!-- 로고별 이미지가 외관상 정렬이 안 되어 있는데 내부적으로는 정렬한 거 맞음
+                                	원본 이미지들의 width만 120px로 통일한 거고 원본의 비율 차이 때문에 이건 어쩔 수 없음 -->
                                 <tr>
-                                    <th colspan="2" width="">추가 상영 방식</th>
-                                    <td><img src="resources/images/icons/IMAX_blue_logo.svg" alt="IMAX"></td>
-                                    <td><img src="resources/images/icons/4DX_2019_logo.svg" alt="4DX"></td>
-                                    <td><img src="resources/images/icons/ScreenX_Logo_(2019).svg" alt="SCREENX"></td>
-                                </tr> -->
+                                    <th>추가 상영 타입</th>
+                                    <td colspan="4"><div id="screentype">
+                                    	<input type="checkbox" class="screentype" id="imax" value="IMAX">
+								        <label for="imax" value="IMAX"></label>
+									<input type="checkbox" class="screentype" id="fdx" value="4DX">
+								        <label for="fdx"></label>
+									<input type="checkbox" class="screentype" id="screenx" value="SCREENX">
+								        <label for="screenx"></label>
+                                   	</div></td>
+                                </tr>
                                 
                                 <tr>
                                     <th>트레일러 링크</th>
@@ -226,7 +269,7 @@
                     <!-- <button>1234</button> -->
 
                     <input type="button" id ="button_sample"
-                     name="movie_submit" value="수정 완료">
+                     name="movie_submit" value="수정 완료" onclick="console.log($(':radio:checked').val());">
 
                 </div>
 
@@ -281,6 +324,72 @@
             $("#posterDisplay").attr("src","https://placehold.co/480x716");
         }
     }
+    
+    function rateFilm(num) {
+        // console.log(num);
+        let target = $("label[for$="+num+"]");
+        $("label *").removeAttr("border");
+        // screenType도 label을 쓰긴 하는데 얘네는 border를 안 쓰니까 괜찮음
+        target.children().first().attr({
+            "border":"3px solid red"
+        });
+        // 현재 border-style과 border-color가 적용되지 않는 이슈 있음
+        // 즉, 현재 버튼 선택시 3px만 적용됨
+    }
+    
+    
+    function submitMovie() {
+		
+    	let movieNo = $("#serial").val();
+    	let movieTitle = $("#title").val();
+    	let filmRate = $("input[name=filmrate]").val();
+    	let director = $("#director").val();
+    	let starring = $("#cast").val();
+    	let genre = $("#genre").val();
+    	let runtime = $("#runtime").val();
+    	let trailer = $("#trailer_link").val();
+    	let description = $("#synopsis").val();
+    	
+    	// adding checkbox selection of 'screenType'
+    	let screenType = [];
+    	$(".screentype").each(function() {
+    		if($(this).is(":checked")) {
+    			screenType.push($(this).val());
+    		}
+    	});
+
+    	$.ajax({
+    		url:"admin.updatemovie.mo",
+    		type:"post",
+    		data: {
+    			"movieNo" : movieNo,
+    			"movieTitle" : movieTitle,
+    			"filmRate" : filmRate,
+    			"director" : director,
+    			"starring" : starring,
+    			"genre" : genre,
+    			"screenType" : screenType,
+    			"runtime" : runtime,
+    			"trailer" : trailer,
+    			"description" : description
+    		},
+
+    		success: function(result) {
+    			if (result == "success") {
+    				alert('modified successfully');
+    				return "redirect:/admin/movie/manageMovieDetail?movieNo="+movieNo;
+    			} else {
+    				// if result == "failure"
+    				alert('movie was not modified');
+    			}
+    		},
+    		error: function(result) {
+    			alert('DAMN!');
+    		}	
+    	});
+
+   	}
+    
     </script>
     
 </body>

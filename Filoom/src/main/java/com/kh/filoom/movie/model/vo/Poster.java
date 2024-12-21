@@ -22,6 +22,7 @@ public class Poster {
 	private int movieNo;
 	private String fileName;
 	private String fileCodename;
+	private String imagePath;
 	private String uploadDate;
 	private int fileLevel;
 	private String status;

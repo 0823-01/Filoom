@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.kh.filoom.member.model.dao.MemberDao;
+import com.kh.filoom.member.model.vo.History;
 import com.kh.filoom.member.model.vo.Member;
 import com.kh.filoom.member.model.vo.Reserve;
 
@@ -91,9 +92,15 @@ public class MemberServiceImpl implements MemberService{
 	}
 
 	@Override
-	public List<Reserve> couponList(int userNo) {
+	public List<Reserve> useCouponList(int userNo) {
 
-		return memberDao.couponList(sqlSession, userNo);
+		return memberDao.useCouponList(sqlSession, userNo);
+	}
+
+	@Override
+	public List<History> historyList(int userNo) {
+
+		return memberDao.historyList(sqlSession, userNo);
 	}
 
 }

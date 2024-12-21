@@ -172,15 +172,28 @@
 		    text-decoration-line: none;
 		    color : #AB886D;
 		}
-		
-		.pagination > li>a.disabled {
-		    color: #AB886D;
-		    pointer-events: none;
-		}
-		
+
 		.pagination > li>a.active {
-		    color: #AB886D;
+		    color: #493628; 
 		}
+		
+		.pagination .active .page-link {
+	
+		    color: #AB886D;
+	
+		}
+		
+		.pagination .page-link {
+		    color: #493628; 
+		    text-decoration: none;
+		}
+		
+		.pagination .disabled .page-link {
+		    color: #ccc;
+		    pointer-events: none;
+		    cursor: default;
+		}
+
 
         /*버튼*/
         .btn {
@@ -270,8 +283,15 @@
 	                                    </div>
 		                            </td>
 		                            <td id="event-title">${e.eventTitle}</td>
-		                            <td id="event-startDate">${e.startDate}</td>
-		                            <td id="event-endDate">${e.endDate}</td>
+			                            <c:choose>
+			                            	<c:when test="${empty e.startDate and empty e.endDate }">
+			                            		<td colspan="2" style="text-align: center;">상시진행</td>
+			                            	</c:when>
+			                            	<c:otherwise>
+			                            		<td id="event-startDate">${e.startDate}</td>
+				                            	<td id="event-endDate">${e.endDate}</td>
+			                            	</c:otherwise>
+			                            </c:choose>
 		                            <td id="event-status">${e.eventStatus}</td>
 		                            <td id="estatus">${e.status}</td>
 		                        </tr>
@@ -295,53 +315,45 @@
                     </script>
 
                     <div class="foot" style="box-sizing: border-box;">
-                        <!--페이징바-->
-                        <div class="pagingArea">
-			                <ul class="pagination" id="pagination">
-			                	<c:choose>
-			                		<c:when test="${requestScope.pi.currentPage eq 1 }">
-			                			<li class="page-item disabled">
-			                				<a class="page-link" href="#">«</a>
-		                				</li>
-			                		</c:when>
-			                		<c:otherwise>
-			                			<li class="page-item">
-			                				<a class="page-link" href="alist.ev?cpage=${requestScope.pi.currentPage-1 }">«</a>
-		                				</li>
-			                		</c:otherwise>
-			                	</c:choose>
-			                	<c:forEach var="p" begin="${requestScope.pi.startPage }"
-			                					   end="${requestScope.pi.endPage }"
-			                					   step="1">
-		                			<c:choose>
-		                				<c:when test="${p ne requestScope.pi.currentPage }">
-		                					<li class="page-item">
-		                						<a class="page-link" href="alist.ev?cpage=${p }">${p }</a>
-		                					</li>
-		                				</c:when>
-		                				<c:otherwise>
-		                					<li class="page-item disabled">
-		                						<a class="page-link" href="alist.ev?cpage=${p }">${p }</a>
-		                					</li>
-		                				</c:otherwise>
-		                			</c:choose>
-			                	</c:forEach>
-			                	
-			                	<c:choose>
-			                		<c:when test="${requestScope.pi.currentPage ne requestScope.pi.maxPage }">
-			                			<li class="page-item">
-	                						<a class="page-link" href="alist.ev?cpage=${requestSCope.pi.currentPage + 1 }">»</a>
-	                					</li>
-			                		</c:when>
-			                		<c:otherwise>
-			                			<li class="page-item disabled">
-	                						<a class="page-link" href="#">»</a>
-	                					</li>
-			                		</c:otherwise>
-			                	</c:choose>
-		                	</ul>
-		                
-           				</div>
+                         <!-- 페이징바 -->
+					    <div class="pagingArea">
+					        <ul class="pagination" id="pagination">
+					            <!-- 이전 페이지 버튼 -->
+					            <c:choose>
+					                <c:when test="${requestScope.pi.currentPage == 1}">
+					                    <li class="page-item disabled">
+					                        <a class="page-link" href="#">«</a>
+					                    </li>
+					                </c:when>
+					                <c:otherwise>
+					                    <li class="page-item">
+					                        <a class="page-link" href="alist.ev?cpage=${requestScope.pi.currentPage - 1}">«</a>
+					                    </li>
+					                </c:otherwise>
+					            </c:choose>
+					
+					            <!-- 페이지 번호 출력 -->
+					            <c:forEach var="p" begin="${requestScope.pi.startPage}" end="${requestScope.pi.endPage}">
+					                <li class="page-item ${p == requestScope.pi.currentPage ? 'active' : ''}">
+					                    <a class="page-link" href="alist.ev?cpage=${p}">${p}</a>
+					                </li>
+					            </c:forEach>
+					
+					            <!-- 다음 페이지 버튼 -->
+					            <c:choose>
+					                <c:when test="${requestScope.pi.currentPage < requestScope.pi.maxPage}">
+					                    <li class="page-item">
+					                        <a class="page-link" href="alist.ev?cpage=${requestScope.pi.currentPage + 1}">»</a>
+					                    </li>
+					                </c:when>
+					                <c:otherwise>
+					                    <li class="page-item disabled">
+					                        <a class="page-link" href="#">»</a>
+					                    </li>
+					                </c:otherwise>
+					            </c:choose>
+					        </ul>
+					    </div>
            					<!--버튼--> 
 	                        <div class="btn">
 	                        	<a href="enrollForm.ev"><button id="enrollForm">이벤트 등록</button></a>

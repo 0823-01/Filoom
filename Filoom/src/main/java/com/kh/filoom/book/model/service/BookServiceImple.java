@@ -62,6 +62,7 @@ public class BookServiceImple implements BookService {
 	@Transactional
 	public int insertBookingSeat(BookingSeat bk) {
 		// TODO Auto-generated method stub
+		System.out.println("service 단에서 : " + bk);
 		return bookDao.insertBookingSeat(sqlSession, bk);
 	}
 
@@ -80,11 +81,24 @@ public class BookServiceImple implements BookService {
 	}
 
 	@Override
-	public int movieSearch(HashMap<String, Object> map) {
+	public ArrayList<Movie> movieSearch(HashMap<String, Object> map) {
 		// TODO Auto-generated method stub
 		return bookDao.movieSearch(sqlSession, map);
 	}
 	
+	
+	@Override
+	public ArrayList<Movie> selectSearchFirstMovie(HashMap<String, Object> map) {
+		// TODO Auto-generated method stub
+		return bookDao.selectSearchFirstMovie(sqlSession, map);
+	}
+	
+	@Override
+	@Transactional
+	public int isSeatAlreadyBooked(HashMap<String, Object> map) {
+		// TODO Auto-generated method stub
+		return bookDao.isSeatAlreadyBooked(sqlSession, map);
+	}
 	
 	
 	
@@ -106,14 +120,29 @@ public class BookServiceImple implements BookService {
 	
 	//결제===========================================================================
 
+	//좌석 확인하기
+	@Override
+	public int checkBookingSeat(int playingNo, ArrayList<String> seatNos) {
+		return bookDao.checkBookingSeat(sqlSession,playingNo,seatNos);
+	}
+
+	//좌석등록하기
+	@Override
+	@Transactional
+	public int insertBookingSeats(int playingNo, ArrayList<String> seatNos) {
+		return bookDao.insertBookingSeats(sqlSession,playingNo,seatNos);
+		
+	}	
+	
+	
 	//1. 좌석 유효성 검사 + 상영좌석일렬번호 반환
 	@Override
-	public ArrayList<BookingSeat> getBookingSeatNoList(ArrayList<String> seatNos,int playingNo) {
+	public ArrayList<BookingSeat> getBookingSeatNoList(ArrayList<String> seatNos,int playingNo,ArrayList<String> bookingSeatNos) {
 		
 		ArrayList<BookingSeat> bookingSeatNoList = new ArrayList();
 		
 		
-		bookingSeatNoList = bookDao.getBookingseatNoList(sqlSession,seatNos,playingNo);
+		bookingSeatNoList = bookDao.getBookingseatNoList(sqlSession,seatNos,playingNo,bookingSeatNos);
 		return bookingSeatNoList;
 	}
 
@@ -170,12 +199,6 @@ public class BookServiceImple implements BookService {
 		return bookDao.selectCheckCoupon(sqlSession,couponNos,userNo);
 	}
 
-	//쿠폰에 북넘버 추가하기
-	@Override
-	public int setCouponBookNo(List<Integer> couponNos, int userNo, int bookNo) {
-		return  bookDao.setCouponBookNo(sqlSession,couponNos,userNo,bookNo);
-		
-	}
 	//유효성 테스트 통과x, bookNo 지우기
 	@Override
 	public int deleteBookNo(int bookNo, int userNo) {
@@ -183,7 +206,17 @@ public class BookServiceImple implements BookService {
 	}
 
 
+
+	
+
+
 	
 
 	
+	//쿠폰에 북넘버 추가하기
+	@Override
+	public int setCouponBookNo(List<Integer> couponNos, int userNo, int bookNo) {
+		return  bookDao.setCouponBookNo(sqlSession,couponNos,userNo,bookNo);
+		
+	}
 }
