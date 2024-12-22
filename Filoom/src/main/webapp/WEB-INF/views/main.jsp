@@ -20,8 +20,8 @@
                 
                 <ul>
    
-                    <li>공지사항</li> &nbsp;&nbsp;&nbsp;&nbsp;
-                    <li>문의</li>
+                    <li><a href="${ pageContext.request.contextPath }/list.no">공지사항</a></li> &nbsp;&nbsp;&nbsp;&nbsp;
+                    <li><a href="${ pageContext.request.contextPath }/list.fa">문의</a></li>
      
                 </ul>
      

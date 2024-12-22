@@ -6,6 +6,7 @@ import java.util.HashMap;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.kh.filoom.movie.model.dao.MovieDao;
 import com.kh.filoom.movie.model.vo.Movie;
@@ -115,6 +116,7 @@ public class MovieServiceImpl implements MovieService {
 	}
 
 	@Override
+	@Transactional
 	public int addMovie(Movie m) {
 		// TODO Auto-generated method stub
 		return mDao.addMovie(sqlSession, m);
@@ -127,17 +129,26 @@ public class MovieServiceImpl implements MovieService {
 
 	// POSTER 테이블에 첨부한 이미지를 추가하는 용도 (영화 추가, 수정)
 	@Override
+	@Transactional
 	public int addPoster(Poster p) {
 		// TODO Auto-generated method stub
 		return mDao.addPoster(sqlSession, p);
 	}
 
 	// 영화 수정시 기존 이미지 삭제, 영화 삭제시 해당 이미지 삭제용 메소드
-	// + 영화 추가시 이미지 첨부는 성공했으나, 영화 추가에 실패시 남겨진 이미지 처리 용도로도 쓰임 
 	@Override
+	@Transactional
 	public int deletePoster(int imageId) {
 		// TODO Auto-generated method stub
 		return mDao.deletePoster(sqlSession, imageId);
+	}
+
+	// DB에 영화 추가는 성공했으나, 포스터 업로드는 실패했을 때 되돌리는 용도
+	// 사유 : 영화는 포스터 없이 추가할 수 없게 되어 있음
+	@Override
+	public int undoAddMovie(int movieNo) {
+		// TODO Auto-generated method stub
+		return mDao.undoAddMovie(sqlSession, movieNo);
 	}
 
 	

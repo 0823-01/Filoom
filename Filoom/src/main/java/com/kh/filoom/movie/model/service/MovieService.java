@@ -67,10 +67,11 @@ public interface MovieService {
 	
 	// 이미지 추가 - 영화 추가/수정 공통
 	int addPoster(Poster p); // 이미지 추가
-	int deletePoster(int imageId); // 이미지 삭제 - 이미지는 추가됐는데 영화 추가가 실패시 써먹을 목적
+	int deletePoster(int imageId); // 이미지 삭제 - 영화 수정/삭제시 써먹을 의도
 	
 	// === 관리자 영화 추가 페이지 ===
 	int addMovie(Movie m);
+	int undoAddMovie(int movieNo); // 영화 추가 후 포스터 추가 실패시 써먹을 의도
 	
 	// === 관리자 영화 수정 페이지 ===
 	int updateMovie(Movie m);

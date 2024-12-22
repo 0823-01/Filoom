@@ -89,7 +89,10 @@
 
         .movie-info {
             font-size:20px;
-            
+        }
+        
+        .box-is-empty {
+        	filter:invert(100%) sepia(100%) saturate(2%) hue-rotate(74deg) brightness(104%) contrast(101%)
         }
 
     </style>
@@ -108,21 +111,31 @@
             </div>
             <hr style="width:95%;">
             <br>
+            
+            <c:choose>
+            	<c:when test="${not empty now}">
+					<c:forEach var="pic" items="${now}">
+		            	<div class="movie">
+			                <img src="${pageContext.request.contextPath}/resources/images/posters/${pic.fileCodename}" class="poster">
+			                <table class="movie-info">
+			                    <tr>
+			                        <td id="filmrate"><img src="resources/images/posters/${pic.filmRate}.svg" class="filmrate"></td>
+			                        <td><b>${pic.movieTitle}</b><br></td>
+			                    </tr>
+			                    <tr>
+			                        <td colspan="2">${pic.openDate} ${pic.premiere eq 'Y' ? '개봉' : '개봉예정'} </td>
+			                    </tr>
+			                </table>
+		            	</div>
+		            </c:forEach>
+            	</c:when>
+            	
+            	<c:otherwise>
+            		<img src="resources/images/icons/projector-128px.svg" class="box-is-empty">
+            		<br>준비된 영화가 없습니다.
+            	</c:otherwise>
+            </c:choose>
 
-			<c:forEach var="pic" items="${now}">
-            	<div class="movie">
-	                <img src="${pageContext.request.contextPath}/resources/images/posters/${pic.fileCodename}" class="poster">
-	                <table class="movie-info">
-	                    <tr>
-	                        <td id="filmrate"><img src="resources/images/posters/${pic.filmRate}.svg" class="filmrate"></td>
-	                        <td><b>${pic.movieTitle}</b><br></td>
-	                    </tr>
-	                    <tr>
-	                        <td colspan="2">${pic.openDate} ${pic.premiere eq 'Y' ? '개봉' : '개봉예정'} </td>
-	                    </tr>
-	                </table>
-            	</div>
-            </c:forEach>
 
         </div>
         <br><br>
@@ -137,20 +150,29 @@
             <hr style="width:95%;">
             <br>
 
-			<c:forEach var="pic" items="${pre}">
-            	<div class="movie">
-	                <img src="${pageContext.request.contextPath}/resources/images/posters/${pic.fileCodename}" class="poster">
-	                <table class="movie-info">
-	                    <tr>
-	                        <td id="filmrate"><img src="resources/images/posters/${pic.filmRate}.svg" class="filmrate"></td>
-	                        <td><b>${pic.movieTitle}</b><br></td>
-	                    </tr>
-	                    <tr>
-	                        <td colspan="2">${pic.openDate} 개봉예정 </td>
-	                    </tr>
-	                </table>
-            	</div>
-            </c:forEach>
+			<c:choose>
+				<c:when test="${not empty pre}">
+					<c:forEach var="pic" items="${pre}">
+		            	<div class="movie">
+			                <img src="${pageContext.request.contextPath}/resources/images/posters/${pic.fileCodename}" class="poster">
+			                <table class="movie-info">
+			                    <tr>
+			                        <td id="filmrate"><img src="resources/images/posters/${pic.filmRate}.svg" class="filmrate"></td>
+			                        <td><b>${pic.movieTitle}</b><br></td>
+			                    </tr>
+			                    <tr>
+			                        <td colspan="2">${pic.openDate} 개봉예정 </td>
+			                    </tr>
+			                </table>
+		            	</div>
+		            </c:forEach>
+				</c:when>
+				
+				<c:otherwise>
+					<img src="resources/images/icons/projector-128px.svg" class="box-is-empty">
+					<br>상영을 앞둔 영화가 없습니다.
+				</c:otherwise>
+			</c:choose>
 
         </div>
         <br><br>

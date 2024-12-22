@@ -78,6 +78,11 @@
 	transition: color 0.3s ease;
 }
 
+#header_top li>a {
+	text-decoration: none; 
+   	color: #8B8B8B;
+}
+
 
 #header_top ul li:hover, #header_top ul li a:hover {
    color: #493628; 
@@ -152,8 +157,8 @@
 
             <ul>
    
-               <li>공지사항</li> &nbsp;&nbsp;&nbsp;&nbsp;
-               <li>문의</li>
+               <li><a href="${ pageContext.request.contextPath }/list.no">공지사항</a></li> &nbsp;&nbsp;&nbsp;&nbsp;
+               <li><a href="${ pageContext.request.contextPath }/list.fa">문의</a></li>
 
          	</ul>
 

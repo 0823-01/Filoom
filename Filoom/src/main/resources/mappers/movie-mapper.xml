@@ -466,24 +466,41 @@
 
 
 	<!-- === 영화 추가 페이지 === -->
-	<update id="addMovie" parameterType="movie">
+	<insert id="addMovie" parameterType="movie">
 		INSERT INTO MOVIE (
 			MOVIE_NO, MOVIE_TITLE, OPEN_DATE, DIRECTOR,
 			GENRE, RUNTIME, SCREEN_TYPE, FILM_RATE,
-			DESCRIPTION, STARRING, TRAILER
-		) VALUES (
-			SEQ_MOV.NEXTVAL, #{movieTitle}, #{openDate}, #{director},
+			DESCRIPTION, STARRING, TRAILER)
+		VALUES (
+			SEQ_MNO.NEXTVAL, #{movieTitle}, #{openDate}, #{director},
 			#{genre}, #{runtime}, #{screenType}, #{filmRate},
-			#{description}, #{starring}, #{trailer}
-		)
-	</update>
+			#{description}, #{starring}, #{trailer})
+		<selectKey keyProperty="movieNo" resultType="int" order="AFTER">
+			SELECT SEQ_MNO.CURRVAL FROM DUAL
+		</selectKey>
+	</insert>
+	
+	<!-- <select id="checkMovieNo" resultType="_int">
+		SELECT SEQ_MOV.CURRVAL FROM DUAL
+	</select> -->
+	
+	<delete id="undoAddMovie" parameterType="_int">
+		DELETE FROM MOVIE
+		WHERE MOVIE_NO = #{movieNo}
+	</delete>
 	
 	<!-- 이미지 추가 (영화 추가/수정 공통) -->
-	<!-- <update id="addPoster" parameterType="poster">
-	</update> -->
+	<insert id="addPoster" parameterType="poster">
+		INSERT INTO POSTER (
+		    IMAGE_ID, MOVIE_NO, FILE_NAME, FILE_CODENAME,
+		    IMAGE_PATH, FILE_LEVEL
+		) VALUES (
+		    SEQ_IMG.NEXTVAL, #{movieNo}, #{fileName}, #{fileCodename},
+		    #{imagePath}, 1 )
+	</insert>
 	
 	<!-- === 영화 수정 페이지 === -->
-	<update id="updateMovie" parameterType="movie">
+	<!-- <update id="updateMovie" parameterType="movie">
 		UPDATE MOVIE
 		SET MOVIE_TITLE = #{movieTitle}, OPEN_DATE = #{openDate},
 			DIRECTOR = #{director}, GENRE = #{genre},
@@ -491,5 +508,5 @@
 			DESCRIPTION = #{description}, STARRING = #{starring},
 			TRAILER = #{trailer}
 		WHERE STATUS = 'Y' AND MOVIE_NO = #{movieNo}
-	</update>
+	</update> -->
 </mapper>
