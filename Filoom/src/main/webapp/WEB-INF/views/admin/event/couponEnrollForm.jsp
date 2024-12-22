@@ -151,7 +151,7 @@
     </style>
 </head>
 <body>
-    <div id="enrollFormMoal">
+    <div id="enrollFormModal" style="display:none;">
 
         <!--쿠폰 등록 모달-->
         <div class="modal">
@@ -161,21 +161,20 @@
             </div>
 
 
-            <form id="coupon" action="" metho="post">
+            <form id="coupon" action="" method="post">
+            <!-- 이벤트 번호를 히든 값으로 전송 -->
+            <input type="hidden" name="eventNo" value="${e.eventNo }" /> 
                 <div class="modalContent" style="box-sizing: border-box;">
                     <div class="content1">
-                        <div class="no">
-                            <div>번호</div>
-                            <div id="no">8000</div>
-                        </div>
+                        
                         <div class="title">
-                            <div>이벤트명</div>
-                            <input type="text" id="title">
+                            <div><label for="couponName">쿠폰 이름</label></div>
+                            <input type="text" id="couponName" required>
                         </div>
+                        
                         <div class="type">
-                            <div>타입</div>
-                            
-                            <select id="type">
+                            <div><label for="couponLevel">타입</label></div>
+                            <select id="type" name="couponLevel">
                                 <option value="1">무대/시사회</option>
                                 <option value="2">관람권</option>
                                 <option value="1">기타</option>
@@ -183,38 +182,31 @@
                             
                         </div>
                     </div>
-
-                    <div class="date-status">
-                        <div class="date">
-                            <div>발급일</div>
-                            <input type="text" id="date">
-                        </div>
-                        <div class="endDate">
-                            <div>만료일</div>
-                            <input type="text" id="endDate">
-                        </div>
-                        <div class="status">
-                            <div>유효여부</div>
-                            <select id="status">
-                                <option value="만료">N</option>
-                                <option value="유효">Y</option>
-                            </select>
-                            
-                        </div>
-                    </div>
-
+                 
                     <!--목록, 수정, 삭제 버튼-->
                     <div class="back-update-delete">
                         <div class="btn">
-                            <button id="backList">목록</button>
+                            <button id="backList" onclick="closeCouponModal();">취소</button>
                             <button type="submit" id="submit">등록</button>
+                           
                         </div>
                     </div>
+                    
+                    </form>
                 </div>
-            </form>
-
         </div>
-        
     </div>
+    
+    <script>
+    	// 쿠폰 등록 모달 닫는 함수 
+    	function closeCouponModal() {
+    		var modal = document.getElementById('enrollFormMoal');
+    		if(modal) {
+    			modal.style.display = 'none'; // 모달 숨기기
+    		}
+    	}
+    </script>
+    
+    
 </body>
 </html>
