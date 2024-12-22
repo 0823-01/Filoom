@@ -6,7 +6,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>paymentForm</title>
 
 
 
@@ -398,7 +398,6 @@ function nicepayClose(){
                                 <div>
                                 	<c:forEach items="${requestScope.bookingSeatList}" var="bookingSeat">
                                 		"${bookingSeat.seatNo}"
-                                		
                                 	</c:forEach>
                                	</div>
                             </div>
@@ -410,7 +409,9 @@ function nicepayClose(){
                     <button type="button" onclick="selectCoupon()">조회</button>
                     
                     <div>
-                        <div id="couponList"></div>
+                        <div id="couponList">
+                        	<input type="checkbox" name="couponNos" value="" hidden>
+                        </div>
 
                     </div>
                 </div>
@@ -419,7 +420,7 @@ function nicepayClose(){
                     <div id="payMethods">
                         <div>
 
-                            <input type="radio" name="PayMethod" id="pay1" value="CARD" required><label for="pay1">카드결제</label>
+                            <input type="radio" name="PayMethod" id="pay1" value="CARD" checked><label for="pay1">카드결제</label>
                             <input type="radio" name="PayMethod" id="pay2" value="BANK" ><label for="pay2">계좌이체</label>
                             <input type="radio" name="PayMethod" id="pay3" value="CELLPHONE"><label for="pay3">휴대폰결제</label>
 
@@ -444,7 +445,7 @@ function nicepayClose(){
                             <tbody>
                                 <tr>
                                     <td>결제수단</td>
-                                    <td colspan="2" id="payMethod">선택</td>
+                                    <td colspan="2" id="payMethod">카드결제</td>
                                 </tr>
                                 <tr>
                                     <td>금액</td>
@@ -567,8 +568,9 @@ function nicepayClose(){
     <script>
    		
     	//영화금액
-    	const price = 1000;
+    	const price = "${requestScope.PRICE}";
 
+    	console.log("결제창 영화 가격 price :"+price);
     	//쿠폰금액 (100%)
     	const couponPrice = price;
     	
@@ -722,7 +724,10 @@ function nicepayClose(){
 		
     	//조회 클릭시 : 쿠폰리스트
     	function selectCoupon(){
-    		
+/*         <div id="couponList">
+             	<input type='checkBox' name='couponNos' value='' hidden>
+           </div> */
+
     		
     		
     		$.ajax({
@@ -735,11 +740,12 @@ function nicepayClose(){
 					
     				let couponList ="";
     				if(result.length===0){ //객체배열의 값이 없는값.. 비었는지로 조건걸기
-    					couponList += "<span>사용 가능한 쿠폰이 없습니다</span> ";				
+    					couponList += "<span>사용 가능한 쿠폰이 없습니다</span> ";
+    							    + "<input type='checkbox' name='couponNos' hidden>";
     				}else{	    				
 	    				result.forEach((item,index) => {
 	    					couponList += "<div>"
-    									+ 	"<input type='checkBox' name='couponNos' id='coupon"+index+"'value='"+item.couponNo+"' >"
+    									+ 	"<input type='checkbox' name='couponNos' id='coupon"+index+"'value='"+item.couponNo+"' >"
     									+ 	"<label for='coupon"+index+"'>"+item.couponName+"<br> "
     									+ 		"<span>"+dateTimeToDate(item.couponExpDate)+"까지</span>"
     									+ 	"</label>"

@@ -97,19 +97,15 @@ public class BookDao {
 
 	
 	//유효성 검사 + 좌석일렬번호 검사
-	public ArrayList<BookingSeat> getBookingseatNoList(SqlSessionTemplate sqlSession,
+	public ArrayList<BookingSeat> checkAndGetBookingSeatNoList(SqlSessionTemplate sqlSession,
 														ArrayList<String> seatNos, 
 														int playingNo,
 														ArrayList<String> bookingSeatNos) {
-		
-		
 		HashMap<String,Object> map = new HashMap<>();
 		map.put("seatNos", seatNos);
 		map.put("playingNo", playingNo);
 		map.put("bookingSeatNos", bookingSeatNos);
-		return (ArrayList)sqlSession.selectList("bookMapper.getBookingseatNoList",map); 
-										
-										
+		return (ArrayList)sqlSession.selectList("bookMapper.checkAndGetBookingSeatNoList",map); 							
 	}
 
 	
@@ -141,8 +137,7 @@ public class BookDao {
 
 	//상영좌석일렬번호, 좌석 정보
 	public ArrayList<BookingSeat> selectListBookingSeat(SqlSessionTemplate sqlSession,
-			ArrayList<BookingSeat> bookingSeatNoList) {
-
+														ArrayList<BookingSeat> bookingSeatNoList) {
 		return (ArrayList)sqlSession.selectList("bookMapper.selectListBookingSeat",bookingSeatNoList);
 	}
 
@@ -192,13 +187,75 @@ public class BookDao {
 	
 	
 	
-	//쿠폰 업데이트 수정하기
-	public int setCouponBookNo(SqlSessionTemplate sqlSession, List<Integer> couponNos, int userNo, int bookNo) {
+
+
+	//예매된 좌석 업데이트
+	public int updateBookingSeatDone(SqlSessionTemplate sqlSession, ArrayList<BookingSeat> bookingSeatNoList,int bookNo) {
+		Map<String,Object> map = new HashMap();
+		map.put("bookingSeatNoList", bookingSeatNoList);
+		map.put("bookNo", bookNo);
+		return sqlSession.update("bookMapper.updateBookingSeatDone",map);
+	}
+
+	public int updateCouponUserDone(SqlSessionTemplate sqlSession, ArrayList<Integer> couponNos, int bookNo,int userNo) {
 		Map<String,Object> map = new HashMap();
 		map.put("couponNos", couponNos);
-		map.put("userNo", userNo);
 		map.put("bookNo", bookNo);
-		return sqlSession.update("couponMapper.setCouponBookNo",map);
+		map.put("userNo", userNo);
+		return sqlSession.update("couponMapper.updateCouponUserDone",map);
 	}
+
+	//영화 예매 처리(업데이트)
+	public int updateBookingDone(SqlSessionTemplate sqlSession, Booking booking) {
+		return sqlSession.update("bookMapper.updateBookingDone",booking);
+	}
+
+	public int deleteBookingSeats(SqlSessionTemplate sqlSession, ArrayList<String> bookingSeatNos) {
+		
+		return sqlSession.delete("bookMapper.deleteBookingSeats",bookingSeatNos);
+	}
+
+	public int deleteBooking(SqlSessionTemplate sqlSession, int bookNo,int userNo) {
+		Map<String,Integer> map = new HashMap();
+		map.put("bookNo", bookNo);
+		map.put("userNo", userNo);
+		return sqlSession.delete("bookMapper.deleteBooking",map);
+	}
+
+	public ArrayList<CouponUser> selectListCouponUserList(SqlSessionTemplate sqlSession, int bookNo) {
+		return (ArrayList)sqlSession.selectList("couponMapper.selectListCouponUserList",bookNo);
+	}
+
+	public Booking selectBooking(SqlSessionTemplate sqlSession, int bookNo) {
+		return sqlSession.selectOne("bookMapper.selectBooking",bookNo);
+	}
+
+	public int cancelUpdateBooking(SqlSessionTemplate sqlSession, int bookNo, int userNo) {
+		Map<String,Integer> map = new HashMap();
+		map.put("bookNo", bookNo);
+		map.put("userNo", userNo);
+		return sqlSession.update("bookMapper.cancelUpdateBooking",map);
+	}
+
+	public int checkCancelBooking(SqlSessionTemplate sqlSession, int bookNo, int userNo) {
+		Map<String,Integer> map = new HashMap();
+		map.put("bookNo", bookNo);
+		map.put("userNo", userNo);
+		return sqlSession.selectOne("bookMapper.checkCancelBooking",map);
+	}
+
+	public int cancelUpdateCouponUser(SqlSessionTemplate sqlSession, int bookNo, int userNo) {
+		Map<String,Integer> map = new HashMap();
+		map.put("bookNo", bookNo);
+		map.put("userNo", userNo);
+		return sqlSession.update("couponMapper.cancelUpdateCouponUser",map);
+	}
+
+	public int cancelupdateBookingSeat(SqlSessionTemplate sqlSession, int bookNo) {
+		return sqlSession.delete("bookMapper.cancelupdateBookingSeat",bookNo);
+	}
+
+
+
 	
 }

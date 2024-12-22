@@ -6,12 +6,14 @@
 	
 	<resultMap id="bookingResultSet" type="booking">
 		<id column="BOOK_NO" property="bookNo"/>
+		<result column="USER_NO" property="userNo"/>
 		<result column="BOOK_DATE" property="bookDate"/>
+		<result column="BOOK_TOTAL_COST" property="bookTotalCost"/>
 		<result column="BOOK_COST" property="bookCost"/>
 		<result column="COST_PROCESS" property="costProcess"/>
+		<result column="COST_TID" property="costTid"/>
 		<result column="STATUS" property="status"/>
 		<result column="MODIFY_DATE" property="modifyDate"/>
-		<result column="USER_NO" property="userNo"/>
 	</resultMap>
 	
 	<resultMap id = "playingResultSet" type="playing">
@@ -238,7 +240,7 @@
 
 	<!-- 결제 -->
 	
-	<select id="getBookingseatNoList" parameterType="map" resultMap="bookingSeatResultSet">
+	<select id="checkAndGetBookingSeatNoList" parameterType="map" resultMap="bookingSeatResultSet">
 
  		SELECT BOOKING_SEAT_NO
 		  FROM BOOKING_SEAT BS
@@ -331,4 +333,73 @@
 		            #{playingNo},
 		            NULL)
 	</insert>
+	
+	<update id="updateBookingSeatDone" parameterType="map">
+		UPDATE BOOKING_SEAT
+		   SET TIMELIMIT = '2999-01-01',
+		       BOOK_NO = #{bookNo}
+	    WHERE							  
+			 <foreach item="item" collection="bookingSeatNoList" open="BOOKING_SEAT_NO IN (" separator="," close=")"> 
+			 	#{item.bookingSeatNo}
+		 	</foreach>
+	</update>
+	
+	<update id="updateBookingDone" parameterType="booking">
+		UPDATE BOOKING
+		   SET BOOK_DATE=SYSDATE,
+		       BOOK_TOTAL_COST=#{bookTotalCost},
+		       BOOK_COST=#{bookCost},
+		       COST_PROCESS=#{costProcess},
+		       COST_TID=#{costTid},
+		       STATUS='Y'
+		 WHERE BOOK_NO=#{bookNo}
+		   AND USER_NO=#{userNo}
+	</update>
+	
+	
+	<delete id="deleteBookingSeats" parameterType="list">
+		DELETE FROM BOOKING_SEAT
+		 WHERE 
+		 <foreach item="item" collection="list" open="BOOKING_SEAT_NO IN (" separator="," close=")">
+		 	#{item}
+		 </foreach>
+	</delete>
+	
+	<delete id="deleteBooking" parameterType="map">
+		DELETE FROM BOOKING
+		 WHERE BOOK_NO = #{bookNo}
+		   AND USER_NO = #{userNo}
+	</delete>
+	
+	<select id="selectBooking" parameterType="int" resultMap="bookingResultSet">
+		SELECT *
+		  FROM BOOKING
+		 WHERE BOOK_NO = #{bookNo}
+	</select>
+	
+	<update id="cancelUpdateBooking" parameterType="map">
+		UPDATE BOOKING
+		   SET STATUS ='N',
+		       MODIFY_DATE=SYSDATE
+		 WHERE BOOK_NO=#{bookNo}
+		   AND USER_NO=#{userNo}
+	</update>
+	
+	<select id="checkCancelBooking" parameterType="map" resultType="int">
+		SELECT COUNT(B.BOOK_NO)
+		  FROM BOOKING B
+		  JOIN BOOKING_SEAT BS ON (B.BOOK_NO = BS.BOOK_NO)
+		  JOIN PLAYING P ON (BS.PLAYING_NO = P.PLAYING_NO)
+		 WHERE B.BOOK_NO = #{bookNo}
+		   AND PLAYTIME > SYSDATE
+		   AND USER_NO = #{userNo}
+		   AND B.STATUS = 'Y'
+		   AND MODIFY_DATE IS NULL
+	</select>
+	
+	<delete id="cancelupdateBookingSeat" parameterType="int">
+		DELETE FROM BOOKING_SEAT
+	 	 WHERE BOOK_NO = #{bookNo}
+	</delete>
+	
 </mapper>

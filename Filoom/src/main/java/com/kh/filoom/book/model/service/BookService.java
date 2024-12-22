@@ -8,6 +8,7 @@ import java.util.Map;
 
 import org.springframework.transaction.annotation.Transactional;
 
+import com.kh.filoom.book.model.vo.Booking;
 import com.kh.filoom.book.model.vo.BookingSeat;
 import com.kh.filoom.book.model.vo.Playing;
 import com.kh.filoom.coupon.model.vo.CouponUser;
@@ -63,7 +64,7 @@ public interface BookService {
 	int insertBookingSeats(int playingNo, ArrayList<String> seatNos);
 
 	//상영좌석 번호 구하기+유효성검사
-	ArrayList<BookingSeat> getBookingSeatNoList(ArrayList<String> seatNoList, int playingNo,ArrayList<String> bookingSeatNos);
+	ArrayList<BookingSeat> checkAndGetBookingSeatNoList(ArrayList<String> seatNoList, int playingNo,ArrayList<String> bookingSeatNos);
 
 	//좌석 유효시간 늘려주기
 	int updateTimeLimit(ArrayList<BookingSeat> bookingSeatNoList);
@@ -95,8 +96,37 @@ public interface BookService {
 
 
 	
-	//쿠폰에 bookNo 추가하기(예비) ///////쿠폰 업데이트에 사용하기
-	int setCouponBookNo(List<Integer> couponNos, int userNo, int bookNo);
+	
+	//결제성공시 영화 예매 처리
+	int updateBookingDone(Booking booking);
+
+	//결제성공시 예매된 좌석 처리
+	int updateBookingSeatDone(ArrayList<BookingSeat> bookingSeatNoList, int bookNo);
+
+	//결제성공시 사용된 쿠폰 처리
+	int updateCouponUserDone(ArrayList<Integer> couponNos, int bookNo,int userNo);
+
+	//결제 실패시 좌석 삭제 처리
+	int deleteBookingSeats(ArrayList<String> bookingSeatNos);
+
+	//결제실패시 예매내역삭제
+	int deleteBooking(int bookNo, int userNo);
+
+	//쿠폰사용시 사용한 쿠폰정보 조회
+	ArrayList<CouponUser> selectListCouponUserList(int bookNo);
+
+	//예약정보 조회
+	Booking selectBooking(int bookNo);
+	
+	//결제 취소 요청
+	int cancelUpdateBooking(int bookNo, int userNo);
+
+	//결제 취소 유효성 검사
+	int checkCancelBooking(int bookNo, int userNo);
+
+	
+	
+
 	
 
 }
