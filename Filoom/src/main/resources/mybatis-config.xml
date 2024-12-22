@@ -32,8 +32,6 @@
 		<typeAlias type = "com.kh.filoom.event.model.vo.Applicant" alias="applicant" />
 		<typeAlias type = "com.kh.filoom.event.model.vo.Winners" alias="winners" />
 		
-		
-		
 		<typeAlias type = "com.kh.filoom.notice.model.vo.Notice" alias="notice" />
 		
 		
@@ -51,8 +49,8 @@
 		<mapper resource = "/mappers/coupon-mapper.xml"/>
 
 		<mapper resource = "/mappers/admin-mapper.xml"/>
-		<mapper resource = "/mappers/event-mapper.xml" />
-		<mapper resource = "/mappers/notice-mapper.xml" />
+		<mapper resource = "/mappers/event-mapper.xml"/>
+		<mapper resource = "/mappers/notice-mapper.xml"/>
 
 	
 	</mappers>

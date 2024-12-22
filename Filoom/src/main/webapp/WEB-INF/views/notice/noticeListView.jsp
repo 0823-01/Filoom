@@ -1,5 +1,5 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>   
 <!DOCTYPE html>
 <html>
 <head>
@@ -7,7 +7,7 @@
 <title>공지사항 목록조회</title>
 <style>
     body{
-        background-color: #313131;
+        background-color: black;
     }
 	/*전체를 감싸는 영역*/
 	.container {
@@ -26,7 +26,7 @@
 	    justify-items: left;
 	    gap : 25px;
 	    background-color: #E4E0E1;
-	    height : 40px;
+	    height : 55px;
 	    font-size: 25px;
 	    font-weight: bold;
 	    color : #493628;
@@ -62,7 +62,7 @@
 	}
 	
 	/*목록 테이블*/
-	.nTable {
+	.noticeList {
 	    width : 100%;
 	    border-collapse : collapse;
 	    overflow: hidden;
@@ -74,6 +74,9 @@
 	
 	#nTitle {
 	    width : 60%;
+	}
+	#nTitle:hover {
+		cursor:pointer;
 	}
 	
 	#nCreateDate {
@@ -102,49 +105,119 @@
 	}
 	
 	/*페이징영역*/
+        
+	.foot {
+	 	box-sizing : border-box;
+	 	display: flex;
+	 	justify-content: center;
+	 	align-items : center;
+	 	flex-direction: column;
+	 	position: relative;
+	
+	}
+       
 	.pagingArea {
-	    width : fit-content;
-	    margin:auto;
+	    display: flex;
+	    justify-content: center;
+	    padding : 20px;
+	    font-size: 20px;
+	    font-weight: bold;
+	
 	}
 	.pagination {
 	    list-style-type : none;
+	    display: flex;
+	    padding : 0;
+	    margin: 0;
+	    font-size: 20px;
+	    font-weight: bold;
 	}
 	.pagination>li {
-	    float : left;
-	    font-size : 20px;
-	    margin-left: 10px;
-	    margin-right: 10px;
-	}
-	li>a {
-	    text-decoration-line: none;
+	    margin : 0 10px; /*리스트 항목 간의 간격*/
+	    cursor: pointer;
+	    transition: color 0.3s ease; /*색상 전환 효과*/
+	    font-size: 25px;
+	    font-weight: bold;
 	    color : #F3F3F3;
-	    color : black;
 	}
 	
-	li>a:hover, li>a:active {
+	.pagination>li>a {
+	    margin : 0 10px; /*리스트 항목 간의 간격*/
+	    cursor: pointer;
+	    transition: color 0.3s ease; /*색상 전환 효과*/
+	    font-size: 25px;
+	    font-weight: bold;
+	    color : #E4E0E1;
+	    text-decoration : none;
+	}
+	
+	.pagination>li>a:hover {
+	    text-decoration-line: none;
 	    color : #AB886D;
 	}
+	
+	.pagination > li>a.active {
+	    color: #493628; 
+	}
+	
+	.pagination .active .page-link {
+	
+	    color: #AB886D;
+	
+	}
+	
+	.pagination .page-link {
+	    color: #E4E0E1; 
+	    text-decoration: none;
+	}
+	
+	.pagination .disabled .page-link {
+	    color: #ccc;
+	    pointer-events: none;
+	    cursor: default;
+	}
+	
+	/*글작성버튼*/
+    .btn {
+        padding-right : 13px;
+        box-sizing: border-box;
+        position: absolute; 
+        right: 0;
+    }
+
+    #enrollForm {
+        width: 170px;
+        height: 38px;
+        border: none;
+        border-radius: 5px;
+        color: #D2CECF;
+        font-size: 20px;
+        font-weight: bolder;
+        box-shadow: 3px 3px 3px rgb(0, 0, 0, 0.2);
+        background-color: #493628;
+        cursor: pointer;
+    }
+
+    #enrollForm:hover {
+        transform: scale(1.1em);
+    }
+
+    #enrollForm:active {
+        background-color: #AB886D;
+    }
 
 </style>
 </head>
 <body>
     
     <jsp:include page="../common/header.jsp" />
-    <!--전체영역을 감싸는 container-->
-    <div class="container">
-    
-        <h2 style="color : #E4E0E1;">공지사항</h2>
-        <h3 style="color : #E4E0E1; ">FILOOM의 주요한 이슈 및 여러가지 소식들을 확인할 수 있습니다.</h3>
-        <div style="font-weight: bold; color : #E4E0E1; margin-bottom : 20px;">총<b style="color : #AB886D;">110</b>건</div>
-
-	<jsp include page="../header.jsp" />
     
     <!--전체영역을 감싸는 container-->
     <div class="container">
 
         <h2 style="color : #E4E0E1;">공지사항</h2>
         <h3 style="color : #E4E0E1; ">FILOOM의 주요한 이슈 및 여러가지 소식들을 확인할 수 있습니다.</h3>
-        <div style="font-weight: bold; color : #E4E0E1; margin-bottom : 20px;">총<b style="color : #AB886D;">110</b>건</div>
+        <div style="font-weight: bold; color : #E4E0E1; margin-bottom : 20px;">총<b style="color : #AB886D;" id="ncount">${listCount }</b>건</div>
 
         <!--공지사항 게시글 목록 리스트 영역-->
         <div class="listArea">
@@ -157,116 +230,99 @@
 
             <!--목록테이블-->
             <div class="list-area">
-                <table class="nTable">
+                <table class="noticeList">
                     <tbody>
-                        <tr class="list">
-                            <td id="nNo">1</td>
-                            <td id="nTitle" align="left">2025&2026 VIP 멤버십 운영 변경 안내</td>
-                            <td id="nCreateDate">2024-11-26</td>
-                            <td id="nCount">5000</td>
-                        </tr>
-                        <tr class="list">
-                            <td>1</td>
-                            <td id="ntitle" align="left">2025&2026 VIP 멤버십 운영 변경 안내</td>
-                            <td>2024-11-26</td>
-                            <td>5000</td>
-                        </tr>
-                        <tr class="list">
-                            <td>1</td>
-                            <td id="ntitle" align="left">2025&2026 VIP 멤버십 운영 변경 안내</td>
-                            <td>2024-11-26</td>
-                            <td>5000</td>
-                        </tr>
-                        <tr class="list">
-                            <td>1</td>
-                            <td id="ntitle" align="left">2025&2026 VIP 멤버십 운영 변경 안내</td>
-                            <td>2024-11-26</td>
-                            <td>5000</td>
-                        </tr>
-                        <tr class="list">
-                            <td>1</td>
-                            <td id="ntitle" align="left">2025&2026 VIP 멤버십 운영 변경 안내</td>
-                            <td>2024-11-26</td>
-                            <td>5000</td>
-                        </tr>
-                        <tr class="list">
-                            <td>1</td>
-                            <td id="ntitle" align="left">2025&2026 VIP 멤버십 운영 변경 안내</td>
-                            <td>2024-11-26</td>
-                            <td>5000</td>
-                        </tr>
-                        <tr class="list">
-                            <td>1</td>
-                            <td id="ntitle" align="left">2025&2026 VIP 멤버십 운영 변경 안내</td>
-                            <td>2024-11-26</td>
-                            <td>5000</td>
-                        </tr>
-                        <tr class="list">
-                            <td>1</td>
-                            <td id="ntitle" align="left">2025&2026 VIP 멤버십 운영 변경 안내</td>
-                            <td>2024-11-26</td>
-                            <td>5000</td>
-                        </tr>
-                        <tr class="list">
-                            <td>1</td>
-                            <td id="ntitle" align="left">2025&2026 VIP 멤버십 운영 변경 안내</td>
-                            <td>2024-11-26</td>
-                            <td>5000</td>
-                        </tr>
-                        <tr class="list">
-                            <td>1</td>
-                            <td id="ntitle" align="left">2025&2026 VIP 멤버십 운영 변경 안내</td>
-                            <td>2024-11-26</td>
-                            <td>5000</td>
-                        </tr>
+                    	<c:forEach var="n" items="${requestScope.list }">
+                    		<tr class="list">
+	                            <td class="nno" id="nNo">${n.noticeNo }</td>
+	                            <td id="nTitle" align="left">${n.noticeTitle }</td>
+	                            <td id="nCreateDate">${n.createDate }</td>
+	                            <td id="nCount">${n.count }</td>
+                        	</tr> 
+                    	</c:forEach>
                     </tbody>
                 </table>
             </div>
         </div>
+        <script>
+			$(function() {
+				$(".noticeList>tbody>tr").click(function() {
+					// 글번호 뽑기
+					let nno = $(this).children(".nno").text();
+					console.log(nno);
+					
+					location.href = "detail.no?nno=" + nno;
+				});
+				
+			});        
+        </script>
 
-	    <!--페이징바-->
-	    <div class="pagingArea">
-	        <ul class="pagination">
-	            <li class="page-item disabled"><a class="page-link" href="#">«</a></li>
-	            <li class="page-item"><a class="page-link" href="#">1</a></li>
-	            <li class="page-item"><a class="page-link" href="#">2</a></li>
-	            <li class="page-item"><a class="page-link" href="#">3</a></li>
-	            <li class="page-item"><a class="page-link" href="#">4</a></li>
-	            <li class="page-item"><a class="page-link" href="#">5</a></li>
-	            <li class="page-item"><a class="page-link" href="#">6</a></li>
-	            <li class="page-item"><a class="page-link" href="#">7</a></li>
-	            <li class="page-item"><a class="page-link" href="#">8</a></li>
-	            <li class="page-item"><a class="page-link" href="#">9</a></li>
-	            <li class="page-item"><a class="page-link" href="#">10</a></li>
-	            <li class="page-item"><a class="page-link" href="#">»</a></li>
-	        </ul> 
-	    </div>
+	    <div class="foot" style="box-sizing: border-box;">
+		<!-- 페이징바 -->
+		<div class="pagingArea">
+		    <ul class="pagination" id="pagination">
+		        <!-- 이전 페이지 버튼 -->
+		<c:choose>
+		    <c:when test="${requestScope.pi.currentPage == 1}">
+		    <li class="page-item disabled">
+		        <a class="page-link" href="#">«</a>
+		    </li>
+		</c:when>
+		<c:otherwise>
+		    <li class="page-item">
+		        <a class="page-link" href="list.no?cpage=${requestScope.pi.currentPage - 1}">«</a>
+		        </li>
+		    </c:otherwise>
+		</c:choose>
+		
+		<!-- 페이지 번호 출력 -->
+		<c:forEach var="p" begin="${requestScope.pi.startPage}" end="${requestScope.pi.endPage}">
+		<li class="page-item ${p == requestScope.pi.currentPage ? 'active' : ''}">
+		<a class="page-link" href="list.no?cpage=${p}">${p}</a>
+		    </li>
+		</c:forEach>
+		
+		<!-- 다음 페이지 버튼 -->
+		<c:choose>
+		    <c:when test="${requestScope.pi.currentPage < requestScope.pi.maxPage}">
+		<li class="page-item">
+		    <a class="page-link" href="list.no?cpage=${requestScope.pi.currentPage + 1}">»</a>
+		                </li>
+		            </c:when>
+		            <c:otherwise>
+		                <li class="page-item disabled">
+		                    <a class="page-link" href="#">»</a>
+		                </li>
+		            </c:otherwise>
+		        </c:choose>
+		    </ul>
+		</div>
+		
+		<!--버튼--> 
+        <div class="btn">
+        	<c:if test="${sessionScope.loginUser.userNo eq 1 }">
+        		<a href="enrollForm.no"><button id="enrollForm">글 작성</button></a>
+        	</c:if>
+        </div>
+    </div>
+	</div>
+	
+	 <jsp include page="../common/footer.jsp" />
+	
+	<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const navItems = document.querySelectorAll("#nav > ul > li");
     
-    </div>
-   
-
-
-    <jsp:include page="../common/footer.jsp" />
-    </div>
-
-    <!--페이징바-->
-    <div class="pagingArea">
-        <ul class="pagination">
-            <li class="page-item disabled"><a class="page-link" href="#">«</a></li>
-            <li class="page-item"><a class="page-link" href="#">1</a></li>
-            <li class="page-item"><a class="page-link" href="#">2</a></li>
-            <li class="page-item"><a class="page-link" href="#">3</a></li>
-            <li class="page-item"><a class="page-link" href="#">4</a></li>
-            <li class="page-item"><a class="page-link" href="#">5</a></li>
-            <li class="page-item"><a class="page-link" href="#">6</a></li>
-            <li class="page-item"><a class="page-link" href="#">7</a></li>
-            <li class="page-item"><a class="page-link" href="#">8</a></li>
-            <li class="page-item"><a class="page-link" href="#">9</a></li>
-            <li class="page-item"><a class="page-link" href="#">10</a></li>
-            <li class="page-item"><a class="page-link" href="#">»</a></li>
-        </ul>
-    </div>
-
-    <jsp include page="../common/footer.jsp" />
+        navItems.forEach(item => {
+            item.addEventListener("click", function () {
+                // 모든 항목에서 selected 클래스 제거
+                navItems.forEach(nav => nav.classList.remove("selected"));
+    
+                // 클릭된 항목에 selected 클래스 추가
+                this.classList.add("selected");
+            });
+        });
+    });
+    </script>
 </body>
 </html>
