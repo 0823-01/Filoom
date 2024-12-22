@@ -331,29 +331,9 @@ public class BookController {
 			//좌석이름들과, 상영번호로 좌석번호 가져오기 
 
 			log.debug("상영좌석 일렬번호 리스트 " +bookingSeatNoList);
-
-///////////////////////////////////////////////////////////////////////////////////////////////////////	
 			
-			/* 필요없어짐
-			if(bookingSeatNoList==null) { //유효성 실패
-				
-				log.debug("2==유효성테스트 실패, 메인페이지로 ->");
-				session.setAttribute("alertMsg", "죄송합니다. 시간이 오래 경과되어 다시 시도해주시기 바랍니다.");
-				mv.setViewName("redirect:/"); 
-				
-			}else {
-
-				log.debug("2==유효성테스트 성공");
-				
-				//유효시간 5분 늘려주기
-				int updateTimeLimit = bookService.updateTimeLimit(bookingSeatNoList);
-				log.debug("3==TimeLimit 늘려주기 : 처리된행의갯수" + updateTimeLimit);
-			*/
-///////////////////////////////////////////////////////////////////////////////////////////////////////				
 			//3.결제화면에 넘길 정보 조회, mv에 담기
-				
-
-		
+	
 			//*상영번호 -> 영화정보,이미지,상영정보, 상영관정보 조회
 			Movie movie = bookService.selectMovieForPlayingNo(playingNo);
 			
@@ -372,8 +352,6 @@ public class BookController {
 			
 			mv.addObject("PRICE",PRICE);
 
-			
-			session.setAttribute("alertMsg", "결제하자");	
 			mv.setViewName("book/paymentForm");
 			
 			
@@ -596,8 +574,6 @@ public class BookController {
 			int bookingDeleteResult = bookService.deleteBooking(bookNo,userNo);
 			log.debug("예매번호 삭제 처리된 행의 갯수 : "+bookingDeleteResult);
 			
-			
-			session.setAttribute("alertMsg", "죄송합니다. 다시 시도해주시길 바랍니다");
 			mv.setViewName("redirect:/");
 		}
 		

@@ -465,7 +465,7 @@
 			                                <div class="title-price">
 			                                    <div><a href="#" class="movie-title">${reserve.movieTitle}</a></div>
 			                                    <div class="cancel-review">
-			                                    	<button type="button" class="cancel-btn">예매 취소</button>
+			                                    	<button type="button" class="cancel-btn" onclick="canelRequest(${reserve.bookNo})">예매 취소</button>
 			                                    	<button type="button" class="review-btn">리뷰 남기러 가기</button>
 			                                    </div>
 			                                </div>
@@ -733,6 +733,32 @@
                 }
             });
         });
+        
+        //형문 -결제 취소
+        function canelRequest(bookNo){
+			let cancelConfirm = confirm("예매를 취소 하시겠습니까 ? ");
+			if(cancelConfirm){
+				$.ajax({
+					url:"cancelRequest.pm",
+					type:"post",
+					data:{bookNo:bookNo},
+					success:function(result){
+						console.log("결제취소요청성공-ajax")
+						console.log(result);
+						if(result==="success"){
+							alert("결제가 취소되었습니다. ");
+							location.href = '${request.contextPath}/filoom/reserve.me';
+							
+						}else{
+							alert("죄송합니다. 상영시간 이후 취소/환불은 불가합니다.")
+						}
+					},
+					error:function(){
+						console.log("결제취소요청실패-ajax")
+					}
+				});
+			}
+		}
 
     </script>
 

@@ -323,7 +323,7 @@ body{
         <!-- 버튼 영역 -->
 
         <div id="btnArea">
-            <button onclick="location.href='${request.contextPath}/'">메인화면</button>
+            <button onclick="location.href='${request.contextPath}/filoom'">메인화면</button>
             <button onclick="canelRequest(${requestScope.booking.bookNo})">예매취소</button>
         </div>
         <!-- 안내글 영역 -->
@@ -395,7 +395,7 @@ body{
 					console.log(result);
 					if(result==="success"){
 						alert("결제가 취소되었습니다. ");
-						location.href="${request.contextPath}/filoom";
+						location.href = '${request.contextPath}/filoom/reserve.me';
 					}else{
 						alert("죄송합니다. 상영시간 이후 취소/환불은 불가합니다.)")
 						
