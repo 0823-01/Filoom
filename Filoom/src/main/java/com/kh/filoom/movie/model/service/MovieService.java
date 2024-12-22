@@ -62,6 +62,7 @@ public interface MovieService {
 	
 	// === 영화 상세 페이지 ===
 	Movie showDetail(int movieNo); // 상세 정보 조회
+	Poster showThumbnail(int movieNo); // 영화 포스터 호호
 	// listScenes(); // 스틸컷 목록 조회
 	// selectReviewList(); // 리뷰 목록 조회
 	

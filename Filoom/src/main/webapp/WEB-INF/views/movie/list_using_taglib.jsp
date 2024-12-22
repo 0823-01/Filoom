@@ -12,7 +12,7 @@
 			<input type="hidden" id="last" value="${requestScope.pi.endPage}">
 			<input type="hidden" id="MX" value="${requestScope.pi.maxPage}">
             <c:forEach var="pic" items="${box}">
-            	<div class="movie">
+            	<div class="movie" onclick="location.href='detail.mo?movieNo=${pic.movieNo}';">
 	                <!-- <img src="resources/images/posters/moana.jpg" class="poster"> -->
 	                <img src="${pageContext.request.contextPath}${pic.fileCodename}" class="poster">
 	                <table class="movie-info">

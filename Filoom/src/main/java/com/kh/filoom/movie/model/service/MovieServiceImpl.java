@@ -114,6 +114,10 @@ public class MovieServiceImpl implements MovieService {
 		// TODO Auto-generated method stub
 		return mDao.showDetail(sqlSession, movieNo);
 	}
+	
+	public Poster showThumbnail(int movieNo) {
+		return mDao.showThumbnail(sqlSession, movieNo);
+	}
 
 	@Override
 	@Transactional

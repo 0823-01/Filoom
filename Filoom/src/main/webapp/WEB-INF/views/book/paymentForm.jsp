@@ -164,18 +164,7 @@ function nicepayClose(){
     #couponArea > :first-child{
     	display:inline-block;
     }
-    /* 
-    	동적으로쿠폰리스트가 생성될 요소
 
-		<div id="couponList">"
-			<div>
-				<input type='checkBox' name='couponNos' id='coupon"+index+"'value='"+item.couponNo+"' >"
-				<label for='coupon"+index+"'>"+item.couponName+"</label><br> "
-				<span>"+dateTimeToDate(item.couponExpDate)+"까지</span>"
-			</div>
-		</div>";
-   	*/
-   	
    	#couponList>div{
    		display:inline-block;
    	}
@@ -186,6 +175,16 @@ function nicepayClose(){
    		width:25%;
    		height:60px;
    		text-align : center;
+   	}
+   	
+   	#selectCouponBtn{
+   		background-color: transparent;
+   		color:white;
+   		
+   	}
+   	#selectCouponBtn:hover{
+   		border:1px solid white;	
+	
    	}
    	
    	/*  */
@@ -335,17 +334,17 @@ function nicepayClose(){
 	/* 결제시 필요한 인풋태그들 */
 
 	#couponList input{
-		/* display:none; */
+		display:none;
 	}
 	
 	
 	#payMethods input{
-		/* display:none; */
+		display:none;
 	}	
 
 
     #submitData{
-    	/* display:none; */
+    	display:none;
 
     }
 
@@ -406,8 +405,7 @@ function nicepayClose(){
                 </div>
                 <div id="couponArea">
                     <div class="infoTitle">할인쿠폰</div>
-                    <button type="button" onclick="selectCoupon()">조회</button>
-                    
+                    <button id="selectCouponBtn" type="button" onclick="selectCoupon()">조회</button>
                     <div>
                         <div id="couponList">
                         	<input type="checkbox" name="couponNos" value="" hidden>
@@ -477,12 +475,10 @@ function nicepayClose(){
 				       
                         <div id="totalButtonArea">
                             <div>
-                                <button type="button" id="backBtn">이전</button>
+                                <button type="button" id="backBtn" onclick="cancelSeat()">이전</button>
                             </div>
                             <div>
-                            	<button type="button" onclick="beforePay();">결제전 ajax 실행</button>
-                                <button id="noPayBtn" type="submit" onclick=";">0원결제</button>
-                                <button  href="#" type="button" id="submitBtn" onclick="nicepayStart();">나이스페이결제</button>
+                            	<button type="button" onclick="beforePay();">결제</button>
                             </div>
                         </div>
                     </div>
@@ -494,76 +490,32 @@ function nicepayClose(){
         </div>
         
          
-                        <!-- 결제시 필요한 정보들 담고, 안보이게 -->
-				                
-						<div id="submitData">			
-							
+                     
+	              
+	<div id="submitData">			
+		
+	
+	
+		<input type="text" name="GoodsName" value="${requestScope.movie.movieTitle}">결제 상품명(o)
+		<input type="text" name= "totalCost" value=""> 토탈 코스트(o)
+		<input type="text" name="Amt" value="">결제 상품금액(o)
+		<input type="text" name="MID" value="nictest00m">상점 아이디(o)
+		<input type="text" name="Moid" value="${requestScope.booking.bookNo }">상품 주문번호 (o)
+		<input type="text" name="BuyerName" value="${sessionScope.loginUser.userName }">구매자명 (o)
+		<input type="text" name="BuyerEmail" value=${sessionScope.loginUser.email }>구매자명 이메일 (o)
+		<!-- 변경 불가능 -->
+		<input type="text" name="EdiDate" value="<%-- <%=ediDate%> --%>"/>전문 생성일시 (o)
+		<input type="text" name="SignData" value="<%-- <%=hashString%> --%>"/>해쉬값(o) 
 
+		<input type="text" name="bookNo" value=""> 예약번호 (o)
+		<input type="text" name="playingNo" value="${requestScope.movie.playingNo }"> playingNo (o)
+		 쿠폰 번호(o)  
+		<c:forEach var="seat" items="${requestScope.bookingSeatList}">
+			<input type="text" name="bookingSeatNos" value="${seat.bookingSeatNo}"> 좌석번호(o)
+		</c:forEach>
 
-				             <input type="text" name="GoodsName" value="${requestScope.movie.movieTitle}">결제 상품명(o)
-				             <br>
-				             <input type="text" name= "totalCost" value=""> 토탈 코스트(o)
-				             <br>
-				             <input type="text" name="Amt" value="">결제 상품금액(o)
-				             <br>
-				             
-				             <br>
-				             <input type="text" name="MID" value="nictest00m">상점 아이디(o)
-				             <br>
-				             <input type="text" name="Moid" value="${requestScope.booking.bookNo }">상품 주문번호 (o)
-				             <br>
-				             <input type="text" name="BuyerName" value="${sessionScope.loginUser.userName }">구매자명 (o)
-				             <br>
-				             <input type="text" name="BuyerEmail" value=${sessionScope.loginUser.email }>구매자명 이메일 (o)
-				             <br>
-				             <!-- <input type="text" name="BuyerTel" value="">구매자 연락처 -->
-				             
-										
-							<!-- 변경 불가능 -->
-							<br>
-				            <input type="text" name="EdiDate" value="<%-- <%=ediDate%> --%>"/>전문 생성일시 (o)
-							<br>
-				            <input type="text" name="SignData" value="<%-- <%=hashString%> --%>"/>해쉬값(o) 
-
-
-
-							<!-- db에 넣을 데이터 -->
-							<!--
-								영화예매번호 bookNo
-								영화 상영번호
-								상영좌석번호 리스트
-							 -->
-							<br>
-							<input type="text" name="bookNo" value=""> 예약번호 (o)
-							<br>
-							<input type="text" name="playingNo" value="${requestScope.movie.playingNo }"> playingNo (o)
-							<!-- <input type="text" name="bookingSeatNos" value=""> 좌석번호들 -->
-							<br>
-							 쿠폰 번호(o)  
-							
-							<c:forEach var="seat" items="${requestScope.bookingSeatList}">
-								<br><input type="text" name="bookingSeatNos" value="${seat.bookingSeatNo}"> 좌석번호(o)
-							</c:forEach>
-							
-							
-							
-							
-							<!--  필요없을것같은것들 -->
-				             <!-- <input type="text" name="VbankExpDate" value="">가상계좌입금만료일(YYYYMMDD) -->
-				             <!-- 옵션 --> 
-							<!-- <input type="hidden" name="GoodsCl" value="0"/> -->						<!-- 상품구분(실물(1),컨텐츠(0)) -->
-							<!-- <input type="hidden" name="TransType" value="0"/> -->					<!-- 일반(0)/에스크로(1) --> 
-							<br>
-				            <!-- <input type="hidden" name="CharSet" value="utf-8"/> -->					<!-- 응답 파라미터 인코딩 방식 -->
-							<!-- <input type="hidden" name="ReqReserved" value=""/> -->					<!-- 상점 예약필드 -->
     </form>
-    
-    
-    <script>
-    	
-    
-    </script>
-    
+
     
     <script>
    		
@@ -724,11 +676,6 @@ function nicepayClose(){
 		
     	//조회 클릭시 : 쿠폰리스트
     	function selectCoupon(){
-/*         <div id="couponList">
-             	<input type='checkBox' name='couponNos' value='' hidden>
-           </div> */
-
-    		
     		
     		$.ajax({
     			url:"couponList.co",
@@ -761,7 +708,6 @@ function nicepayClose(){
     			},
     			
     		})
-
     	}
 
 
@@ -796,15 +742,11 @@ function nicepayClose(){
 
  		// 최종 결제 금액 구하기 
 		$("#couponList").on('change','input',showCost);
-		
 		function showCost(){
 			//console.log("체인지이벤트발생");
 			
 			let totalPrice = $("#totalPriceTd").text();
 			let totalCouponPrice = $("#couponList input:checked").length*couponPrice;
-			
-			//console.log(totalPrice);
-			//console.log(totalCouponPrice);
 			
 			let finalPrice = totalPrice - totalCouponPrice;
 			$("#finalPrice").text(finalPrice)

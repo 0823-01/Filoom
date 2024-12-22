@@ -96,6 +96,11 @@ public class MovieDao {
 		// TODO Auto-generated method stub
 		return sqlSession.selectOne("movieMapper.showDetail", movieNo);
 	}
+	
+	public Poster showThumbnail(SqlSessionTemplate sqlSession, int movieNo) {
+		// TODO Auto-generated method stub
+		return sqlSession.selectOne("movieMapper.showThumbnail", movieNo);
+	}
 
 	public int addMovie(SqlSessionTemplate sqlSession, Movie m) {
 		// TODO Auto-generated method stub
@@ -125,6 +130,8 @@ public class MovieDao {
 		return 0;
 
 	}
+
+	
 
 	
 

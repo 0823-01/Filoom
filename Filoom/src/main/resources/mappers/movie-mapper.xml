@@ -448,7 +448,7 @@
 
 		SELECT MOVIE_NO,
 		    MOVIE_TITLE,
-		    OPEN_DATE,
+		    TO_CHAR(OPEN_DATE, 'YYYY.MM.DD') AS "OPEN_DATE",
 		    DIRECTOR,
 		    GENRE,
 		    RUNTIME,
@@ -456,14 +456,21 @@
 		    FILM_RATE,
 		    DESCRIPTION,
 		    STARRING,
-		    STATUS,
 		    TRAILER
 		FROM MOVIE
-		WHERE MOVIE_NO = #{movieNo}
-	
+		WHERE MOVIE_NO = #{movieNo} AND STATUS = 'Y'
 	
 	</select>
+	
+	<!-- 이거랑 showDetail이랑 통합해서 movieWithPoster 이용해서 쓸 수 있을라나?
+	<select id="showThumbnail" parameterType="movieNo" resultMap="">
+		SELECT FILE_NAME, FILE_CODENAME 
+		FROM POSTER
+		WHERE MOVIE_NO = #{movieNo} AND STATUS = 'Y'
+			AND FILE_LEVEL = 1
+	</select>
 
+	-->
 
 	<!-- === 영화 추가 페이지 === -->
 	<insert id="addMovie" parameterType="movie">
@@ -480,10 +487,6 @@
 		</selectKey>
 	</insert>
 	
-	<!-- <select id="checkMovieNo" resultType="_int">
-		SELECT SEQ_MOV.CURRVAL FROM DUAL
-	</select> -->
-	
 	<delete id="undoAddMovie" parameterType="_int">
 		DELETE FROM MOVIE
 		WHERE MOVIE_NO = #{movieNo}
@@ -496,7 +499,7 @@
 		    IMAGE_PATH, FILE_LEVEL
 		) VALUES (
 		    SEQ_IMG.NEXTVAL, #{movieNo}, #{fileName}, #{fileCodename},
-		    #{imagePath}, 1 )
+		    #{imagePath}, 1)
 	</insert>
 	
 	<!-- === 영화 수정 페이지 === -->
@@ -509,4 +512,11 @@
 			TRAILER = #{trailer}
 		WHERE STATUS = 'Y' AND MOVIE_NO = #{movieNo}
 	</update> -->
+	
+	<!-- === 영화 삭제 페이지 === -->
+	<!-- <update id="deleteMovie" parameterType="_int">
+		UPDATE MOVIE
+		SET STATUS = 'N'
+		WHERE MOVIE_NO = #{movieNo}
+	</delete> -->
 </mapper>
