@@ -135,11 +135,6 @@ public class BookDao {
 		return sqlSession.selectOne("movieMapper.selectMovieForPlayingNo",playingNo);
 	}
 
-	//상영좌석일렬번호, 좌석 정보
-	public ArrayList<BookingSeat> selectListBookingSeat(SqlSessionTemplate sqlSession,
-														ArrayList<BookingSeat> bookingSeatNoList) {
-		return (ArrayList)sqlSession.selectList("bookMapper.selectListBookingSeat",bookingSeatNoList);
-	}
 
 	//쿠폰조회
 	public ArrayList<CouponUser> selectListCouponUser(SqlSessionTemplate sqlSession, int userNo) {

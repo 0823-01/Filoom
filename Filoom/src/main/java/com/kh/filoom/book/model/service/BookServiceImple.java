@@ -127,7 +127,7 @@ public class BookServiceImple implements BookService {
 		return bookDao.checkBookingSeat(sqlSession,playingNo,seatNos);
 	}
 
-	//좌석등록하기
+	//좌석등록하기 
 	@Override
 	@Transactional
 	public int insertBookingSeats(int playingNo, ArrayList<String> seatNos) {
@@ -185,13 +185,6 @@ public class BookServiceImple implements BookService {
 	public Movie selectMovieForPlayingNo(int playingNo) {
 		return bookDao.selectMovieForPlayingNo(sqlSession,playingNo);
 	}
-
-	//8. 상영좌석정보, 좌석번호 조회
-	@Override
-	public ArrayList<BookingSeat> selectListBookingSeat(ArrayList<BookingSeat> bookingSeatNoList) {
-		return bookDao.selectListBookingSeat(sqlSession,bookingSeatNoList);
-	}
-
 
 	//결제전 쿠폰 유효성 검사
 	@Override
