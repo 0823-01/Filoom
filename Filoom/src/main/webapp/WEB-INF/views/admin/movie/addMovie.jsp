@@ -182,7 +182,6 @@
                         </div>
 
 
-
                         <div id="basicInfo">
                             <table>
                                 <tr>
@@ -219,6 +218,7 @@
                                     <th>장르</th>
                                     <td colspan="4"><input type="text" id="genre" value=""></td>
                                 </tr>
+                                
                                 <!-- ↓ 년월일까지 표기라 'date'가 맞음 -->
                                 <tr>
                                     <th>개봉일자</th>
@@ -383,7 +383,9 @@
 	    		success: function(result) {
 	    			if (result == "success") {
 	    				alert('added successfully');
-	    				return "redirect:/admin/movie/manageMovieList";
+	    				
+						location.href = '/admin/movie/manageMovieList';
+	    				// return redirect는 여기가 아니라 Controller에서 쓰는 거임
 	    			} else {
 	    				// if result = "failure"
 	    				alert('movie was not added');
