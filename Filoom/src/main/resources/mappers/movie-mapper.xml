@@ -369,6 +369,7 @@
 					P.IMAGE_PATH, P.FILE_CODENAME
 				FROM MOVIE M JOIN POSTER P USING (MOVIE_NO)
 				WHERE M.STATUS = 'Y' AND P.FILE_LEVEL = 1
+				ORDER BY MOVIE_NO DESC
 			) A
 		) WHERE RNUM BETWEEN 16*(#{cpage}-1)+1 AND 16*#{cpage}
 	</select>
@@ -386,6 +387,7 @@
 		            FILM_RATE, P.FILE_CODENAME
 				FROM MOVIE M JOIN POSTER P USING (MOVIE_NO)
 				WHERE M.STATUS = 'Y' AND PREMIERE = 'Y' AND P.FILE_LEVEL = 1
+				ORDER BY MOVIE_NO DESC				
 			) A
 		) WHERE RNUM BETWEEN 16*(#{cpage}-1)+1 AND 16*#{cpage}
 	</select>
@@ -581,19 +583,13 @@
 	<!-- 영화 페이지 상세 보기 -->
 	<select id = "showDetail" parameterType="int" resultMap="movieResultSet">
 
-		SELECT MOVIE_NO,
-		    MOVIE_TITLE,
+		SELECT MOVIE_NO, MOVIE_TITLE,
 		    TO_CHAR(OPEN_DATE, 'YYYY.MM.DD') AS "OPEN_DATE",
-		    DIRECTOR,
-		    GENRE,
-		    RUNTIME,
-		    SCREEN_TYPE,
-		    FILM_RATE,
-		    DESCRIPTION,
-		    STARRING,
-		    TRAILER
-		FROM MOVIE
-		WHERE MOVIE_NO = #{movieNo} AND STATUS = 'Y'
+		    DIRECTOR, GENRE, RUNTIME, SCREEN_TYPE,
+		    FILM_RATE, DESCRIPTION, STARRING, TRAILER,
+		    P.FILE_CODENAME
+		FROM MOVIE M JOIN POSTER P USING (MOVIE_NO)
+		WHERE MOVIE_NO = #{movieNo} AND M.STATUS = 'Y' AND P.FILE_LEVEL = 1
 	
 	</select>
 	

@@ -17,7 +17,6 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     
     <style>
-        /* *{overflow:auto;} */
         #admin_right * {
             font-family: "Poppins", sans-serif;
             font-size:25px;
@@ -46,7 +45,11 @@
             width:90%;
             padding: 5px 5%;
         }
-        /* #innerAdmin * { border: 1px solid red;} */
+        #innerAdmin>* {
+        	margin:0px 20px;
+        	display:inline-block;
+        	/*border:1px solid red;*/
+        }
 
         /* === 영화 포스터 (좌) === */
         #moviePoster {
@@ -65,8 +68,9 @@
 
         /* === 영화 정보 (우) === */
         #tobeManaged {
-            /* width:100%; */
+            width:725px;
             height:100%;
+            max-height:684px;
             vertical-align: top;
             text-align:left;
             overflow:auto;
@@ -207,7 +211,7 @@
                 <div id ="admin_page">
 
                     <div id="innerAdmin">
-                        <div id="moviePoster" style="margin-right:20px;">
+                        <div id="moviePoster">
                             <!-- <img src="https://placehold.co/600x400"> -->
                             <!-- <img src="resources/images/posters/1win.jpg"> -->
                             <img src="${pageContext.request.contextPath}/resources/images/posters/${requestScope.target.fileCodename}">
@@ -245,7 +249,7 @@
                                 <!-- 주요 배우는 네 명까지만 -->
                                 <table>
                                     <tr>
-                                        <th>감독</th>
+                                        <th width="110">감독</th>
                                         <td>${requestScope.target.director}</td>
                                     </tr>
                                     <tr>
@@ -285,15 +289,16 @@
 
                             <br><hr>
                             <!-- 상영 중일 경우, 아래 div안으로 상영 정보가 들어감 -->
-                            <div id="only_when_playing">
+                            <div id="only_when_playing" align="center" style="width:100%;">
                                 <div id="tabletitle">
                                     <b>상영 정보</b>
                                     <hr>
-                                    <button><img src="resources/images/icons/plus.svg"></button>
+                                    <!-- 밑으로 내려가는 게 나을 것 같아서 대책 필요함 -->
+                                    <button onclick="$('#addPlaying').toggle(800);"><img src="resources/images/icons/plus.svg"></button>
+                                    <!-- onclick → 상영 정보 추가 탭 toggle(0.5s~1s 사이) -->
                                 </div>
 
-                                <br><br>
-                                <div style="background-color: #8b8b8b;">
+                                <div id="addPlaying" style="background-color: #8b8b8b; width:100%; display:none;">
                                     <table>
                                         <tr>
                                             <th>날짜</th>
@@ -356,17 +361,20 @@
     
     $(function() {
     	let isOpen = ("${target.premiere}" == 'Y');
-    	if(isOpen)
+    	if(isOpen) {
     		$("input[name=if_premiere]").attr("checked", "true");
+    	}/*  else
+    		$("#only_when_playing").hide(); */
     	console.log(isOpen);
-//     	let premiere = ("${target.premiere}" == 'Y');
-//     	let isOpen = premiere;
-//     	console.log("premiere = " + isOpen);
-//     	if(isOpen)
     	
+    	/* isOpen.change(function() {
+    		$("#only_when_playing").toggle();
+    	}); */
+
 		$(".unready").click(function() {
 			removeMovie(isOpen);
 		});
+		
     });
     
     function togglePremiere(isOpen) {
@@ -384,18 +392,16 @@
     			if(result === "success") {
    					console.log("CHANGED to "+ isOpen);
    					isOpen = $("input[name=if_premiere]").prop("checked");
+   					$("#only_when_playing").toggle(500);
     			} else {
     				// result === "failure"
+    				console.log(isOpen);
     				alert("개봉 여부 변경에 실패하였습니다.");
-
-					// $() = !isOpen이 안 되서 조건문으로 해야 함
-//     				isOpen = $("input[name=if_premiere]").prop("checked");
-//     				if(isOpen)
-//     					$("input[name=if_premiere]").removeAttr("checked");
-//     				else
-//     					$("input[name=if_premiere]").attr("checked", "true");
-//     				console.log(isOpen);
-//     				// 실패하면 스위치 도로 밀어야 함
+    				
+    				// 스위치 원상 복구하기
+					$("input[name=if_premiere]").prop("checked",!isOpen);
+					isOpen = !isOpen;
+    				console.log(isOpen);
     			}
     		},
     		error:function() {

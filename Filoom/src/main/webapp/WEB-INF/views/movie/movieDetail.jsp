@@ -306,7 +306,7 @@
             <div id="description" align="left">
                 <!-- 이미지 넣는 곳 -->
                 <div>
-                	<img src="${pageContext.request.contextPath}${requestScope.poster.fileCodename}" alt="${requestScope.list.movieTitle}" class="thumbnail">
+                	<img src="${pageContext.request.contextPath}${requestScope.list.fileCodename}" alt="${requestScope.list.movieTitle}" class="thumbnail">
                     <!-- <img src="resources/images/posters/wicked2.jpg" alt="위키드" id="thumbnail"> -->
                 </div>
 

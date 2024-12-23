@@ -116,7 +116,7 @@
             	<c:when test="${not empty now}">
 					<c:forEach var="pic" items="${now}">
 		            	<div class="movie">
-			                <img src="${pageContext.request.contextPath}${pic.fileCodename}" class="poster">
+			                <img src="${pageContext.request.contextPath}/resources/images/posters/${pic.fileCodename}" class="poster">
 			                <table class="movie-info">
 			                    <tr>
 			                        <td id="filmrate"><img src="resources/images/posters/${pic.filmRate}.svg" class="filmrate"></td>
@@ -154,7 +154,7 @@
 				<c:when test="${not empty pre}">
 					<c:forEach var="pic" items="${pre}">
 		            	<div class="movie">
-			                <img src="${pageContext.request.contextPath}${pic.fileCodename}" class="poster">
+			                <img src="${pageContext.request.contextPath}/resources/images/posters/${pic.fileCodename}" class="poster">
 			                <table class="movie-info">
 			                    <tr>
 			                        <td id="filmrate"><img src="resources/images/posters/${pic.filmRate}.svg" class="filmrate"></td>

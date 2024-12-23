@@ -27,7 +27,7 @@ import com.kh.filoom.movie.model.vo.Poster;
 
 /**
  * @author 정원섭
- * === MovieController v 0.5 ===
+ * === MovieController v 0.5.1 ===
  * 작업 착수일 : 2024-12-13
  * 최종 수정일 : 2024-12-23
  */
@@ -39,7 +39,8 @@ import com.kh.filoom.movie.model.vo.Poster;
  * v 0.4 - 관리자 영화 추가 페이지 & 수정 페이지 착수
  * v 0.4.1 - 관리자 영화 추가 페이지 완료, 이미지가 안 뜨는 문제 원인 확인
  * v 0.4.2 - 상세 페이지 리뷰 페이징바 삭제 외 일부 사소한 변경 사항
- * v 0.5 - 영화 수정 페이지 & 삭제 페이지 완료, 상세 페이지 내 스위치 클릭시 개봉 여부 바뀜 
+ * v 0.5 - 영화 수정 페이지 & 삭제 페이지 완료, 상세 페이지 내 스위치 클릭시 개봉 여부 바뀜
+ * v 0.5.1 - 박스오피스 기본 정렬 기준 변경 외 크고 작은 문제 수정 
  * */
 @Controller
 public class MovieController {
@@ -216,19 +217,12 @@ public class MovieController {
 	// detail.mo?movieNo=XXX
 	@GetMapping("detail.mo")
 	public String showDetail(int movieNo, Model model) {
-		
-		
+				
 		Movie list = msi.showDetail(movieNo);
-		
-		System.out.println(list);
+		// System.out.println(list); // 확인용
 		
 		model.addAttribute("list", list);
-		
-		msi.showDetail(movieNo);
-		
-		// Poster p = msi.showThumbnail(movieNo);
-		// model.addAttribute("poster", p);
-		
+
 		return "movie/movieDetail";
 	}
 	
@@ -403,7 +397,6 @@ public class MovieController {
 			@RequestParam(value="prevpath")String prevpath,
 			Movie m, Model model, HttpSession session) {
 		
-		// addMovie의 ajax 그대로 가져온 거긴 한데 여기서 직접 확인은 아직. (안 될 가능성 매우 낮음)
 		// System.out.println(m);
 		
 		// 굳이 이것부터 하는 이유 : 수정은 이미지를 새로 첨부할 필요가 없으므로
@@ -433,11 +426,6 @@ public class MovieController {
 			return "success";
 		} else
 			return "failure";
-		
-		
-		// 이미지는 첨부했으나 정작 영화 추가가 안 됐을 경우, 첨부하려던 이미지를 삭제한다
-		// String realPath = session.getServletContext().getRealPath(p.getFileCodename());
-		// new File(realPath).delete();
 	}
 	
 	// 영화 삭제
@@ -453,9 +441,6 @@ public class MovieController {
 			return (result > 0) ? "success" : "failure";
 		} else
 			return "failure";
-		
-		//int result = msi.deleteMovie(movieNo);
-		// return (result > 0) ? : "success" : "failure";
 	}
 	
 	
@@ -471,7 +456,7 @@ public class MovieController {
 	
 	
 	
-	// === (관리자) 영화 관리 상세 페이지
+	// === (관리자) 영화 관리 상세 페이지 ===
 	// (관리자) 상영 여부 변경
 	@ResponseBody
 	@PostMapping("admin.premiere.mo")
@@ -485,7 +470,7 @@ public class MovieController {
 		
 		int result = msi.togglePremiere(movieNo, map);
 		
-		return /*(result > 0) ? "success" : */"success"; 
+		return (result > 0) ? "success" : "failure"; 
 	}
 	
 	// 상영 정보 추가
@@ -498,7 +483,7 @@ public class MovieController {
 		
 	}
 	
-	// -- 여기부터 상세>이미지 관리 화면
+	/* -- 여기부터 상세>이미지 관리 화면
 	public void showImageList() {
 		
 	}
@@ -514,6 +499,8 @@ public class MovieController {
 	public void deleteImage() {
 		
 	}
+	*/
+	
 	
 	// (관리자) 리뷰 목록 확인 (+ 페이징 처리)
 	@GetMapping("managereview.mo")
