@@ -225,6 +225,7 @@
             <div id="eventing"><a href="${pageContext.request.contextPath}/list.ev?eventStatus=N">진행중인 이벤트&emsp;</a>|</div>
             <div id="winner"><a href="#">당첨자 발표&emsp;</a>|</div>
             <div id="evented"><a href="${pageContext.request.contextPath}/list.ev?eventStatus=Y">지난 이벤트&emsp;</a></div>
+            
 
         </div>
 
@@ -260,7 +261,10 @@
         
         	<!-- 필터링에 따라 제목도 바뀌도록 / 진행중인 이벤트, 전체이벤트, 지난이벤트 -->
             <div id="statusTitle">${statusTitle}</div>
-            <!--div id="more"><a href="#" style="text-decoration: none;">더보기 ></a></!--div-->
+            
+            <c:if test="${sessionScope.loginUser.userNo eq 1 }">
+            	<div id="more"><a href="${pageContext.request.contextPath}/enrollForm.ev" style="text-decoration: none;">글작성</a></div>
+           	</c:if>
         </div>
         
         <div class="card">
@@ -276,7 +280,7 @@
 	                       				상시진행
 	                       			</c:when>
 	                       			<c:otherwise>
-	                       				${event.startDate }~${event.endDate } <b class="event-days-remaining" style="color : red;">D-2</b>
+	                       				${event.startDate }~${event.endDate }
 	                       			</c:otherwise>
 	                        	</c:choose>
                         	</div>
