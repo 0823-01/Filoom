@@ -8,13 +8,15 @@
 <title>Insert title here</title>
 </head>
 <body>
-			<input type="hidden" id="first" value="${requestScope.pi.startPage}">
-			<input type="hidden" id="last" value="${requestScope.pi.endPage}">
-			<input type="hidden" id="MX" value="${requestScope.pi.maxPage}">
-            <c:forEach var="pic" items="${box}">
-            	<div class="movie" onclick="location.href='detail.mo?movieNo=${pic.movieNo}';">
+<%-- 			<input type="hidden" id="first" value="${requestScope.pi.startPage}"> --%>
+<%-- 			<input type="hidden" id="last" value="${requestScope.pi.endPage}"> --%>
+<%-- 			<input type="hidden" id="MX" value="${requestScope.pi.maxPage}"> --%>
+            <c:forEach var="pic" items="${list}">
+            	<div class="movie" onclick="location.href='admin.managemovie.mo?movieNo=${pic.movieNo}';">
 	                <!-- <img src="resources/images/posters/moana.jpg" class="poster"> -->
 	                <img src="${pageContext.request.contextPath}/resources/images/posters/${pic.fileCodename}" class="poster">
+	                <%-- <img src="${pageContext.request.contextPath}${pic.imagePath}" class="poster"> ← 완성 후 이걸로 변경해야 함 --%>
+	                
 	                <table class="movie-info">
 	                    <tr>
 	                        <td id="filmrate"><img src="resources/images/posters/${pic.filmRate}.svg" class="filmrate"></td>

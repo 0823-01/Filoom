@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+    <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -152,8 +153,6 @@
                     구상은 각자 알아서~ 
                 -->
                 <div id = "admin_title_content">
-                    <!-- <div id="fnName">영화 관리</div>
-                    <div id="goBack">← 목록으로 돌아가기</div> -->
                     <p id="fnName" style="padding-left:33px; font-weight:bold;">영화 수정</p>
                     <p id="goBack" style="padding-right:33px;"
                         onclick="location.href='movielist_ad.mo';">
@@ -171,35 +170,40 @@
                     <input type="hidden" id="serial" value="1">
                     <div id="innerAdmin">
                         <div id="newPoster">
-                            <img id="posterDisplay" src="resources/images/posters/moana.jpg">
+                            <img id="posterDisplay" src="${pageContext.request.contextPath}/resources/images/posters/${requestScope.target.fileCodename}">
+                            <input type="hidden" id="prevpath" value="${requestScope.target.imagePath}">
                             <input type="file" id="posterInput" style="display:none;" onchange="loadImg(this);">
                         </div>
 
 
 
-                        <!-- 아마 여기도 기재란을 table로 하지 않을까..
-                        input 안의 글자색은 #493628로 하기로 했음
-                        -->
                         <div id="basicInfo">
                             <table>
+                            	<tr style='display:none;'>
+                            		<td colspan="5"><input type="hidden" id="mno" value="${requestScope.target.movieNo}"></td>
+                            	</tr>
                                 <tr>
                                     <th>영화 제목</th>
-                                    <td colspan="4"><input type="text" id="title" value="모아나 2"></td>
+                                    <td colspan="4"><input type="text" id="title" value="${requestScope.target.movieTitle}"></td>
+                                </tr>
+                                
+                                <tr style="display:none;">
+                                    <th>확인용</th>
+                                    <td><input type="radio" name="filmrate" value="3"  id="rate3"
+                                    	<c:if test="${requestScope.target.filmRate eq 3}">checked</c:if>
+                                    	></td>
+                                    <td><input type="radio" name="filmrate" value="12" id="rate12"
+                                    	<c:if test="${requestScope.target.filmRate eq 12}">checked</c:if>
+                                    	></td>
+                                    <td><input type="radio" name="filmrate" value="15" id="rate15"
+                                    	<c:if test="${requestScope.target.filmRate eq 15}">checked</c:if>
+                                    	></td>
+                                    <td><input type="radio" name="filmrate" value="19" id="rate19"
+                                    	<c:if test="${requestScope.target.filmRate eq 19}">checked</c:if>
+                                    	></td>
                                 </tr>
                                 <tr>
                                     <th>상영 등급</th>
-                                    <!-- <td width="160">
-                                        <label for="rate3"><img class="filmrate" src="resources/images/posters/3.svg" onclick="rateFilm(3);" alt="ALL"></label>
-                                    </td>
-                                    <td width="160">
-                                        <label for="rate12"><img class="filmrate" src="resources/images/posters/12.svg" onclick="rateFilm(12);" alt="12"></label>
-                                    </td>
-                                    <td width="160">
-                                        <label for="rate15"><img class="filmrate" src="resources/images/posters/15.svg" onclick="rateFilm(15);" alt="15"></label>
-                                    </td>
-                                    <td width="60">
-                                        <label for="rate19"><img class="filmrate" src="resources/images/posters/19.svg" onclick="rateFilm(19);" alt="19"></label>
-                                    </td> -->
                                     <td colspan="4" width=540>
                                     	<div style="display:flex; justify-content: space-between;">
 	                                    	<label for="rate3"><img class="filmrate" src="resources/images/posters/3.svg" onclick="rateFilm(3);" alt="ALL"></label>
@@ -209,34 +213,29 @@
                                     	</div>
                                     </td>
                                 </tr>
-                                
-                                <tr style="display:none;">
-                                    <th>확인용</th>
-                                    <td><input type="radio" name="filmrate" value="3"  id="rateA"></td>
-                                    <td><input type="radio" name="filmrate" value="12" id="rate12"></td>
-                                    <td><input type="radio" name="filmrate" value="15" id="rate15"></td>
-                                    <td><input type="radio" name="filmrate" value="19" id="rate19"></td>
-                                </tr>
+
                                 <tr>
                                     <th>감독</th>
-                                    <td colspan="4"><input type="text" id="director" value="데이비드 데릭 주니어"></td>
+                                    <td colspan="4"><input type="text" id="director" value="${requestScope.target.director}"></td>
                                 </tr>
                                 <tr>
                                     <th>주요 배우</th>
-                                    <td colspan="4"><input type="text" id="cast" value="아우이 크라발호, 드웨인 존슨"></td>
+                                    <td colspan="4"><input type="text" id="cast" value="${requestScope.target.starring}"></td>
                                 </tr>
                                 <tr>
                                     <th>장르</th>
-                                    <td colspan="4"><input type="text" id="genre" value="애니메이션"></td>
+                                    <td colspan="4"><input type="text" id="genre" value="${requestScope.target.genre}"></td>
                                 </tr>
+                                
+                                <!-- 이미 개봉한 경우 개봉일자를 변경할 수 없음 -->
                                 <!-- ↓ 년월일까지 표기라 'date'가 맞음 -->
                                 <tr>
                                     <th>개봉일자</th>
-                                    <td colspan="4"><input type="date" id="premiere" value="2024-11-27"></td>
+                                    <td colspan="4"><input type="date" id="open_date" value="${requestScope.target.openDate}"></td>
                                 </tr>
                                 <tr>
                                     <th>상영시간</th>
-                                    <td><input type="number" id="runtime" value="100"></td>
+                                    <td><input type="number" id="runtime" value="${requestScope.target.runtime}"></td>
                                     <td colspan="3">분</td>
                                 </tr>
                                 
@@ -256,12 +255,13 @@
                                 
                                 <tr>
                                     <th>트레일러 링크</th>
-                                    <td colspan="4"><input type="url" id="trailer_link"></td>
+                                    <td colspan="4"><input type="url" id="trailer_link"
+                                    	value="${requestScope.target.trailer}"></td>
                                 </tr>
                                 <tr>
                                     <th>시놉시스</th>
                                     <td colspan="4"><textarea name="" 
-                                        rows="3" id="synopsis"></textarea></td>
+                                        rows="3" id="synopsis">${requestScope.target.description}</textarea></td>
                                 </tr>
                             </table>
                         </div>
@@ -269,8 +269,9 @@
                     <!-- <button>1234</button> -->
 
                     <input type="button" id ="button_sample"
-                     name="movie_submit" value="수정 완료" onclick="console.log($(':radio:checked').val());">
-
+                     name="movie_submit" value="수정 완료" onclick="submitMovie();">
+					<!-- console.log($(':radio:checked').val());
+						OR console.log($('input[name=filmrate]:checked').val()); -->
                 </div>
 
             </div>
@@ -295,6 +296,11 @@
 
     // 이미지 첨부시, #posterDisplay 칸이 이미지 미리보기로 바뀜
     $(function() {
+    	// 지금 filmRate를 target.getFilmRate()로 받을 거 아냐
+//     	let filmRate = target.getFilmRate();
+//     	console.log(filmRate);
+//     	$("#rate"+filmRate).attr("checked","true");
+    	// $("input[name=filmrate][value="+filmRate+"]").attr("checked","true");
         $("#posterDisplay").click(function() {
             $("#posterInput").click();
         });
@@ -339,49 +345,74 @@
     
     
     function submitMovie() {
+		// 이미지 변경 없을 때는 확인만 함
+		console.log($("#posterInput").val());
 		
-    	console.log($("#posterInput").val());
+    	/* ↓ 이걸 해야 form 태그없이도 current request is not a multipart request
+		안 띄우고 이미지를 넣을 수 있다고 함 */
+		let formData = new FormData();
+		
+		// adding checkbox selection of 'screenType'
+		let screenType = [];
+		$(".screentype").each(function() {
+			if($(this).is(":checked")) {
+				screenType.push($(this).val());
+			}
+		});
+		
+		let mno = $("#mno").val();
+		formData.append("movieNo", mno);
+		formData.append("movieTitle", $("#title").val());
+		formData.append("filmRate", parseInt($("input[name=filmrate]:checked").val(), 10));
+		// 10진수로 parseInt
+		formData.append("director", $("#director").val());
+		formData.append("starring", $("#cast").val());
+		formData.append("genre", $("#genre").val());
+		formData.append("openDate", $("#open_date").val());
+		formData.append("screenType", screenType.join(","));
+		formData.append("runtime", $("#runtime").val());
+		// ↑ number로 받고 있어서 굳이 parseInt 안 해도 됨
+		formData.append("trailer", $("#trailer_link").val());
+		formData.append("description",$("#synopsis").val());
+		
 		// 포스터를 첨부하지 않은 경우
     	if($("#posterInput").val() === '') {
-    		alert('포스터를 첨부해주세요.');
-    		return false;
+    		// 혹시나 삭제 과정에서 포스터만 지워지고 영화 정보는 남았는데 거기서 수정을 누를 경우를 대비하여..
+    		if($("#prevpath").val() === '') {
+    			alert('포스터가 없습니다.');
+    			return false;
+    		}
+    		
+    		// confirm : 확인 누르면 true, 취소 누르면 false
+    		else if(!confirm("포스터가 변경되지 않았습니다. 그래도 변경하시겠습니까?")) {
+    			console.log(false);
+    			return false;
+    		}
     	} else {
-	    	/* ↓ 이걸 해야 form 태그없이도 current request is not a multipart request
-	    		안 띄우고 이미지를 넣을 수 있다고 함 */
-			let formData = new FormData();
+    		// 기존 이미지 경로 추가
+			formData.append("prevpath", $("#prevpath").val());
 	    	
-			// adding checkbox selection of 'screenType'
-			let screenType = [];
-	    	$(".screentype").each(function() {
-	    		if($(this).is(":checked")) {
-	    			screenType.push($(this).val());
-	    		}
-	    	});
-	    	
-			formData.append("movieTitle", $("#title").val());
-			formData.append("filmRate", parseInt($("input[name=filmrate]").val(), 10));
-			// 10진수로 parseInt
-			formData.append("director", $("#director").val());
-			formData.append("starring", $("#cast").val());
-			formData.append("genre", $("#genre").val());
-			formData.append("openDate", $("#open_date").val());
-			formData.append("screenType", screenType.join(","));
-			formData.append("runtime", $("#runtime").val());
-			// ↑ number로 받고 있어서 굳이 parseInt 안 해도 됨
-			formData.append("trailer", $("#trailer_link").val());
-			formData.append("description",$("#synopsis").val());
-			formData.append("img", $("#posterInput")[0].files[0]);
-
+    		// 이미지 추가
+	    	formData.append("img", $("#posterInput")[0].files[0]);
+	    	let prevpath = $("#prevpath").val();
+	   	}
+		
     	$.ajax({
     		url:"admin.updatemovie.mo",
     		type:"post",
     		data: formData,
+    		// illegal invocation 오류 방지
+    		contentType:false,
+    		processData:false,
 
     		success: function(result) {
     			if (result == "success") {
     				alert('modified successfully');
     				
-    				location.href = '/admin/movie/manageMovieDetail?movieNo='+movieNo;
+    				location.href = 'admin.managemovie.mo?movieNo='+mno;
+    			} else if (result == "half_success") {
+    				alert('poster is not uploaded but information is modified');
+    				location.href = 'admin.managemovie.mo?movieNo='+mno;
     			} else {
     				// if result == "failure"
     				alert('movie was not modified');
@@ -391,8 +422,8 @@
     			alert('DAMN!');
     		}	
     	});
-
-   	}
+	
+    }
     
     </script>
     

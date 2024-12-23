@@ -259,7 +259,6 @@
 
                     <input type="button" id ="button_sample"
                      name="movie_submit" value="추가 완료" onclick="submitMovie();">
-
                 </div>
 
             </div>
@@ -284,7 +283,6 @@
  	// 이미지 첨부시, #posterDisplay 칸이 이미지 미리보기로 바뀜
     $(function() {
         $("#posterDisplay").click(function() {
-        	console.log("click");
             $("#posterInput").click();
         });
     });
@@ -346,7 +344,7 @@
 	    	});
 	    	
 			formData.append("movieTitle", $("#title").val());
-			formData.append("filmRate", parseInt($("input[name=filmrate]").val(), 10));
+			formData.append("filmRate", parseInt($('input[name=filmrate]:checked').val(), 10));
 			// 10진수로 parseInt
 			formData.append("director", $("#director").val());
 			formData.append("starring", $("#cast").val());
@@ -362,19 +360,8 @@
 	    	$.ajax({
 	    		url:"admin.insertmovie.mo",
 	    		type:"post",
-	    		data: /* {
-	    			"movieTitle" : movieTitle,
-	    			"filmRate" : filmRate,
-	    			"director" : director,
-	    			"starring" : starring,
-	    			"genre" : genre,
-	    			"openDate" : openDate,
-	    			"screenType" : screenType,
-	    			"runtime" : runtime,
-	    			"trailer" : trailer,
-	    			"description" : description,
-	    			"img" : image
-	    		} */ formData,
+	    		data: formData,
+	    		
 	    		// 아래 두 줄을 안 넣으면 'illegal invocation' 오류가 남
 	    		// 사유 : https://repacat.tistory.com/38
 	    		contentType: false,
@@ -384,9 +371,12 @@
 	    			if (result == "success") {
 	    				alert('added successfully');
 	    				
-						location.href = '/admin/movie/manageMovieList';
+						location.href = 'movielist_ad.mo';
 	    				// return redirect는 여기가 아니라 Controller에서 쓰는 거임
-	    			} else {
+	    			} else if (result == "half_failure") {
+	    				alert('movie was not added because poster was not uploaded');
+	    			}
+	    				else {
 	    				// if result = "failure"
 	    				alert('movie was not added');
 	    			}
