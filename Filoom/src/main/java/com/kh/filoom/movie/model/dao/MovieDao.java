@@ -95,7 +95,7 @@ public class MovieDao {
 	public Movie showDetail(SqlSessionTemplate sqlSession, int movieNo) {
 		// TODO Auto-generated method stub
 		return sqlSession.selectOne("movieMapper.showDetail", movieNo);
-
+	}
 	public int addMovie(SqlSessionTemplate sqlSession, Movie m) {
 		// TODO Auto-generated method stub
 		return sqlSession.update("movieMapper.addMovie", m);

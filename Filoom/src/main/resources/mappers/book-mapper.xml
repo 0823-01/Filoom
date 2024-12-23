@@ -80,10 +80,10 @@
 	</resultMap>
 	
 	<resultMap id = "insertBookingSeat" type="bookingseat">
-		<id column="PLAYING_NO" property="playingNo"/>
+		<id column="BOOKING_SEAT_NO" property="bookingSeatNo"/>
+		<result column="PLAYING_NO" property="playingNo"/>
 		<result column="TIME_LIMIT" property="timeLimit"/>
 		<result column="SEAT_NO" property="seatNo"/>
-	
 	</resultMap>
 	
 	<resultMap id = "deleteBookingListList" type="bookingseat">
@@ -105,7 +105,7 @@
 		    (SELECT COUNT(*) 
 		     FROM BOOKING_SEAT 
 		     WHERE PLAYING_NO = P.PLAYING_NO 
-		       AND TIMELIMIT &lt; SYSDATE) AS OCCUPIED_SEATS
+		       AND TIMELIMIT &gt; SYSDATE) AS OCCUPIED_SEATS
 		FROM 
 		    PLAYING P
 		JOIN
@@ -158,21 +158,6 @@
 	</select>
 	
 	
-	<insert id = "insertBookingSeat" parameterType="bookingseat">
-		INSERT INTO BOOKING_SEAT VALUES (
-            SEQ_BSNO.NEXTVAL,
-            #{timeLimit},
-            (SELECT SSEAT_NO
-             FROM SCREEN_SEAT
-             WHERE SEAT_NO = #{seatId}
-               AND SCREEN_NO = (SELECT SCREEN_NO 
-                                FROM PLAYING
-                                WHERE PLAYING_NO = #{playingNo})),
-            #{playingNo},
-            NULL
-		)
-	</insert>
-	
 	<select id="isSeatAlreadyBooked" parameterType="map" resultType="int">
 	    SELECT COUNT(*)
 		FROM BOOKING_SEAT BS
@@ -181,6 +166,32 @@
 		WHERE BS.PLAYING_NO = #{playingNo}
 	      AND SS.SEAT_NO = #{seatId}
 	</select>
+	
+	<insert id = "insertBookingSeat" parameterType="bookingseat">
+		INSERT INTO BOOKING_SEAT (
+		    BOOKING_SEAT_NO,
+		    TIMELIMIT,
+		    SSEAT_NO,
+		    PLAYING_NO,
+		    BOOK_NO
+		)
+		VALUES (
+		    SEQ_BSNO.NEXTVAL, -- 예약 좌석 일련번호 자동 증가
+		    TO_TIMESTAMP(#{timeLimit}, 'YYYY-MM-DD HH24:MI:SS.FF'),
+		    (SELECT SSEAT_NO
+		     FROM SCREEN_SEAT
+		     WHERE SEAT_NO = #{seatId} 
+		     AND SCREEN_NO = (
+		         SELECT SCREEN_NO 
+		         FROM PLAYING
+		         WHERE PLAYING_NO = #{playingNo}
+		     )
+		    ),
+		    #{playingNo}, 
+		    NULL 
+		)
+	
+	</insert>
 	
 	<delete id = "deleteBookingSeat" parameterType="bookingseat">
 		DELETE FROM BOOKING_SEAT

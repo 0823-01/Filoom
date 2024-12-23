@@ -134,6 +134,79 @@
 	
 	</select>
 	
+	<!-- 미성년자 예매페이지 검색 기능 -->
+	<select id = "movieSearchKid" parameterType="hashmap" resultMap="movieResultSet">
+		
+		SELECT 
+	        M.MOVIE_NO,
+	        M.MOVIE_TITLE,
+	        M.PREMIERE,
+	        TO_CHAR(M.OPEN_DATE, 'YYYY MM DD') AS OPEN_DATE,
+	        M.RUNTIME,
+	        M.SCREEN_TYPE,
+	        M.FILM_RATE,
+	        M.DESCRIPTION,
+	        M.STARRING,
+	        M.STATUS,
+	        P.IMAGE_PATH,
+	        P.FILE_CODENAME
+	    FROM 
+	        MOVIE M
+	    LEFT JOIN 
+	        POSTER P
+	    ON 
+	        M.MOVIE_NO = P.MOVIE_NO
+	        AND P.FILE_LEVEL = 1
+	    WHERE 
+	        M.MOVIE_TITLE LIKE '%' || #{searchMovieKeyword} || '%'
+	        AND M.STATUS = 'Y'
+	        AND M.FILM_RATE &lt;&gt; 19
+		 
+	
+	</select>
+	
+	<!-- 미성년자용 검색 첫 -->
+	<select id = "selectSearchFirstMovieKid" parameterType="hashmap" resultMap="movieResultSet">
+		
+		 SELECT 
+	        M.MOVIE_NO,
+	        M.MOVIE_TITLE,
+	        M.PREMIERE,
+	        M.OPEN_DATE,
+	        M.RUNTIME,
+	        M.SCREEN_TYPE,
+	        M.FILM_RATE,
+	        CASE 
+	            WHEN LENGTH(M.DESCRIPTION) &gt; 120 THEN SUBSTR(M.DESCRIPTION, 1, 120) || '...'
+	            ELSE M.DESCRIPTION
+	        END AS DESCRIPTION,
+	        M.STARRING,
+	        M.STATUS,
+	        P.IMAGE_PATH,
+	        P.FILE_LEVEL,
+	        P.FILE_CODENAME
+	    FROM 
+	        MOVIE M
+	    JOIN 
+	        POSTER P 
+	    ON 
+	        M.MOVIE_NO = P.MOVIE_NO
+	    WHERE 
+	        M.STATUS = 'Y'
+	        AND M.FILM_RATE &lt;&gt; 19
+	        AND M.MOVIE_NO = (
+	            SELECT 
+	                MIN(MOVIE_NO)
+	            FROM 
+	                MOVIE
+	            WHERE 
+	                STATUS = 'Y'
+	                AND MOVIE_TITLE LIKE '%' || #{searchMovieKeyword} || '%'
+	                AND FILM_RATE &lt;&gt; 19
+	        )
+	
+	</select>
+	
 	<!-- 이거 영화 예매 페이지 첫페이지 상세정보 가져오기 -->
 	<select id = "selectMovie" parameterType="_int" resultMap="movieWithPosterFlatResultMap">
 	
@@ -181,6 +254,68 @@
 		WHERE M.MOVIE_TITLE LIKE '%' || #{searchMovieKeyword} || '%'
 		  AND M.STATUS = 'Y'
 		 
+	
+	</select>
+
+	<select id ="selectListKid" resultMap="movieResultSet">
+		SELECT 
+		    M.MOVIE_NO,
+		    M.MOVIE_TITLE,
+		    M.PREMIERE,
+		    TO_CHAR(M.OPEN_DATE, 'YYYY MM DD') AS OPEN_DATE,
+		    M.RUNTIME,
+		    M.SCREEN_TYPE,
+		    M.FILM_RATE,
+		    M.DESCRIPTION,
+		    M.STARRING,
+		    M.STATUS,
+		    P.IMAGE_PATH,
+		    P.FILE_CODENAME
+		FROM 
+		    MOVIE M
+		LEFT JOIN 
+		    POSTER P
+		ON 
+		    M.MOVIE_NO = P.MOVIE_NO
+		    AND P.FILE_LEVEL = 1
+		WHERE 
+		    M.STATUS = 'Y'
+		    AND M.FILM_RATE  &lt;&gt; 19
+	</select>
+
+	<select id ="selectFirstMovieKid" resultMap="movieResultSet">
+		SELECT 
+	        M.MOVIE_NO,
+	        M.MOVIE_TITLE,
+	        M.PREMIERE,
+	        M.OPEN_DATE,
+	        M.RUNTIME,
+	        M.SCREEN_TYPE,
+	        M.FILM_RATE,
+	        CASE 
+	            WHEN LENGTH(M.DESCRIPTION) > 120 THEN SUBSTR(M.DESCRIPTION, 1, 120) || '...'
+	            ELSE M.DESCRIPTION
+	        END AS DESCRIPTION,
+	        M.STARRING,
+	        M.STATUS,
+	        P.IMAGE_PATH,
+	        P.FILE_LEVEL,
+	        P.FILE_CODENAME
+	    FROM 
+	        MOVIE M
+	    JOIN 
+	        POSTER P 
+	    ON 
+	        M.MOVIE_NO = P.MOVIE_NO
+	    WHERE 
+	        M.STATUS = 'Y'
+	        AND M.FILM_RATE &lt;&gt; 19
+	        AND M.MOVIE_NO = (
+	            SELECT MIN(MOVIE_NO)
+	            FROM MOVIE
+	            WHERE STATUS = 'Y'
+	              AND FILM_RATE &lt;&gt; 19
+	        )
 	
 	</select>
 

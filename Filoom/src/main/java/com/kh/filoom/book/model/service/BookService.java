@@ -52,6 +52,14 @@ public interface BookService {
 	// 영화 검색 후 첫번째 영화
 	ArrayList<Movie> selectSearchFirstMovie(HashMap<String, Object> map);
 	
+	// 아래 2개는 사용자가 미성년자일 경우
+	ArrayList<Movie> selectListKid();
+	
+	ArrayList<Movie> selectFirstMovieKid();
+
+	ArrayList<Movie> movieSearchKid(HashMap<String, Object> map);
+
+	ArrayList<Movie> selectSearchFirstMovieKid(HashMap<String, Object> map);
 	
 	//결제============================================================
 	
@@ -84,6 +92,7 @@ public interface BookService {
 
 	//유효성 테스트 통과x, bookNo 지우기
 	int deleteBookNo(int bookNo, int userNo);
+
 
 
 

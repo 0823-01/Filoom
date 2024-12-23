@@ -85,7 +85,25 @@ public class BookDao {
 	}
 	
 	
+	public ArrayList<Movie> selectListKid(SqlSessionTemplate sqlSession) {
+		// TODO Auto-generated method stub
+		return (ArrayList)sqlSession.selectList("movieMapper.selectListKid");
+	}
 	
+	public ArrayList<Movie> selectFirstMovieKid(SqlSessionTemplate sqlSession) {
+		// TODO Auto-generated method stub
+		return (ArrayList)sqlSession.selectList("movieMapper.selectFirstMovieKid");
+	}
+	
+	public ArrayList<Movie> movieSearchKid(SqlSessionTemplate sqlSession, HashMap<String, Object> map) {
+		// TODO Auto-generated method stub
+		return (ArrayList)sqlSession.selectList("movieMapper.movieSearchKid", map);
+	}
+
+	public ArrayList<Movie> selectSearchFirstMovieKid(SqlSessionTemplate sqlSession, HashMap<String, Object> map) {
+		// TODO Auto-generated method stub
+		return (ArrayList)sqlSession.selectList("movieMapper.selectSearchFirstMovieKid", map);
+	}
 	
 	
 	
@@ -174,4 +192,9 @@ public class BookDao {
 		map.put("userNo", userNo);
 		return sqlSession.delete("bookMapper.deleteBookNo",map);
 	}
+
+	
+
+
+	
 }

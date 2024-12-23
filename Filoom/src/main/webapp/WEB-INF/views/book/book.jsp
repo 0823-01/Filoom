@@ -974,7 +974,6 @@
 	    		    inputField.setAttribute("value", inputField.value);
 	    		}
 	    		
-	    		
 
     		
     		

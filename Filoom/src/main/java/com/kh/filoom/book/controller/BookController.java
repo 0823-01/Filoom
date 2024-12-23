@@ -5,8 +5,8 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.http.HttpRequest;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -58,7 +58,27 @@ public class BookController {
 	
 	
 	@GetMapping("book.do")
-	public String selectList(Model model) {
+	public String selectList(Model model, HttpSession session) {
+		
+		Member loginUser = (Member)session.getAttribute("loginUser");
+		
+		if (loginUser != null) {
+		    String birthDate = loginUser.getBirth();
+		    System.out.println("사용자 생년월일: " + birthDate);
+		}
+		
+		// 비로그인 상태 예외 처리
+	    if (loginUser == null) {
+	        return "redirect:/loginForm.me"; 
+	        
+	    }
+	    
+	    String birth = loginUser.getBirth(); 
+	    int birthYear = Integer.parseInt(birth.substring(0, 4));
+	    int currentYear = LocalDate.now().getYear();
+	    int age = currentYear - birthYear;
+	    
+	    /*
 		
 		ArrayList<Movie> list = bookService.selectList();
 		
@@ -69,7 +89,26 @@ public class BookController {
 		model.addAttribute("firstMovie", firstMovie);
 		
 		//System.out.println(list);
-		
+		*/
+	    
+	    // 나이에 따라 적절한 메서드 호출
+	    ArrayList<Movie> list;
+	    ArrayList<Movie> firstMovie;
+
+	    if (age >= 19) {
+	        // 성인용 영화 리스트
+	        list = bookService.selectList();
+	        firstMovie = bookService.selectFirstMovie();
+	    } else {
+	        // 어린이용 영화 리스트
+	        list = bookService.selectListKid();
+	        firstMovie = bookService.selectFirstMovieKid();
+	    }
+
+	    // Model에 추가
+	    model.addAttribute("list", list);
+	    model.addAttribute("firstMovie", firstMovie);
+	    
 		return "book/book";
 		
 	}
@@ -127,6 +166,8 @@ public class BookController {
 		
 		System.out.println("book.fb 실행");
 		
+		System.out.println(seatId);
+		System.out.println(playingNo);
 
 		Calendar calendar = Calendar.getInstance();
 	    calendar.setTime(currentDate);
@@ -141,11 +182,10 @@ public class BookController {
 	    bk.setSeatId(seatId);
 	    bk.setPlayingNo(playingNo);
 	    bk.setTimeLimit(sqlUpdatedTime);
-	    System.out.println("입력받은 bk" + bk);
-	    
-	    // System.out.println("BookingSeat 객체: " + bk);
+	    System.out.println("입력받은 bk :" + bk);
 	 
 	    int result = bookService.insertBookingSeat(bk);
+	    //System.out.println("Insert 결과: " + result);
 
 	    return new Gson().toJson(bk);
 	}
@@ -235,20 +275,40 @@ public class BookController {
 	
 	
 	@GetMapping("movie.sea")
-	public String movieSearch(String searchMovieKeyword, Model model) {
+	public String movieSearch(HttpSession session, String searchMovieKeyword, Model model) {
 		
 		HashMap<String, Object> map = new HashMap<>();
 		
+		Member loginUser = (Member)session.getAttribute("loginUser");
 		
-		map.put("searchMovieKeyword", searchMovieKeyword);
-		
-		//System.out.println(searchMovieKeyword);
-		//System.out.println(map);
-		
-		
-		ArrayList<Movie> firstMovie = bookService.selectSearchFirstMovie(map);
-		ArrayList<Movie> list = bookService.movieSearch(map);
-		
+		ArrayList<Movie> firstMovie;
+	    ArrayList<Movie> list;
+
+	    if (loginUser != null) {
+	        String birth = loginUser.getBirth(); // 생년월일 가져오기
+	        int birthYear = Integer.parseInt(birth.substring(0, 4));
+	        int currentYear = LocalDate.now().getYear();
+	        int age = currentYear - birthYear;
+
+	        map.put("searchMovieKeyword", searchMovieKeyword);
+
+	        // 나이에 따라 적절한 메서드 호출
+	        if (age >= 19) {
+	            // 성인용 영화 검색
+	            firstMovie = bookService.selectSearchFirstMovie(map);
+	            list = bookService.movieSearch(map);
+	        } else {
+	            // 어린이용 영화 검색
+	            firstMovie = bookService.selectSearchFirstMovieKid(map);
+	            list = bookService.movieSearchKid(map);
+	        }
+	    } else {
+	    	
+	        return "redirect:/loginForm.me";
+	        
+	    }
+	    
+	    
 		model.addAttribute("list", list);
 		model.addAttribute("firstMovie", firstMovie);
 		
