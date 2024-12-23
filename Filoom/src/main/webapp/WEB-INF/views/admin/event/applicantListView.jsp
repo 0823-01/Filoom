@@ -1,10 +1,10 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %> 
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <title>응모자 목록조회</title>
 <link rel="stylesheet" href="resources/css/admin.css" />
     <style>
@@ -187,7 +187,7 @@
             right: 0;
         }
 
-       #back, #applicantBtn {
+       #back, #couponList {
             width: 170px;
             height: 38px;
             border: none;
@@ -200,11 +200,11 @@
             cursor: pointer;
         }
 
-        #back:hover, #applicantBtn:hover {
+        #back:hover, #couponList:hover {
             transform: scale(1.1em);
         }
 
-        #back:active, #applicantBtn:active {
+        #back:active, #couponList:active {
             background-color: #AB886D;
         }
         
@@ -236,6 +236,9 @@
                 <!-- 혜원 - 버튼 응모자 목록 -->
                 <div id = "admin_title_content" style="box-sizing: border-box;">
                     <div class="menu">
+                    	<c:forEach var="item" items="${alist}">
+				           <input type = "hidden" id = "eventNum" value ="${item.eventNo}">
+				        </c:forEach>
                         <div id="no">번호</div>
                         <div id="title">응모내용</div>
                         <div id="applicants">응모자</div>
@@ -259,11 +262,20 @@
                         <tbody>
                         	<c:forEach var="a" items="${requestScope.alist }">
 	                        	<tr id="list" class="applicant-item">
+		                          
 		                            <td id="applicantNo" class="ano">${a.applicantNo }</td>
 		                            <td id="eventTitle">버튼클릭!</td>
-		                            <td id="applicant">${a.userNo}</td>
+		                           <td id="applicant">${a.userNo}</td>
 		                            <td id="applicantDate">${a.applicationDate }</td>
-		                            <td id="drawingStatus">${a.drawingStatus }</td>
+		                            <td id="a">
+		                            	<select name ="drawingStatus" id="drawingStatusSelect" >
+																												
+		                            		<option value = "N">${a.drawingStatus }</option>
+		                            		<option value = "Y">Y</option>
+		                            			
+		                            	</select>
+		                            	
+		                            </td>
 		                            <td id="winStatus">${w.winStatus }</td>
 	                        	</tr>
                         	</c:forEach>
@@ -315,7 +327,10 @@
            				<!--버튼--> 
 	                    <div class="btn">
 	                    	<button id="back" onclick="history.back();">이전으로</button>
-	                        <button id="applicantBtn">당첨자 추첨</button>
+							
+	                        <a href="clist.ev?eventNo=${e.eventNo}&cpage=1">
+	                        	<button id="couponList">쿠폰발급하기</button>
+                        	</a>
 	                        <!--추첨이 완료된 경우, 버튼 조작 불가-->
 	                        
 	                    </div>
@@ -343,50 +358,76 @@
         });
     });
     
- 	// 당첨자 추첨 
-    document.getElementById("applicantBtn").addEventListener("click", function() {
-        // 화면에 출력된 목록에서 데이터 추출 (클래스명에 따라 대상 선택)
-        const applicants = document.querySelectorAll(".applicant-item"); // 응모자 데이터 탐색 (tr 태그)
 
-        // 댓글 작성자명 추출
-        const names = Array.from(applicants).map(item => {
-            return item.querySelector("#applicant").textContent.trim(); // 응모자 이름 가져오기
+    $(document).ready(function() {
+        // eventNo 값 가져오기
+        var eventNo = $('#eventNum').val();
+        console.log("eventNo는 " + eventNo);  // 확인하기 위해 로그 출력
+
+        // 사용자 번호 가져오기
+        var userNo = $("#applicant").text();  // 텍스트 값 가져오기
+		console.log("userNo는 : " + userNo);
+
+        // drawingStatus 선택 값이 변경될 때마다 AJAX 호출
+        $('select[name="drawingStatus"]').change(function() {
+            var selectedStatus = $(this).val();  // 선택된 값 가져오기
+            console.log('selectedStatus:', selectedStatus);  // 선택된 값이 출력되는지 확인
+
+            $.ajax({
+                url: 'insertCoupon.co',  
+                type: 'POST',  
+                data: {
+                    userNo: userNo,  // 사용자 번호
+                    eventNo: eventNo  // 이벤트 번호
+                },
+                success: function(response) {
+                    console.log('응답:', response);  // 성공적으로 응답을 받았을 때 처리할 코드
+                    alert('상태가 변경되었습니다.');
+                },
+                error: function(xhr, status, error) {
+                    console.error('에러 발생:', error);  // 오류 발생 시 처리할 코드
+                    alert('상태 변경 중 오류가 발생했습니다.');
+                }
+            });
         });
-        
-        if (names.length === 0) {
-            alert("추첨 가능한 응모자가 없습니다.");
-            return;
-        }
-
-        const winnerCount = 10; // 당첨자 수
-        const winners = []; // 당첨자 목록
-
-        // 중복되지 않게 당첨자 10명 뽑기
-        while (winners.length < winnerCount && names.length > 0) {
-            const randomIndex = Math.floor(Math.random() * names.length);
-            const winner = names[randomIndex];
-            winners.push(winner);
-            names.splice(randomIndex, 1); // 뽑은 사람을 배열에서 제거
-        }
-
-     	// 당첨자 출력
-        if (winners.length > 0) {
-            alert("🎉 당첨자: " + winners.join(", "));
-            
-	        // 추첨 후 버튼 비활성화 및 텍스트 변경
-	        const enrollButton = document.getElementById("applicantBtn");
-	        enrollButton.disabled = true;  // 버튼 비활성화
-	        enrollButton.textContent = "당첨자 추첨 완료";  // 버튼 텍스트 변경
-	
-	        // 추첨 후 상태 업데이트 (서버로 상태 보내기)
-	        updateDrawingStatus(eventNo);
-	        
-	        // 쿠폰 발송 로직 호출 (추첨된 사람들에게 쿠폰 발급)
-	        sendCoupons(winners);
-	    } else {
-	        alert("추첨 가능한 인원이 부족합니다.");
-	    }
     });
+    
+    $(document).ready(function() {
+        // drawingStatus 값 변경 시 AJAX 호출
+        $('select[name="drawingStatus"]').change(function() {
+            var userNo = $(this).data('userno');  // 사용자 번호
+            var bookNo = $(this).data('bookno');  // 책 번호
+            var couponNo = $(this).data('couponno');  // 쿠폰 번호
+            var couponUse = $(this).data('couponuse');  // 쿠폰 사용 여부
+            var drawingStatus = $(this).val();  // 선택된 상태 값 ('N' 또는 'Y')
+
+            console.log("userNo:", userNo);
+            console.log("bookNo:", bookNo);
+            console.log("couponNo:", couponNo);
+            console.log("couponUse:", couponUse);
+            console.log("drawingStatus:", drawingStatus);
+
+            $.ajax({
+                url: 'updateCouponStatus.co',  // 해당 경로로 요청을 보냄
+                type: 'POST',
+                data: {
+                    userNo: userNo,
+                    bookNo: bookNo,
+                    couponNo: couponNo,
+                    couponUse: couponUse,
+                    drawingStatus: drawingStatus  // 새로운 drawingStatus 값
+                },
+                success: function(response) {
+                    alert("상태가 변경되었습니다.");
+                },
+                error: function(xhr, status, error) {
+                    console.error("Error:", error);
+                    alert("상태 변경 중 오류가 발생했습니다.");
+                }
+            });
+        });
+    });
+    
     </script>
     
 </body>

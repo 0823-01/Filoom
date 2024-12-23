@@ -365,6 +365,31 @@ public class EventDao {
 		
 		return (List)sqlSession.selectList("eventMapper.adminSeletApplicantList", params, rowBounds);
 	}
+	
+	/**
+	 * 쿠폰 수
+	 * @param sqlSession
+	 * @param eventNo
+	 * @return
+	 */
+	public int selectCouponListCount(SqlSessionTemplate sqlSession, int eventNo) {
+		return sqlSession.selectOne("eventMapper.selectCouponListCount", eventNo);
+	}
+
+	/**
+	 * 쿠폰목록조회
+	 * @param sqlSession
+	 * @param params
+	 * @return
+	 */
+	public ArrayList<Coupon> selectCouponList(SqlSessionTemplate sqlSession, Map<String, Object> params) {
+		PageInfo pi = (PageInfo)params.get("pi");
+		int offset = (pi.getCurrentPage()-1)*pi.getBoardLimit();
+		int limit = pi.getBoardLimit();
+		
+		RowBounds rowBounds = new RowBounds(offset, limit);
+		return (ArrayList)sqlSession.selectList("eventMapper.selectCouponList", params, rowBounds);
+	}
 
 	/**
 	 * 241219 한혜원
@@ -376,6 +401,11 @@ public class EventDao {
 	public int insertWinners(SqlSessionTemplate sqlSession, Map<String, Object> params) {
 		return sqlSession.insert("eventMapper.insertWinners", params);
 	}
+
+	public int couponInsertEx(SqlSessionTemplate sqlSession, Map<String, Object> params) {
+		return sqlSession.insert("couponMapper.couponInsertEx", params);
+	}
+
 
 
 

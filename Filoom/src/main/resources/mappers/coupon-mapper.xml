@@ -71,4 +71,15 @@
 		 WHERE BOOK_NO = #{bookNo}
 		   AND USER_NO = #{userNo}
 	</update>
+	
+	<!-- 응모자에게 쿠폰 등록해주기 -->
+	<insert id="couponInsertEx" parameterType="couponUser">
+		INSERT INTO COUPON_USER (COUPON_NO, USER_NO, BOOK_NO, COUPON_USE, COUPON_NAME)
+		VALUES(SEQ_CNO.NEXTVAL, #{userNo}, NULL, ${couponUse},
+			SELECT EVENT_TITLE
+			FROM EVENT
+			WHERE #{eventNo}
+		)
+	</insert>
+	
 </mapper>
