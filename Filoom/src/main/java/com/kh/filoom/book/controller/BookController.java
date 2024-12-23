@@ -345,7 +345,7 @@ public class BookController {
 	
 
 	
-	@GetMapping("paymentForm.pm")
+	@PostMapping("paymentForm.pm")
 	public ModelAndView paymentFormRequest(ModelAndView mv,HttpSession session,
 									int playingNo,  
 									@RequestParam("seatNos")ArrayList<String> seatNos
