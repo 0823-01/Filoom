@@ -1266,14 +1266,29 @@
 			            var seatIds = seatId.split(",");
 
 			            
-			            // URL에 쿼리 파라미터 동적으로 추가
-			            var queryParams = "?playingNo=" + playingNo;
-			            seatIds.forEach(function(seat) {
-			                queryParams += "&seatNos=" + encodeURIComponent(seat.trim());
+			            var form = document.createElement("form");
+			            form.method = "POST";
+			            form.action = "/filoom/paymentForm.pm";
+
+			            // playingNo 값을 추가
+			            var playingNoInput = document.createElement("input");
+			            playingNoInput.type = "hidden";
+			            playingNoInput.name = "playingNo";
+			            playingNoInput.value = playingNo;
+			            form.appendChild(playingNoInput);
+
+			            // seatIds 값을 추가
+			            seatIds.forEach(function (seat) {
+			                var seatInput = document.createElement("input");
+			                seatInput.type = "hidden";
+			                seatInput.name = "seatNos"; // 동일한 이름으로 여러 값을 전달
+			                seatInput.value = seat.trim();
+			                form.appendChild(seatInput);
 			            });
 
-			            // 페이지 이동
-			            window.location.href = "/filoom/paymentForm.pm" + queryParams;
+			            // 동적으로 생성한 form을 body에 추가하고 제출
+			            document.body.appendChild(form);
+			            form.submit();
 			        });
 			    });
 			    

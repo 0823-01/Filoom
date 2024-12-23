@@ -160,20 +160,7 @@
 	</select>
 	
 
-	<select id = "insertBookingSeat" parameterType="bookingseat">
-		INSERT INTO BOOKING_SEAT VALUES (
-            SEQ_BSNO.NEXTVAL,
-            #{timeLimit},
-            (SELECT SSEAT_NO
-             FROM SCREEN_SEAT
-             WHERE SEAT_NO = #{seatId}
-               AND SCREEN_NO = (SELECT SCREEN_NO 
-                                FROM PLAYING
-                                WHERE PLAYING_NO = #{playingNo})),
-            #{playingNo},
-            NULL
-		)
-	</select>
+
 
 	
 	<select id="isSeatAlreadyBooked" parameterType="map" resultType="int">
@@ -194,7 +181,7 @@
 		    BOOK_NO
 		)
 		VALUES (
-		    SEQ_BSNO.NEXTVAL, -- 예약 좌석 일련번호 자동 증가
+		    SEQ_BSNO.NEXTVAL, 
 		    TO_TIMESTAMP(#{timeLimit}, 'YYYY-MM-DD HH24:MI:SS.FF'),
 		    (SELECT SSEAT_NO
 		     FROM SCREEN_SEAT
