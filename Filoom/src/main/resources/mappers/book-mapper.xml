@@ -159,7 +159,7 @@
 		    P.PLAYING_NO =  #{playingNo}
 	</select>
 	
-
+<!-- 
 	<select id = "insertBookingSeat" parameterType="bookingseat">
 		INSERT INTO BOOKING_SEAT VALUES (
             SEQ_BSNO.NEXTVAL,
@@ -174,7 +174,7 @@
             NULL
 		)
 	</select>
-
+-->
 	
 	<select id="isSeatAlreadyBooked" parameterType="map" resultType="int">
 	    SELECT COUNT(*)

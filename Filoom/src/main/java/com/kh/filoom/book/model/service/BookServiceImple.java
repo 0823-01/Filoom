@@ -159,9 +159,7 @@ public class BookServiceImple implements BookService {
 	@Override
 	public ArrayList<BookingSeat> checkAndGetBookingSeatNoList(ArrayList<String> seatNos,int playingNo,ArrayList<String> bookingSeatNos) {
 		
-		ArrayList<BookingSeat> bookingSeatNoList = new ArrayList();
-		
-		bookingSeatNoList = bookDao.checkAndGetBookingSeatNoList(sqlSession,seatNos,playingNo,bookingSeatNos);
+		ArrayList<BookingSeat> bookingSeatNoList = bookDao.checkAndGetBookingSeatNoList(sqlSession,seatNos,playingNo,bookingSeatNos);
 		return bookingSeatNoList;
 	}
 

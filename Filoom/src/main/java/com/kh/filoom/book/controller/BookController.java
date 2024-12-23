@@ -510,11 +510,12 @@ public class BookController {
 		log.debug("=========================");
 		
 		
+		
 		int userNo = ((Member)session.getAttribute("loginUser")).getUserNo();
 		int bookNo = Integer.parseInt(request.get("bookNo"));
 		int playingNo = Integer.parseInt(request.get("playingNo"));
 		
-		log.debug("넘어온 값들 : userNo : " + userNo +", bookNo = "+ bookNo +", playingNo : "+ playingNo);
+		log.debug("넘어온 값들 : ArrayList<String>bookingSeatNos = "+bookingSeatNos+"bookNo = "+ bookNo +", playingNo : "+ playingNo);
 				
 		
 		boolean seatTest = false;
@@ -526,10 +527,9 @@ public class BookController {
 		//		넘어온 좌석번호로 유효성 검사
 			
 		////
-		ArrayList<BookingSeat> bookingSeatList = new ArrayList();
-		bookingSeatList = bookService.checkAndGetBookingSeatNoList(null,playingNo,bookingSeatNos);
+		ArrayList<BookingSeat> bookingSeatList= bookService.checkAndGetBookingSeatNoList(null,playingNo,bookingSeatNos);
 		
-		log.debug("넘어온 좌석 정보 : "+bookingSeatList);
+		log.debug("유효성 검사 통과한 좌석 정보 : "+bookingSeatList);
 		if(bookingSeatList.size() ==bookingSeatNos.size()) { 
 			seatTest = true;
 			log.debug("좌석 유효성 검사 통과 "+seatTest);

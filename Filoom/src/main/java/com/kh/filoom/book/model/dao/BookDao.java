@@ -116,9 +116,9 @@ public class BookDao {
 	
 	//유효성 검사 + 좌석일렬번호 검사
 	public ArrayList<BookingSeat> checkAndGetBookingSeatNoList(SqlSessionTemplate sqlSession,
-														ArrayList<String> seatNos, 
-														int playingNo,
-														ArrayList<String> bookingSeatNos) {
+															   ArrayList<String> seatNos, 
+															   int playingNo,
+															   ArrayList<String> bookingSeatNos) {
 		HashMap<String,Object> map = new HashMap<>();
 		map.put("seatNos", seatNos);
 		map.put("playingNo", playingNo);
