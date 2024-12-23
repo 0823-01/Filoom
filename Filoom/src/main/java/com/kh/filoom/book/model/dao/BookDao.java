@@ -128,8 +128,8 @@ public class BookDao {
 
 	
 	//TIME_LIMIT 늘려주기
-	public int updateTimeLimit(SqlSessionTemplate sqlSession, ArrayList<BookingSeat> bookingSeatNoList) {
-		return sqlSession.update("bookMapper.updateTimeLimit",bookingSeatNoList);
+	public int updateTimeLimit(SqlSessionTemplate sqlSession, ArrayList<String> seatNos) {
+		return sqlSession.update("bookMapper.updateTimeLimit",seatNos);
 	}
 
 	//영화예매번호 생성 + 반환
@@ -176,13 +176,6 @@ public class BookDao {
 		map.put("bookNo", bookNo);
 		map.put("userNo", userNo);
 		return sqlSession.delete("bookMapper.deleteBookNo",map);
-	}
-
-	public int checkBookingSeat(SqlSessionTemplate sqlSession, int playingNo, ArrayList<String> seatNos) {
-		Map<String,Object>map=new HashMap();
-		map.put("playingNo", playingNo);
-		map.put("seatNos", seatNos);
-		return sqlSession.selectOne("bookMapper.checkBookingSeat",map);
 	}
 
 	public int insertBookingSeats(SqlSessionTemplate sqlSession, int playingNo, ArrayList<String> seatNos) {

@@ -368,7 +368,7 @@ function nicepayClose(){
                 <div id="mainTitle">
                     결제하기 
                     <span>제한시간</span>
-                    <span id="payiTmeLimit">30</span>
+                    <span id="payiTmeLimit">0</span>
                 </div>
                 <div id="bookInfoArea">
                     <div class="infoTitle">예매정보</div>
@@ -522,7 +522,6 @@ function nicepayClose(){
     	//영화금액
     	const price = "${requestScope.PRICE}";
 
-    	console.log("결제창 영화 가격 price :"+price);
     	//쿠폰금액 (100%)
     	const couponPrice = price;
     	
@@ -539,46 +538,97 @@ function nicepayClose(){
 		
 		let Amt = ""; //결제할 금액
 		
+		const playingNo = "${requestScope.movie.playingNo}";
+		
 		
 		
 		
 		//전체 로드 다 된후 실행
-    	$(function(){
-			
-    		//reCheck()
+    	$(function(){		
 			setInterval(countDown,1000);
     		showMovieDate(playTime); 	
     		showPlayTime(playTime,runTime);		
     		showTotalPrice(); 					//총금액	
     		showCost();							//최종결재금액
-
+    		deleteSeatAndBook()
     	});
 		
-		//좌석이 생성되지 않을경우 새로고침
-		/* function reCheck(){
-			let bookingSeatNo="${requestScope.bookingSeatList.bookingSeatNo}";
-			console.log("bookingSeatNo");
-			
-			
-		} */
 		
-		//카운트다운
-		let i = 0;
-		function countDown(){
+		function deleteSeatAndBook(){
+			console.log("deleteSeatAndBook()실행");
+			let bookNo = $("#submitData>input[name=bookNo]").val(bookNo);
+			seatNos = [];
+			$("#submitData>input[name='bookingSeatNos']").each(function(index,item){
+				seatNos.push($(item).val());
+			});
+			//console.log(seatNos);
+			$.ajax({
+				url:"deleteSB.pm",
+				type:"post",
+				data:{playingNo:playingNo,
+					 seatNos:seatNos,
+					 bookNo:bookNo},
+				success:function(){
+					console.log("ajax-deleteSeatAndBook 통신 성공");
+				},
+				error:function(){
+					console.log("ajax-deleteSeatAndBook 통신 실패");
+				}
+			});
 			
-			/*  <span id="payiTmeLimit">30</span> */
-			let nowTime = new Date;
-			
-			let hours = nowTime.getHours();
-			let minutes = nowTime.getMinutes();
-			let seconds = nowTime.getSeconds();
-
-			//console.log("nowTime);
-			//console.log(timeLimit);
-			
-			 i++;
-			$("#payiTmeLimit").text(i);
 		}
+		
+		/*
+			    // 화면 벗어남(페이지 종료 또는 탭 이동) 이벤트 처리
+			    function handlePageExit() {
+			        const seatId = $("#movieSeat").val();
+			        const playingNo = $("#time input[name='playingNo']:checked").val();
+			
+			        // console.log("화면 벗어남 - seatId:", seatId, "playingNo:", playingNo);
+			
+			        sendAjaxForSeat(seatId, playingNo);
+			    }
+			
+			    // beforeunload 이벤트
+				$(window).on("beforeunload",handlePageExit);
+				
+			    // visibilitychange 이벤트
+			    function handleVisibilityChange() {
+			        if (document.visibilityState === "hidden") {
+			            handlePageExit();
+			        }
+			    }
+			    
+			    // 이벤트 리스너 등록
+			    document.addEventListener("visibilitychange", handleVisibilityChange);
+			    
+		
+		*/
+		
+		
+		
+		
+
+
+		//카운트다운
+		
+		function countDown(){
+			let timeLimitDate = new Date(timeLimit.replace(' ','T')); 
+			let date = new Date;
+	
+			let differnceTime =  Math.floor((timeLimitDate-date)/1000)-1;
+			//console.log("카운트 다운 : " + differnceTime);
+			
+			if(differnceTime<0){
+				location.href='${request.contextRoot}/filoom/book.do';
+				alert("죄송합니다. 제한시간이 초과되었습니다.")
+			}
+			$("#payiTmeLimit").text(differnceTime);
+		}
+		
+		
+		
+		
 		
     	
 		// 영화상영날짜 뿌려주기 

@@ -341,7 +341,16 @@ public class BookController {
 	
 	
 	//형문/////////////////////////////////////////////////////////////////////////
-	
+	@ResponseBody
+	@PostMapping("deleteSB.pm")
+	public String deleteSeatAndBook(ArrayList<String> bookingSeatNos
+									,int playingNo
+									,int bookNo) {
+		log.debug("좌석,북넘버 제거 " );
+		
+		
+		return "";
+	}
 	
 	@PostMapping("paymentForm.pm")
 	public ModelAndView paymentFormRequest1(ModelAndView mv,HttpSession session,
@@ -362,49 +371,39 @@ public class BookController {
 		log.debug("매개변수 데이터 : 좌석번호 Array<String> seatNos : "+seatNos +", 상영번호 : "+playingNo + ", 회원정보: " +loginUser );
 		
 		
+		//0. 유효한지 체크...
 		
-		//1. 좌석 검사하기 (선택된 좌석이 없는경우 통과 : 0 일경우 통과)
+		//1. 좌석번호seatNos 로 좌석정보 
+		int timeLimitUpdate = bookService.updateTimeLimit(seatNos);
+		
+		log.debug("1. 좌석 시간 늘려주기 처리된행의갯수 : " +timeLimitUpdate+"  (0실패/1이상 성공)");
+		
+		
+
+		//여기까지 DML (insert,update,delete)
+		//=====================================================
+		//여기서 부턴 조회
+		
+		//3.결제화면에 넘길 정보 조회, mv에 담기
 		//
-		int checkSeatResult = bookService.checkBookingSeat(playingNo,seatNos);
-		log.debug("1. 좌석유효성 검사 : " + checkSeatResult+"  (0통과/1이상 실패)");
+					
+		//*상영번호 -> 영화정보,이미지,상영정보, 상영관정보 조회
+		Movie movie = bookService.selectMovieForPlayingNo(playingNo);
+		log.debug("2. 보낼정보 영화정보(+포스터),상영정보,상영관 정보 movie : " + movie.toString());
 		
+		//*상영번호 -> 상영좌석, 상영관정보 조회
 		
-		if(checkSeatResult!=0) { //유효성 검사 실패
-			log.debug("좌석 유효성 검사 *실패");
-			mv.setViewName("redirect:/"); 
-		}else { //유효성 검사 성공
-			log.debug("좌석 유효성 검사 *성공");
-			
-			//2. 좌석 생성하기(타임리밋 +5분)
-			//
-			int insertResult = bookService.insertBookingSeats(playingNo,seatNos);
-			log.debug("좌석생성(timelimit+5분) : "+insertResult+" (1성공/0실패)" );
-			
-		}	
-			//여기까지 DML (insert,update,delete)
-			//=====================================================
-			//여기서 부턴 조회
-			
-			//3.결제화면에 넘길 정보 조회, mv에 담기
-			//
-						
-			//*상영번호 -> 영화정보,이미지,상영정보, 상영관정보 조회
-			Movie movie = bookService.selectMovieForPlayingNo(playingNo);
-			log.debug("4==영화정보(+포스터),상영정보,상영관 정보 movie : " + movie.toString());
-			
-			//*상영번호 -> 상영좌석, 상영관정보 조회
-			
-			ArrayList<BookingSeat> bookingSeatList = bookService.checkAndGetBookingSeatNoList(seatNos,playingNo,null);
-			log.debug("5==좌석정보, 상영관정보 : bookingSeatList : " + bookingSeatList.toString() );
-			
-			mv.addObject("movie",movie);
-			mv.addObject("bookingSeatList",bookingSeatList);
-			mv.addObject("PRICE",PRICE);
-			
-			//여기서부터 테스트
-			//mv.setViewName("redirect:/paymentFormResult.pm");//2번째메소드 호출
-			mv.setViewName("book/paymentForm");
-			
+		ArrayList<BookingSeat> bookingSeatList = bookService.checkAndGetBookingSeatNoList(seatNos,playingNo,null);
+		log.debug("3. 좌석정보, 상영관정보 : bookingSeatList : " + bookingSeatList.toString() );
+		
+		mv.addObject("movie",movie);
+		mv.addObject("bookingSeatList",bookingSeatList);
+		mv.addObject("PRICE",PRICE);
+		
+		//여기서부터 테스트
+		//mv.setViewName("redirect:/paymentFormResult.pm");//2번째메소드 호출
+		mv.setViewName("book/paymentForm");
+		
 			
 
 		
@@ -421,6 +420,28 @@ public class BookController {
 		return mv;
 	}
 	
+	
+	//상영좌석이 생성되었는지 체크
+	//
+	
+	/*
+	@ResponseBody
+	@PostMapping("reCheckBs.pm")
+	public String reCheckBookingSeatList (String seatNo,int playingNo) {
+		
+		log.debug("넘어온값 : ArrayList<String> seatNos : "+seatNo+", playingNo : "+playingNo);
+		
+		ArrayList<String> seatNos = new ArrayList();
+		seatNos.add(seatNo);
+		
+		int checkSeatResult = bookService.checkBookingSeat(playingNo,seatNos);
+					
+		
+		log.debug("reCheckBs Ajax 요청 결과 : "+checkSeatResult+" (0:생성안됌/1이상:생성됨)" );
+		return checkSeatResult+"";
+		
+	}
+	*/
 	
 	
 	@ResponseBody

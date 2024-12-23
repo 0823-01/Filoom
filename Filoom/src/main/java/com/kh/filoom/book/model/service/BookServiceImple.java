@@ -140,11 +140,6 @@ public class BookServiceImple implements BookService {
 	
 	//결제===========================================================================
 
-	//좌석 확인하기
-	@Override
-	public int checkBookingSeat(int playingNo, ArrayList<String> seatNos) {
-		return bookDao.checkBookingSeat(sqlSession,playingNo,seatNos);
-	}
 
 	//좌석등록하기 
 	@Override
@@ -165,13 +160,8 @@ public class BookServiceImple implements BookService {
 
 	//3. 좌석 유효시간 sysdate + 5분
 	@Override
-	@Transactional
-	public int updateTimeLimit(ArrayList<BookingSeat> bookingSeatNoList) {
-		
-		//int updateTimeLimit=bookDao.updateTimeLimit(sqlSession, bookingSeatNoList);
-		int updateTeimLimit = 0;
-		
-		return updateTeimLimit;
+	public int updateTimeLimit(ArrayList<String> seatNos) {
+		return bookDao.updateTimeLimit(sqlSession,seatNos);
 	}
 
 	

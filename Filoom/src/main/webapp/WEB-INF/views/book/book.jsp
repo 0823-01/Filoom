@@ -1232,21 +1232,19 @@
 			        sendAjaxForSeat(seatId, playingNo);
 			    }
 			
-			   
 			    // beforeunload 이벤트
-			    $(window).on("beforeunload", function () {
-			        handlePageExit();
-			    });
+				$(window).on("beforeunload",handlePageExit);
 				
-			    
 			    // visibilitychange 이벤트
-			    document.addEventListener("visibilitychange", function () {
+			    function handleVisibilityChange() {
 			        if (document.visibilityState === "hidden") {
 			            handlePageExit();
 			        }
-			    });
+			    }
 			    
-			   
+			    // 이벤트 리스너 등록
+			    document.addEventListener("visibilitychange", handleVisibilityChange);
+			    
 			    
 			    $(document).ready(function () {
 			        $("#booking_3").on("click", function () {
@@ -1287,6 +1285,10 @@
 			                seatInput.value = seat.trim();
 			                form.appendChild(seatInput);
 			            });
+			            
+			            //beforeunload, visibilitychange 이벤트 제거
+			            $(window).off("beforeunload",handlePageExit);
+			            document.removeEventListener("visibilitychange", handleVisibilityChange);
 
 			            // 동적으로 생성한 form을 body에 추가하고 제출
 			            document.body.appendChild(form);
