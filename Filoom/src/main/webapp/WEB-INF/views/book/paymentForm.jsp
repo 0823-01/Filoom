@@ -545,6 +545,7 @@ function nicepayClose(){
 		//전체 로드 다 된후 실행
     	$(function(){
 			
+    		//reCheck()
 			setInterval(countDown,1000);
     		showMovieDate(playTime); 	
     		showPlayTime(playTime,runTime);		
@@ -552,6 +553,14 @@ function nicepayClose(){
     		showCost();							//최종결재금액
 
     	});
+		
+		//좌석이 생성되지 않을경우 새로고침
+		/* function reCheck(){
+			let bookingSeatNo="${requestScope.bookingSeatList.bookingSeatNo}";
+			console.log("bookingSeatNo");
+			
+			
+		} */
 		
 		//카운트다운
 		let i = 0;

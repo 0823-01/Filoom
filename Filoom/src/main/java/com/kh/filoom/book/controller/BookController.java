@@ -343,10 +343,8 @@ public class BookController {
 	//형문/////////////////////////////////////////////////////////////////////////
 	
 	
-
-	
 	@PostMapping("paymentForm.pm")
-	public ModelAndView paymentFormRequest(ModelAndView mv,HttpSession session,
+	public ModelAndView paymentFormRequest1(ModelAndView mv,HttpSession session,
 									int playingNo,  
 									@RequestParam("seatNos")ArrayList<String> seatNos
 									) {
@@ -382,7 +380,7 @@ public class BookController {
 			int insertResult = bookService.insertBookingSeats(playingNo,seatNos);
 			log.debug("좌석생성(timelimit+5분) : "+insertResult+" (1성공/0실패)" );
 			
-			
+		}	
 			//여기까지 DML (insert,update,delete)
 			//=====================================================
 			//여기서 부턴 조회
@@ -409,7 +407,7 @@ public class BookController {
 			
 			
 
-		}
+		
 		return mv;
 	}
 	@GetMapping("paymentFormResult.pm")

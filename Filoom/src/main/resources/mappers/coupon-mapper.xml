@@ -23,6 +23,7 @@
 		   AND USER_NO = #{userNo}
 		   AND BOOK_NO IS NULL
 		   AND COUPON_USE = 'X'
+		   AND COUPON_STATUS='Y'
 		 ORDER BY C.COUPON_EXP_DATE ASC 
 		   
 				
@@ -37,6 +38,7 @@
 			COUPON_USE = 'X'
 		  	AND BOOK_NO IS NULL
 		  	AND USER_NO = #{userNo}
+		  	AND COUPON_STATUS='Y'
 			<foreach item="item" collection="couponNos" open="AND C.COUPON_NO IN (" separator="," close=")" > 
 				#{item}
 			</foreach>
@@ -62,6 +64,7 @@
 		  FROM COUPON_USER CU
 		  JOIN COUPON C ON(CU.COUPON_NO = C.COUPON_NO)
 		 WHERE BOOK_NO = #{bookNo}
+		   AND COUPON_STATUS='Y'
 	</select>
 
 	<update id="cancelUpdateCouponUser" parameterType="map">

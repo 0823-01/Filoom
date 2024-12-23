@@ -1184,7 +1184,7 @@
 			
 
 			<script>
-			    // 공통 AJAX 요청 함수
+			    // 공통 AJAX 요청 함수 
 			    function sendAjaxForSeat(seatId, playingNo) {
 			        if (seatId && playingNo) {
 			            
@@ -1232,11 +1232,13 @@
 			        sendAjaxForSeat(seatId, playingNo);
 			    }
 			
+			   
 			    // beforeunload 이벤트
 			    $(window).on("beforeunload", function () {
 			        handlePageExit();
 			    });
-			
+				
+			    
 			    // visibilitychange 이벤트
 			    document.addEventListener("visibilitychange", function () {
 			        if (document.visibilityState === "hidden") {

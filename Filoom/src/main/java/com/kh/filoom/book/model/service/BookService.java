@@ -89,9 +89,6 @@ public interface BookService {
 	//상영번호로 영화정보 조회
 	Movie selectMovieForPlayingNo(int playingNo);
 
-	//상영좌석정보, 좌석번호 조회
-	ArrayList<BookingSeat> selectListBookingSeat(ArrayList<BookingSeat> bookingSeatNoList);
-
 	//결제전 쿠폰 유효성 검사
 	int selectCheckCoupon(List<Integer> couponNos, int userNo);
 

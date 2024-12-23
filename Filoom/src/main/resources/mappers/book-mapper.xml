@@ -329,11 +329,10 @@
 			<foreach item="item" collection="seatNos" open="SS.SEAT_NO IN (" separator="," close=")" >
 				 #{item}
 			</foreach>
-			  	
+				
 	</select>
 	
  	<insert id="insertBookingSeats" parameterType="map">
-		
 		INSERT INTO BOOKING_SEAT VALUES
 		           (SEQ_BSNO.NEXTVAL,
 		            SYSDATE+INTERVAL '5' MINUTE,
