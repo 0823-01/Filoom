@@ -6,7 +6,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>FILOOM</title>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <style>
 
@@ -76,6 +76,11 @@
 	color: #E4E0E1;
 	text-decoration: none;
 	transition: color 0.3s ease;
+}
+
+#header_top li>a {
+	text-decoration: none; 
+   	color: #8B8B8B;
 }
 
 
@@ -152,8 +157,8 @@
 
             <ul>
    
-               <li>공지사항</li> &nbsp;&nbsp;&nbsp;&nbsp;
-               <li>문의</li>
+               <li><a href="${ pageContext.request.contextPath }/list.no">공지사항</a></li> &nbsp;&nbsp;&nbsp;&nbsp;
+               <li><a href="${ pageContext.request.contextPath }/list.fa">문의</a></li>
 
          	</ul>
 

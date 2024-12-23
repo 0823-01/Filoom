@@ -83,13 +83,24 @@
 	}
 	
 	.reserve-header {
+		display: flex;
+		border-bottom: 1px solid #333;
+		margin-bottom: 30px;
+	    padding-bottom: 10px;
+		align-items: center;
+	}
+
+	.reserve-header h1 {
 	    font-size: 24px;
 	    font-weight: bold;
-	    margin-bottom: 30px;
-	    border-bottom: 1px solid #333;
-	    padding-bottom: 10px;
 	}
 	
+	.reserve-header p {
+	    font-size: 14px;
+	    margin-left: 12px;
+	    color: #aaa;
+	}
+
 	.reserve-list {
 	    padding: 20px;
 	}
@@ -99,8 +110,6 @@
 	    padding-bottom: 20px;
 	    margin-bottom: 50px;
 	}
-	
-	
 	
 	.box-info {
 	    display: flex;
@@ -141,17 +150,19 @@
 	    font-weight: bold;
 	}
 	
-	.cancel-btn {
+	.cancel-btn, .review-btn {
 		background: none;
 		border: none;
 		color: #aaa;
 		cursor: pointer;
 		font-size: 12px;
 		margin-left: 5px;
+		transition: color 0.3s ease;
 	}
 
-	.cancel-btn:hover {
+	.cancel-btn:hover, .review-btn:hover {
 	    color: #fff;
+	    font-weight: bold;
 	}
 	
 	/* 전체 예약 내용 컨테이너 */
@@ -299,10 +310,6 @@
 	    /* display: none; */
 	}
 	
-	
-	
-	
-	
 	.cancel-header {
 	    display: flex;
 	}
@@ -318,16 +325,17 @@
 	    line-height: 24px;
 	}
 	
-	
 	.cencel-content table {
 	    width: 100%;
 	    text-align: center;
-	    border-bottom: 1px solid #aaa;
+		border-collapse: collapse;
+		font-size: 14px;
 	}
 	
 	.cencel-content thead {
-	    background-color: gray;
-	    font-size: 14px;
+	    background-color: #444;
+		font-weight: 300;
+		color: #999;
 	}
 	
 	.nodata {
@@ -335,14 +343,29 @@
 	    font-size: 14px;
 	    color: #aaa;
 	}
+
+	.cancel-data>td {
+		padding: 10px;
+		border-bottom: 1px solid #aaa;
+		height: 60px;
+	}
+
+
+
+
+
+
+
+
+
+
+
+
 	
 	.sect-box-descri {
 	    margin-top: 70px;
 	    border: 1px solid #aaa;
 	}
-	
-	
-	
 	
 	/* 컨테이너 스타일 */
 	.sect-box-descri {
@@ -412,14 +435,15 @@
             </ul>
         </div>
         <div class="mypage-content">
-            <h1 class="reserve-header">나의 예매 내역</h1>
-
+        	<div class="reserve-header">
+	            <h1>나의 예매 내역</h1>
+	            <p>지난 1개월까지의 예매내역을 확인하실 수 있습니다.</p>
+			</div>
             <!-- 예매 내역과 취소 내역을 합친 div -->
             <div class="reserve-body">
             
                 <!-- 예매 내역들만 묶은 div -->
                 <div class="reserve-list">
-                    <!-- 예매 내역 하나의 div -->
                     <c:choose>
                     
 	                    <c:when test="${empty reserveList}">
@@ -430,23 +454,27 @@
 						
 						<c:otherwise>
 		                    <c:forEach var="reserve" items="${reserveList}">
+		                    	<!-- 예매 내역 하나의 div -->
 			                    <div class="reserve-item">
 			                        <div class="box-info">
 			                            <div class="box-image">
-			                                <a href="#"><img src="${ pageContext.request.contextPath }/${ reserve.imagePath }/${ reserve.fileCodename }" class="poster"></a>
+			                                <a href="#"><img src="${ pageContext.request.contextPath }/resources/images/posters/${ reserve.fileCodename }" class="poster"></a>
 			                            </div>
 			                            <input type="hidden" id="hiddenEndTime" value="${reserve.endTime}">
 			                            <div class="reserve-info">
 			                                <div class="title-price">
 			                                    <div><a href="#" class="movie-title">${reserve.movieTitle}</a></div>
-			                                    <div><button type="button" class="cancel-btn">예매 취소</button></div>
+			                                    <div class="cancel-review">
+			                                    	<button type="button" class="cancel-btn" onclick="canelRequest(${reserve.bookNo})">예매 취소</button>
+			                                    	<button type="button" class="review-btn">리뷰 남기러 가기</button>
+			                                    </div>
 			                                </div>
 			                                <div class="reserve-content">
 			                                    <ul>
 			                                        <li>
 			                                            <dl>
 			                                                <dt>관람일시</dt>
-			                                                <dd><fmt:formatDate value="${reserve.playtime}" pattern="yyyy.MM.dd(E) HH:mm" /></dd>
+			                                                <dd class="d-day"><fmt:formatDate value="${reserve.playtime}" pattern="yyyy.MM.dd(E) HH:mm" /></dd>
 			                                            </dl>
 			                                        </li>
 			                                        <li>
@@ -485,14 +513,16 @@
 			                                    <span><fmt:formatNumber value="${reserve.bookTotalCost}" type="number" pattern="#,##0" />원</span>
 			                                </p>
 			                                
-			                                <c:if test="${not empty couponList}">
-			                                	<c:forEach var="coupon" items="${couponList}">
-					                                <p class="coupon-discount">
-					                                    <span>└ 쿠폰 할인 (${coupon.couponName})</span>
-					                                    <span>-<fmt:formatNumber value="${reserve.bookTotalCost / reserve.totalTickets}" type="number" pattern="#,##0" />원</span>
-					                                </p>
-					                            </c:forEach>
-			                                </c:if>
+			                                <c:if test="${not empty useCouponList}">
+											    <c:forEach var="coupon" items="${useCouponList}">
+											        <c:if test="${coupon.bookNo == reserve.bookNo}">
+											            <p class="coupon-discount">
+											                <span>└ 쿠폰 할인 (${coupon.couponName})</span>
+											                <span>-<fmt:formatNumber value="${reserve.bookTotalCost / reserve.totalTickets}" type="number" pattern="#,##0" />원</span>
+											            </p>
+											        </c:if>
+											    </c:forEach>
+											</c:if>
 			                                
 			                                <p class="payment-method">
 			                                    <span>${reserve.costProcess}</span>
@@ -566,24 +596,26 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
-                                    	<c:choose>
-                                    	
-		                                    <c:when test="${empty cancelList}">
-											    <td colspan="4" class="nodata">고객님의 최근 취소내역이 존재하지 않습니다.</td>
-											</c:when>
-											
-											<c:otherwise>
-												<c:forEach var="cancel" items="${cancelList}">
+
+									<c:choose>
+										<c:when test="${empty cancelList}">
+											<tr>
+												<td colspan="4" class="nodata">고객님의 최근 취소내역이 존재하지 않습니다.</td>
+											</tr>
+										</c:when>
+										
+										<c:otherwise>
+											<c:forEach var="cancel" items="${cancelList}">
+												<tr class="cancel-data">
 													<td>${cancel.movieTitle}</td>
 													<td><fmt:formatDate value="${cancel.playtime}" pattern="yyyy.MM.dd(E) HH:mm" /></td>
 													<td><fmt:formatDate value="${cancel.modifyDate}" pattern="yyyy.MM.dd(E) HH:mm" /></td>
-													<td><fmt:formatNumber value="${cancel.bookCost}" type="number" pattern="#,##0" />원</td>
-												</c:forEach>
-											</c:otherwise>
-											
-										</c:choose>
-                                    </tr>
+													<td><strong><fmt:formatNumber value="${cancel.bookCost}" type="number" pattern="#,##0" /></strong>원</td>
+												</tr>
+											</c:forEach>
+										</c:otherwise>
+									</c:choose>
+
                                 </tbody>
                             </table>
                         </div>
@@ -598,7 +630,7 @@
                                 <dd>
                                     <ul>
                                         <li>예매 변경은 불가능하며, 취소 후 재 예매를 하셔야만 합니다.</li>
-                                        <li>영수증은 상영 시간 전까지 My CGV 에서 출력하실 수 있습니다. 단, 신용카드로 예매하신 경우만 한합니다.</li>
+                                        <li>영수증은 상영 시간 전까지 My Filoom 에서 출력하실 수 있습니다. 단, 신용카드로 예매하신 경우만 한합니다.</li>
                                         <li>상영 시간 이후 관람하신 영화의 영수증 출력을 원하실 경우, 1544-1122로 문의 주시기 바랍니다.</li>
                                         <li>취소하신 내역이 나타나지 않거나 궁금하신 사항이 있으시면, 고객센터로 문의해 주시기 바랍니다.</li>
                                     </ul>
@@ -655,7 +687,6 @@
     <jsp:include page="../common/footer.jsp" />
 
     <script>
-
     
         // 소득공제 슬라이드 다운
         $(function() {
@@ -668,10 +699,12 @@
         
         $(function () {
             $(".reserve-item").each(function () {
-            	
-            	const endTimeText = $("#hiddenEndTime").val();
+                // 각 reserve-item 내에서 작업
+                const endTimeText = $(this).find("#hiddenEndTime").val(); // 해당 예약의 hiddenEndTime 값을 가져옴
                 const now = new Date(); // 현재 시간
-                
+
+                if (!endTimeText) return; // endTimeText가 없으면 건너뜀
+
                 const parts = endTimeText.split(" ");
                 const months = {
                     Jan: 0, Feb: 1, Mar: 2, Apr: 3, May: 4, Jun: 5,
@@ -686,14 +719,47 @@
                 const endTime = new Date(year, month, day, hours, minutes, seconds);
 
                 if (now > endTime) {
+                    // 상영 시간이 지난 경우
                     $(this).find(".msg-expired").show();
+                    $(this).find(".d-day").css("color", "#fb4357");
+                    $(this).find(".cancel-btn").hide();
+                    $(this).find(".review-btn").show();
                 } else {
+                    // 상영 시간이 지나지 않은 경우
                     $(this).find(".msg-expired").hide();
+                    $(this).find(".d-day").css("color", "");
+                    $(this).find(".cancel-btn").show();
+                    $(this).find(".review-btn").hide();
                 }
             });
         });
-
         
+        //형문 -결제 취소
+        function canelRequest(bookNo){
+			let cancelConfirm = confirm("예매를 취소 하시겠습니까 ? ");
+			if(cancelConfirm){
+				$.ajax({
+					url:"cancelRequest.pm",
+					type:"post",
+					data:{bookNo:bookNo},
+					success:function(result){
+						console.log("결제취소요청성공-ajax")
+						console.log(result);
+						if(result==="success"){
+							alert("결제가 취소되었습니다. ");
+							location.href = '${request.contextPath}/filoom/reserve.me';
+							
+						}else{
+							alert("죄송합니다. 상영시간 이후 취소/환불은 불가합니다.")
+						}
+					},
+					error:function(){
+						console.log("결제취소요청실패-ajax")
+					}
+				});
+			}
+		}
+
     </script>
 
 </body>

@@ -182,7 +182,6 @@
                         </div>
 
 
-
                         <div id="basicInfo">
                             <table>
                                 <tr>
@@ -198,18 +197,6 @@
                                 </tr>
                                 <tr>
                                     <th>상영 등급</th>
-                                    <!-- <td width="160">
-                                        <label for="rate3"><img class="filmrate" src="resources/images/posters/3.svg" onclick="rateFilm(3);" alt="ALL"></label>
-                                    </td>
-                                    <td width="160">
-                                        <label for="rate12"><img class="filmrate" src="resources/images/posters/12.svg" onclick="rateFilm(12);" alt="12"></label>
-                                    </td>
-                                    <td width="160">
-                                        <label for="rate15"><img class="filmrate" src="resources/images/posters/15.svg" onclick="rateFilm(15);" alt="15"></label>
-                                    </td>
-                                    <td width="60">
-                                        <label for="rate19"><img class="filmrate" src="resources/images/posters/19.svg" onclick="rateFilm(19);" alt="19"></label>
-                                    </td> -->
                                     <td colspan="4" width=540>
                                     	<div style="display:flex; justify-content: space-between;">
 	                                    	<label for="rate3"><img class="filmrate" src="resources/images/posters/3.svg" onclick="rateFilm(3);" alt="ALL"></label>
@@ -231,10 +218,11 @@
                                     <th>장르</th>
                                     <td colspan="4"><input type="text" id="genre" value=""></td>
                                 </tr>
+                                
                                 <!-- ↓ 년월일까지 표기라 'date'가 맞음 -->
                                 <tr>
                                     <th>개봉일자</th>
-                                    <td colspan="4"><input type="date" id="premiere" value=""></td>
+                                    <td colspan="4"><input type="date" id="open_date" value=""></td>
                                 </tr>
                                 <tr>
                                     <th>상영시간</th>
@@ -278,6 +266,7 @@
         </div>
     </div>
     <script>
+    // navigator 쪽 메뉴 호버시의 script
     document.addEventListener("DOMContentLoaded", function () {
         const navItems = document.querySelectorAll("#nav > ul > li");
     
@@ -295,6 +284,7 @@
  	// 이미지 첨부시, #posterDisplay 칸이 이미지 미리보기로 바뀜
     $(function() {
         $("#posterDisplay").click(function() {
+        	console.log("click");
             $("#posterInput").click();
         });
     });
@@ -314,7 +304,7 @@
 
                 $("#posterDisplay").attr("src",e.target.result);
                 var photo = document.getElementById("posterDisplay").innerHTML;
-                console.log(e.target.result);
+                //console.log(e.target.result);
             };
         }
         // if not
@@ -337,52 +327,75 @@
     }
     
     function submitMovie() {
-
-    	let movieTitle = $("#title").val();
-    	let filmRate = parseInt($("input[name=filmrate]").val(), 10); // 10진수로 parseInt
-    	let director = $("#director").val();
-    	let starring = $("#cast").val();
-    	let genre = $("#genre").val();
-    	let runtime = $("#runtime").val(); // number로 받고 있어서 parseInt 필요 없음
-    	let trailer = $("#trailer_link").val();
-    	let description = $("#synopsis").val();
-    	
-    	// adding checkbox selection of 'screenType'
-    	let screenType = [];
-    	$(".screentype").each(function() {
-    		if($(this).is(":checked")) {
-    			screenType.push($(this).val());
-    		}
-    	});
-
-    	$.ajax({
-    		url:"admin.insertmovie.mo",
-    		type:"post",
-    		data: {
-    			"movieTitle" : movieTitle,
-    			"filmRate" : filmRate,
-    			"director" : director,
-    			"starring" : starring,
-    			"genre" : genre,
-    			"screenType" : screenType,
-    			"runtime" : runtime,
-    			"trailer" : trailer,
-    			"description" : description
-    		},
-
-    		success: function(result) {
-    			if (result == "success") {
-    				alert('added successfully');
-    				return "redirect:/admin/movie/manageMovieList";
-    			} else {
-    				// if result = "failure"
-    				alert('movie was not added');
-    			}
-    		},
-    		error: function(result) {
-    			alert('DAMN!');
-    		}	
-    	});
+		console.log($("#posterInput").val());
+		// 포스터를 첨부하지 않은 경우
+    	if($("#posterInput").val() === '') {
+    		alert('포스터를 첨부해주세요.');
+    		return false;
+    	} else {
+	    	/* ↓ 이걸 해야 form 태그없이도 current request is not a multipart request
+	    		안 띄우고 이미지를 넣을 수 있다고 함 */
+			let formData = new FormData();
+	    	
+			// adding checkbox selection of 'screenType'
+			let screenType = [];
+	    	$(".screentype").each(function() {
+	    		if($(this).is(":checked")) {
+	    			screenType.push($(this).val());
+	    		}
+	    	});
+	    	
+			formData.append("movieTitle", $("#title").val());
+			formData.append("filmRate", parseInt($("input[name=filmrate]").val(), 10));
+			// 10진수로 parseInt
+			formData.append("director", $("#director").val());
+			formData.append("starring", $("#cast").val());
+			formData.append("genre", $("#genre").val());
+			formData.append("openDate", $("#open_date").val());
+			formData.append("screenType", screenType.join(","));
+			formData.append("runtime", $("#runtime").val());
+			// ↑ number로 받고 있어서 굳이 parseInt 안 해도 됨
+			formData.append("trailer", $("#trailer_link").val());
+			formData.append("description",$("#synopsis").val());
+			formData.append("img", $("#posterInput")[0].files[0]);
+	
+	    	$.ajax({
+	    		url:"admin.insertmovie.mo",
+	    		type:"post",
+	    		data: /* {
+	    			"movieTitle" : movieTitle,
+	    			"filmRate" : filmRate,
+	    			"director" : director,
+	    			"starring" : starring,
+	    			"genre" : genre,
+	    			"openDate" : openDate,
+	    			"screenType" : screenType,
+	    			"runtime" : runtime,
+	    			"trailer" : trailer,
+	    			"description" : description,
+	    			"img" : image
+	    		} */ formData,
+	    		// 아래 두 줄을 안 넣으면 'illegal invocation' 오류가 남
+	    		// 사유 : https://repacat.tistory.com/38
+	    		contentType: false,
+	    		processData: false,
+	
+	    		success: function(result) {
+	    			if (result == "success") {
+	    				alert('added successfully');
+	    				
+						location.href = '/admin/movie/manageMovieList';
+	    				// return redirect는 여기가 아니라 Controller에서 쓰는 거임
+	    			} else {
+	    				// if result = "failure"
+	    				alert('movie was not added');
+	    			}
+	    		},
+	    		error: function(result) {
+	    			alert('DAMN!');
+	    		}	
+	    	});
+    	}
 
    	}
     </script>

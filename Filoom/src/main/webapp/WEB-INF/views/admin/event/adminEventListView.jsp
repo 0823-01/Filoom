@@ -276,7 +276,7 @@
                     	<tbody>
 	                    	<c:forEach var="e" items="${requestScope.list }">
 		                        <tr id="list">
-		                            <td class=eno>${e.eventNo}</td>
+		                            <td class="eno">${e.eventNo}</td>
 		                            <td id="event-thumb">
 		                                <div id="img" style="box-sizing: border-box; margin-top : 3px;">
 		                                    <img id="contentImg1" src="${pageContext.request.contextPath}${e.contentImg1}" style="box-sizing: border-box; width : 90px; height : 115px; border-radius : 4px;">                      

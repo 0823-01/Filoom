@@ -44,18 +44,31 @@
 	</select>
 		
 	<!-- 쿠폰에 bookNo 추가하기(예비) -->
-	<update id="setCouponBookNo" parameterType="map">
+	<update id="updateCouponUserDone" parameterType="map">
 		UPDATE COUPON_USER
-		   SET BOOK_NO = #{bookNo} 
-		<where>
-			USER_NO = #{userNo}
-			<foreach item="item" collection="couponNos" open="AND COUPON_NO IN (" separator="," close=")" >
-				#{item}
-			</foreach>
-		</where>
-	
-	
+		   SET BOOK_NO = #{bookNo},
+		       COUPON_USE='O'
+			<where>
+				USER_NO = #{userNo}
+				<foreach item="item" collection="couponNos" open="AND COUPON_NO IN (" separator="," close=")" >
+					#{item}
+				</foreach>
+			</where>
 	</update>
-
 	
+	
+	<select id="selectListCouponUserList" parameterType="int" resultMap="couponUserResultSet">
+		SELECT CU.COUPON_NO,USER_NO,BOOK_NO,COUPON_USE,COUPON_NAME
+		  FROM COUPON_USER CU
+		  JOIN COUPON C ON(CU.COUPON_NO = C.COUPON_NO)
+		 WHERE BOOK_NO = #{bookNo}
+	</select>
+
+	<update id="cancelUpdateCouponUser" parameterType="map">
+		UPDATE COUPON_USER 
+		   SET BOOK_NO = NULL,
+		       COUPON_USE = 'X'
+		 WHERE BOOK_NO = #{bookNo}
+		   AND USER_NO = #{userNo}
+	</update>
 </mapper>

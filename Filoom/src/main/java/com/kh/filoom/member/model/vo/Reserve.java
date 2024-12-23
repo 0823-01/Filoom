@@ -13,6 +13,7 @@ import lombok.ToString;
 @ToString
 public class Reserve {
 	
+	private int movieNo;		  // 영화 번호
 	private String movieTitle;    // 영화 제목
     private int runtime;          // 러닝타임
     private int bookNo;           // 예매 번호

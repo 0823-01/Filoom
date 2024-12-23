@@ -6,12 +6,14 @@
 	
 	<resultMap id="bookingResultSet" type="booking">
 		<id column="BOOK_NO" property="bookNo"/>
+		<result column="USER_NO" property="userNo"/>
 		<result column="BOOK_DATE" property="bookDate"/>
+		<result column="BOOK_TOTAL_COST" property="bookTotalCost"/>
 		<result column="BOOK_COST" property="bookCost"/>
 		<result column="COST_PROCESS" property="costProcess"/>
+		<result column="COST_TID" property="costTid"/>
 		<result column="STATUS" property="status"/>
 		<result column="MODIFY_DATE" property="modifyDate"/>
-		<result column="USER_NO" property="userNo"/>
 	</resultMap>
 	
 	<resultMap id = "playingResultSet" type="playing">
@@ -157,6 +159,22 @@
 		    P.PLAYING_NO =  #{playingNo}
 	</select>
 	
+
+	<select id = "insertBookingSeat" parameterType="bookingseat">
+		INSERT INTO BOOKING_SEAT VALUES (
+            SEQ_BSNO.NEXTVAL,
+            #{timeLimit},
+            (SELECT SSEAT_NO
+             FROM SCREEN_SEAT
+             WHERE SEAT_NO = #{seatId}
+               AND SCREEN_NO = (SELECT SCREEN_NO 
+                                FROM PLAYING
+                                WHERE PLAYING_NO = #{playingNo})),
+            #{playingNo},
+            NULL
+		)
+	</select>
+
 	
 	<select id="isSeatAlreadyBooked" parameterType="map" resultType="int">
 	    SELECT COUNT(*)
@@ -249,20 +267,28 @@
 
 	<!-- 결제 -->
 	
-	<select id="getBookingseatNoList" parameterType="map" resultMap="bookingSeatResultSet">
-
- 		SELECT BOOKING_SEAT_NO
+	<select id="checkAndGetBookingSeatNoList" parameterType="map" resultMap="bookingSeatResultSet">
+ 		SELECT BOOKING_SEAT_NO, TIMElIMIT, SEAT_NO
 		  FROM BOOKING_SEAT BS
 		  JOIN SCREEN_SEAT SS ON (BS.SSEAT_NO  = SS.SSEAT_NO)
 		  JOIN PLAYING P ON (BS.PLAYING_NO = P.PLAYING_NO)
 		 WHERE BS.BOOK_NO IS NULL
 		   AND BS.PLAYING_NO = #{playingNo}
 		   AND TIMELIMIT > SYSDATE
-		   AND
-		   	<foreach item="item" collection="seatNos" open="SEAT_NO IN (" separator="," close=")">
-		   		#{item}
-		   	</foreach>
-		   
+		   <choose>
+		   		<when test="seatNos != null" >
+				   AND
+				   	<foreach item="item" collection="seatNos" open="SEAT_NO IN (" separator="," close=")">
+				   		#{item}
+				   	</foreach>
+		   		</when>
+		   		<when test="bookingSeatNos != null">
+		   			And
+		   			<foreach item="item" collection="bookingSeatNos" open="BOOKING_SEAT_NO IN (" separator="," close=")">
+				   		#{item}
+				   	</foreach>
+		   		</when>
+		   </choose>
 		   
 	</select>
 	
@@ -286,22 +312,108 @@
 		</selectKey>
 	</insert>
 	
-	<!-- 예약할 좌석 데이터 조회 -->
-	<select id="selectListBookingSeat" parameterType="list" resultMap="bookingSeatResultSet">
-	   SELECT BOOKING_SEAT_NO, TIMElIMIT, SEAT_NO
-	     FROM BOOKING_SEAT
-	     JOIN SCREEN_SEAT USING(SSEAT_NO)
- 		 <where>
-		 	<foreach item="item" collection="list" open="BOOKING_SEAT_NO IN (" separator="," close=")" >
-		 		#{item.bookingSeatNo}
-		 	</foreach>
-		 </where>
-	</select>
-	
 	<!-- 데이터 삭제  -->
 	<delete id="deleteBookNo" parameterType="map">
 		DELETE FROM BOOKING
 		  WHERE USER_NO = #{userNo}
 		    AND BOOK_NO = #{bookNo}	
 	</delete>
+	
+	<select id="checkBookingSeat" parameterType="map" resultType="int">
+		SELECT COUNT(BOOKING_SEAT_NO)
+		  FROM BOOKING_SEAT BS
+		  JOIN SCREEN_SEAT SS ON(BS.SSEAT_NO = SS.SSEAT_NO)
+		 WHERE PLAYING_NO=#{playingNo}
+		   AND TIMELIMIT &gt; SYSDATE
+		   AND
+			<foreach item="item" collection="seatNos" open="SS.SEAT_NO IN (" separator="," close=")" >
+				 #{item}
+			</foreach>
+			  	
+	</select>
+	
+ 	<insert id="insertBookingSeats" parameterType="map">
+		
+		INSERT INTO BOOKING_SEAT VALUES
+		           (SEQ_BSNO.NEXTVAL,
+		            SYSDATE+INTERVAL '5' MINUTE,
+		            (SELECT SSEAT_NO
+		               FROM SCREEN_SEAT
+		              WHERE SEAT_NO = #{seatNo}
+		                AND SCREEN_NO = (SELECT SCREEN_NO 
+		                                    FROM PLAYING
+		                                   WHERE PLAYING_NO = #{playingNo})
+					 ),
+		            #{playingNo},
+		            NULL)
+	</insert>
+	
+	<update id="updateBookingSeatDone" parameterType="map">
+		UPDATE BOOKING_SEAT
+		   SET TIMELIMIT = '2999-01-01',
+		       BOOK_NO = #{bookNo}
+	    WHERE							  
+			 <foreach item="item" collection="bookingSeatNoList" open="BOOKING_SEAT_NO IN (" separator="," close=")"> 
+			 	#{item.bookingSeatNo}
+		 	</foreach>
+	</update>
+	
+	<update id="updateBookingDone" parameterType="booking">
+		UPDATE BOOKING
+		   SET BOOK_DATE=SYSDATE,
+		       BOOK_TOTAL_COST=#{bookTotalCost},
+		       BOOK_COST=#{bookCost},
+		       COST_PROCESS=#{costProcess},
+		       COST_TID=#{costTid},
+		       STATUS='Y'
+		 WHERE BOOK_NO=#{bookNo}
+		   AND USER_NO=#{userNo}
+	</update>
+	
+	
+	<delete id="deleteBookingSeats" parameterType="list">
+		DELETE FROM BOOKING_SEAT
+		 WHERE 
+		 <foreach item="item" collection="list" open="BOOKING_SEAT_NO IN (" separator="," close=")">
+		 	#{item}
+		 </foreach>
+	</delete>
+	
+	<delete id="deleteBooking" parameterType="map">
+		DELETE FROM BOOKING
+		 WHERE BOOK_NO = #{bookNo}
+		   AND USER_NO = #{userNo}
+	</delete>
+	
+	<select id="selectBooking" parameterType="int" resultMap="bookingResultSet">
+		SELECT *
+		  FROM BOOKING
+		 WHERE BOOK_NO = #{bookNo}
+	</select>
+	
+	<update id="cancelUpdateBooking" parameterType="map">
+		UPDATE BOOKING
+		   SET STATUS ='N',
+		       MODIFY_DATE=SYSDATE
+		 WHERE BOOK_NO=#{bookNo}
+		   AND USER_NO=#{userNo}
+	</update>
+	
+	<select id="checkCancelBooking" parameterType="map" resultType="int">
+		SELECT COUNT(B.BOOK_NO)
+		  FROM BOOKING B
+		  JOIN BOOKING_SEAT BS ON (B.BOOK_NO = BS.BOOK_NO)
+		  JOIN PLAYING P ON (BS.PLAYING_NO = P.PLAYING_NO)
+		 WHERE B.BOOK_NO = #{bookNo}
+		   AND PLAYTIME > SYSDATE
+		   AND USER_NO = #{userNo}
+		   AND B.STATUS = 'Y'
+		   AND MODIFY_DATE IS NULL
+	</select>
+	
+	<delete id="cancelupdateBookingSeat" parameterType="int">
+		DELETE FROM BOOKING_SEAT
+	 	 WHERE BOOK_NO = #{bookNo}
+	</delete>
+	
 </mapper>

@@ -4,7 +4,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>관리자 공지사항 글작성</title>
+<title>관리자 공지사항 글수정</title>
 <!--  link rel="stylesheet" href="../main/admin.css" />-->
 <style>
 body{
@@ -300,7 +300,7 @@ body{
 
                 <!-- 혜원 - 관리자 공지사항 글작성-->
                 <div id = "admin_title_content">
-                    <div id="title">공지사항 글 작성</div>
+                    <div id="title">공지사항 글 수정</div>
                     <div id="sub">체크(<b style="color : red;">*</b>)된 항목은 필수 입력사항입니다.</div>
                 </div>
             </div>
@@ -311,26 +311,27 @@ body{
                         <!--이건 버튼 이랑 text 샘플
                         <input type ="text" id ="text_sample">
                         <input type="button" id ="button_sample" value="샘플">-->
-                        <form id="enroll-form" action="insert.no" method="post">
+                        <form id="updateForm" action="update.no" method="post">
+                        <input type="hidden" name="noticeNo" value="${requestScope.n.noticeNo }">
                             <!--제목-->
                             <div class="title_date_count">
                                 <div id="nTitlearea">
-                                    <label for="title">제목<b style="color : red;">*</b></label> <input type="text" id="ntitle" name="noticeTitle">
+                                    <label for="title">제목<b style="color : red;">*</b></label><input type="text" id="ntitle" name="noticeTitle" value="${requestScope.n.noticeTitle }" required>
                                 </div>
                             </div>
 
                             <!-- 내용 -->
                             <div class="content">
                                 <div id="nContentarea">
-                                    <label for="content">내용<b style="color : red;">*</b></label><textarea id="ncontent"  name="noticeContent"></textarea>
+                                    <label for="content">내용<b style="color : red;">*</b></label><textarea id="ncontent"  name="noticeContent" required>${requestScope.n.noticeContent }</textarea>
                                 </div>
                             </div>
 
                             <!--등록, 취소 버튼-->
                             <div class="btn" style="font-size: 20px; font-weight: bold;">
                                 <!--게시물 상단 고정 <input id="check" type="checkbox">-->
-                                <button id="cancle" style="width : 100px; margin-right : 5px;">취소</button>
-                                <button type="submit" id="submit" style="width : 130px;">등록</button>
+                                <button id="cancle" style="width : 100px; margin-right : 5px;" onclick="javascript:history.go(-1);">취소</button>
+                                <button type="submit" id="submit" style="width : 130px;">수정</button>
                             </div> 
                         </form>
                     </div>
