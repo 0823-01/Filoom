@@ -638,20 +638,74 @@
 	</insert>
 	
 	<!-- === 영화 수정 페이지 === -->
-	<!-- <update id="updateMovie" parameterType="movie">
+	<!-- 기존 영화 정보를 페이지 내 input의 value값으로 집어넣기 -->
+	<select id="selectMovietoModify" parameterType="_int" resultMap="movieResultSet">
+		SELECT MOVIE_NO, MOVIE_TITLE,
+			TO_CHAR(OPEN_DATE, 'YYYY-MM-DD') AS OPEN_DATE, PREMIERE,
+			DIRECTOR, GENRE, RUNTIME, SCREEN_TYPE, FILM_RATE,
+			DESCRIPTION, STARRING, TRAILER,
+			P.IMAGE_ID, P.IMAGE_PATH, P.FILE_CODENAME
+		FROM MOVIE M JOIN POSTER P USING (MOVIE_NO) 
+		WHERE M.STATUS = 'Y' AND MOVIE_NO = #{movieNo} AND P.FILE_LEVEL = 1
+	</select>
+	
+	<!-- === 영화 수정 페이지 === -->
+	<update id="updateMovie" parameterType="movie">
 		UPDATE MOVIE
 		SET MOVIE_TITLE = #{movieTitle}, OPEN_DATE = #{openDate},
 			DIRECTOR = #{director}, GENRE = #{genre},
 			RUNTIME = #{runtime}, SCREEN_TYPE = #{screenType},
-			DESCRIPTION = #{description}, STARRING = #{starring},
-			TRAILER = #{trailer}
+			FILM_RATE = #{filmRate}, DESCRIPTION = #{description},
+			STARRING = #{starring}, TRAILER = #{trailer}
 		WHERE STATUS = 'Y' AND MOVIE_NO = #{movieNo}
-	</update> -->
+	</update>
+	
+	<!-- 포스터 변경용 -->
+	<update id="changePoster" parameterType="poster">
+		UPDATE POSTER
+		SET FILE_NAME = #{fileName}, FILE_CODENAME = #{fileCodename},
+		    IMAGE_PATH = #{imagePath}
+		WHERE MOVIE_NO = #{movieNo}
+	</update>
 	
 	<!-- === 영화 삭제 페이지 === -->
-	<!-- <update id="deleteMovie" parameterType="_int">
+	<update id="deleteMovie" parameterType="_int">
 		UPDATE MOVIE
 		SET STATUS = 'N'
 		WHERE MOVIE_NO = #{movieNo}
-	</delete> -->
+	</update>
+	<!-- 포스터 삭제용 -->
+	<delete id="deletePoster" parameterType="int">
+		DELETE FROM POSTER
+		WHERE MOVIE_NO = #{movieNo}
+	</delete>
+	<!-- 일단 포스터 변경/삭제 모두 DB에서도 삭제하기로 하였음 -->
+	
+	
+	
+	<!-- === 관리자 전용 영화 쿼리 페이지 === -->
+	<!-- 여기는 별일 없으면 페이징 처리 안 하기로 해서 따로 쿼리 만들었음 -->
+	<select id="adminMovieList" parameterType="int" resultMap="movieResultSet">
+		SELECT MOVIE_NO,
+			CASE WHEN (LENGTH(MOVIE_TITLE) > 9)
+     			THEN SUBSTR(MOVIE_TITLE,1,9) || '...'
+         		ELSE MOVIE_TITLE
+ 			END AS MOVIE_TITLE,
+			PREMIERE, TO_CHAR(OPEN_DATE,'YYYY.MM.DD') AS "OPEN_DATE", FILM_RATE,
+			P.IMAGE_PATH, P.FILE_CODENAME
+		FROM MOVIE M JOIN POSTER P USING (MOVIE_NO)
+		WHERE M.STATUS = 'Y' AND P.FILE_LEVEL = 1
+		<if test='isOpen >= 1'>
+			AND PREMIERE = 'Y'
+		</if>
+		ORDER BY MOVIE_NO DESC
+	</select>
+	
+	<!-- 관리자 상세 - 개봉 여부 변경 -->
+	<update id="togglePremiere" parameterType="hashmap">
+		UPDATE MOVIE
+		SET PREMIERE = DECODE(#{premiere}, 1, 'Y', 0, 'N')
+		WHERE MOVIE_NO = #{movieNo}
+	</update>
+
 </mapper>

@@ -1184,7 +1184,7 @@
 			
 
 			<script>
-			    // 공통 AJAX 요청 함수
+			    // 공통 AJAX 요청 함수 
 			    function sendAjaxForSeat(seatId, playingNo) {
 			        if (seatId && playingNo) {
 			            
@@ -1233,18 +1233,18 @@
 			    }
 			
 			    // beforeunload 이벤트
-			    $(window).on("beforeunload", function () {
-			        handlePageExit();
-			    });
-			
+				$(window).on("beforeunload",handlePageExit);
+				
 			    // visibilitychange 이벤트
-			    document.addEventListener("visibilitychange", function () {
+			    function handleVisibilityChange() {
 			        if (document.visibilityState === "hidden") {
 			            handlePageExit();
 			        }
-			    });
+			    }
 			    
-			   
+			    // 이벤트 리스너 등록
+			    document.addEventListener("visibilitychange", handleVisibilityChange);
+			    
 			    
 			    $(document).ready(function () {
 			        $("#booking_3").on("click", function () {
@@ -1266,14 +1266,33 @@
 			            var seatIds = seatId.split(",");
 
 			            
-			            // URL에 쿼리 파라미터 동적으로 추가
-			            var queryParams = "?playingNo=" + playingNo;
-			            seatIds.forEach(function(seat) {
-			                queryParams += "&seatNos=" + encodeURIComponent(seat.trim());
-			            });
+			            var form = document.createElement("form");
+			            form.method = "POST";
+			            form.action = "/filoom/paymentForm.pm";
 
-			            // 페이지 이동
-			            window.location.href = "/filoom/paymentForm.pm" + queryParams;
+			            // playingNo 값을 추가
+			            var playingNoInput = document.createElement("input");
+			            playingNoInput.type = "hidden";
+			            playingNoInput.name = "playingNo";
+			            playingNoInput.value = playingNo;
+			            form.appendChild(playingNoInput);
+
+			            // seatIds 값을 추가
+			            seatIds.forEach(function (seat) {
+			                var seatInput = document.createElement("input");
+			                seatInput.type = "hidden";
+			                seatInput.name = "seatNos"; // 동일한 이름으로 여러 값을 전달
+			                seatInput.value = seat.trim();
+			                form.appendChild(seatInput);
+			            });
+			            
+			            //beforeunload, visibilitychange 이벤트 제거
+			            $(window).off("beforeunload",handlePageExit);
+			            document.removeEventListener("visibilitychange", handleVisibilityChange);
+
+			            // 동적으로 생성한 form을 body에 추가하고 제출
+			            document.body.appendChild(form);
+			            form.submit();
 			        });
 			    });
 			    

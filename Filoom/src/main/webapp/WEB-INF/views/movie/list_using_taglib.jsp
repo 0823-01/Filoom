@@ -14,7 +14,7 @@
             <c:forEach var="pic" items="${box}">
             	<div class="movie" onclick="location.href='detail.mo?movieNo=${pic.movieNo}';">
 	                <!-- <img src="resources/images/posters/moana.jpg" class="poster"> -->
-	                <img src="${pageContext.request.contextPath}${pic.fileCodename}" class="poster">
+	                <img src="${pageContext.request.contextPath}/resources/images/posters/${pic.fileCodename}" class="poster">
 	                <table class="movie-info">
 	                    <tr>
 	                        <td id="filmrate"><img src="resources/images/posters/${pic.filmRate}.svg" class="filmrate"></td>
