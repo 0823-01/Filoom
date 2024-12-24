@@ -134,6 +134,79 @@
 	
 	</select>
 	
+	<!-- 미성년자 예매페이지 검색 기능 -->
+	<select id = "movieSearchKid" parameterType="hashmap" resultMap="movieResultSet">
+		
+		SELECT 
+	        M.MOVIE_NO,
+	        M.MOVIE_TITLE,
+	        M.PREMIERE,
+	        TO_CHAR(M.OPEN_DATE, 'YYYY MM DD') AS OPEN_DATE,
+	        M.RUNTIME,
+	        M.SCREEN_TYPE,
+	        M.FILM_RATE,
+	        M.DESCRIPTION,
+	        M.STARRING,
+	        M.STATUS,
+	        P.IMAGE_PATH,
+	        P.FILE_CODENAME
+	    FROM 
+	        MOVIE M
+	    LEFT JOIN 
+	        POSTER P
+	    ON 
+	        M.MOVIE_NO = P.MOVIE_NO
+	        AND P.FILE_LEVEL = 1
+	    WHERE 
+	        M.MOVIE_TITLE LIKE '%' || #{searchMovieKeyword} || '%'
+	        AND M.STATUS = 'Y'
+	        AND M.FILM_RATE &lt;&gt; 19
+		 
+	
+	</select>
+	
+	<!-- 미성년자용 검색 첫 -->
+	<select id = "selectSearchFirstMovieKid" parameterType="hashmap" resultMap="movieResultSet">
+		
+		 SELECT 
+	        M.MOVIE_NO,
+	        M.MOVIE_TITLE,
+	        M.PREMIERE,
+	        M.OPEN_DATE,
+	        M.RUNTIME,
+	        M.SCREEN_TYPE,
+	        M.FILM_RATE,
+	        CASE 
+	            WHEN LENGTH(M.DESCRIPTION) &gt; 120 THEN SUBSTR(M.DESCRIPTION, 1, 120) || '...'
+	            ELSE M.DESCRIPTION
+	        END AS DESCRIPTION,
+	        M.STARRING,
+	        M.STATUS,
+	        P.IMAGE_PATH,
+	        P.FILE_LEVEL,
+	        P.FILE_CODENAME
+	    FROM 
+	        MOVIE M
+	    JOIN 
+	        POSTER P 
+	    ON 
+	        M.MOVIE_NO = P.MOVIE_NO
+	    WHERE 
+	        M.STATUS = 'Y'
+	        AND M.FILM_RATE &lt;&gt; 19
+	        AND M.MOVIE_NO = (
+	            SELECT 
+	                MIN(MOVIE_NO)
+	            FROM 
+	                MOVIE
+	            WHERE 
+	                STATUS = 'Y'
+	                AND MOVIE_TITLE LIKE '%' || #{searchMovieKeyword} || '%'
+	                AND FILM_RATE &lt;&gt; 19
+	        )
+	
+	</select>
+	
 	<!-- 이거 영화 예매 페이지 첫페이지 상세정보 가져오기 -->
 	<select id = "selectMovie" parameterType="_int" resultMap="movieWithPosterFlatResultMap">
 	
@@ -181,6 +254,68 @@
 		WHERE M.MOVIE_TITLE LIKE '%' || #{searchMovieKeyword} || '%'
 		  AND M.STATUS = 'Y'
 		 
+	
+	</select>
+
+	<select id ="selectListKid" resultMap="movieResultSet">
+		SELECT 
+		    M.MOVIE_NO,
+		    M.MOVIE_TITLE,
+		    M.PREMIERE,
+		    TO_CHAR(M.OPEN_DATE, 'YYYY MM DD') AS OPEN_DATE,
+		    M.RUNTIME,
+		    M.SCREEN_TYPE,
+		    M.FILM_RATE,
+		    M.DESCRIPTION,
+		    M.STARRING,
+		    M.STATUS,
+		    P.IMAGE_PATH,
+		    P.FILE_CODENAME
+		FROM 
+		    MOVIE M
+		LEFT JOIN 
+		    POSTER P
+		ON 
+		    M.MOVIE_NO = P.MOVIE_NO
+		    AND P.FILE_LEVEL = 1
+		WHERE 
+		    M.STATUS = 'Y'
+		    AND M.FILM_RATE  &lt;&gt; 19
+	</select>
+
+	<select id ="selectFirstMovieKid" resultMap="movieResultSet">
+		SELECT 
+	        M.MOVIE_NO,
+	        M.MOVIE_TITLE,
+	        M.PREMIERE,
+	        M.OPEN_DATE,
+	        M.RUNTIME,
+	        M.SCREEN_TYPE,
+	        M.FILM_RATE,
+	        CASE 
+	            WHEN LENGTH(M.DESCRIPTION) > 120 THEN SUBSTR(M.DESCRIPTION, 1, 120) || '...'
+	            ELSE M.DESCRIPTION
+	        END AS DESCRIPTION,
+	        M.STARRING,
+	        M.STATUS,
+	        P.IMAGE_PATH,
+	        P.FILE_LEVEL,
+	        P.FILE_CODENAME
+	    FROM 
+	        MOVIE M
+	    JOIN 
+	        POSTER P 
+	    ON 
+	        M.MOVIE_NO = P.MOVIE_NO
+	    WHERE 
+	        M.STATUS = 'Y'
+	        AND M.FILM_RATE &lt;&gt; 19
+	        AND M.MOVIE_NO = (
+	            SELECT MIN(MOVIE_NO)
+	            FROM MOVIE
+	            WHERE STATUS = 'Y'
+	              AND FILM_RATE &lt;&gt; 19
+	        )
 	
 	</select>
 
@@ -448,7 +583,7 @@
 
 		SELECT MOVIE_NO,
 		    MOVIE_TITLE,
-		    TO_CHAR(OPEN_DATE, 'YYYY.MM.DD') AS "OPEN_DATE",
+		    OPEN_DATE,
 		    DIRECTOR,
 		    GENRE,
 		    RUNTIME,
@@ -456,54 +591,34 @@
 		    FILM_RATE,
 		    DESCRIPTION,
 		    STARRING,
+		    STATUS,
 		    TRAILER
 		FROM MOVIE
-		WHERE MOVIE_NO = #{movieNo} AND STATUS = 'Y'
+		WHERE MOVIE_NO = #{movieNo}
 	
-	</select>
 	
-	<!-- 이거랑 showDetail이랑 통합해서 movieWithPoster 이용해서 쓸 수 있을라나?
-	<select id="showThumbnail" parameterType="movieNo" resultMap="">
-		SELECT FILE_NAME, FILE_CODENAME 
-		FROM POSTER
-		WHERE MOVIE_NO = #{movieNo} AND STATUS = 'Y'
-			AND FILE_LEVEL = 1
 	</select>
 
-	-->
 
 	<!-- === 영화 추가 페이지 === -->
-	<insert id="addMovie" parameterType="movie">
+	<update id="addMovie" parameterType="movie">
 		INSERT INTO MOVIE (
 			MOVIE_NO, MOVIE_TITLE, OPEN_DATE, DIRECTOR,
 			GENRE, RUNTIME, SCREEN_TYPE, FILM_RATE,
-			DESCRIPTION, STARRING, TRAILER)
-		VALUES (
-			SEQ_MNO.NEXTVAL, #{movieTitle}, #{openDate}, #{director},
+			DESCRIPTION, STARRING, TRAILER
+		) VALUES (
+			SEQ_MOV.NEXTVAL, #{movieTitle}, #{openDate}, #{director},
 			#{genre}, #{runtime}, #{screenType}, #{filmRate},
-			#{description}, #{starring}, #{trailer})
-		<selectKey keyProperty="movieNo" resultType="int" order="AFTER">
-			SELECT SEQ_MNO.CURRVAL FROM DUAL
-		</selectKey>
-	</insert>
-	
-	<delete id="undoAddMovie" parameterType="_int">
-		DELETE FROM MOVIE
-		WHERE MOVIE_NO = #{movieNo}
-	</delete>
+			#{description}, #{starring}, #{trailer}
+		)
+	</update>
 	
 	<!-- 이미지 추가 (영화 추가/수정 공통) -->
-	<insert id="addPoster" parameterType="poster">
-		INSERT INTO POSTER (
-		    IMAGE_ID, MOVIE_NO, FILE_NAME, FILE_CODENAME,
-		    IMAGE_PATH, FILE_LEVEL
-		) VALUES (
-		    SEQ_IMG.NEXTVAL, #{movieNo}, #{fileName}, #{fileCodename},
-		    #{imagePath}, 1)
-	</insert>
+	<!-- <update id="addPoster" parameterType="poster">
+	</update> -->
 	
 	<!-- === 영화 수정 페이지 === -->
-	<!-- <update id="updateMovie" parameterType="movie">
+	<update id="updateMovie" parameterType="movie">
 		UPDATE MOVIE
 		SET MOVIE_TITLE = #{movieTitle}, OPEN_DATE = #{openDate},
 			DIRECTOR = #{director}, GENRE = #{genre},
@@ -511,12 +626,5 @@
 			DESCRIPTION = #{description}, STARRING = #{starring},
 			TRAILER = #{trailer}
 		WHERE STATUS = 'Y' AND MOVIE_NO = #{movieNo}
-	</update> -->
-	
-	<!-- === 영화 삭제 페이지 === -->
-	<!-- <update id="deleteMovie" parameterType="_int">
-		UPDATE MOVIE
-		SET STATUS = 'N'
-		WHERE MOVIE_NO = #{movieNo}
-	</delete> -->
+	</update>
 </mapper>

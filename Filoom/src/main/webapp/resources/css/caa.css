@@ -285,7 +285,11 @@ body{
 
 
 #selectTime{
-    background-color: green;
+    background-color: #151515;
     transform: scale(1.1);
 } 
+
+#time>div>label{
+	margin:auto;	
+}
 

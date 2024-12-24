@@ -206,7 +206,6 @@
                         <div id="moviePoster" style="margin-right:20px;">
                             <!-- <img src="https://placehold.co/600x400"> -->
                             <img src="resources/images/posters/1win.jpg">
-                            <!-- ${pageContext.request.contextPath}${pic.fileCodename} -->
                         </div>
                         <div id="tobeManaged">
                             <!-- 내부 스크롤은 여기만 지원함 -->
@@ -219,11 +218,9 @@
                              (불필요하거나 시간 부족할 경우 삭제) -->
                             <div align="right" style="width:100%;">
                                 <button id="button_sample">이미지 관리</button>
-                                <button id="button_sample" onclick="location.href='managereview.mo';">리뷰 관리</button>
-                                <button id="button_sample" onclick="location.href='modifymovie.mo?movieNo=${requestScope.target.movieNo}';">수정</button>
-                                <button id="button_sample" class="unready" style="background-color:red;"
-                                	onclick="alert('현재 영화를 삭제할 수 없습니다.');">삭제</button>
-                                	<!-- location.href='admin.deletemovie.mo' -->
+                                <button id="button_sample" onclick="location.href='admin.managereview.mo';">리뷰 관리</button>
+                                <button id="button_sample" onclick="location.href='modifymovie.mo';">수정</button>
+                                <button id="button_sample" class="unready" style="background-color:red;">삭제</button>
                             </div>
                             
                             <div id="movie-title">

@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.kh.filoom.common.model.vo.PageInfo;
-import com.kh.filoom.coupon.model.vo.Coupon;
 import com.kh.filoom.event.model.dao.EventDao;
 import com.kh.filoom.event.model.vo.Applicant;
 import com.kh.filoom.event.model.vo.Event;
@@ -107,17 +106,13 @@ public class EventServiceImpl implements EventService {
 		return eventDao.selectReplyList(sqlSession, eventNo, pi);
 	}
 	
-	
 	/**
-	 * 241222 한혜원
-	 * 댓글 중복체크
-	 */
-	@Override
-	public boolean checkReplyWriter(int refEno, String replyWriter) {
-		
-		return eventDao.checkReplyWriter(sqlSession, refEno, replyWriter);
-	}
-	
+	 *
+	 
+	public boolean checkIfReplyExists(int eventNo, String userNo) {
+		return eventDao.checkIfReplyExists(eventNo, userNo) > 0;
+	} */
+
 	/**
 	 * 241217 한혜원 
 	 * 댓글 작성용 요청 메소드 
@@ -127,7 +122,6 @@ public class EventServiceImpl implements EventService {
 	public int insertReply(Reply r) {
 		return eventDao.insertReply(sqlSession, r);
 	}
-
 
 	/**
 	 * 241217 한혜원
@@ -166,20 +160,18 @@ public class EventServiceImpl implements EventService {
 	 * 응모자 추가 메소드
 	 */
 	@Override
-	@Transactional
 	public void insertParticipant(Applicant a) {
 		eventDao.insertParticipant(sqlSession, a);
 		
 	}
 	
-	/**
-	 * 쿠폰발급
-	 */
-	@Override
-	public int sendCoupon(List<Applicant> alist, int eventNo) {
-		return 0;
-	}
+	
+	
+	
+	
+	
 
+	
 	// 관리자 --------------------------------------------------------------------------------
 	/**
 	 * 241211 한혜원 
@@ -203,21 +195,6 @@ public class EventServiceImpl implements EventService {
 		return eventDao.insertEventAttachment(sqlSession, eventAttachment); // 첨부파일저장
 	}
 	
-	
-	
-	/**
-	 * 241222 한혜원
-	 * 관리자용 쿠폰 등록 메소드
-	 */
-	@Override
-	@Transactional
-	public int insertCoupon(Coupon coupon) {
-		if(coupon.getCouponName() != null && !coupon.getCouponName().isEmpty()) {
-			return eventDao.insertCoupon(sqlSession, coupon);
-		}
-		return 0; // 쿠폰이 없으면 저장하지 않음
-	}
-
 	/**
 	 * 241218 한혜원 
 	 * 관리자용 게시글 총 갯수
@@ -256,24 +233,16 @@ public class EventServiceImpl implements EventService {
 		return eventDao.adminSelectEventAttachment(sqlSession, eventNo);
 	}
 
-	/**
-	 * 241222 한혜원 
-	 * 게시글 수정용
-	 */
 	@Override
-	@Transactional
 	public int updateEvent(Event e) {
 		// TODO Auto-generated method stub
 		return 0;
 	}
 
-	/**
-	 * 게시글 삭제 메소드
-	 */
 	@Override
-	@Transactional
-	public int deleteEvent(int eventNo) {
-		return eventDao.deleteEvent(sqlSession, eventNo);
+	public int deleteEvevnt(Event e) {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 
 	/**

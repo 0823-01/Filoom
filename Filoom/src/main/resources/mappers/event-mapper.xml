@@ -57,16 +57,6 @@
 	<result column="COUPON_NO" property="couponNo" />
 </resultMap>
 
-<!-- coupon 테이블로부터 조회된 ResultSet을 Coupon VO 타입으로 옮겨주는 ResultMap -->
-<resultMap id="couponResultSet" type="coupon">
-	<id column="COUPON_NO" property="couponNO" />
-	<result column="COUPON_NAME" property="couponName" />
-	<result column="COUPON_EXPDATE" property="couponExpDate" />
-	<result column="COUPON_STATUS" property="couponStatus" />
-	<result column="COUPON_LEVEL" property="couponLevel" />
-	<result column="REF_ENO" property="refEno" />
-</resultMap>
-
 
 <!-- 사용자 -->
 <!-- 241218 한혜원, 이벤트 추천게시글 목록조회 -->
@@ -158,14 +148,6 @@
 	   AND R.STATUS = 'Y'
 </select>
 
-<!-- 241222 한혜원 댓글 중복 확인 -->
-<select id="checkReplyWriter" parameterType="map" resultType="Integer">
-	SELECT COUNT(*)
-	  FROM REPLY
-	 WHERE REF_ENO = #{refEno}
-	   AND REPLY_WRITER = #{replyWriter}
-</select>
-
 <!-- 241217 한혜원 이벤트 게시판 댓글 작성 -->
 <insert id="insertReply" parameterType="reply">
 	INSERT INTO REPLY(REPLY_NO, REF_ENO, REPLY_WRITER, REPLY_CONTENT)
@@ -217,12 +199,6 @@
 	VALUES(SEQ_EFNO.NEXTVAL, SEQ_ENO.CURRVAL, #{originName}, #{changeName}, #{filePath}, #{fileLevel})
 </insert>
 
-<!-- 241222 한혜원, 쿠폰 등록 -->
-<insert id="insertCoupon" parameterType="coupon">
-	INSERT INTO COUPON(COUPON_NO, REF_ENO, COUPON_NAME, COUPON_QUANTITY, COUPON_LEVEL)
-	VALUES(SEQ_CNO.NEXTVAL, #{refEno}, #{couponName}, #{couponQuantity},  #{couponLevel})
-</insert>
-
 <!-- 241218 한혜원, 이벤트 게시글 총 갯수 -->
 <select id="selectListCount" resultType="_int">
 	SELECT COUNT(*)
@@ -270,11 +246,6 @@
 	 WHERE REF_ENO = #{eventNo}
 	   AND FILE_LEVEL = 2
 </select>
-
-<!-- 241222 한혜원 -->
-<update id="deleteEvent" >
-
-</update>
 
 <!-- 응모확인 -->
 <!-- 241219 한혜원, 댓글 개수 확인 -->

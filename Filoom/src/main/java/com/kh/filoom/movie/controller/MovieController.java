@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,18 +26,16 @@ import com.kh.filoom.movie.model.vo.Poster;
 
 /**
  * @author 정원섭
- * === MovieController v 0.4.1 ===
+ * === MovieController v 0.3 ===
  * 작업 착수일 : 2024-12-13
- * 최종 수정일 : 2024-12-22
+ * 최종 수정일 : 2024-12-19
  */
 
 /* 작업 내역
  * v 0.1 - 틀 잡기
  * v 0.2 - 영화 목록 출력 (평점순 제외)
  * v 0.3 - 검색을 제외한 각 영화 목록에 페이징바 추가
- * v 0.4 - 관리자 영화 추가 페이지 & 수정 페이지 착수
- * v.0.4.1 - 관리자 영화 추가 페이지 완료, 이미지가 안 뜨는 문제 원인 확인
- * v.0.4.2 - 상세 페이지 리뷰 페이징바 삭제 외 일부 사소한 변경 사항
+ * v 0.4 - 관리자 영화 추가 페이지 & 수정 페이지
  * */
 @Controller
 public class MovieController {
@@ -164,6 +161,7 @@ public class MovieController {
 	// 상영 예정작만 보기 - 페이지 띄우기
 	@GetMapping("preopen.mo")
 	public String viewNotOpened() {
+		// ArrayList<Movie> tbs = msi.selectMovieListPre();
 		return "movie/movieNotOpened";
 	}
 
@@ -209,10 +207,21 @@ public class MovieController {
 		return "movie/list_using_taglib";
 	}
 
-	// === 영화 상세 페이지 ===
+	
+	// 영화 상세 페이지
+	// specific.mo?movieNo=XXX
+	// 임시로 하드코딩한 <위키드>의 상세 페이지로 연결해놨으며, 이에 따라 boxOffice.jsp의 <위키드>에만 상세페이지를 링크해놨음
+	// 도메인 미확정
+	/*
+	@GetMapping("detail.mo")
+	public String selectMovie(int movieNo, Model model) {
+		
+		
+		return "movie/movieDetail";
+	}
+	*/
 	
 	// 영화 상세 정보 조회 (스틸컷까지만)
-	// detail.mo?movieNo=XXX
 	@GetMapping("detail.mo")
 	public String showDetail(int movieNo, Model model) {
 		
@@ -223,15 +232,13 @@ public class MovieController {
 		
 		model.addAttribute("list", list);
 		
-		msi.showDetail(movieNo);
 		
-		// Poster p = msi.showThumbnail(movieNo);
-		// model.addAttribute("poster", p);
+		msi.showDetail(movieNo);
 		
 		return "movie/movieDetail";
 	}
 	
-	// 리뷰 목록 조회 (+ 페이징 처리) (AJAX 예정)
+	// 리뷰 목록 조회 (+ 페이징 처리) (AJAX 예상)
 	public void selectReview(@RequestParam(value="cpage", defaultValue="1")int cpage) {
 		int boardLimit = 10;
 		int listCount = 42; // 임시숫자
@@ -240,25 +247,21 @@ public class MovieController {
 	
 	
 	// 리뷰 작성 페이지
-	@GetMapping("review.mo") //?userNo=XXX&movieNo=XXX
 	public void reviewForm() {
-		// return "movie/reviewForm";
+		
 	}
 	
 	// 작성
-	@GetMapping("newreview.mo")
 	public void writeReview() {
 		
 	}
 	
 	// 수정
-	@GetMapping("modifyreview.mo")
 	public void updateReview() {
 		
 	}
 	
 	// 삭제
-	@GetMapping("deletereview.mo")
 	public void deleteReview() {
 		
 	}
@@ -298,10 +301,7 @@ public class MovieController {
 
 		// 4. 파일 업로드 - MultipartFile 객체에서 제공하는 transferTo 메소드를 활용함
 		try {
-			File target = new File(savePath + fileCodename);
-			upfile.transferTo(target);
-			// 저장경로 로그
-			System.out.println("An image has saved to : " + target.getAbsolutePath());
+			upfile.transferTo(new File(savePath + fileCodename));
 		} catch(IOException e) {
 			e.printStackTrace();
 		}
@@ -311,71 +311,67 @@ public class MovieController {
 	// 영화 추가
 	@ResponseBody
 	@PostMapping("admin.insertmovie.mo")
-	public String addMovie(HttpServletRequest request, @RequestParam("img")MultipartFile img, Movie m,
+	public String addMovie(/*HttpServletRequest request, */MultipartFile img, Movie m,
 			Model model, HttpSession session) {
-		int mvresult = 0; // 영화 삽입이 성공해야 이미지 삽입을 시도할 수 있음
-		int result = 0; // 이미지 삽입까지 포함한 최종 결과
+		int imgresult = 0; // 이미지를 안 넣으면 버튼 자체가 안 눌러짐
+		int result = 0; // 이미지 삽입이 실패하면 바로 'failure'가 뜸
 		
 		// 영화 정보 넣는 것까진 성공
 		System.out.println(m);
 		
-		// 이미지 넣기
-		// maxUploadSize는 root-context.xml에 있으니까 굳이 안 써도 됨
-		Poster p = new Poster();
-		
-		System.out.println("fileName = " + img.getOriginalFilename());
-		
-		
-		//for(img : imglist) {
-			if(!img.getOriginalFilename().equals("")) {
-				String fileCodename = addImage(img, session);
-				p.setFileName(img.getOriginalFilename());
-				p.setFileCodename("/resources/images/posters/" + fileCodename);
-				p.setImagePath(fileCodename); // ???
-				p.setFileLevel(1); // 1 = 대표 이미지라는 뜻
-			}
-		//}
-		
-		System.out.println(p);
-		
-		// 순서상 영화 추가를 먼저 하는 것이 맞음
-		mvresult = msi.addMovie(m); // 결과값으로 movieNo를 뱉음
-		if(mvresult > 0) {
-			p.setMovieNo(mvresult);
-			result = msi.addPoster(p);
-			if(result <= 0) {
-				int del = msi.undoAddMovie(mvresult);
-				if (del > 0)
-					System.out.println("Adding movie has reverted because adding image is failed.");
-				// 영화부터 추가 시도하니까 귀찮게 File(realpath) 안해도 됨
-			}
-		}
-		
-		/*
-		 * 딴 데 쓰려고 일부러 남겨놨음
-		// 이미지는 첨부했으나 정작 영화 추가가 안 됐을 경우, 첨부하려던 이미지를 삭제한다
-		String realPath = session.getServletContext().getRealPath(p.getFileCodename());
-		new File(realPath).delete();
-		*/	
+//		// 이미지 넣기
+//		int maxSize = 10485760; // = 10MB = 10 × 1024×1024
+//		Poster p = new Poster();
+//		
+//		/*for(img : imglist) {*/
+//			if(!img.getOriginalFilename().equals("")) {
+//				String fileCodename = addImage(img, session);
+//				p.setFileName(img.getOriginalFilename());
+//				p.setFileCodename("/resources/images/posters/" + fileCodename);
+//				p.setImagePath(fileCodename);
+//				p.setFileLevel(1);
+//			}
+//		/*}*/
+//		
+//		imgresult = msi.addPoster(p);
+//		
+//		// 지금 코드 순서가 바뀐 것 같음. 테이블대로라면 영화 추가가 먼저고 그 다음에 포스터가 추가되어야 함 
+//		// 이거 imageId 반환하게 못 하나?  
+//		if(imgresult > 0) {
+//			result = msi.addMovie(m);
+//			if (result <= 0) {
+//				// 만약 imageId 반환이 된다면 이미지 지울 때 int deletePoster(imageId) 실행 후 이미지 삭제
+//				/*int del = msi.deletePoster(imageId);
+//				 * if(del > 0)
+//				 * 	System.out.println("OK!");
+//				 */
+//				
+//				// 이미지는 첨부했으나 정작 영화 추가가 안 됐을 경우, 첨부하려던 이미지를 삭제한다
+//				String realPath = session.getServletContext().getRealPath(p.getFileCodename());
+//				new File(realPath).delete();
+//			}
+//		}
+//		
 		return (result > 0) ? "success" : "failure";
 	}
 	
 	// 영화 수정 화면으로 이동
 	@GetMapping("modifymovie.mo")
-	public String modifyMovie(int movieNo) {
-		// Movie m = msi.selectMovie(movieNo);
+	public String modifyMovie() {
 		return "admin/movie/modifyMovie";
 	}
 	
 	// 영화 수정
 	@ResponseBody
 	@PostMapping("admin.updatemovie.mo")
-	public String updateMovie(/*HttpServletRequest request, @RequestParam(value="img")MultipartFile img, */
-			Movie m, Model model/*, int movieNo */) {
+	public String updateMovie(/*MultipartFile img, */Movie m,
+			/*HttpServletRequest request, */Model model) {
 		
-		//m.setMovieNo(movieNo);
 		// addMovie의 ajax 그대로 가져온 거긴 한데 여기서 직접 확인은 아직. (안 될 가능성 매우 낮음)
 		System.out.println(m);
+		
+		// 이미지 넣기
+		int maxSize = 10485760;
 		
 //		if(!img.getOriginalFilename().equals("")) {
 //			String fileCodename = addImage(img, session);
@@ -392,7 +388,7 @@ public class MovieController {
 		// return (result > 0) ? "success" : "failure";
 	}
 	
-	// 영화 삭제
+	// 영화 삭제 / 도메인 미확정
 	@PostMapping("admin.deletemovie.mo")
 	public void deleteMovie(int movieNo) {
 		//int result = msi.deleteMovie(movieNo);
@@ -450,7 +446,7 @@ public class MovieController {
 	}
 	
 	// (관리자) 리뷰 목록 확인 (+ 페이징 처리)
-	@GetMapping("managereview.mo")
+	@GetMapping("admin.managereview.mo")
 	public String reviewPatrol(/*PageInfo pi*/) {
 		return "admin/movie/manageReview";
 	}

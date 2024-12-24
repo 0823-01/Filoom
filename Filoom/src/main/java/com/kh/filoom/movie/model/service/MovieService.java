@@ -62,17 +62,15 @@ public interface MovieService {
 	
 	// === 영화 상세 페이지 ===
 	Movie showDetail(int movieNo); // 상세 정보 조회
-	Poster showThumbnail(int movieNo); // 영화 포스터 호호
 	// listScenes(); // 스틸컷 목록 조회
 	// selectReviewList(); // 리뷰 목록 조회
 	
 	// 이미지 추가 - 영화 추가/수정 공통
 	int addPoster(Poster p); // 이미지 추가
-	int deletePoster(int imageId); // 이미지 삭제 - 영화 수정/삭제시 써먹을 의도
+	int deletePoster(int imageId); // 이미지 삭제 - 이미지는 추가됐는데 영화 추가가 실패시 써먹을 목적
 	
 	// === 관리자 영화 추가 페이지 ===
 	int addMovie(Movie m);
-	int undoAddMovie(int movieNo); // 영화 추가 후 포스터 추가 실패시 써먹을 의도
 	
 	// === 관리자 영화 수정 페이지 ===
 	int updateMovie(Movie m);

@@ -96,20 +96,9 @@ public class MovieDao {
 		// TODO Auto-generated method stub
 		return sqlSession.selectOne("movieMapper.showDetail", movieNo);
 	}
-	
-	public Poster showThumbnail(SqlSessionTemplate sqlSession, int movieNo) {
-		// TODO Auto-generated method stub
-		return sqlSession.selectOne("movieMapper.showThumbnail", movieNo);
-	}
-
 	public int addMovie(SqlSessionTemplate sqlSession, Movie m) {
 		// TODO Auto-generated method stub
-		/* int influence = */sqlSession.insert("movieMapper.addMovie", m);
-		// System.out.println(influence);
-		// 이건 영향을 받은 row 수가 나오기 때문에 0 또는 1만 나오는 게 맞음
-		
-		// 추가된 영화의 movieNo 리턴하기 (포스터 추가와 추가 실패시 되돌리는데 활용)
-		return /*int movieNo = */m.getMovieNo();
+		return sqlSession.update("movieMapper.addMovie", m);
 	}
 
 	public int updateMovie(SqlSessionTemplate sqlSession, Movie m) {
@@ -118,11 +107,12 @@ public class MovieDao {
 	}
 
 	public int addPoster(SqlSessionTemplate sqlSession, Poster p) {
-		return sqlSession.insert("movieMapper.addPoster", p);
-	}
-	
-	public int undoAddMovie(SqlSessionTemplate sqlSession, int movieNo) {
-		return sqlSession.delete("movieMapper.undoAddMovie", movieNo);
+		
+//		int influence = sqlSession.update("movieMapper.addPoster", p);
+//		if(influence > 0) {
+//			return -1;
+//		} else
+			return 0;
 	}
 
 	public int deletePoster(SqlSessionTemplate sqlSession, int imageId) {
@@ -130,8 +120,6 @@ public class MovieDao {
 		return 0;
 
 	}
-
-	
 
 	
 

@@ -25,6 +25,4 @@ public class Coupon {
 	private int couponLevel;
 	//	REF_ENO	NUMBER
 	private int refEno;
-	
-
 }

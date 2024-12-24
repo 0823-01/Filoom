@@ -6,7 +6,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>FILOOM</title>
+<title>Insert title here</title>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <style>
 
@@ -76,11 +76,6 @@
 	color: #E4E0E1;
 	text-decoration: none;
 	transition: color 0.3s ease;
-}
-
-#header_top li>a {
-	text-decoration: none; 
-   	color: #8B8B8B;
 }
 
 
@@ -157,14 +152,26 @@
 
             <ul>
    
-               <li><a href="${ pageContext.request.contextPath }/list.no">공지사항</a></li> &nbsp;&nbsp;&nbsp;&nbsp;
-               <li><a href="${ pageContext.request.contextPath }/list.fa">문의</a></li>
+               <li>공지사항</li> &nbsp;&nbsp;&nbsp;&nbsp;
+               <li>문의</li>
 
          	</ul>
 
 
 
-            <a class="logo" href="${ pageContext.request.contextPath }/">Filoom</a>
+           	<c:choose>
+				<c:when test = "${ empty sessionScope.loginUser }">
+				
+	                <a class="logo" href="${ pageContext.request.contextPath }">Filoom</a>
+				
+				</c:when>
+				<c:otherwise>
+
+	                <a class="logo" href="${ pageContext.request.contextPath }" style="margin-left:40px">Filoom</a>
+				
+				</c:otherwise>
+			</c:choose>
+    
 
 
 			<c:choose>
@@ -189,12 +196,29 @@
         <div id = "header_bottom">
             <ul>
                 <li><a href="${ pageContext.request.contextPath }/movies.mo">영화</a></li>
-                <li><a href="${ pageContext.request.contextPath }/book.do">예매</a></li>
+               
+                 <c:choose>
+		            <c:when test="${ empty sessionScope.loginUser }">
+		                <!-- 로그인 전 -->
+		                <li><a href="javascript:void(0);" onclick="requireLoginAlert();">예매</a></li>
+		            </c:when>
+		            <c:otherwise>
+		                <!-- 로그인 후 -->
+		                <li><a href="${ pageContext.request.contextPath }/book.do">예매</a></li>
+		            </c:otherwise>
+		        </c:choose>
+                
                 <li><a href="${ pageContext.request.contextPath }/list.ev">이벤트</a></li>
 
             </ul>
         </div>
 
     </div>
+    
+    <script>
+    	function requireLoginAlert() {
+		    alert("로그인이 필요한 기능입니다!");
+		}
+    </script>
 </body>
 </html>
