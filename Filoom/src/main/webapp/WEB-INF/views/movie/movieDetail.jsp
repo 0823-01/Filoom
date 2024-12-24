@@ -314,8 +314,8 @@
                 <div style="flex-grow: 1;">
                     <table>
                         <tr>
-                            <td style="padding-right:5px;"><img src="resources/images/posters/${requestScope.list.filmRate}.svg" class="filmrate"></td>
-                            <td id="movieTitle">${requestScope.list.movieTitle}</td>
+                            <td style="padding-right:5px;"><img src="resources/images/posters/3.svg" class="filmrate"></td>
+                            <td id="movieTitle">위키드</td>
                         </tr>
                     </table>
                     <div>
@@ -323,36 +323,41 @@
                         <table style="width:100%;">
                             <tr>
                                 <th>감독</th>
-                                <td>${ requestScope.list.director }</td>
+                                <td>존 추</td>
                             </tr>
                             <tr>
                                 <th>배우</th>
-                                <td>${ requestScope.list.starring }</td>
+                                <td>아리아나 그란데, 신시아 에리보, 조나단 베일리, 에단 슬레이터, 양자경, 제프 골드브럼</td>
                             </tr>
                             <tr>
                                 <th>장르</th>
-                                <td>${ requestScope.list.genre }</td>
+                                <td>판타지, 뮤지컬</td>
                             </tr>
                             <tr>
                                 <th>상영시간</th>
-                                <td>${requestScope.list.runtime}분</td>
+                                <td>160분</td>
                             </tr>
                             <tr>
                                 <th>개봉</th>
-                                <td>${requestScope.list.openDate}</td>
+                                <td>2024.11.20</td>
                             </tr>
                         </table>
 
                         <hr>
                         <!-- ↓ 이거 길어지면 내부 스크롤 넣는 게 미관상으로도 좋아보임 -->
-                        <pre style="padding-left:10px;">                
-    ${requestScope.list.description}
+                        <pre>                
+    자신의 진정한 힘을 미처 발견하지 못한 '엘파바'(신시아 에리보)
+    자신의 진정한 본성을 아직 발견하지 못한 ‘글린다'(아리아나 그란데)
+    전혀 다른 두 사람은 마법 같은 우정을 쌓아간다.
+    그러던 어느 날, '마법사'의 초대를 받아 에메랄드 시티로 가게 되고
+    운명은 예상치 못한 위기와 모험으로 두 사람을 이끄는데…
+    
+    마법 같은 운명의 시작, 누구나 세상을 날아오를 수 있어
                         </pre>
                     </div>
                 </div>
                 
-                <%--	예시 
-                <div id="description" align="left">
+                <%-- <div id="description" align="left">
                 	// 여기에 이미지를 삽입이미지 넣는 곳
                 <div>
                     <img src="resources/images/posters/${fileCodename}.jpg" alt="${movieTitle}" id="thumbnail">
@@ -435,9 +440,9 @@
                 <!-- <div><img src="resources/images/posters/IMAX.svg">대충 IMAX 로고</div>
                 <div>대충 4DX 로고</div>
                 <div>대충 ScreenX 로고</div>-->
-                <a href="#" id="imax">IMAX</a>
-                <a href="#" id="4dx">4DX</a>
-                <a href="#" id="screenx">SCREENX</a>
+                <a href="" id="imax">IMAX</a>
+                <a href="" id="4dx">4DX</a>
+                <a href="" id="screenx">SCREENX</a>
             </div>
 
             <br><br>
@@ -686,67 +691,33 @@
                     <!-- link to 'give_a_star.html' -->
                 </c:if>
                 <br><br>
-                
-                <script>
-                function refreshPagingBar(sort, cpage) {
-            		$(".pagingbar").empty();
-            		let link = '';
-            		let pgbar = '';
-
-            		switch(sort) {
-            			case 'all' : link ="viewAll("; break;
-            			case 'open' : link ="openedOnly("; break;
-            			case 'order' : link = "listbyOpenedOrder("; break;
-            			case 'critic' : link = "listbyCritics("; break;
-            			case 'name' : link = "listbyName("; break;
-            			// default : alert('오류가 발생했습니다.'); return;
-            		}
-
-            		// EL 태그를 function 안에 쓸 수 없어서 다른 방법을 연구하는 중
-            		// 여기만 해결하면 진짜 끝남
-         
-            		let start = $("#first").val();
-            		let end = $("#last").val();
-            		let max = $("#MX").val();
-            		
-            		console.log("start = " + start + ", end = " + end + ", max = " + max);
-            				
-        			// '<<', '<' 처리
-            		if(cpage > 1) {
-            			// add &lt;&lt;
-            			// add &lt;
-            			pgbar += "<button onclick= '" + link + "1);'>&lt;&lt;</button> <!-- to Page1 -->"
-            				+ "<button onclick= '" + link + (cpage-1) + ");'>&lt;</button> <!-- Prev -->";
-            		}
-
-            		for(let i = start; i <= Math.min(end,max); i++) {
-
-            			if(i == cpage) {
-            				// font-weight:normal 넣는 이유 : 나머지는 lighter로 해놨음
-            				pgbar += "<button disabled style='font-weight: normal;' onclick= '" + link + i + ");'>"
-            					+ i + "</button>";
-            			}
-            			else {
-            				pgbar += "<button onclick= '" + link + i + ");'>" + i + "</button>";
-            			}
-            		}
-
-            		if (cpage < max) {
-            			// add &gt;
-            			// add &gt;&gt;
-            			pgbar += "<button onclick= '" + link
-            					+ (cpage+1) + ");'>&gt;</button> <!-- Next -->"
-            				+ "<button onclick= '" + link + max + ")';>&gt;&gt;</button> <!-- to LastPage -->";
-            		}
-
-            		$(".pagingbar").html(pgbar);
-            		
-            	}
-                </script>
 
                 <!-- Paging Bar -->
 				<div class="pagingbar" align="center">
-
+		            <!-- if i > 1 -->
+		            <c:if test="${ requestScope.pi.currentPage gt 1 }">
+		                <button onclick="location.href = 'boxoffice.mo?page=1';">&lt;&lt;</button> <!-- to Page1 -->
+		                <button onclick="location.href = 'boxoffice.mo?page=${p-1}';">&lt;</button> <!-- prev -->
+		            </c:if>
+		            
+		            <!-- if 3 ≤ i ≤ maxPage-2, for i in range (currentPage -2 ~ +2) -->
+		            <c:forEach var="p" begin="${requestScope.pi.startPage }" end="${requestScope.pi.endPage }" step="1">
+		            	<c:choose>
+		            		<c:when test=""> <!-- button refers to currentPage -->
+		            			<button class="currentPage" disabled>${p}</button>
+		            		</c:when>
+		            		<c:otherwise>
+		            			<button onclick="location.href = 'boxoffice.mo?page=${p}';">${p}</button>
+		            		</c:otherwise>
+		            	</c:choose>
+		            </c:forEach>
+		
+		            <!-- if i < maxPage -->
+		            <c:if test="${ requestScope.pi.currentPage lt requestScope.pi.maxPage }">
+		                <button onclick="location.href = 'boxoffice.mo?page=${p+1}';">&gt;</button> <!-- next -->    
+		                <button onclick="location.href = 'boxoffice.mo?page=${requestScope.pi.maxPage}';">&gt;&gt;</button> <!-- to LastPage -->
+					</c:if>
+		        </div>
                 
             </div>
         </div>
