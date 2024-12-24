@@ -54,6 +54,6 @@ public class Movie {
     private int playingNo;
     private Timestamp playTime;
     private String screenName;
-    private String screenInfo;
+    // private String screenInfo;
     
 }
