@@ -261,6 +261,23 @@ public class BookDao {
 		return sqlSession.delete("bookMapper.cancelupdateBookingSeat",bookNo);
 	}
 
+	//북킹시트 제거(북킹시트리스트)
+	
+	/**
+	 * @param sqlSession
+	 * @param bookingSeatList
+	 * @return
+	 */
+	public int deleteBookingSeats2(SqlSessionTemplate sqlSession,
+								   ArrayList<BookingSeat> bookingSeatList,
+								   ArrayList<Integer> bookingSeatNos) {
+		Map<String,Object> map = new HashMap();
+		map.put("bookingSeatList",bookingSeatList);
+		map.put("bookingSeatNos",bookingSeatNos);
+
+		return sqlSession.delete("bookMapper.deleteBookingSeats2",map);
+	}
+
 
 
 

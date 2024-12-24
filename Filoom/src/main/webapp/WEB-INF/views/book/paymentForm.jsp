@@ -488,34 +488,30 @@ function nicepayClose(){
             </div>
 
         </div>
-        
-         
-                     
-	              
-	<div id="submitData">			
-		
+           
+		<div id="submitData">			
+			<input type="text" name="GoodsName" value="${requestScope.movie.movieTitle}">결제 상품명(o)
+			<input type="text" name= "totalCost" value=""> 토탈 코스트(o)
+			<input type="text" name="Amt" value="">결제 상품금액(o)
+			<input type="text" name="MID" value="nictest00m">상점 아이디(o)
+			<input type="text" name="Moid" value="${requestScope.booking.bookNo}">상품 주문번호 (o)
+			<input type="text" name="BuyerName" value="${sessionScope.loginUser.userName }">구매자명 (o)
+			<input type="text" name="BuyerEmail" value=${sessionScope.loginUser.email }>구매자명 이메일 (o)
+			<!-- 변경 불가능 -->
+			<input type="text" name="EdiDate" value="<%-- <%=ediDate%> --%>"/>전문 생성일시 (o)
+			<input type="text" name="SignData" value="<%-- <%=hashString%> --%>"/>해쉬값(o) 
 	
-	
-		<input type="text" name="GoodsName" value="${requestScope.movie.movieTitle}">결제 상품명(o)
-		<input type="text" name= "totalCost" value=""> 토탈 코스트(o)
-		<input type="text" name="Amt" value="">결제 상품금액(o)
-		<input type="text" name="MID" value="nictest00m">상점 아이디(o)
-		<input type="text" name="Moid" value="${requestScope.booking.bookNo }">상품 주문번호 (o)
-		<input type="text" name="BuyerName" value="${sessionScope.loginUser.userName }">구매자명 (o)
-		<input type="text" name="BuyerEmail" value=${sessionScope.loginUser.email }>구매자명 이메일 (o)
-		<!-- 변경 불가능 -->
-		<input type="text" name="EdiDate" value="<%-- <%=ediDate%> --%>"/>전문 생성일시 (o)
-		<input type="text" name="SignData" value="<%-- <%=hashString%> --%>"/>해쉬값(o) 
-
-		<input type="text" name="bookNo" value=""> 예약번호 (o)
-		<input type="text" name="playingNo" value="${requestScope.movie.playingNo }"> playingNo (o)
-		 쿠폰 번호(o)  
-		<c:forEach var="seat" items="${requestScope.bookingSeatList}">
-			<input type="text" name="bookingSeatNos" value="${seat.bookingSeatNo}"> 좌석번호(o)
-		</c:forEach>
-
+			<input type="text" name="bookNo" value=""> 예약번호 (o)
+			<input type="text" name="playingNo" value="${requestScope.movie.playingNo }"> playingNo (o)
+			 쿠폰 번호(o)  
+			<c:forEach var="seat" items="${requestScope.bookingSeatList}">
+				<input type="text" name="bookingSeatNos" value="${seat.bookingSeatNo}"> 좌석번호(o)
+			</c:forEach>
+		</div>
     </form>
 
+    
+    <button onclick="deleteSeatAndBook()">삭제테스트 버튼</button>
     
     <script>
    		
@@ -550,24 +546,36 @@ function nicepayClose(){
     		showPlayTime(playTime,runTime);		
     		showTotalPrice(); 					//총금액	
     		showCost();							//최종결재금액
-    		deleteSeatAndBook()
+    		
     	});
+		/*
+		<c:forEach var="seat" items="${requestScope.bookingSeatList}">
+			<input type="text" name="bookingSeatNos" value="${seat.bookingSeatNo}"> 좌석번호(o)
+		</c:forEach>	
+		*/
 		
-		
+		//취소/결제시 예약된 좌석,예약번호 삭제
 		function deleteSeatAndBook(){
 			console.log("deleteSeatAndBook()실행");
-			let bookNo = $("#submitData>input[name=bookNo]").val(bookNo);
-			seatNos = [];
-			$("#submitData>input[name='bookingSeatNos']").each(function(index,item){
-				seatNos.push($(item).val());
-			});
-			//console.log(seatNos);
+			let bookingSeatNoList = $("#submitData>input[name=bookingSeatNos]").map(function(){
+				return $(this).val();
+			}).get();
+			
+			
+			
+			
+			 					 
+			console.log(bookingSeatNoList);
+			console.log(playingNo);
+		
+			
 			$.ajax({
 				url:"deleteSB.pm",
 				type:"post",
-				data:{playingNo:playingNo,
-					 seatNos:seatNos,
-					 bookNo:bookNo},
+				contentType: "application/json", // JSON 형식으로 전달
+				data:JSON.stringify({playingNo:playingNo,
+									 bookingSeatNoList:bookingSeatNoList //JSON 형식으로 전달
+					 				 }),
 				success:function(){
 					console.log("ajax-deleteSeatAndBook 통신 성공");
 				},
@@ -575,6 +583,7 @@ function nicepayClose(){
 					console.log("ajax-deleteSeatAndBook 통신 실패");
 				}
 			});
+			
 			
 		}
 		

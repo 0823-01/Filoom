@@ -393,4 +393,24 @@
 	 	 WHERE BOOK_NO = #{bookNo}
 	</delete>
 	
+	
+	<select id="deleteBookingSeats2" parameterType="map">
+		DELETE FROM BOOKING_SEAT
+		WHERE
+			<choose>
+				<when test="#{bookingSeatList}!=null">
+					<foreach item="item" collection="bookingSeatList" open="BOOKING_SEAT_NO IN (" separator="," close=")" >
+		 				#{item.bookNo}	
+		 			</foreach>
+	 			</when>
+	 			<otherwise>
+	 				<foreach item="item" collection="bookingSeatNos" open="BOOKING_SEAT_NO IN (" separator="," close=")" >
+		 				#{item}	
+		 			</foreach>
+						 			
+	 			</otherwise>
+	 		</choose>
+	 		
+	</select>
+	
 </mapper>

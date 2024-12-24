@@ -127,6 +127,9 @@ public interface BookService {
 	//결제 취소 유효성 검사
 	int checkCancelBooking(int bookNo, int userNo);
 
+	//상영좌석 삭제 bookingSeatList, bookingSeatNos
+	int deleteBookingSeats2(ArrayList<BookingSeat> bookingSeatList,ArrayList<Integer> bookingSeatNos);
+
 	
 	
 

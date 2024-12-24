@@ -341,16 +341,41 @@ public class BookController {
 	
 	
 	//형문/////////////////////////////////////////////////////////////////////////
+	 
+	
+	
+	//ajax 상영좌석 삭제 요청 핸들러 메소드
+	//
 	@ResponseBody
 	@PostMapping("deleteSB.pm")
-	public String deleteSeatAndBook(ArrayList<String> bookingSeatNos
-									,int playingNo
-									,int bookNo) {
-		log.debug("좌석,북넘버 제거 " );
+	public String deleteSeatAndBook(@RequestBody Map<String, Object> data) {
+		log.debug("==좌석 제거 요청 핸들러 메소드 실행" );
+		log.debug("넘겨받은값 : "+ data.toString());
 		
+		System.out.println(data.get("bookingSeatNoList"));
+		ArrayList<Integer> bookingSeatNoList =(ArrayList<Integer>) data.get("bookingSeatNoList");
+
 		
-		return "";
+
+		String result = deleteBookingSeat(null,bookingSeatNoList);
+
+		return "result";
 	}
+	
+	public String deleteBookingSeat(ArrayList<BookingSeat> bookingSeatList,ArrayList<Integer> bookingSeatNos) {
+		
+		log.debug("====상영좌석 삭제 메소드 실행 ");
+		
+		int deleteResult = bookService.deleteBookingSeats2(bookingSeatList,bookingSeatNos);
+		log.debug("deleteResult = " + deleteResult);
+		int size = (bookingSeatList!=null ? bookingSeatList.size() : bookingSeatNos.size() ) ;
+		log.debug("size : "+size);
+		String result = (deleteResult == size ? "success" : "fail");
+		log.debug("====결과 : " + result);
+		return result;
+		
+	}
+												
 	
 	@PostMapping("paymentForm.pm")
 	public ModelAndView paymentFormRequest1(ModelAndView mv,HttpSession session,
@@ -409,6 +434,9 @@ public class BookController {
 		
 		return mv;
 	}
+	
+	
+	
 	@GetMapping("paymentFormResult.pm")
 	public ModelAndView paymentFormResult(ModelAndView mv) {
 	
@@ -419,6 +447,8 @@ public class BookController {
 		mv.setViewName("book/paymentForm");
 		return mv;
 	}
+	
+	
 	
 	
 	//상영좌석이 생성되었는지 체크

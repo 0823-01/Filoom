@@ -270,6 +270,13 @@ public class BookServiceImple implements BookService {
 		return bookDao.checkCancelBooking(sqlSession,bookNo,userNo);
 	}
 
+	
+	//상영좌석 삭제 bookingSeatList
+	@Override
+	public int deleteBookingSeats2(ArrayList<BookingSeat> bookingSeatList,ArrayList<Integer> bookingSeatNos) {
+		return bookDao.deleteBookingSeats2(sqlSession,bookingSeatList,bookingSeatNos);
+	}
+
 
 
 }

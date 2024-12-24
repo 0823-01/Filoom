@@ -20,7 +20,7 @@ body{
     width:60%;
     background-color: #222222;
     border:1px dashed #696868;
-    margin: auto;
+    /* margin: auto; */
     margin: 3%;
     padding: 5%;
     
