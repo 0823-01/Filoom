@@ -1,10 +1,11 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>paymentResult</title>
 </head>
 <style>
 
@@ -19,7 +20,7 @@ body{
     width:60%;
     background-color: #222222;
     border:1px dashed #696868;
-    /* margin: auto; */
+    margin: auto;
     margin: 3%;
     padding: 5%;
     
@@ -214,34 +215,47 @@ body{
 
 </style>
 <body>
+	<jsp:include page="../common/header.jsp" />	
     
     <div id="outer">
         <!-- 예매/결제 내역 div -->
         <div>
-            <div id="message"> xxx 회원님, 결제가 성공적으로 완료되었습니다.  </div>
+            <div id="message"> "${sessionScope.loginUser.userName}" 회원님, 결제가 성공적으로 완료되었습니다.  </div>
             <div id="bookInfoArea">
                 <div id="imgArea">
-                     <img src="파이널_3/조커.jfif">
+                     <img src="${requestScope.movie.imagePath}/${requestScope.movie.fileCodename}" alt="영화이미지" width="100%" />
                 </div>
                 <div id="bookArea">
-                    <div id="movieName">19 조커</div>
+                    <div id="movieName">
+                    	<span>
+                        	<img src="resources/images/posters/${requestScope.movie.filmRate}.svg" height="25px">	
+                        </span>
+                        <span>${requestScope.movie.movieTitle}</span>
+                    </div>
                     <div id="playingInfo">
                         <table>
                             <tr>
                                 <td>예매번호</td>
-                                <td> 11156</td>
+                                <td>${requestScope.booking.bookNo}</td>
                                 <td>관람인원</td>
-                                <td>2</td>
+                                <td>${requestScope.bookingSeatList.size()}</td>
                             </tr>
                             <tr>
                                 <td>상영관</td>
-                                <td>x관</td>
+                                <td>${requestScope.movie.screenName}</td>
                                 <td>관람좌석</td>
-                                <td>c-5,c-6</td>
+                                <td>
+                                <c:forEach  items="${requestScope.bookingSeatList}" var="item">
+                                	'${item.seatNo}'
+                                </c:forEach>
+                                </td>
                             </tr>
                             <tr>
                                 <td>관람일시</td>
-                                <td colspan="3"> 2024-12-25 12:10 (금)</td>
+                                <td colspan="3">
+                                	<div>${requestScope.movie.playTime}</div>
+                                	<div>${requestScope.movie.runtime}</div>
+                                </td>
                             </tr>
                         </table>
 
@@ -253,20 +267,30 @@ body{
                                 <table>
                                     <tbody>
                                         <tr>
-                                            <td>영화쿠폰 </td>
-                                            <td>영화쿠폰1</td>
-                                        </tr>
-                                        <tr>
                                             <td>결제금액</td>
-                                            <td> 15000</td>
+                                            <td>${requestScope.booking.bookTotalCost}원</td>
                                         </tr>
+                                       	<c:if test="${not empty requestScope.couponUserList}">
+	                                        <tr>
+	                                            <td>영화쿠폰 </td>
+	                                            <td>
+													<c:forEach items="${requestScope.couponUserList}" var="item">
+														'${item.couponName}'
+													</c:forEach>
+												</td>
+	                                        </tr>
+	                                        <tr>
+	                                        	<td>할인금액</td>
+	                                        	<td>${requestScope.booking.bookCost-requestScope.booking.bookTotalCost}원</td>
+	                                        </tr>
+                                        </c:if>
                                         <tr>
                                             <td>결제일시</td>
-                                            <td> 2024.10.28 11:20:31</td>
+                                            <td>${requestScope.booking.bookDate}</td>
                                         </tr>
                                         <tr>
                                             <td>결제방식 </td>
-                                            <td>카드결제</td>
+                                            <td>${requestScope.booking.costProcess}</td>
                                         </tr>
                                     </tbody>
                                     <tfoot>
@@ -282,7 +306,7 @@ body{
                             </div>
                             <div id="totalPrice">
                                 <span>총결제 금액</span> 
-                                <span>15000</span>
+                                <span>${requestScope.booking.bookCost}</span>
                             </div>
                         </div>
 
@@ -291,49 +315,7 @@ body{
             </div>
         </div>
         
-        	<table>
-		<%-- <%if("9999".equals(resultJsonStr)){%> --%>
-		<tr>
-			<th>승인 통신 실패로 인한 망취소 처리 진행 결과</th>
-			<td>ResultCode</td>
-		</tr>
-		<%-- <%}else{%> --%>
-		<tr>
-			<th>결과 내용</th>
-			<td>ResultMsg</td>
-		</tr>
-		<tr>
-			<th>결제수단</th>
-			<td>PayMethod</td>
-		</tr>
-		<tr>
-			<th>상품명</th>
-			<td>GoodsName</td>
-		</tr>
-		<tr>
-			<th>결제 금액</th>
-			<td>Amt</td>
-		</tr>
-		<tr>
-			<th>거래 번호</th>
-			<td>TID</td>
-		</tr>
-		<%-- <%/*if(Signature.equals(paySignature)){%> --%>
-		<tr>
-			<th>Signature</th>
-			<td>Signature</td>
-		</tr>
-		<%-- <%}else{%> --%>
-		<tr>
-			<th>승인 Signature</th>
-			<td>Signature</td>
-		</tr>
-		<tr>
-			<th>생성 Signature</th>
-			<td>paySignature</td>
-		</tr> 
-		<%-- <%}*/}%> --%>
-	</table>
+
         
         
         
@@ -341,8 +323,8 @@ body{
         <!-- 버튼 영역 -->
 
         <div id="btnArea">
-            <button>메인화면</button>
-            <button>예매취소</button>
+            <button onclick="location.href='${request.contextPath}/filoom'">메인화면</button>
+            <button onclick="canelRequest(${requestScope.booking.bookNo})">예매취소</button>
         </div>
         <!-- 안내글 영역 -->
         <div id="comment">
@@ -387,5 +369,44 @@ body{
             </div>
         </div>
     </div>
+    <jsp:include page="../common/footer.jsp" />
 </body>
+
+<script>
+	let bookingUserList = "${requestScope.couponUserList}";
+	let bookNo = "${requestScope.bookNo}";
+	let booking = "${requestScope.booking}";
+	console.log("콘솔실행");
+	console.log(bookingUserList);
+	console.log(booking);
+	
+	
+	
+	function canelRequest(bookNo){
+		
+		let cancelConfirm = confirm("예메를 취소 하시겠습니까 ? ");
+		if(cancelConfirm){
+			$.ajax({
+				url:"cancelRequest.pm",
+				type:"post",
+				data:{bookNo:bookNo},
+				success:function(result){
+					console.log("결제취소요청성공-ajax")
+					console.log(result);
+					if(result==="success"){
+						alert("결제가 취소되었습니다. ");
+						location.href = '${request.contextPath}/filoom/reserve.me';
+					}else{
+						alert("죄송합니다. 상영시간 이후 취소/환불은 불가합니다.)")
+						
+					}
+					
+				},
+				error:function(){
+					console.log("결제취소요청실패-ajax")
+				}
+			});
+		}
+	}
+</script>
 </html>

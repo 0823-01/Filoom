@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.kh.filoom.book.model.dao.BookDao;
+import com.kh.filoom.book.model.vo.Booking;
 import com.kh.filoom.book.model.vo.BookingSeat;
 import com.kh.filoom.book.model.vo.Playing;
 import com.kh.filoom.coupon.model.vo.CouponUser;
@@ -148,17 +149,12 @@ public class BookServiceImple implements BookService {
 		
 	}	
 	
+	
 	//1. 좌석 유효성 검사 + 상영좌석일렬번호 반환
 	@Override
-	public ArrayList<BookingSeat> getBookingSeatNoList(ArrayList<String> seatNos,int playingNo) {
+	public ArrayList<BookingSeat> checkAndGetBookingSeatNoList(ArrayList<String> seatNos,int playingNo,ArrayList<String> bookingSeatNos) {
 		
-		ArrayList<BookingSeat> bookingSeatNoList = new ArrayList();
-		
-		
-		bookingSeatNoList = bookDao.getBookingseatNoList(sqlSession,seatNos,playingNo);
-
 		ArrayList<BookingSeat> bookingSeatNoList = bookDao.checkAndGetBookingSeatNoList(sqlSession,seatNos,playingNo,bookingSeatNos);
-
 		return bookingSeatNoList;
 	}
 
@@ -197,25 +193,12 @@ public class BookServiceImple implements BookService {
 		return bookDao.selectMovieForPlayingNo(sqlSession,playingNo);
 	}
 
-	//8. 상영좌석정보, 좌석번호 조회
-	@Override
-	public ArrayList<BookingSeat> selectListBookingSeat(ArrayList<BookingSeat> bookingSeatNoList) {
-		return bookDao.selectListBookingSeat(sqlSession,bookingSeatNoList);
-	}
-
-
 	//결제전 쿠폰 유효성 검사
 	@Override
 	public int selectCheckCoupon(List<Integer> couponNos,int userNo) { 
 		return bookDao.selectCheckCoupon(sqlSession,couponNos,userNo);
 	}
 
-	//쿠폰에 북넘버 추가하기
-	@Override
-	public int setCouponBookNo(List<Integer> couponNos, int userNo, int bookNo) {
-		return  bookDao.setCouponBookNo(sqlSession,couponNos,userNo,bookNo);
-		
-	}
 	//유효성 테스트 통과x, bookNo 지우기
 	@Override
 	public int deleteBookNo(int bookNo, int userNo) {
@@ -236,20 +219,57 @@ public class BookServiceImple implements BookService {
 		return bookDao.updateBookingSeatDone(sqlSession,bookingSeatNoList,bookNo);
 	}
 
-	
-
-	
-	//상영좌석 삭제 bookingSeatList
+	//사용된 쿠폰 처리
 	@Override
-	public int deleteBookingSeats2(ArrayList<BookingSeat> bookingSeatList,ArrayList<Integer> bookingSeatNos) {
-		return bookDao.deleteBookingSeats2(sqlSession,bookingSeatList,bookingSeatNos);
+	public int updateCouponUserDone(ArrayList<Integer> couponNos, int bookNo,int userNo) {
+		return bookDao.updateCouponUserDone(sqlSession,couponNos,bookNo,userNo);
+	}
+
+	//좌석 삭제처리
+	@Override
+	public int deleteBookingSeats(ArrayList<String> bookingSeatNos) {
+		return bookDao.deleteBookingSeats(sqlSession,bookingSeatNos);
+	}
+
+	//결제 실패시 예매내역삭제
+	@Override
+	public int deleteBooking(int bookNo,int userNo) {
+		return bookDao.deleteBooking(sqlSession,bookNo,userNo);
+	}
+
+	//쿠폰 사용시, 사용한 쿠폰 데이터 조회
+	@Override
+	public ArrayList<CouponUser> selectListCouponUserList(int bookNo) {
+		
+		return bookDao.selectListCouponUserList(sqlSession,bookNo);
+	}
+
+	//예약 정보 조회
+	@Override
+	public Booking selectBooking(int bookNo) {
+		return bookDao.selectBooking(sqlSession,bookNo);
+	}
+
+	//결제 취소 요청 (BOOKING, BOOKING_SEAT, COUPON_USER)
+	@Transactional
+	@Override
+	public int cancelUpdateBooking(int bookNo, int userNo) {
+		int result =1;
+		//BOOKING 취소처리
+		result *= bookDao.cancelUpdateBooking(sqlSession,bookNo,userNo);
+		//쿠폰 취소처리
+		result *= bookDao.cancelUpdateCouponUser(sqlSession,bookNo,userNo);
+		//좌석취소처리
+		result *= bookDao.cancelupdateBookingSeat(sqlSession,bookNo);
+		return result;
+	}
+
+	//결제 취소 유효성 검사
+	@Override
+	public int checkCancelBooking(int bookNo, int userNo) {
+		return bookDao.checkCancelBooking(sqlSession,bookNo,userNo);
 	}
 
 
 
-
-	
-
-
-	
 }
