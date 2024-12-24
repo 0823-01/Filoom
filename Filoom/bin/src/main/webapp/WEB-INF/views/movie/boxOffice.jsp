@@ -106,7 +106,7 @@
 </head>
 <body>
 
-    <%@ jsp:include file="../common/header.jsp" %>
+    <jsp:include page="../common/header.jsp" />
 
     <div class="backStage">
         
@@ -438,7 +438,7 @@
 
     <br><br>
 
-    <%@ jsp:include file="../common/footer.jsp" %>
+    <jsp:include page="../common/footer.jsp" />
 
 </body>
 </html>
