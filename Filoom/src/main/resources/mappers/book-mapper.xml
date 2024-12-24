@@ -121,6 +121,7 @@
 		WHERE 
 		    P.STATUS = 'Y'
 		    AND P.MOVIE_NO = #{movieNo}
+		    AND P.PLAYTIME &gt; SYSDATE
 	</select>
 	
 	<select id = "selectMovieSeat" parameterType="_int" resultMap="selectMovieSeat">
