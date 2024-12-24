@@ -29,6 +29,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.google.gson.Gson;
 import com.kh.filoom.common.model.vo.PageInfo;
 import com.kh.filoom.common.template.Pagination;
+import com.kh.filoom.coupon.model.vo.Coupon;
 import com.kh.filoom.event.model.service.EventService;
 import com.kh.filoom.event.model.vo.Applicant;
 import com.kh.filoom.event.model.vo.Event;

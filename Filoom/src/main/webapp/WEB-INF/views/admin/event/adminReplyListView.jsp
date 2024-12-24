@@ -327,9 +327,7 @@
            				<!--버튼--> 
 	                    <div class="btn">
 	                    	<button id="back" onclick="history.back();">이전으로</button>
-
 	                        <button id="applicant">당첨자추첨</button>
-
 	                        <!--추첨여부에 따라 버튼 비활성화기-->
 	                    </div>
 		    		</div>
@@ -341,7 +339,7 @@
         </div>
     </div>
     <script>
-
+    
     document.addEventListener("DOMContentLoaded", function () {
         const navItems = document.querySelectorAll("#nav > ul > li");
     
@@ -412,9 +410,7 @@
         } else {
             alert("당첨 가능한 인원이 없습니다.");
         }
-
-    });
-
+    }); 
     </script>
     
 </body>
