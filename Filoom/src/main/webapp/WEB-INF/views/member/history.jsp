@@ -136,6 +136,10 @@
 	    font-weight: bold;
 	}
 	
+	#year-btn:hover {
+		background-color: #8b5a2b;
+	}
+	
 	.history-item {
 	    border: 1px solid #444;
 	    border-radius: 10px;
@@ -207,6 +211,29 @@
 	    margin-bottom: 10px;
 	}
 	
+	select:focus {
+	  	outline: none;
+	}
+	
+	#btn-more {
+		background-color: #493628;
+        margin-top: 50px;
+		width: 30%;
+        padding: 10px;
+        border: none;
+        font-size: 16px;
+        font-weight: bold;
+        color: #ffffff;
+        border-radius: 60px;
+        cursor: pointer;
+        transition: background-color 0.3s ease, color 0.3s ease; /* 배경색과 글씨 색 변화를 위한 트랜지션 */
+	}
+	
+	#btn-more:hover {
+		background-color: #fff; /* 배경을 흰색으로 변경 */
+        color: #000; /* 글씨 색을 검정색으로 변경 */
+	}
+	
 </style>
 </head>
 <body>
@@ -274,12 +301,13 @@
 			                                    <div>
 			                                        <a href="#" class="movie-title">${ history.movieTitle }</a>
 			                                    </div>
-			                                    <div><button class="history-delete-btn">기록에서 삭제</button></div>
+			                                    <div><button class="history-delete-btn" data-book-no="${history.bookNo}">기록에서 삭제</button></div>
+			                                    <input type="hidden" id="userNo" value="${loginUser.userNo}">
 			                                </div>
 			                                <div class="history-content">
 			                                    <p>${ history.playtime }</p>
 			                                    <p>${ history.screenName }관 / ${ history.totalTickets }명</p>
-			                                    <a class="review-plz" href="detail.mo?movieno=${requestScope.firstMovie[0].hisory.movieNo}">이 영화를 평가해주세요</a>
+			                                    <a class="review-plz" id="detailViewButton" onClick="location.href='detail.mo?movieno=${history.movieNo}'">이 영화를 평가해주세요</a>
 			                                </div>
 			                            </div>
 			                        </div>
@@ -358,29 +386,39 @@
      	     
              });
          });
-    	
-    	/*
-    	$(function () {
-    	    $("#year-btn").click(function () {
-    	    	
-    	    	console.log("클릭됨");
-    	    	const selectedYear = $("#year-select").val(); // 선택된 연도를 가져옴
-    	        const contextPath = '${pageContext.request.contextPath}'; // 컨텍스트 경로 가져오기
-    	        
-    	        console.log(selectedYear);
-    	        console.log(contextPath);
-    	        
-    	        if (selectedYear) {
-    	            // 선택된 연도로 URL 생성
-    	            window.location.href = `${pageContext.request.contextPath}/history.me?year=${selectedYear}`;
-    	        } else {
-    	            alert("연도를 선택하세요.");
+    	 
+    	 $(document).on("click", ".history-delete-btn", function () {
+    	        const bookNo = $(this).data("book-no");
+    	        const userNo = $("#userNo").val(); // 사용자 번호를 숨겨진 input 필드에서 가져오기
+
+
+    	        if (confirm("해당 영화를 내가 본 영화에서 삭제하시겠습니까?")) {
+    	            $.ajax({
+    	                url: "deleteHistory.me",
+    	                type: "POST",
+    	                data: { 
+    	                    userNo: userNo, 
+    	                    bookNo: bookNo 
+    	                },
+    	                success: function (response) {
+    	                    alert(response);
+    	                    if (response.trim() === "내가 본 영화 기록에서 삭제되었습니다.") {
+    	                        location.reload(); // 성공 시 페이지 새로고침
+    	                    }
+    	                },
+    	                error: function () {
+    	                    alert("삭제 중 오류가 발생했습니다. 다시 시도해주세요.");
+    	                }
+    	            });
     	        }
     	    });
-    	});
-
-*/
-
+    	 
+    	 $("input[name='movieDetailNo']").val(mainMovie.movieNo);
+         const movieNo = mainMovie.movieNo;
+         if (movieNo) {
+         	$("#detailViewButton").attr("onClick", "location.href='detail.mo?movieno=" + movieNo + "'");
+         }
+    	
 
     	
     </script>
