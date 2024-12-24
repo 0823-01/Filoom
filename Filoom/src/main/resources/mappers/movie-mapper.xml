@@ -703,5 +703,40 @@
 		SET PREMIERE = DECODE(#{premiere}, 1, 'Y', 0, 'N')
 		WHERE MOVIE_NO = #{movieNo}
 	</update>
+	
+	<!-- 상영 정보 조회 -->
+	<select id="showRunInfo" parameterType="_int" resultMap="movieResultSet">
+		SELECT PLAYING_NO, PLAYTIME, SCREEN_NO
+		FROM PLAYING PL JOIN MOVIE M USING (MOVIE_NO)
+		WHERE MOVIE_NO = #{movieNo} AND PL.STATUS = 'Y'
+	</select>
+	<select id="checkRunCount" parameterType="_int" resultType="_int">
+		SELECT COUNT(*) FROM PLAYING PL JOIN MOVIE M USING (MOVIE_NO)
+		WHERE PL.STATUS = 'Y' AND MOVIE_NO = #{movieNo}
+	</select>
+	
+	<!-- 상영 정보 추가 -->
+	<insert id="newRunInfo" paramterType="movie">
+		INSERT INTO PLAYING(PLAYING_NO, PLAYTIME, MOVIE_NO, SCREEN_NO)
+		VALUES(SEQ_PLA.NEXTVAL, #{playTime}, #{movieNo}, TO_NUMBER(#{screenName}))
+	</insert>
+	
+	<!-- <update id="removeRunInfo" parameterType="_int">
+		UPDATE PLAYING
+		SET STATUS = 'Y'
+		WHERE PLAYING_NO = #{playingNo} 
+	</update> -->
+	
+	<!-- === 리뷰 관련 === -->
+	<!-- 리뷰 조회 - 사용자, 관리자 공통 -->
+	<!-- 공사중 -->
+	
+	<!-- 리뷰 작성 (사용자) -->
+	
+	<!-- 리뷰 수정 (사용자) -->
+	
+	<!-- 리뷰 삭제 (사용자) -->
+	
+	<!-- 리뷰 강제 삭제 (관리자) -->
 
 </mapper>

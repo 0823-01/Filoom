@@ -2,6 +2,7 @@ package com.kh.filoom.movie.controller;
 
 import java.io.File;
 import java.io.IOException;
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -27,9 +28,9 @@ import com.kh.filoom.movie.model.vo.Poster;
 
 /**
  * @author 정원섭
- * === MovieController v 0.5.1 ===
+ * === MovieController v 0.5.2 ===
  * 작업 착수일 : 2024-12-13
- * 최종 수정일 : 2024-12-23
+ * 최종 수정일 : 2024-12-24
  */
 
 /* 작업 내역
@@ -40,7 +41,8 @@ import com.kh.filoom.movie.model.vo.Poster;
  * v 0.4.1 - 관리자 영화 추가 페이지 완료, 이미지가 안 뜨는 문제 원인 확인
  * v 0.4.2 - 상세 페이지 리뷰 페이징바 삭제 외 일부 사소한 변경 사항
  * v 0.5 - 영화 수정 페이지 & 삭제 페이지 완료, 상세 페이지 내 스위치 클릭시 개봉 여부 바뀜
- * v 0.5.1 - 박스오피스 기본 정렬 기준 변경 외 크고 작은 문제 수정 
+ * v 0.5.1 - 박스오피스 기본 정렬 기준 변경 외 크고 작은 문제 수정
+ * v.0.5.2 - 상영정보 조회 및 추가 기능 거의 완료 
  * */
 @Controller
 public class MovieController {
@@ -450,7 +452,11 @@ public class MovieController {
 		Movie m = msi.selectMovietoModify(movieNo);
 		// System.out.println(m); // 확인용
 		
+		// 추가로 좋아요를 확인
+		// int fav = msi.countFavorite(movieNo);
+		
 		model.addAttribute("target", m);
+		// model.addAttribute("fav", fav);
 		return "admin/movie/manageMovieDetail";
 	}
 	
@@ -473,17 +479,47 @@ public class MovieController {
 		return (result > 0) ? "success" : "failure"; 
 	}
 	
-	// 상영 정보 추가
-	public void newRunInfo() {
+	// 상영 정보 조회
+	@ResponseBody
+	@PostMapping("admin.playlist.mo")
+	public String showRunInfo(int movieNo) {
+		ArrayList<Movie> list = msi.showRunInfo(movieNo);
 		
+		int count = msi.checkRunCount(movieNo);
+		return (count > 0) ? "success" : "empty";
+	}
+	
+	
+	// 상영 정보 추가 - 이것들도 Movie m으로 들어가 있음
+	@ResponseBody
+	@PostMapping("admin.moviePlay.mo")
+	public String newRunInfo(int mno, String pDate, String pTime, int screen) {
+		// 확인용
+		System.out.println("playdate = "+pDate);
+		System.out.println("starttime = "+pTime);
+		
+		Timestamp playTime = Timestamp.valueOf(pDate + " " + pTime+":00");
+		System.out.println("playTime = "+playTime);
+		
+		System.out.println("screenNo = "+screen);
+		
+		Movie m = new Movie();
+		m.setMovieNo(mno);
+		m.setPlayTime(playTime);
+		m.setScreenName(String.valueOf(screen));
+		
+		int result = msi.newRunInfo(m);
+		
+		return (result > 0) ? "success" : "failure";
 	}
 	
 	// 상영 정보 제거
-	public void removeRunInfo() {
-		
+	@PostMapping("admin.movieStop.mo")
+	public void removeRunInfo(int pno) {
+		//pno = playingNo
 	}
 	
-	/* -- 여기부터 상세>이미지 관리 화면
+	/* -- 여기부터 상세>이미지 관리 화면 : 시간이 촉박해서 쳐내기로 했음. 미련 남아서 각주 남겨둠
 	public void showImageList() {
 		
 	}

@@ -420,9 +420,10 @@
                 <a href="#reviewList" id="evalTotal">평점 4.55</a>
                 <!-- script를 통해 버튼이 왼쪽부터 평점/5 만큼만 밝은 색으로 나오게 할 계획  -->
                 <a href="" id="toBook">예매하기</a>
-                <a href="" id="like">♡ 1234</a>
+                <a href="javascript:like();" id="like">♡ 1234</a>
                 <!-- 로그인 후 클릭시 ♥ 1235 으로 바뀌도록. 비로그인시 로그인하라고 얼럿함 -->
                 <!-- 좋아요 켜면 FAVORITE 테이블에 넣는 거니까 확인하고 넣을 것 -->
+                <!-- 좋아요 수: 페이지 띄울 때 같이 조회해오면 됨 -->
             </div>
 
 

@@ -157,6 +157,21 @@ public class MovieDao {
 		return sqlSession.update("movieMapper.togglePremiere", map);
 	}
 
+	public ArrayList<Movie> showRunInfo(SqlSessionTemplate sqlSession, int movieNo) {
+		// TODO Auto-generated method stub
+		return (ArrayList) sqlSession.selectList("movieMapper.showRunInfo", movieNo);
+	}
+
+	public int checkRunCount(SqlSessionTemplate sqlSession, int movieNo) {
+		// TODO Auto-generated method stub
+		return sqlSession.selectOne("movieMapper.checkRunCount", movieNo);
+	}
+
+	public int newRunInfo(SqlSessionTemplate sqlSession, Movie m) {
+		// TODO Auto-generated method stub
+		return sqlSession.insert("movieMapper.newRunInfo", m);
+	}
+
 	
 
 }
