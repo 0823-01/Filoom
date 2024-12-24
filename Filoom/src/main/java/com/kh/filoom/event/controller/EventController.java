@@ -82,7 +82,7 @@ public class EventController {
 		// System.out.println("list size : " + list.size());
 		// System.out.println(statusTitle);
 		// System.out.println(eventStatus);
-		 System.out.println(hotList);
+		// System.out.println(hotList);
 		
 		return "event/eventListView";
 	}
@@ -117,8 +117,8 @@ public class EventController {
 		mv.addObject("list", list);
 		mv.setViewName("event/eventDetailView");
 		
-		 System.out.println(e);
-		 System.out.println(list);
+		// System.out.println(e);
+		// System.out.println(list);
 		
 		
 		return mv;
@@ -281,12 +281,12 @@ public class EventController {
 	 * 241222 한혜원
 	 * 쿠폰 등록 페이지 요청
 	 * @return
-	 
+	 */
 	@GetMapping("couponForm.ev")
 	public String couponForm(@RequestParam("eventNo") int eventNo, Model model) {
 		model.addAttribute("eventNo", eventNo); // 쿠폰 등록에서 사용할 이벤트 번호 전달
 		return "admin/event/couponEnrollForm"; // 쿠폰 등록 폼 html 반환
-	} */
+	}
 	
 	
 	/**
