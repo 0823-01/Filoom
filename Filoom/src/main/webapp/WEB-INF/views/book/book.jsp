@@ -12,6 +12,7 @@
     <link rel = "stylesheet" href="resources/css/aaa.css"/>
     <link rel = "stylesheet" href="resources/css/cinema_list.css"/>
     <link rel = "stylesheet" href="resources/css/caa.css"/>
+       <script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/panzoom/panzoom.umd.js"></script>
     <style>
 
         #detail_1, #detail_2, #detail_3,
@@ -58,6 +59,7 @@
             color: inherit; /* 부모 색상 따라감 */
             display: block; /* 중앙 정렬을 위해 block으로 설정 */
             cursor: default;
+            font-weight : bolder;
         }
 
         .transition {
@@ -92,6 +94,19 @@
         
         #detailViewButton>button{
         	background-color: none;
+        
+        }
+        
+        #searchMovieKeyword{
+        	background-color:#313131;
+        	border:none;
+        	color:white;
+        }
+        
+        #searchMovieKeyword:focus{
+        	
+        	border-color: blue;
+		  	outline: none;
         
         }
         
@@ -167,11 +182,13 @@
 			<c:if test="${not empty requestScope.firstMovie}">
     <div id="seat_1">
         <!-- 메인 이미지 출력 -->
-        <div id="thumbnail_img">
+        <div  id="thumbnail_img">
             <c:forEach var="movie" items="${requestScope.firstMovie}">
-                <c:if test="${movie.fileLevel == 1}">
-                    <img src="${pageContext.request.contextPath}/resources/images/posters/${movie.fileCodename}" alt="메인 이미지">
+            	<div class="image-container">
+	                <c:if test="${movie.fileLevel == 1}">
+	                    <img class="f-panzoom__content" src="${pageContext.request.contextPath}/resources/images/posters/${movie.fileCodename}" alt="메인 이미지" >
                 </c:if>
+                </div>
 		            </c:forEach>
 		        </div>
 		
@@ -287,9 +304,9 @@
           
             <div id = "detail_1">
                 
-                <div id = "searchMovie" style="width:500px; height:30px; margin:auto;">
+                <div id = "searchMovie" style="width:500px; height:30px; margin:auto;" >
 	                <form action="movie.sea" method="get">
-				        <input type="text" id="searchMovieKeyword" name="searchMovieKeyword" style="width:400px; height:30px; margin:auto; margin-left:10px">
+				        <input type="text" id="searchMovieKeyword" autocomplete='off' name="searchMovieKeyword" style="width:400px; height:30px; margin:auto; margin-left:10px">
 				        <button type="submit" id="searchButton" style="width:75px; height:30px">검색</button>
 				    </form>
                 </div>
@@ -796,7 +813,25 @@
         
         
        	 <script>
-        	
+	       	const container = document.getElementById("thumbnail_img");
+	
+	        const instance = new Panzoom(container, {
+	          panMode: 'mousemove',
+	          mouseMoveFactor: 1.25,
+	          click: false,
+	          wheel: false
+	        });
+	
+	        container.addEventListener("mouseenter", (event) => {
+	          if (!event.buttons) {
+	            instance.zoomToCover(event);
+	          }
+	        });
+	
+	        container.addEventListener("mouseleave", () => {
+	          instance.zoomToFit();
+	        });
+	        	
        
         	
         	 // 임시 예약 상태: 예약된 좌석
@@ -911,6 +946,8 @@
 	      	                }, 
 	      	                success: function (response) {
 	      	                	
+	      	                	alert("좌석 예약을 취소하셨습니다.");
+	      	                	
 	      	                },error:{
 	      	                	
 	      	                },complete:{
@@ -946,6 +983,8 @@
 	    		                        success: function (response) {
 	    		                            
 	    		                            console.log("좌석 예약 성공:", response);
+	    		                            alert("좌석 예약에 성공하셨습니다.");
+	    		                            
 	    		                        },
 	    		                        error: function (error) {
 	    		                            console.error("좌석 예약 오류:", error);
@@ -1020,7 +1059,7 @@
           	                success: function (response) {
           	                   
           	                	const movieTitle = response[0] && response[0].movieTitle ? response[0].movieTitle : "제목 없음";
-          	                    inputField2.value = movieTitle; // input value 설정
+          	                    inputField2.value = "제목 :" +movieTitle; // input value 설정
           	                    inputField2.setAttribute("value", movieTitle);
 
           	                    //formatDateTime(new Date(item.playTime))
@@ -1088,13 +1127,13 @@
 	                            
 	                            const endTime = (endHours < 10 ? "0" + endHours : endHours) + ":" + (endMinutes < 10 ? "0" + endMinutes : endMinutes);
 
-	                            console.log("playTime:", playTime, "Type:", typeof playTime);
+	                            // console.log("playTime:", playTime, "Type:", typeof playTime);
 	                            
 	                            // movieDate 설정 (20xx-xx-xx HH:mm~HH:mm 형식)
 	                            const movieDate = playTime.substring(0, 6) + " " + startTime + "~" + endTime;
-	                            inputField3.value = movieDate; 
+	                            inputField3.value = "시간 : " + movieDate; 
 	                            
-	                            console.log("무비데이터" + movieDate);
+	                            // console.log("무비데이터" + movieDate);
 	                            
 	                            inputField3.setAttribute("value", movieDate);
           	                	
@@ -1184,7 +1223,7 @@
 			
 
 			<script>
-			    // 공통 AJAX 요청 함수 
+			    // 공통 AJAX 요청 함수
 			    function sendAjaxForSeat(seatId, playingNo) {
 			        if (seatId && playingNo) {
 			            
@@ -1233,18 +1272,18 @@
 			    }
 			
 			    // beforeunload 이벤트
-				$(window).on("beforeunload",handlePageExit);
-				
+			    $(window).on("beforeunload", function () {
+			        handlePageExit();
+			    });
+			
 			    // visibilitychange 이벤트
-			    function handleVisibilityChange() {
+			    document.addEventListener("visibilitychange", function () {
 			        if (document.visibilityState === "hidden") {
 			            handlePageExit();
 			        }
-			    }
+			    });
 			    
-			    // 이벤트 리스너 등록
-			    document.addEventListener("visibilitychange", handleVisibilityChange);
-			    
+			   
 			    
 			    $(document).ready(function () {
 			        $("#booking_3").on("click", function () {
@@ -1285,10 +1324,6 @@
 			                seatInput.value = seat.trim();
 			                form.appendChild(seatInput);
 			            });
-			            
-			            //beforeunload, visibilitychange 이벤트 제거
-			            $(window).off("beforeunload",handlePageExit);
-			            document.removeEventListener("visibilitychange", handleVisibilityChange);
 
 			            // 동적으로 생성한 form을 body에 추가하고 제출
 			            document.body.appendChild(form);

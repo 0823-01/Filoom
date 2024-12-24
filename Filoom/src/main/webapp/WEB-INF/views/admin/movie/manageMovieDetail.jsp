@@ -167,6 +167,10 @@
         #only_when_playing table th {
             text-align:center;
         }
+        
+        #minus {
+        	filter: invert(100%) sepia(1%) saturate(0%) hue-rotate(151deg) brightness(105%) contrast(102%);
+        }
     </style>
 </head>
 <body>
@@ -213,7 +217,6 @@
                     <div id="innerAdmin">
                         <div id="moviePoster">
                             <!-- <img src="https://placehold.co/600x400"> -->
-                            <!-- <img src="resources/images/posters/1win.jpg"> -->
                             <img src="${pageContext.request.contextPath}/resources/images/posters/${requestScope.target.fileCodename}">
                             <input type="hidden" id="prevpath" value="${requestScope.target.imagePath}">
                             <input type="hidden" id="mno" value="${requestScope.target.movieNo}">
@@ -294,44 +297,49 @@
                                     <b>상영 정보</b>
                                     <hr>
                                     <!-- 밑으로 내려가는 게 나을 것 같아서 대책 필요함 -->
-                                    <button onclick="$('#addPlaying').toggle(800);"><img src="resources/images/icons/plus.svg"></button>
+                                    <button id="plus" onclick="newPlayList();"><img src="resources/images/icons/plus.svg"></button>
                                     <!-- onclick → 상영 정보 추가 탭 toggle(0.5s~1s 사이) -->
                                 </div>
 
-                                <div id="addPlaying" style="background-color: #8b8b8b; width:100%; display:none;">
-                                    <table>
-                                        <tr>
-                                            <th>날짜</th>
-                                            <th colspan="3">시간</th>
-                                            <th>상영관</th>
-                                        </tr>
+                                <div style="background-color: #8b8b8b; width:100%;">
+                                    <table id="playList" border=1>
+                                    	<thead>
+	                                        <tr id="toprow">
+	                                            <th>날짜</th>
+	                                            <th>시작 시간</th>
+	                                            <th colspan="2">상영관</th>
+	                                        </tr>
+                                        </thead>
                                         
+                                        <tbody></tbody>
                                         <!-- 이 밑으로는 ajax로 추가/삭제 구현 -->
                                         <!-- 추가할 때 맨 오른쪽 버튼은 'OK', 추가 후 '-'로 변경
                                             ajax 추가할 때는 아래 tr을 table에 "append"하면 됨 
                                         -->
-                                        <tr>
-                                            <td>
-                                                <input type="date" class="movie-date">
-                                            </td>
-                                            <td>
-                                                <input type="time" class="movie-start">
-                                            </td>
-                                            <td>~</td>
-                                            <td>
-                                                <input type="time" class="movie-end">
-                                            </td>
-                                            <td>
-                                                <select class="screen-no">
-                                                    <option value="1">1</option>
-                                                    <option value="2">2</option>
-                                                    <option value="3">3</option>
-                                                    <option value="4">4</option>
-                                                    <option value="5">5</option>
-                                                </select>
-                                                <button style="background-color: red;"><img src="resources/images/icons/dash-lg.svg"></button>
-                                            </td>
-                                        </tr>
+                                        
+                                        <tfoot id="addPlaying" style="display:none;">
+	                                        <tr>
+	                                            <td>
+	                                                <input type="date" class="movie-date">
+	                                            </td>
+	                                            <td>
+	                                                <input type="time" class="movie-start">
+	                                            </td>
+	                                            <td>
+	                                                <select class="screen-no">
+	                                                    <option value="1">1</option>
+	                                                    <option value="2">2</option>
+	                                                </select>
+	                                            </td>
+	                                            <td class="plus">
+	                                                <button style="background-color:red; color:white;" onclick="confirmPlaying();">OK</button>
+	                                            </td>
+	                                            <td class="minus" style="display:none;">
+	                                                <button style="background-color: red;" onclick="deletePlaying();">
+	                                                	<img id="minus" src="resources/images/icons/dash-lg.svg"></button>
+	                                            </td>
+	                                        </tr>
+	                                    </tfoot>
                                     </table>
                                 </div>
                             </div>
@@ -363,18 +371,21 @@
     	let isOpen = ("${target.premiere}" == 'Y');
     	if(isOpen) {
     		$("input[name=if_premiere]").attr("checked", "true");
-    	}/*  else
-    		$("#only_when_playing").hide(); */
+    	} else
+	   		$("#only_when_playing").hide();
     	console.log(isOpen);
     	
-    	/* isOpen.change(function() {
-    		$("#only_when_playing").toggle();
-    	}); */
-
-		$(".unready").click(function() {
+    	$(".unready").click(function() {
 			removeMovie(isOpen);
 		});
 		
+    	// 상영 정보 조회 함수 제작 후, 해당 함수로 통합
+    	if($("#playList tr").not(":hidden").length == 1) {
+    		$("#toprow").hide();
+    	}
+    	// viewPlayList();
+    	
+    	// let row = $("#addPlaying");
     });
     
     function togglePremiere(isOpen) {
@@ -443,6 +454,139 @@
     		});
     		
     	}
+    }
+    
+    function viewPlayList() {
+    	let mno = $("#mno").val();
+		$.ajax({
+			url:"admin.moviePlay.mo?movieNo="+mno,
+    		type:"post",
+    		data:{"movieNo" : mno},
+    		
+    		success:function(result) {
+    			if(result == "success") {
+    				let resultStr = '';
+    				
+    				$("#toprow").hide();
+        			$("#playList>tfoot").remove();
+        			$("#plus").attr("disabled","true");
+    			} else {
+    				// result == "empty"
+    				$("#toprow").hide();
+    			}
+    		},
+    		error:function() {
+    			// 상영 정보 추가가 불가능하도록 막기
+    			let resultStr = "<tr><td colspan='4'>상영 정보 조회에 실패하였습니다.</td></tr>";
+    			$("#playList>tbody").html(resultStr);
+    			$("#playList>tfoot").remove();
+    			$("#plus").attr("disabled","true");
+    		}
+		});    	
+    }
+    
+    function newPlayList() {
+        var rowcount = $("#playList tr").not(":hidden").length;
+        
+        // vis = $("#addPlaying")의 display가 none인지 체크
+        var vis = $("#addPlaying").is(":hidden");
+
+        if(vis) {
+            // if hidden
+            if(rowcount == 0)
+            	$("#toprow").show(); // rowcount = 1
+            $("#addPlaying").slideDown(1000);
+            vis = $("#addPlaying").is(":hidden");
+            console.log("Now #addPlaying is : "+vis);
+            // console.log($("#playList tr").not(":hidden").length);
+        } else {
+            // if visible
+            $("#plus").attr("disabled","true");
+            $("#addPlaying").hide(); // 원래 slideUp할라 했는데 부자연스러워서 바꿈
+            vis = $("#addPlaying").is(":hidden");
+            console.log("Now #addPlaying is : "+vis);
+            
+            console.log(rowcount); // 2
+            if(rowcount == 2)
+            	$("#toprow").hide();
+            // console.log(rowcount);
+            // 숨기는 조건이 rowcount == 1이 아니라 2인 이유 : 즉시 숨겨도 rowcount=2로 나옴
+            
+            // 쿨타임 2초 적용
+            setTimeout(function() {
+            	$("#plus").removeAttr("disabled");
+            }, 2000);
+        }
+        
+    }
+    
+    function confirmPlaying() {
+    	// let infocount = $("#playList>tbody>tr").length;
+    	
+    	let mno = $("#mno").val();
+    	let playdate = $("input.movie-date").val();
+    	let starttime = $("input.movie-start").val();
+    	let screen = $(".screen-no option:selected").val();
+    	
+    	console.log(playdate);
+    	console.log(starttime);
+    	
+    	console.log(screen);
+
+    	if(playdate != '' && starttime != '') {
+    		alert("ready to execute function");
+    		$.ajax({
+        		url:"admin.moviePlay.mo?mno="+mno,
+        		type:"post",
+        		data:{"mno" : mno, "pDate" : playdate,
+        				"pTime" : starttime, "screen": screen},
+        		
+        		success:function(result) {
+        			if(result == "success") {    				
+    	    			alert("added successfully");
+    					$("#addPlaying").find("input").val("");
+    					$("#addPlaying").hide();
+    					viewPlayList();
+        			} else {
+        				// result == "failure"
+        				alert("failed to add playing information");
+        			}
+        		},
+        		error:function(){
+        			alert("An error has occurred..");
+        		}
+        	});
+    	} else {
+    		alert("상영일과 상영 시작시간을 모두 입력해주세요.");
+    		return false;
+    	}
+     	 console.log("V");
+    }
+    
+    function deletePlaying(num) {
+    	
+    	$.ajax({
+    		url:"admin.movieStop.mo?pno="+pno,
+    		type:"post",
+    		data:{},
+    		
+    		success:function(result) {
+    			if(result == "success") {
+    				alert("상영정보가 삭제되었습니다.");
+    				viewPlayList();
+    			} else {
+    				// result == "failure"
+    				alert("상영정보가 삭제되지 않았습니다.");
+    			}
+    		},
+    		error:function(){
+    			alert("An error has occurred..");
+    		}
+    	})
+    	
+    	$("#play"+ num).remove();
+    	
+    	console.log("X");
     }
     </script>
     

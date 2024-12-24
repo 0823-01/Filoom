@@ -194,7 +194,27 @@ public class MovieServiceImpl implements MovieService {
 		return mDao.togglePremiere(sqlSession, map);
 	}
 
+	@Override
+	public ArrayList<Movie> showRunInfo(int movieNo) {
+		// TODO Auto-generated method stub
+		return mDao.showRunInfo(sqlSession, movieNo);
+	}
+
+	@Override
+	public int checkRunCount(int movieNo) {
+		// TODO Auto-generated method stub
+		return mDao.checkRunCount(sqlSession, movieNo);
+	}
+
+	@Override
+	public int newRunInfo(Movie m) {
+		// TODO Auto-generated method stub
+		return mDao.newRunInfo(sqlSession, m);
+	}
 	
+	public int removeRunInfo(int playingNo) {
+		return mDao.removeRunInfo(sqlSession, playingNo);
+	}
 
 	
 	
