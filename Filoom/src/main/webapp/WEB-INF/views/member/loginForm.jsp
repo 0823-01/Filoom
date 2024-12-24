@@ -63,8 +63,13 @@
         color: #777;
     } 
 
+	input:focus {
+	  outline: none;
+	}
+
     .saveId {
         cursor: pointer;
+        transition: color 0.3s ease;
     }
 
     .options {
@@ -79,9 +84,10 @@
     .options a {
         color: #aaaaaa;
         text-decoration: none;
+        transition: color 0.3s ease;
     }
 
-    .options a:hover {
+    .options a:hover, .saveId:hover {
         color: #ffffff;
     }
 
@@ -163,20 +169,20 @@
                 
                 <div class="options">
                 
-                <c:choose>
-                	<c:when test="${ not empty cookie.saveId }">
-	                    <div>
-	                        <input type="checkbox" class="saveId" id="saveId" name="saveId" value="y" checked>
-	                        <label for="saveId" class="saveId">아이디 저장</label>
-	                    </div>
-                    </c:when>
-                    <c:otherwise>
-                    	<div>
-	                        <input type="checkbox" class="saveId" id="saveId" name="saveId" value="y">
-	                        <label for="saveId" class="saveId">아이디 저장</label>
-	                    </div>
-                    </c:otherwise>
-                </c:choose>
+                    <c:choose>
+                        <c:when test="${ not empty cookie.saveId }">
+                            <div>
+                                <input type="checkbox" class="saveId" id="saveId" name="saveId" value="y" checked>
+                                <label for="saveId" class="saveId">아이디 저장</label>
+                            </div>
+                        </c:when>
+                        <c:otherwise>
+                            <div>
+                                <input type="checkbox" class="saveId" id="saveId" name="saveId" value="y">
+                                <label for="saveId" class="saveId">아이디 저장</label>
+                            </div>
+                        </c:otherwise>
+                    </c:choose>
                 
                     <div>
                         <a href="findIdForm.me">아이디 찾기</a> | <a href="findPwdForm.me">비밀번호 찾기</a>
@@ -226,7 +232,7 @@
 	                data: formData,
 	                success: function (response) {
 	                    if (response === "로그인 성공") {
-	                        alert(response);
+	                        // alert(response);
 	                        location.href = "${pageContext.request.contextPath}/"; // 홈으로 이동
 	                    } else {
 	                        alert(response); // 실패 메시지 출력
