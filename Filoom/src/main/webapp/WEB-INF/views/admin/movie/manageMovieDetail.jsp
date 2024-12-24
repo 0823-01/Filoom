@@ -218,7 +218,6 @@
                     <div id="innerAdmin">
                         <div id="moviePoster">
                             <!-- <img src="https://placehold.co/600x400"> -->
-                            <!-- <img src="resources/images/posters/1win.jpg"> -->
                             <img src="${pageContext.request.contextPath}/resources/images/posters/${requestScope.target.fileCodename}">
                             <input type="hidden" id="prevpath" value="${requestScope.target.imagePath}">
                             <input type="hidden" id="mno" value="${requestScope.target.movieNo}">
@@ -566,19 +565,25 @@
     }
     
     function deletePlaying(num) {
-    	/*
+    	
     	$.ajax({
     		url:"admin.movieStop.mo?pno="+pno,
     		type:"post",
     		data:{},
     		
-    		success:function(){
-    			//
+    		success:function(result) {
+    			if(result == "success") {
+    				alert("상영정보가 삭제되었습니다.");
+    				viewPlayList();
+    			} else {
+    				// result == "failure"
+    				alert("상영정보가 삭제되지 않았습니다.");
+    			}
     		},
     		error:function(){
-    			//
+    			alert("An error has occurred..");
     		}
-    	}) */
+    	})
     	
     	$("#play"+ num).remove();
     	
