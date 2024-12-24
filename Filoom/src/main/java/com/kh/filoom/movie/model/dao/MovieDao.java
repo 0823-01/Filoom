@@ -105,12 +105,7 @@ public class MovieDao {
 
 	public int addMovie(SqlSessionTemplate sqlSession, Movie m) {
 		// TODO Auto-generated method stub
-		/* int influence = */sqlSession.insert("movieMapper.addMovie", m);
-		// System.out.println(influence);
-		// 이건 영향을 받은 row 수가 나오기 때문에 0 또는 1만 나오는 게 맞음
-		
-		// 추가된 영화의 movieNo 리턴하기 (포스터 추가와 추가 실패시 되돌리는데 활용)
-		return /*int movieNo = */m.getMovieNo();
+		return sqlSession.insert("movieMapper.addMovie", m);
 	}
 
 	// 영화 수정
@@ -155,6 +150,34 @@ public class MovieDao {
 	public int togglePremiere(SqlSessionTemplate sqlSession, HashMap<String, Integer> map) {
 		// TODO Auto-generated method stub
 		return sqlSession.update("movieMapper.togglePremiere", map);
+	}
+
+	public ArrayList<Movie> showRunInfo(SqlSessionTemplate sqlSession, int movieNo) {
+		// TODO Auto-generated method stub
+		return (ArrayList) sqlSession.selectList("movieMapper.showRunInfo", movieNo);
+	}
+
+	public int checkRunCount(SqlSessionTemplate sqlSession, int movieNo) {
+		// TODO Auto-generated method stub
+		return sqlSession.selectOne("movieMapper.checkRunCount", movieNo);
+	}
+
+	public int newRunInfo(SqlSessionTemplate sqlSession, Movie m) {
+		// TODO Auto-generated method stub
+		return sqlSession.insert("movieMapper.newRunInfo", m);
+	}
+
+	
+	/**
+	 * @param sqlSession - DB 접속용 객체
+	 * @param playingNo - 상영정보 ID
+	 * @return
+	 * ※ 충돌 문제 해결 이전에 작성되었음
+	 * 12/24 15:46 정원섭
+	 */
+	public int removeRunInfo(SqlSessionTemplate sqlSession, int playingNo) {
+		// TODO Auto-generated method stub
+		return sqlSession.update("movieMapper.removeRunInfo", playingNo);
 	}
 
 	

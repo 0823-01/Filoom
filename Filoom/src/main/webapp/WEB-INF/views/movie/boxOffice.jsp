@@ -227,232 +227,15 @@
             </div>
             <br>
 
-			<!-- 하드코딩본을 의도적으로 안 지웠음
-				사유 : <위키드>를 상세 페이지로 이어놨음 -->
-            <div class="movie-list">
-            
-	            <div class="movie">
-	                <img src="resources/images/posters/moana.jpg" class="poster">
-	                <table class="movie-info">
-	                    <tr>
-	                        <td id="filmrate"><img src="resources/images/posters/3.svg" class="filmrate"></td>
-	                        <td><b>모아나 2</b><br></td>
-	                    </tr>
-	                    <tr>
-	                        <td colspan="2">2024.11.27 개봉예정</td>
-	                    </tr>
-	                </table>
-	            </div>
-	            	
-	            <div class="movie" onclick="location.href='detail.mo';">
-	                <img src="resources/images/posters/wicked2.jpg" class="poster"><br>
-	                <table class="movie-info">
-	                    <tr>
-	                        <td id="filmrate"><img src="resources/images/posters/3.svg" class="filmrate"></td>
-	                        <td><b>위키드</b><br></td>
-	                    </tr>
-	                    <tr>
-	                        <td colspan="2">2024.11.20 개봉</td>
-	                    </tr>
-	                </table>
-	            </div>
-	
-	            <div class="movie">
-	                <img src="resources/images/posters/1win.jpg" class="poster"><br>
-	                <table class="movie-info">
-	                        <tr>
-	                            <td id="filmrate"><img src="resources/images/posters/12.svg" class="filmrate"></td>
-	                            <td><b>1승</b><br></td>
-	                        </tr>
-	                        <tr>
-	                            <td colspan="2">2024.12.4 개봉예정</td>
-	                        </tr>
-	                </table>
-	            </div>
-	
-	            <div class="movie">
-	                <img src="resources/images/posters/hiddenface.jpg" class="poster"><br>
-	                <table class="movie-info">
-	                    <tr>
-	                        <td id="filmrate"><img src="resources/images/posters/19.svg" class="filmrate"></td>
-	                        <td><b>히든페이스</b><br></td>
-	                    </tr>
-	                    <tr>
-	                        <td colspan="2">2024.11.20 개봉</td>
-	                    </tr>
-	                </table>
-	            </div>
-	
-	            
-	            <div class="movie">
-	                <img src="resources/images/posters/firefighter.jpg" class="poster"><br>
-	                <table class="movie-info">
-	                    <tr>
-	                        <td id="filmrate"><img src="resources/images/posters/12.svg" class="filmrate"></td>
-	                        <td><b>소방관</b><br></td>
-	                    </tr>
-	                    <tr>
-	                        <td colspan="2">2024.12.4 개봉예정</td>
-	                    </tr>
-	                </table>
-	            </div>
-	
-	            <div class="movie">
-	                <img src="resources/images/posters/rm.jpg" class="poster"><br>
-	                <!-- 알엠 : 라이트 피플, 롱 플레이스 (RM : Right People, Wrong Place) -->
-	                <table class="movie-info">
-	                    <tr>
-	                        <td id="filmrate"><img src="resources/images/posters/12.svg" class="filmrate"></td>
-	                        <td><b>알엠: 라이트 피플...</b><br></td>
-	                    </tr>
-	                    <tr>
-	                        <td colspan="2">2024.12.5 개봉예정</td>
-	                    </tr>
-	                </table>
-	            </div>
-	
-	            <div class="movie">
-	                <img src="resources/images/posters/1jungbilla.jpg" class="poster"><br>
-	                <table class="movie-info">
-	                    <tr>
-	                        <td id="filmrate"><img src="resources/images/posters/15.svg" class="filmrate"></td>
-	                        <td><b>원정빌라</b></td>
-	                    </tr>
-	                    <tr>
-	                        <td colspan="2">2024.12.4 개봉예정</td>
-	                    </tr>
-	                </table>
-	            </div>
-	
-	            <div class="movie">
-	                <img src="resources/images/posters/chungsul.jpg" class="poster"><br>
-	                <table class="movie-info">
-	                    <tr>
-	                        <td id="filmrate"><img src="resources/images/posters/3.svg" class="filmrate"></td>
-	                        <td><b>청설</b></td>
-	                    </tr>
-	                    <tr>
-	                        <td colspan="2">2024.11.6 개봉</td>
-	                    </tr>
-	                </table>
-	            </div>
-	
-	            <div class="movie">
-	                <img src="resources/images/posters/bigfamily.jpg" class="poster"><br>
-	                <table class="movie-info">
-	                    <tr>
-	                        <td id="filmrate"><img src="resources/images/posters/12.svg" class="filmrate"></td>
-	                        <td><b>대가족</b></td>
-	                    </tr>
-	                    <tr>
-	                        <td colspan="2">2024.11.27 개봉</td>
-	                    </tr>
-	                </table>
-	            </div>
-	
-	            <div class="movie">
-	                <img src="resources/images/posters/morningseagull.jpg" class="poster"><br>
-	                <!-- 아침바다 갈매기는 -->
-	                <table class="movie-info">
-	                    <tr>
-	                        <td id="filmrate"><img src="resources/images/posters/12.svg" class="filmrate"></td>
-	                        <td><b>아침바다 갈매기는</b></td>
-	                    </tr>
-	                    <tr>
-	                        <td colspan="2">2024.11.27 개봉</td>
-	                    </tr>
-	                </table>
-	            </div>
-	
-	            <div class="movie">
-	                <img src="resources/images/posters/lemongrass.jpg" class="poster"><br>
-	                <!-- 여름날의 레몬그라스 -->
-	                <table class="movie-info">
-	                    <tr>
-	                        <td id="filmrate"><img src="resources/images/posters/12.svg" class="filmrate"></td>
-	                        <td><b>여름날의 레몬그...</b></td>
-	                    </tr>
-	                    <tr>
-	                        <td colspan="2">2024.11.27 개봉</td>
-	                    </tr>
-	                </table>
-	            </div>
-	
-	            <div class="movie">
-	                <img src="resources/images/posters/gladiator2.jpg" class="poster"><br>
-	                <table class="movie-info">
-	                    <tr>
-	                        <td id="filmrate"><img src="resources/images/posters/19.svg" class="filmrate"></td>
-	                        <td><b>글레디에이터 II</b></td>
-	                    </tr>
-	                    <tr>
-	                        <td colspan="2">2024.12.13 개봉</td>
-	                    </tr>
-	                </table>
-	            </div>
-	
-	            <div class="movie">
-	                <img src="resources/images/posters/knivesout.jpg" class="poster"><br>
-	                <table class="movie-info">
-	                    <tr>
-	                        <td id="filmrate"><img src="resources/images/posters/15.svg" class="filmrate"></td>
-	                        <td><b>나이브스 아웃</b></td>
-	                    </tr>
-	                    <tr>
-	                        <td colspan="2">2019.12.4 개봉</td>
-	                        <!-- ※ 재개봉일 : 2024-12-04 -->
-	                    </tr>
-	                </table>
-	            </div>
-	
-	            <div class="movie">
-	                <img src="resources/images/posters/thecrow.jpg" class="poster"><br>
-	                <table class="movie-info">
-	                    <tr>
-	                        <td id="filmrate"><img src="resources/images/posters/19.svg" class="filmrate"></td>
-	                        <td><b>더 크로우</b></td>
-	                    </tr>
-	                    <tr>
-	                        <td colspan="2">2024.12.11 개봉예정</td>
-	                    </tr>
-	                </table>
-	            </div>
-	
-	            <div class="movie">
-	                <img src="resources/images/posters/carol.jpg" class="poster"><br>
-	                <table class="movie-info">
-	                    <tr>
-	                        <td id="filmrate"><img src="resources/images/posters/19.svg" class="filmrate"></td>
-	                        <td><b>캐롤</b></td>
-	                    </tr>
-	                    <tr>
-	                        <td colspan="2">2016.2.4 개봉</td>
-	                        <!-- ※ 재개봉일 = 2024-11-20 -->
-	                    </tr>
-	                </table>
-	            </div>
-	
-	            <div class="movie">
-	                <img src="resources/images/posters/joker.jpg" class="poster"><br>
-	                <table class="movie-info">
-	                    <tr>
-	                        <td id="filmrate"><img src="resources/images/posters/15.svg" class="filmrate"></td>
-	                        <td><b>조커</b>
-	                    </tr>
-	                    <tr>
-	                        <td colspan="2">2019.10.2 개봉</td>
-	                        <!-- ※ 재개봉일 = 2023-11-01 -->
-	                    </tr>
-	                </table>
-	            </div>
+			<div class="movie-list">
+	            <!--  -->
             </div>
 
         </div>
         
         <script>
         	$(function() {
-        		//refreshPagingBar(??);
-        		// openedOnly();
+        		viewAll(1);
         	});
         	
         	function toggleSwitch() {
@@ -579,10 +362,8 @@
 	    					$(".movie-list").empty();
 	    					$(".movie-list").append(result);
 	    					$(".pagingbar").empty();
-	    					//refreshPagingBar(??);
-	    					/* 검색 기능에서는 일부러 페이징바를 넣지 않으려고 하는데
-	    					 더미데이터(30편)에서 '아' 한 글자로 검색해도 10편 정도밖에 안 되기 때문임
-	    					 대신 페이징바를 없애는 기능으로 구현하였음
+	    					/* 검색 기능은 더미 데이터에서 '아' 한 글자로 검색해도 10편 안팎으로 나오므로
+	    						굳이 페이징처리가 필요없다고 판단하여 '페이징바 없애기'만 구현했음
 	    					*/
 	    				},
 	    				error: function() {
@@ -651,7 +432,6 @@
         <br><br>
 
         <!-- Paging Bar -->
-        <!-- 영화 상세 페이지 때문에 임시 화면 남겨둔 건데 해당 화면 완성되면 이 페이징바(임시)도 같이 삭제할 예정 -->
         <div class="pagingbar" align="center">
             <!-- if i > 1 -->
             <c:if test="${ requestScope.pi.currentPage gt 1 }">

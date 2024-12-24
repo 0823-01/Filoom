@@ -52,7 +52,7 @@
 		<mapper resource = "/mappers/coupon-mapper.xml"/>
 
 		<mapper resource = "/mappers/admin-mapper.xml"/>
-		<mapper resource = "/mappers/event-mapper.xml"/>
+		<mapper resource = "/mappers/event-mapper.xml" />
 		<mapper resource = "/mappers/notice-mapper.xml"/>
 
 	

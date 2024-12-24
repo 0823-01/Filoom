@@ -182,6 +182,7 @@
                         </div>
 
 
+
                         <div id="basicInfo">
                             <table>
                                 <tr>
@@ -218,7 +219,6 @@
                                     <th>장르</th>
                                     <td colspan="4"><input type="text" id="genre" value=""></td>
                                 </tr>
-                                
                                 <!-- ↓ 년월일까지 표기라 'date'가 맞음 -->
                                 <tr>
                                     <th>개봉일자</th>
@@ -265,7 +265,6 @@
         </div>
     </div>
     <script>
-    // navigator 쪽 메뉴 호버시의 script
     document.addEventListener("DOMContentLoaded", function () {
         const navItems = document.querySelectorAll("#nav > ul > li");
     
@@ -302,7 +301,7 @@
 
                 $("#posterDisplay").attr("src",e.target.result);
                 var photo = document.getElementById("posterDisplay").innerHTML;
-                //console.log(e.target.result);
+                // console.log(e.target.result);
             };
         }
         // if not

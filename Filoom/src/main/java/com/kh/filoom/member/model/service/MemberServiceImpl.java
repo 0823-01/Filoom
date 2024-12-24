@@ -95,15 +95,9 @@ public class MemberServiceImpl implements MemberService{
 	}
 
 	@Override
-	public List<Reserve> useCouponList(int userNo) {
+	public List<Reserve> couponList(int userNo) {
 
-		return memberDao.useCouponList(sqlSession, userNo);
-	}
-
-	@Override
-	public List<History> historyList(int userNo) {
-
-		return memberDao.historyList(sqlSession, userNo);
+		return memberDao.couponList(sqlSession, userNo);
 	}
 	
 	@Override

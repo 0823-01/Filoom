@@ -16,7 +16,6 @@
 	</resultMap>
 	
 	<resultMap id="reserveResultSet" type="reserve">
-		<result column="MOVIE_NO" property="movieNo" />
 		<result column="MOVIE_TITLE" property="movieTitle" />
 	    <result column="RUNTIME" property="runtime" />
 	    <result column="BOOK_NO" property="bookNo" />
@@ -41,9 +40,8 @@
 	    <result column="SEATNO" property="seatNo" />
 	</resultMap>
 	
-	<resultMap id="useCouponResultSet" type="reserve">
+	<resultMap id="couponResultSet" type="reserve">
 	    <result column="COUPON_NAME" property="couponName" />
-	    <result column="BOOK_NO" property="bookNo" />
 	</resultMap>
 	
 	<resultMap id="historyResultSet" type="history">
@@ -150,8 +148,7 @@
 	</update>
 	
 	<select id="reserveList" parameterType="int" resultMap="reserveResultSet">
-		SELECT m.MOVIE_NO AS MOVIE_NO,
-		       m.MOVIE_TITLE AS MOVIE_TITLE,
+		SELECT m.MOVIE_TITLE AS MOVIE_TITLE,
 		       m.RUNTIME AS RUNTIME,
 		       b.BOOK_NO AS BOOK_NO,
 		       b.BOOK_COST AS BOOK_COST,
@@ -174,14 +171,9 @@
 		 WHERE b.STATUS = 'Y'
 		   AND b.USER_NO = #{userNo}
 		   AND po.FILE_LEVEL = '1'
-		   AND p.PLAYTIME >= ADD_MONTHS(SYSDATE, -1)
-		 GROUP BY m.MOVIE_NO, m.MOVIE_TITLE, m.RUNTIME, b.BOOK_NO, b.BOOK_COST, b.BOOK_TOTAL_COST, b.COST_PROCESS,
-		          s.SCREEN_NAME, p.PLAYTIME, (p.PLAYTIME + (m.RUNTIME / 1440)), po.FILE_CODENAME, po.IMAGE_PATH
-		 ORDER BY 
-		  CASE WHEN p.PLAYTIME + (m.RUNTIME / 1440) > SYSDATE 
-		       THEN 0
-		       ELSE 1
-		       END, p.PLAYTIME ASC
+		 GROUP BY m.MOVIE_TITLE, m.RUNTIME, b.BOOK_NO, b.BOOK_COST, b.BOOK_TOTAL_COST, b.COST_PROCESS, s.SCREEN_NAME, 
+		          p.PLAYTIME, (p.PLAYTIME + (m.RUNTIME / 1440)), po.FILE_CODENAME, po.IMAGE_PATH
+		 ORDER BY p.PLAYTIME DESC
 	</select>
 	
 	<select id="cancelList" parameterType="int" resultMap="cancelResultSet">
@@ -199,7 +191,6 @@
 		  JOIN SCREEN_SEAT ss ON bs.SSEAT_NO = ss.SSEAT_NO
 		 WHERE b.STATUS = 'N'
 		   AND b.USER_NO = #{userNo}
-		   AND p.PLAYTIME >= SYSDATE - 7
 		 GROUP BY m.MOVIE_TITLE, s.SCREEN_NAME, p.PLAYTIME, b.MODIFY_DATE, b.BOOK_COST
 		 ORDER BY p.PLAYTIME ASC
 	</select>
@@ -241,6 +232,7 @@
 		 ORDER BY p.PLAYTIME DESC
 	</select>
 	
+
 	<select id="historyListByYear" parameterType="map" resultMap="historyResultSet">
 	    SELECT b.BOOK_NO AS BOOK_NO,
 	    	   m.MOVIE_NO AS MOVIE_NO,

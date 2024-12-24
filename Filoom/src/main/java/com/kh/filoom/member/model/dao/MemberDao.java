@@ -70,14 +70,9 @@ public class MemberDao {
 		return sqlSession.selectList("memberMapper.cancelList", userNo);
 	}
 
-	public List<Reserve> useCouponList(SqlSessionTemplate sqlSession, int userNo) {
+	public List<Reserve> couponList(SqlSessionTemplate sqlSession, int userNo) {
 
-		return sqlSession.selectList("memberMapper.useCouponList", userNo);
-	}
-
-	public List<History> historyList(SqlSessionTemplate sqlSession, int userNo) {
-
-		return sqlSession.selectList("memberMapper.historyList", userNo);
+		return sqlSession.selectList("memberMapper.couponList", userNo);
 	}
 	
 	public List<History> historyListByYear(SqlSessionTemplate sqlSession, int userNo, String year) {

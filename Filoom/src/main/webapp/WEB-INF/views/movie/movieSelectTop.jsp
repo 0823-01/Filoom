@@ -116,7 +116,7 @@
             	<c:when test="${not empty now}">
 					<c:forEach var="pic" items="${now}">
 		            	<div class="movie">
-			                <img src="${pageContext.request.contextPath}${pic.fileCodename}" class="poster">
+			                <img src="${pageContext.request.contextPath}/resources/images/posters/${pic.fileCodename}" class="poster">
 			                <table class="movie-info">
 			                    <tr>
 			                        <td id="filmrate"><img src="resources/images/posters/${pic.filmRate}.svg" class="filmrate"></td>
@@ -136,6 +136,20 @@
             	</c:otherwise>
             </c:choose>
 
+			<c:forEach var="pic" items="${now}">
+            	<div class="movie">
+	                <img src="${pageContext.request.contextPath}/resources/images/posters/${pic.fileCodename}" class="poster">
+	                <table class="movie-info">
+	                    <tr>
+	                        <td id="filmrate"><img src="resources/images/posters/${pic.filmRate}.svg" class="filmrate"></td>
+	                        <td><b>${pic.movieTitle}</b><br></td>
+	                    </tr>
+	                    <tr>
+	                        <td colspan="2">${pic.openDate} ${pic.premiere eq 'Y' ? '개봉' : '개봉예정'} </td>
+	                    </tr>
+	                </table>
+            	</div>
+            </c:forEach>
 
         </div>
         <br><br>
@@ -154,7 +168,7 @@
 				<c:when test="${not empty pre}">
 					<c:forEach var="pic" items="${pre}">
 		            	<div class="movie">
-			                <img src="${pageContext.request.contextPath}${pic.fileCodename}" class="poster">
+			                <img src="${pageContext.request.contextPath}/resources/images/posters/${pic.fileCodename}" class="poster">
 			                <table class="movie-info">
 			                    <tr>
 			                        <td id="filmrate"><img src="resources/images/posters/${pic.filmRate}.svg" class="filmrate"></td>
