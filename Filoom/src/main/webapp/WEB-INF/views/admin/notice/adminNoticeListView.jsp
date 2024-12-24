@@ -231,7 +231,8 @@
                 </div>
 
             </div>
-
+<!-- 다시다시 -->
+<input type="hidden">
             <div id = "admin_detail">
                 
                 <!-- 혜원 목록테이블-->
