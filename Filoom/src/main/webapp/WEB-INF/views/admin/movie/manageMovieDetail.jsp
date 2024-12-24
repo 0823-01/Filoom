@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%--     <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %> --%>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -12,8 +13,10 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
     
+    <!-- jQuery 연동 -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    
     <style>
-        /* *{overflow:auto;} */
         #admin_right * {
             font-family: "Poppins", sans-serif;
             font-size:25px;
@@ -42,7 +45,11 @@
             width:90%;
             padding: 5px 5%;
         }
-        /* #innerAdmin * { border: 1px solid red;} */
+        #innerAdmin>* {
+        	margin:0px 20px;
+        	display:inline-block;
+        	/*border:1px solid red;*/
+        }
 
         /* === 영화 포스터 (좌) === */
         #moviePoster {
@@ -61,8 +68,9 @@
 
         /* === 영화 정보 (우) === */
         #tobeManaged {
-            /* width:100%; */
+            width:725px;
             height:100%;
+            max-height:684px;
             vertical-align: top;
             text-align:left;
             overflow:auto;
@@ -203,10 +211,12 @@
                 <div id ="admin_page">
 
                     <div id="innerAdmin">
-                        <div id="moviePoster" style="margin-right:20px;">
+                        <div id="moviePoster">
                             <!-- <img src="https://placehold.co/600x400"> -->
-                            <img src="resources/images/posters/1win.jpg">
-                            <!-- ${pageContext.request.contextPath}${pic.fileCodename} -->
+                            <!-- <img src="resources/images/posters/1win.jpg"> -->
+                            <img src="${pageContext.request.contextPath}/resources/images/posters/${requestScope.target.fileCodename}">
+                            <input type="hidden" id="prevpath" value="${requestScope.target.imagePath}">
+                            <input type="hidden" id="mno" value="${requestScope.target.movieNo}">
                         </div>
                         <div id="tobeManaged">
                             <!-- 내부 스크롤은 여기만 지원함 -->
@@ -217,55 +227,60 @@
                             <!-- 스틸컷을 관리할 수 있는 '이미지 보기' 버튼을 추가했음
                              → 해당 페이지를 하나 더 제작해야 함
                              (불필요하거나 시간 부족할 경우 삭제) -->
-                            <div align="right" style="width:100%;">
+                            <div id="manageBar" align="right" style="width:100%;">
                                 <button id="button_sample">이미지 관리</button>
-                                <button id="button_sample" onclick="location.href='managereview.mo';">리뷰 관리</button>
+                                <button id="button_sample" onclick="location.href='managereview.mo?movieNo=${requestScope.target.movieNo}';">리뷰 관리</button>
                                 <button id="button_sample" onclick="location.href='modifymovie.mo?movieNo=${requestScope.target.movieNo}';">수정</button>
-                                <button id="button_sample" class="unready" style="background-color:red;"
-                                	onclick="alert('현재 영화를 삭제할 수 없습니다.');">삭제</button>
-                                	<!-- location.href='admin.deletemovie.mo' -->
+                                <button id="button_sample" class="unready" style="background-color:red;">삭제</button>
+                                	<!-- location.href='admin.deletemovie.mo?movieNo=${requestScope.target.movieNo}' -->
                             </div>
                             
                             <div id="movie-title">
                                 <table>
                                     <tr>
-                                        <td><img class="filmrate" src="resources/images/posters/12.svg"></td>
-                                        <td><b>1승</b></td>
+                                        <td><img class="filmrate" src="resources/images/posters/${requestScope.target.filmRate}.svg"></td>
+                                        <td><b>${requestScope.target.movieTitle}</b></td>
                                     </tr>
                                 </table>
                             </div>
                             <br>
                             <div id="movie-info">
                                 <!-- 대충 영화 정보 -->
-                                <!-- 주요 배우는 세 명까지만 -->
+                                <!-- 주요 배우는 네 명까지만 -->
                                 <table>
                                     <tr>
-                                        <th>감독</th>
-                                        <td>신연식</td>
+                                        <th width="110">감독</th>
+                                        <td>${requestScope.target.director}</td>
                                     </tr>
                                     <tr>
                                         <th>주요 배우</th>
-                                        <td>송강호, 박정민, 장윤주</td>
+                                        <td>${requestScope.target.starring}</td>
                                     </tr>
                                     <tr>
                                         <th>장르</th>
-                                        <td>드라마</td>
+                                        <td>${requestScope.target.genre}</td>
                                     </tr>
                                     <tr>
                                         <th>상영시간</th>
-                                        <td>107분</td>
+                                        <td>${requestScope.target.runtime}분</td>
                                     </tr>
-                                    
+                                    <tr>
+                                        <th>개봉일자</th>
+                                        <td>${requestScope.target.openDate}</td>
+                                    </tr>
                                 </table>
                             </div>
 
-                            <br><br><hr>
+                            <br><hr>
                             <div id="if_premiere" style="font-size:36px;">
                                 <tr>
                                     <th>개봉 여부</th>
                                     <td>
                                         <label class="switch">
-                                            <input type="checkbox" name="if_premiere">
+                                            <input type="checkbox" name="if_premiere" onclick="togglePremiere(this.checked);">
+                                            <!-- onclick='console.log(this.checked);' 찍어보면 누른 후의 결과로 나옴
+                                            	그러니까 개봉 안한 영화(false로 조회됨)에 스위치 누르면 true로 바뀐 후 true가 찍힘 -->
+                                            <!-- onchange 보다 onclick으로 해야 제대로 반영될 듯 -->
                                             <span class="slider round"></span>
                                         </label>
                                     </td>
@@ -274,15 +289,16 @@
 
                             <br><hr>
                             <!-- 상영 중일 경우, 아래 div안으로 상영 정보가 들어감 -->
-                            <div id="only_when_playing">
+                            <div id="only_when_playing" align="center" style="width:100%;">
                                 <div id="tabletitle">
                                     <b>상영 정보</b>
                                     <hr>
-                                    <button><img src="resources/images/icons/plus.svg"></button>
+                                    <!-- 밑으로 내려가는 게 나을 것 같아서 대책 필요함 -->
+                                    <button onclick="$('#addPlaying').toggle(800);"><img src="resources/images/icons/plus.svg"></button>
+                                    <!-- onclick → 상영 정보 추가 탭 toggle(0.5s~1s 사이) -->
                                 </div>
 
-                                <br><br>
-                                <div style="background-color: #8b8b8b;">
+                                <div id="addPlaying" style="background-color: #8b8b8b; width:100%; display:none;">
                                     <table>
                                         <tr>
                                             <th>날짜</th>
@@ -342,6 +358,92 @@
             });
         });
     });
+    
+    $(function() {
+    	let isOpen = ("${target.premiere}" == 'Y');
+    	if(isOpen) {
+    		$("input[name=if_premiere]").attr("checked", "true");
+    	}/*  else
+    		$("#only_when_playing").hide(); */
+    	console.log(isOpen);
+    	
+    	/* isOpen.change(function() {
+    		$("#only_when_playing").toggle();
+    	}); */
+
+		$(".unready").click(function() {
+			removeMovie(isOpen);
+		});
+		
+    });
+    
+    function togglePremiere(isOpen) {
+    	let mno = $("#mno").val();
+    	let premiere = isOpen ? 1 : 0;
+    	// premiere는 스위치를 눌러서 바뀐 값으로 들어감.
+    	// 즉, 미개봉(false)일 때 눌러서 true로 만들면 isOpen = true, premiere = 1
+    	
+    	$.ajax({
+    		url:"admin.premiere.mo?movieNo="+mno,
+    		type:"post",
+    		data: {"movieNo" : mno, "premiere" : premiere},
+    		
+    		success:function(result) {
+    			if(result === "success") {
+   					console.log("CHANGED to "+ isOpen);
+   					isOpen = $("input[name=if_premiere]").prop("checked");
+   					$("#only_when_playing").toggle(500);
+    			} else {
+    				// result === "failure"
+    				console.log(isOpen);
+    				alert("개봉 여부 변경에 실패하였습니다.");
+    				
+    				// 스위치 원상 복구하기
+					$("input[name=if_premiere]").prop("checked",!isOpen);
+					isOpen = !isOpen;
+    				console.log(isOpen);
+    			}
+    		},
+    		error:function() {
+    			alert("An error has occurred..");
+    		}
+    	});
+    }
+    
+    function removeMovie(isOpen) {
+    	    	
+    	if(isOpen) {
+    		alert("현재 상영중인 영화는 삭제할 수 없습니다.");
+    		return false;
+    	} else if(!confirm("삭제하면 되돌릴 수 없습니다. 정말 삭제하시겠습니까?")) {
+    		return false;
+    	} else {
+    		// 현재 개봉중이 아닌 영화에서, 확인창에서 '확인'을 눌렀을 경우
+    		
+    		let mno = $("#mno").val();
+    		$.ajax({
+    			url:"admin.deletemovie.mo?movieNo="+mno,
+    			type:"post",
+    			data: {"movieNo" : mno},
+    			
+    			success: function(result) {
+    				if(result === "success") {
+	    				alert("삭제가 완료되었습니다.");
+    				} else {
+    					// if result === "failure"
+    					alert("영화가 삭제되지 않았습니다.");
+    				}
+    				
+    				// 성공 여부와 상관없이 리다이렉트 - 뚫렸을 때 시간 벌 목적
+    				location.href = 'movielist_ad.mo';
+    			},
+    			error: function(result) {
+    				alert("An error has occurred..");
+    			}
+    		});
+    		
+    	}
+    }
     </script>
     
 </body>

@@ -1,6 +1,7 @@
 package com.kh.filoom.member.model.service;
 
 import java.util.List;
+import java.util.Map;
 
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -102,6 +103,33 @@ public class MemberServiceImpl implements MemberService{
 
 		return memberDao.historyList(sqlSession, userNo);
 	}
+	
+	@Override
+	public List<History> historyListByYear(int userNo, String year) {
+		
+	    return memberDao.historyListByYear(sqlSession, userNo, year);
+	}
+
+	@Override
+	public String findUserId(Map<String, Object> paramMap) {
+
+		return memberDao.findUserId(sqlSession, paramMap);
+	}
+
+	@Override
+	public String findUserPwd(Map<String, Object> paramMap) {
+
+		return memberDao.findUserPwd(sqlSession, paramMap);
+	}
+
+	@Override
+	@Transactional
+	public int updateUserPwd(Map<String, String> paramMap) {
+
+		return memberDao.updateUserPwd(sqlSession, paramMap);
+	}
+
+	
 
 }
 

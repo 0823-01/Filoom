@@ -118,7 +118,19 @@ public class MovieServiceImpl implements MovieService {
 	public Poster showThumbnail(int movieNo) {
 		return mDao.showThumbnail(sqlSession, movieNo);
 	}
-
+	
+	// ======
+	
+	// === 관리자 메뉴 ===
+	
+	// === 관리 목록 페이지 ===
+	@Override
+	public ArrayList<Movie> adminMovieList(int isOpen) {
+		// TODO Auto-generated method stub
+		return mDao.adminMovieList(sqlSession, isOpen);
+	}
+	// 관리자 영화 검색의 경우, 쿼리 자체는 사용자 쪽과 동일하게 사용
+	
 	@Override
 	@Transactional
 	public int addMovie(Movie m) {
@@ -126,6 +138,7 @@ public class MovieServiceImpl implements MovieService {
 		return mDao.addMovie(sqlSession, m);
 	}
 
+	@Transactional
 	public int updateMovie(Movie m) {
 		// TODO Auto-generated method stub
 		return mDao.updateMovie(sqlSession, m);
@@ -139,6 +152,28 @@ public class MovieServiceImpl implements MovieService {
 		return mDao.addPoster(sqlSession, p);
 	}
 
+	// DB에 영화 추가는 성공했으나, 포스터 업로드는 실패했을 때 되돌리는 용도
+	// 사유 : 영화는 포스터 없이 추가할 수 없게 되어 있음
+	@Override
+	public int undoAddMovie(int movieNo) {
+		// TODO Auto-generated method stub
+		return mDao.undoAddMovie(sqlSession, movieNo);
+	}
+
+	// === 영화 수정 페이지 ===
+	// 관리 상세 화면에서 수정 페이지 접근시, 해당되는 영화의 기존 정보를 띄워줌 
+	@Override
+	public Movie selectMovietoModify(int movieNo) {
+		// TODO Auto-generated method stub
+		return mDao.selectMovietoModify(sqlSession, movieNo);
+	}
+	
+	@Transactional
+	public int changePoster(Poster p) {
+		return mDao.changePoster(sqlSession, p);
+	}
+	
+
 	// 영화 수정시 기존 이미지 삭제, 영화 삭제시 해당 이미지 삭제용 메소드
 	@Override
 	@Transactional
@@ -147,12 +182,16 @@ public class MovieServiceImpl implements MovieService {
 		return mDao.deletePoster(sqlSession, imageId);
 	}
 
-	// DB에 영화 추가는 성공했으나, 포스터 업로드는 실패했을 때 되돌리는 용도
-	// 사유 : 영화는 포스터 없이 추가할 수 없게 되어 있음
 	@Override
-	public int undoAddMovie(int movieNo) {
+	public int deleteMovie(int movieNo) {
 		// TODO Auto-generated method stub
-		return mDao.undoAddMovie(sqlSession, movieNo);
+		return mDao.deleteMovie(sqlSession, movieNo);
+	}
+
+	@Override
+	public int togglePremiere(int movieNo, HashMap<String, Integer> map) {
+		// TODO Auto-generated method stub
+		return mDao.togglePremiere(sqlSession, map);
 	}
 
 	

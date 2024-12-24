@@ -1,6 +1,7 @@
 package com.kh.filoom.member.model.service;
 
 import java.util.List;
+import java.util.Map;
 
 import com.kh.filoom.member.model.vo.History;
 import com.kh.filoom.member.model.vo.Member;
@@ -46,6 +47,20 @@ public interface MemberService {
 
 	// 내가 본 영화 목록 조회용 서비스 (select)
 	List<History> historyList(int userNo);
+	
+	// 연도별 영화 목록 조회용 서비스
+	List<History> historyListByYear(int userNo, String year);
+
+	// 아이디 찾기 서비스 (select)
+	String findUserId(Map<String, Object> paramMap);
+
+	// 비밀번호 찾기(변경) 서비스 (update)
+	String findUserPwd(Map<String, Object> paramMap);
+
+	// 비밀번호 찾기-> 비밀번호 변경 서비스 (update)
+	int updateUserPwd(Map<String, String> paramMap);
+
+	
 	
 	
 }

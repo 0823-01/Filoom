@@ -96,6 +96,7 @@ public class MovieDao {
 		// TODO Auto-generated method stub
 		return sqlSession.selectOne("movieMapper.showDetail", movieNo);
 	}
+
 	
 	public Poster showThumbnail(SqlSessionTemplate sqlSession, int movieNo) {
 		// TODO Auto-generated method stub
@@ -112,6 +113,7 @@ public class MovieDao {
 		return /*int movieNo = */m.getMovieNo();
 	}
 
+	// 영화 수정
 	public int updateMovie(SqlSessionTemplate sqlSession, Movie m) {
 		// TODO Auto-generated method stub
 		return sqlSession.update("movieMapper.updateMovie", m);
@@ -125,13 +127,35 @@ public class MovieDao {
 		return sqlSession.delete("movieMapper.undoAddMovie", movieNo);
 	}
 
-	public int deletePoster(SqlSessionTemplate sqlSession, int imageId) {
+	public Movie selectMovietoModify(SqlSessionTemplate sqlSession, int movieNo) {
 		// TODO Auto-generated method stub
-		return 0;
-
+		return sqlSession.selectOne("movieMapper.selectMovietoModify", movieNo);
 	}
 
-	
+	public ArrayList<Movie> adminMovieList(SqlSessionTemplate sqlSession, int isOpen) {
+		// TODO Auto-generated method stub
+		return (ArrayList) sqlSession.selectList("movieMapper.adminMovieList", isOpen);
+	}
+
+	public int changePoster(SqlSessionTemplate sqlSession, Poster p) {
+		// TODO Auto-generated method stub
+		return sqlSession.update("movieMapper.changePoster", p);
+	}
+
+	public int deletePoster(SqlSessionTemplate sqlSession, int movieNo) {
+		// TODO Auto-generated method stub
+		return sqlSession.delete("movieMapper.deletePoster", movieNo);
+	}
+
+	public int deleteMovie(SqlSessionTemplate sqlSession, int movieNo) {
+		// TODO Auto-generated method stub
+		return sqlSession.update("movieMapper.deleteMovie", movieNo);
+	}
+
+	public int togglePremiere(SqlSessionTemplate sqlSession, HashMap<String, Integer> map) {
+		// TODO Auto-generated method stub
+		return sqlSession.update("movieMapper.togglePremiere", map);
+	}
 
 	
 

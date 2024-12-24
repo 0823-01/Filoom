@@ -82,10 +82,10 @@
 	</resultMap>
 	
 	<resultMap id = "insertBookingSeat" type="bookingseat">
-		<id column="PLAYING_NO" property="playingNo"/>
+		<id column="BOOKING_SEAT_NO" property="bookingSeatNo"/>
+		<result column="PLAYING_NO" property="playingNo"/>
 		<result column="TIME_LIMIT" property="timeLimit"/>
 		<result column="SEAT_NO" property="seatNo"/>
-	
 	</resultMap>
 	
 	<resultMap id = "deleteBookingListList" type="bookingseat">
@@ -107,7 +107,7 @@
 		    (SELECT COUNT(*) 
 		     FROM BOOKING_SEAT 
 		     WHERE PLAYING_NO = P.PLAYING_NO 
-		       AND TIMELIMIT &lt; SYSDATE) AS OCCUPIED_SEATS
+		       AND TIMELIMIT &gt; SYSDATE) AS OCCUPIED_SEATS
 		FROM 
 		    PLAYING P
 		JOIN
@@ -159,22 +159,6 @@
 		    P.PLAYING_NO =  #{playingNo}
 	</select>
 	
-
-	<select id = "insertBookingSeat" parameterType="bookingseat">
-		INSERT INTO BOOKING_SEAT VALUES (
-            SEQ_BSNO.NEXTVAL,
-            #{timeLimit},
-            (SELECT SSEAT_NO
-             FROM SCREEN_SEAT
-             WHERE SEAT_NO = #{seatId}
-               AND SCREEN_NO = (SELECT SCREEN_NO 
-                                FROM PLAYING
-                                WHERE PLAYING_NO = #{playingNo})),
-            #{playingNo},
-            NULL
-		)
-	</select>
-	
 	<select id="isSeatAlreadyBooked" parameterType="map" resultType="int">
 	    SELECT COUNT(*)
 		FROM BOOKING_SEAT BS
@@ -183,6 +167,32 @@
 		WHERE BS.PLAYING_NO = #{playingNo}
 	      AND SS.SEAT_NO = #{seatId}
 	</select>
+	
+	<insert id = "insertBookingSeat" parameterType="bookingseat">
+		INSERT INTO BOOKING_SEAT (
+		    BOOKING_SEAT_NO,
+		    TIMELIMIT,
+		    SSEAT_NO,
+		    PLAYING_NO,
+		    BOOK_NO
+		)
+		VALUES (
+		    SEQ_BSNO.NEXTVAL, 
+		    TO_TIMESTAMP(#{timeLimit}, 'YYYY-MM-DD HH24:MI:SS.FF'),
+		    (SELECT SSEAT_NO
+		     FROM SCREEN_SEAT
+		     WHERE SEAT_NO = #{seatId} 
+		     AND SCREEN_NO = (
+		         SELECT SCREEN_NO 
+		         FROM PLAYING
+		         WHERE PLAYING_NO = #{playingNo}
+		     )
+		    ),
+		    #{playingNo}, 
+		    NULL 
+		)
+	
+	</insert>
 	
 	<delete id = "deleteBookingSeat" parameterType="bookingseat">
 		DELETE FROM BOOKING_SEAT
@@ -241,7 +251,9 @@
 	<!-- 결제 -->
 	
 	<select id="checkAndGetBookingSeatNoList" parameterType="map" resultMap="bookingSeatResultSet">
- 		SELECT BOOKING_SEAT_NO, TIMElIMIT, SEAT_NO
+ 		SELECT BOOKING_SEAT_NO,
+ 			   TO_CHAR(TIMELIMIT, 'YYYY-MM-DD HH24:MI:SS') AS TIMELIMIT,
+ 			   SEAT_NO
 		  FROM BOOKING_SEAT BS
 		  JOIN SCREEN_SEAT SS ON (BS.SSEAT_NO  = SS.SSEAT_NO)
 		  JOIN PLAYING P ON (BS.PLAYING_NO = P.PLAYING_NO)
@@ -266,13 +278,18 @@
 	</select>
 	
 	<update id="updateTimeLimit" parameterType="list" >
-		UPDATE BOOKING_SEAT 
+		UPDATE BOOKING_SEAT
 		   SET TIMELIMIT = SYSDATE+INTERVAL '5' MINUTE
-		 WHERE 
-		 <foreach item="item" collection="list" open="BOOKING_SEAT_NO IN(" separator="," close=")">
-		 	#{item.bookingSeatNo}
-		 </foreach>
-	</update>
+		 WHERE SSEAT_NO IN (
+		 		SELECT SSEAT_NO
+		  		  FROM SCREEN_SEAT
+		  		  WHERE SEAT_NO IN
+		  		  <foreach item="item" collection="list" open="(" separator="," close=")">
+		  		 	#{item} 
+		  		  </foreach>
+		  		   
+		  		  )
+	</update>	
 	
 
 	<!-- 북킹 데이터 생성과 동시에 bookNo 반환 -->	
@@ -292,21 +309,8 @@
 		    AND BOOK_NO = #{bookNo}	
 	</delete>
 	
-	<select id="checkBookingSeat" parameterType="map" resultType="int">
-		SELECT COUNT(BOOKING_SEAT_NO)
-		  FROM BOOKING_SEAT BS
-		  JOIN SCREEN_SEAT SS ON(BS.SSEAT_NO = SS.SSEAT_NO)
-		 WHERE PLAYING_NO=#{playingNo}
-		   AND TIMELIMIT &gt; SYSDATE
-		   AND
-			<foreach item="item" collection="seatNos" open="SS.SEAT_NO IN (" separator="," close=")" >
-				 #{item}
-			</foreach>
-			  	
-	</select>
 	
  	<insert id="insertBookingSeats" parameterType="map">
-		
 		INSERT INTO BOOKING_SEAT VALUES
 		           (SEQ_BSNO.NEXTVAL,
 		            SYSDATE+INTERVAL '5' MINUTE,

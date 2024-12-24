@@ -8,6 +8,7 @@ import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.kh.filoom.common.model.vo.PageInfo;
 import com.kh.filoom.coupon.model.vo.Coupon;
@@ -172,13 +173,6 @@ public class EventServiceImpl implements EventService {
 		
 	}
 	
-	/**
-	 * 쿠폰발급
-	 */
-	@Override
-	public int sendCoupon(List<Applicant> alist, int eventNo) {
-		return 0;
-	}
 
 	// 관리자 --------------------------------------------------------------------------------
 	/**
@@ -311,6 +305,17 @@ public class EventServiceImpl implements EventService {
 	public List<Applicant> adminSelectApplicantList(Map<String, Object> params) {
 		return eventDao.amdinSelectApplicantList(sqlSession, params);
 	}
+	
+	
+	@Override
+	public int selectCouponListCount(int eventNo) {
+		return eventDao.selectCouponListCount(sqlSession, eventNo);
+	}
+
+	@Override
+	public ArrayList<Coupon> selectCouponList(Map<String, Object> params) {
+		return eventDao.selectCouponList(sqlSession, params);
+	}
 
 	/**
 	 * 241220 한혜원
@@ -320,6 +325,31 @@ public class EventServiceImpl implements EventService {
 	public int insertWinners(Map<String, Object> params) {
 		return eventDao.insertWinners(sqlSession, params);
 	}
+	
+	/**
+	 * 241223 한혜원
+	 * 응모자들에게 쿠폰발급
+	 */
+	@Override
+	public int sendCoupon(List<Applicant> alist, int eventNo) {
+		return 0;
+	}
+
+	@Override
+	public void deleteEventAttachment(List<Long> deleteFileIds) {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	
+	public int couponInsertEx(Map<String, Object> params) {
+		return eventDao.couponInsertEx(sqlSession, params);
+		
+	}
+	
+
+	
+	
 	
 	
 

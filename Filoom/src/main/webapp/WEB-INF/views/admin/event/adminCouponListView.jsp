@@ -1,9 +1,11 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %> 
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <title>쿠폰 목록 조회</title>
     <link rel="stylesheet" href="resources/css/admin.css" />
     <style>
@@ -193,10 +195,10 @@
                 <div id = "admin_title_content" style="box-sizing: border-box;">
                     <div class="menu">
                         <div id="no">번호</div>
-                        <div id="title">이벤트명</div>
+                        <div id="title">쿠폰이름</div>
                         <div id="type">타입</div>
-                        <div id="createDate">발급일</div>
-                        <div id="endDate">유효일</div>
+                        <div id="createDate">유효기간</div>
+                        <div id="endDate">보유자</div>
                         <div id="status">유효여부</div>
                     </div>
                 </div>
@@ -211,136 +213,80 @@
                     <input type ="text" id ="text_sample">
                     <input type="button" id ="button_sample" value="샘플">-->
 
-                    <table>
-                        <tr id="list">
-                            
-                            <td id="couponNo">1</td>
-                            <td id="eventTitle">[대가족] 22024.12.31 대가족 시사회</td>
-                            <td id="couponType">무대/시사회</td>
-                            <td id="couponDate">2024-12-01</td>
-                            <td id="couponEndDate">2024-12-31</td>
-                            <td id="couponStatus">Y</td>
-                        </tr>
-
-                        <tr id="list">
-                            
-                            <td id="couponNo">1</td>
-                            <td id="eventTitle">[대가족] 22024.12.31 대가족 시사회</td>
-                            <td id="couponType">무대/시사회</td>
-                            <td id="couponDate">2024-12-01</td>
-                            <td id="couponEndDate">2024-12-31</td>
-                            <td id="couponStatus">Y</td>
-                        </tr>
-
-                        <tr id="list">
-                            
-                            <td id="couponNo">1</td>
-                            <td id="eventTitle">[대가족] 22024.12.31 대가족 시사회</td>
-                            <td id="couponType">무대/시사회</td>
-                            <td id="couponDate">2024-12-01</td>
-                            <td id="couponEndDate">2024-12-31</td>
-                            <td id="couponStatus">Y</td>
-                        </tr>
-
-                        <tr id="list">
-                            
-                            <td id="couponNo">1</td>
-                            <td id="eventTitle">[대가족] 22024.12.31 대가족 시사회</td>
-                            <td id="couponType">무대/시사회</td>
-                            <td id="couponDate">2024-12-01</td>
-                            <td id="couponEndDate">2024-12-31</td>
-                            <td id="couponStatus">Y</td>
-                        </tr>
-
-                        <tr id="list">
-                            
-                            <td id="couponNo">1</td>
-                            <td id="eventTitle">[대가족] 22024.12.31 대가족 시사회</td>
-                            <td id="couponType">무대/시사회</td>
-                            <td id="couponDate">2024-12-01</td>
-                            <td id="couponEndDate">2024-12-31</td>
-                            <td id="couponStatus">Y</td>
-                        </tr>
-
-                        <tr id="list">
-                            
-                            <td id="couponNo">1</td>
-                            <td id="eventTitle">[대가족] 22024.12.31 대가족 시사회</td>
-                            <td id="couponType">무대/시사회</td>
-                            <td id="couponDate">2024-12-01</td>
-                            <td id="couponEndDate">2024-12-31</td>
-                            <td id="couponStatus">Y</td>
-                        </tr>
-
-                        <tr id="list">
-                            
-                            <td id="couponNo">1</td>
-                            <td id="eventTitle">[대가족] 22024.12.31 대가족 시사회</td>
-                            <td id="couponType">무대/시사회</td>
-                            <td id="couponDate">2024-12-01</td>
-                            <td id="couponEndDate">2024-12-31</td>
-                            <td id="couponStatus">Y</td>
-                        </tr>
-
-                        <tr id="list">
-                            
-                            <td id="couponNo">1</td>
-                            <td id="eventTitle">[대가족] 22024.12.31 대가족 시사회</td>
-                            <td id="couponType">무대/시사회</td>
-                            <td id="couponDate">2024-12-01</td>
-                            <td id="couponEndDate">2024-12-31</td>
-                            <td id="couponStatus">Y</td>
-                        </tr>
-
-                        <tr id="list">
-                            
-                            <td id="couponNo">1</td>
-                            <td id="eventTitle">[대가족] 22024.12.31 대가족 시사회</td>
-                            <td id="couponType">무대/시사회</td>
-                            <td id="couponDate">2024-12-01</td>
-                            <td id="couponEndDate">2024-12-31</td>
-                            <td id="couponStatus">Y</td>
-                        </tr>
-
-                        <tr id="list">
-                            
-                            <td id="couponNo">1</td>
-                            <td id="eventTitle">[대가족] 22024.12.31 대가족 시사회</td>
-                            <td id="couponType">무대/시사회</td>
-                            <td id="couponDate">2024-12-01</td>
-                            <td id="couponEndDate">2024-12-31</td>
-                            <td id="couponStatus">Y</td>
-                        </tr>
-
-                        
-
+                    <table id="couponList">
+                        <tbody>
+                        	<c:choose>
+                        		<c:when test="${not empty requestScope.list }">
+                        			<c:forEach var="c" items="${requestScope.list }">
+                        				<tr id="list">
+				                            <td id="couponNo">${c.couponNo }</td>
+				                            <td id="eventTitle">${c.couponName }</td>
+				                            <td id="couponType">${c.couponLevel }</td>
+				                            <td id="couponDate">${c.couponExpDate }</td>
+				                            <td id="couponEndDate">dd</td>
+				                            <td id="couponStatus">${c.couponStatus }</td>
+				                        </tr>
+                        			</c:forEach>
+                        		</c:when>
+                        		
+                        		<c:otherwise>
+                       				<tr>
+                       					<td colspan="6" style="text-align: center; color : black; font-size : 50px;">현재 응모자가 없습니다.</td>
+                       				<tr>
+                       			</c:otherwise>
+                        	</c:choose>
+                        </tbody>
+                       
                         
                     </table>
 
-                    <!--페이징바-->
-                    <div class="pagingArea">
-                        <ul class="pagination">
-                            <li class="page-item disabled"><a class="page-link" href="#">«</a></li>
-                            <li class="page-item"><a class="page-link" href="#">1</a></li>
-                            <li class="page-item"><a class="page-link" href="#">2</a></li>
-                            <li class="page-item"><a class="page-link" href="#">3</a></li>
-                            <li class="page-item"><a class="page-link" href="#">4</a></li>
-                            <li class="page-item"><a class="page-link" href="#">5</a></li>
-                            <li class="page-item"><a class="page-link" href="#">6</a></li>
-                            <li class="page-item"><a class="page-link" href="#">7</a></li>
-                            <li class="page-item"><a class="page-link" href="#">8</a></li>
-                            <li class="page-item"><a class="page-link" href="#">9</a></li>
-                            <li class="page-item"><a class="page-link" href="#">10</a></li>
-                            <li class="page-item"><a class="page-link" href="#">»</a></li>
-                        </ul>
-                    </div>
-
-                    <!--버튼--> 
-                    <div class="btn">
-                        <button id="couponeEnrollFormBtn">쿠폰 등록</button>
-                        <!--추첨이 완료된 경우, 버튼 조작 불가-->
-                        
-                    </div>
+                    <div class="foot" style="box-sizing: border-box;" >
+                        <!-- 페이징바 -->
+					    <div class="pagingArea">
+					        <ul class="pagination" id="pagination">
+					            <!-- 이전 페이지 버튼 -->
+					            <c:choose>
+					                <c:when test="${requestScope.pi.currentPage == 1}">
+					                    <li class="page-item disabled">
+					                        <a class="page-link" href="#">«</a>
+					                    </li>
+					                </c:when>
+					                <c:otherwise>
+					                    <li class="page-item">
+					                        <a class="page-link" href="clist.ev?cpage=${requestScope.pi.currentPage - 1}">«</a>
+					                    </li>
+					                </c:otherwise>
+					            </c:choose>
+					
+					            <!-- 페이지 번호 출력 -->
+					            <c:forEach var="p" begin="${requestScope.pi.startPage}" end="${requestScope.pi.endPage}">
+					                <li class="page-item ${p == requestScope.pi.currentPage ? 'active' : ''}">
+					                    <a class="page-link" href="clist.ev?cpage=${p}">${p}</a>
+					                </li>
+					            </c:forEach>
+					
+					            <!-- 다음 페이지 버튼 -->
+					            <c:choose>
+					                <c:when test="${requestScope.pi.currentPage < requestScope.pi.maxPage}">
+					                    <li class="page-item">
+					                        <a class="page-link" href="clist.ev?cpage=${requestScope.pi.currentPage + 1}">»</a>
+					                    </li>
+					                </c:when>
+					                <c:otherwise>
+					                    <li class="page-item disabled">
+					                        <a class="page-link" href="#">»</a>
+					                    </li>
+					                </c:otherwise>
+					            </c:choose>
+					        </ul>
+					    </div>
+					    
+	                    <!--버튼--> 
+	                    <div class="btn">
+	                        <button id="couponeEnrollFormBtn" onclick="history.back();">이전으로</button>
+	                        <!--추첨이 완료된 경우, 버튼 조작 불가-->
+	                        
+	                    </div>
                 </div>
 
 

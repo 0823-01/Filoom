@@ -68,12 +68,26 @@ public interface MovieService {
 	
 	// 이미지 추가 - 영화 추가/수정 공통
 	int addPoster(Poster p); // 이미지 추가
-	int deletePoster(int imageId); // 이미지 삭제 - 영화 수정/삭제시 써먹을 의도
+	int changePoster(Poster p); // 이미지 변경
+	// int deletePoster(int imageId); // 이미지 삭제 - 영화 수정/삭제시 써먹을 의도
+	
+	// === 관리자 전용 ===
+	ArrayList<Movie> adminMovieList(int isOpen);
 	
 	// === 관리자 영화 추가 페이지 ===
 	int addMovie(Movie m);
 	int undoAddMovie(int movieNo); // 영화 추가 후 포스터 추가 실패시 써먹을 의도
 	
 	// === 관리자 영화 수정 페이지 ===
+	Movie selectMovietoModify(int movieNo); // 관리자 상세 페이지에서도 활용
 	int updateMovie(Movie m);
+	
+	// === 관리자 영화 삭제 페이지 ===
+	int deletePoster(int movieNo); // 포스터 먼저
+	int deleteMovie(int movieNo);
+	
+	// === 관리자 영화 상세 페이지 ===
+	// 상세 조회는 selectMovietoModify(movieNo)를 사용
+	// premiere : 스위치 눌러서 바뀐 값 기준.
+	int togglePremiere(int movieNo, HashMap<String, Integer> map);
 }

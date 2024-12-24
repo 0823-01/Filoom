@@ -27,9 +27,9 @@ import com.kh.filoom.movie.model.vo.Poster;
 
 /**
  * @author 정원섭
- * === MovieController v 0.4.1 ===
+ * === MovieController v 0.5.1 ===
  * 작업 착수일 : 2024-12-13
- * 최종 수정일 : 2024-12-22
+ * 최종 수정일 : 2024-12-23
  */
 
 /* 작업 내역
@@ -37,8 +37,10 @@ import com.kh.filoom.movie.model.vo.Poster;
  * v 0.2 - 영화 목록 출력 (평점순 제외)
  * v 0.3 - 검색을 제외한 각 영화 목록에 페이징바 추가
  * v 0.4 - 관리자 영화 추가 페이지 & 수정 페이지 착수
- * v.0.4.1 - 관리자 영화 추가 페이지 완료, 이미지가 안 뜨는 문제 원인 확인
- * v.0.4.2 - 상세 페이지 리뷰 페이징바 삭제 외 일부 사소한 변경 사항
+ * v 0.4.1 - 관리자 영화 추가 페이지 완료, 이미지가 안 뜨는 문제 원인 확인
+ * v 0.4.2 - 상세 페이지 리뷰 페이징바 삭제 외 일부 사소한 변경 사항
+ * v 0.5 - 영화 수정 페이지 & 삭제 페이지 완료, 상세 페이지 내 스위치 클릭시 개봉 여부 바뀜
+ * v 0.5.1 - 박스오피스 기본 정렬 기준 변경 외 크고 작은 문제 수정 
  * */
 @Controller
 public class MovieController {
@@ -215,19 +217,12 @@ public class MovieController {
 	// detail.mo?movieNo=XXX
 	@GetMapping("detail.mo")
 	public String showDetail(int movieNo, Model model) {
-		
-		
+				
 		Movie list = msi.showDetail(movieNo);
-		
-		System.out.println(list);
+		// System.out.println(list); // 확인용
 		
 		model.addAttribute("list", list);
-		
-		msi.showDetail(movieNo);
-		
-		// Poster p = msi.showThumbnail(movieNo);
-		// model.addAttribute("poster", p);
-		
+
 		return "movie/movieDetail";
 	}
 	
@@ -264,11 +259,36 @@ public class MovieController {
 	}
 	
 	
+	// ↓ === 관리자 메뉴 === ↓
 	
-	// === 관리자 메뉴 === : admin 폴더를 따로 만들 경우 그쪽으로 옮길 예정
 	@GetMapping("movielist_ad.mo")
 	public String selectMovieList() {
 		return "admin/movie/manageMovieList";
+	}
+	
+	// 관리자 전용 목록 조회 쿼리 실행용
+	@GetMapping("admin.viewlist.mo")
+	public String adminMovieList(int isOpen, Model model) {
+		ArrayList<Movie> list = msi.adminMovieList(isOpen);
+		model.addAttribute("list",list);
+		 
+		return "admin/movie/adminlist_taglib";
+	}
+	
+	// 관리자 영화 관리 목록 검색 기능
+	// 원래 int side 변수를 추가하여 사용자 쪽과 통합하려 했는데
+	// 이러면 개발자 도구를 열고 side를 바꾸면 관리자 페이지가 뚫리므로 분리하였음
+	// 정렬 기준이 MOVIE_NO DESC인 것 같아서 이건 원래 기준을 이쪽에 맞추면 될 듯
+	@GetMapping("admin.searchMovie.mo")
+	public String adminSearchMovie(String keyword, int status, Model model) {
+		// status : 0 = 전체, 1 = 개봉작만. 2는 미개봉작에 쓰는 건데 관리자는 해당 사항 X
+		HashMap<String, Object> map = new HashMap<>();
+		map.put("keyword", keyword);
+		map.put("status", status);
+		
+		ArrayList<Movie> searched = msi.searchMovie(map);
+		model.addAttribute("list", searched);
+		return "admin/movie/adminlist_taglib";
 	}
 	
 	// 영화 추가 화면으로 이동
@@ -311,8 +331,8 @@ public class MovieController {
 	// 영화 추가
 	@ResponseBody
 	@PostMapping("admin.insertmovie.mo")
-	public String addMovie(HttpServletRequest request, @RequestParam("img")MultipartFile img, Movie m,
-			Model model, HttpSession session) {
+	public String addMovie(HttpServletRequest request, @RequestParam("img")MultipartFile img,
+			Movie m, Model model, HttpSession session) {
 		int mvresult = 0; // 영화 삽입이 성공해야 이미지 삽입을 시도할 수 있음
 		int result = 0; // 이미지 삽입까지 포함한 최종 결과
 		
@@ -329,9 +349,10 @@ public class MovieController {
 		//for(img : imglist) {
 			if(!img.getOriginalFilename().equals("")) {
 				String fileCodename = addImage(img, session);
+				System.out.println(fileCodename);
 				p.setFileName(img.getOriginalFilename());
-				p.setFileCodename("/resources/images/posters/" + fileCodename);
-				p.setImagePath(fileCodename); // ???
+				p.setFileCodename(fileCodename);
+				p.setImagePath("/resources/images/posters/" + fileCodename);
 				p.setFileLevel(1); // 1 = 대표 이미지라는 뜻
 			}
 		//}
@@ -348,6 +369,7 @@ public class MovieController {
 				if (del > 0)
 					System.out.println("Adding movie has reverted because adding image is failed.");
 				// 영화부터 추가 시도하니까 귀찮게 File(realpath) 안해도 됨
+				return "half_failure";
 			}
 		}
 		
@@ -362,64 +384,93 @@ public class MovieController {
 	
 	// 영화 수정 화면으로 이동
 	@GetMapping("modifymovie.mo")
-	public String modifyMovie(int movieNo) {
-		// Movie m = msi.selectMovie(movieNo);
+	public String modifyMovie(int movieNo, Model model) {
+		Movie m = msi.selectMovietoModify(movieNo);
+		model.addAttribute("target", m);
 		return "admin/movie/modifyMovie";
 	}
 	
 	// 영화 수정
 	@ResponseBody
 	@PostMapping("admin.updatemovie.mo")
-	public String updateMovie(/*HttpServletRequest request, @RequestParam(value="img")MultipartFile img, */
-			Movie m, Model model/*, int movieNo */) {
+	public String updateMovie(HttpServletRequest request, @RequestParam(value="img")MultipartFile img,
+			@RequestParam(value="prevpath")String prevpath,
+			Movie m, Model model, HttpSession session) {
 		
-		//m.setMovieNo(movieNo);
-		// addMovie의 ajax 그대로 가져온 거긴 한데 여기서 직접 확인은 아직. (안 될 가능성 매우 낮음)
-		System.out.println(m);
+		// System.out.println(m);
 		
-//		if(!img.getOriginalFilename().equals("")) {
-//			String fileCodename = addImage(img, session);
-//			Poster p = new Poster();
-//			p.setFileName(img.getOriginalFilename());
-//			p.setFileCodename("/resources/images/posters/" + fileCodename);
-//			p.setImagePath(fileCodename);
-//			p.setFileLevel(1);
-//		}
-		// int result = msi.updateMovie(m);
-
-		// 마무리
-		return "success";
-		// return (result > 0) ? "success" : "failure";
+		// 굳이 이것부터 하는 이유 : 수정은 이미지를 새로 첨부할 필요가 없으므로
+		int result = msi.updateMovie(m);
+		if(result > 0) {
+			// img == null이면 변경 로직 안 거치고 끝
+			if(img != null) {
+				// 기존 이미지의 경로 받기 - 변경 성공시 삭제할 용도
+				System.out.println("prevpath = "+prevpath);
+				
+				String fileCodename = addImage(img, session);
+				Poster p = new Poster();
+				p.setMovieNo(m.getMovieNo());
+				p.setFileName(img.getOriginalFilename());
+				p.setFileCodename(fileCodename);
+				p.setImagePath("/resources/images/posters/" + fileCodename);
+				p.setFileLevel(1);
+				
+				System.out.println(p);
+				
+				int imgresult = msi.changePoster(p);
+				if(imgresult > 0)
+					new File(prevpath).delete();
+				else // if (imgresult <= 0)
+					return "half_success";
+			}
+			return "success";
+		} else
+			return "failure";
 	}
 	
 	// 영화 삭제
+	@ResponseBody
 	@PostMapping("admin.deletemovie.mo")
-	public void deleteMovie(int movieNo) {
-		//int result = msi.deleteMovie(movieNo);
-		// return (result > 0) ? : "success" : "failure";
-		/* 사용할 쿼리
-		 * UPDATE MOVIE
-			SET STATUS = 'N'
-			WHERE MOVIE_NO = #{movieNo}
-		 */
+	public String deleteMovie(int movieNo) {
+		int result = 0;
+		// 포스터 삭제부터
+		int picresult = msi.deletePoster(movieNo);
+		
+		if(picresult > 0) {
+			result = msi.deleteMovie(movieNo);
+			return (result > 0) ? "success" : "failure";
+		} else
+			return "failure";
 	}
 	
 	
 	// (관리자) 영화 관리 상세 - 페이지 띄우기
 	@GetMapping("admin.managemovie.mo")
-	public String movieManage() {
+	public String movieManage(int movieNo, Model model) {
+		Movie m = msi.selectMovietoModify(movieNo);
+		// System.out.println(m); // 확인용
+		
+		model.addAttribute("target", m);
 		return "admin/movie/manageMovieDetail";
 	}
 	
-	// === (관리자) 영화 관리 상세 페이지
+	
+	
+	// === (관리자) 영화 관리 상세 페이지 ===
 	// (관리자) 상영 여부 변경
-	// @ResponseBody
-	// @GetMapping("admin.premiere.mo")
-	public void togglePremiere(int movieNo, boolean premiere) {
-		// String isOpen = premiere ? 'Y' : 'N';
-		// int result = msi.toggle(movieNo, isOpen);
+	@ResponseBody
+	@PostMapping("admin.premiere.mo")
+	public String togglePremiere(int movieNo, boolean premiere) {
+		// premiere = 눌렀을 때 바뀐 스위치 값 (= 미개봉(false)상태에서 눌러 실행시키면 true로 받음)
+		// String isOpen = premiere ? "Y" : "N"; // 굳이?
+		System.out.println(premiere);
+		HashMap<String, Integer> map = new HashMap<>();
+		map.put("movieNo", movieNo);
+		map.put("premiere", premiere ? 1 : 0);
 		
-		// return ???
+		int result = msi.togglePremiere(movieNo, map);
+		
+		return (result > 0) ? "success" : "failure"; 
 	}
 	
 	// 상영 정보 추가
@@ -432,7 +483,7 @@ public class MovieController {
 		
 	}
 	
-	// -- 여기부터 상세>이미지 관리 화면
+	/* -- 여기부터 상세>이미지 관리 화면
 	public void showImageList() {
 		
 	}
@@ -448,6 +499,8 @@ public class MovieController {
 	public void deleteImage() {
 		
 	}
+	*/
+	
 	
 	// (관리자) 리뷰 목록 확인 (+ 페이징 처리)
 	@GetMapping("managereview.mo")

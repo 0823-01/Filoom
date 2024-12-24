@@ -13,8 +13,13 @@ public class Applicant {
 
 	private int applicantNo; 			// 응모자 번호
 	private int refEno; 	 			// 참조게시글 번호
+	private int eventNo;
 	private String userNo; 	 			// 응모한 회원번호
 	private String applicationDate; 	// 응모한날짜
 	private String drawingStatus; 		// 추첨여부
-	private String winStatus; // 테이블에는 없지만 필요해서 만든거
+	
+	private int bookNo;
+	private int couponNo;
+	private String couponUse;
+
 }
