@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -110,9 +111,14 @@
 	    margin-top: 30px;
 	    display: grid; /* flex 대신 grid를 사용 */
 	    grid-template-columns: repeat(3, 1fr); /* 한 줄에 3개 */
-	    gap: 50px; /* 요소 간의 간격 */
+	    gap: 30px; /* 요소 간의 간격 */
+	    justify-items: center; /* 가운데 정렬 */
 	}
 	
+	.favorite-item {
+	    width: 100%; /* 부모 컨테이너에 맞춤 */
+	    max-width: 185px; /* 포스터 가로 크기에 맞춤 */
+	}
 	
 	.year-search {
 	    margin-right: 10px;
@@ -137,6 +143,10 @@
 	    background-color: #493628;
 	    font-weight: bold;
 	}
+	
+	#year-btn:hover, .reserve-btn:hover {
+		background-color: #8b5a2b;
+	}
 	/* 
 	.favorite-item {
 	    margin-bottom: 30px;
@@ -144,7 +154,6 @@
 	
 	.box-image {
 	    margin-bottom: 14px;
-	    padding: 6px;
 	    /* background-color: white; */
 	}
 	
@@ -152,23 +161,31 @@
 	.poster {
 	    width: 185px;
 	    height: 261px;
+	    object-fit: cover; /* 이미지 비율 유지하며 잘림 방지 */
 	}
 	
 	.movie-title {
-	    text-decoration: none;
-	    color: #fff;
-	    font-size: 20px;
+	    display: block;
+	    font-size: 16px; /* 제목 폰트 크기 */
 	    font-weight: bold;
+	    color: #fff;
+	    margin-top: 8px;
+	    text-decoration: none;
+	    overflow: hidden; /* 넘치는 텍스트 숨기기 */
+	    text-overflow: ellipsis; /* ... 표시 */
+	    white-space: nowrap; /* 한 줄로 유지 */
+	    max-width: 185px; /* 포스터의 가로 크기와 동일하게 */
 	}
 	
 	.release-date {
 	    font-size: 12px;
 	    color: #aaa;
+	    margin-top: 4px;
 	}
 	
 	.reserve-btn {
 	    margin-top: 10px;
-	    padding: 2px 5px;
+	    padding: 2px 10px;
 	    border: 1px solid #333;
 	    border-radius: 5px;
 	    background-color: #493628;
@@ -188,6 +205,30 @@
 	    cursor: pointer;
 	    font-size: 12px;
 	    font-weight: 600;
+	    transition: color 0.3s ease;
+	}
+	
+	.delete-btn:hover {
+		color: #ffffff;
+	}
+	
+	#btn-more {
+		background-color: #493628;
+        margin-top: 50px;
+		width: 30%;
+        padding: 10px;
+        border: none;
+        font-size: 16px;
+        font-weight: bold;
+        color: #ffffff;
+        border-radius: 60px;
+        cursor: pointer;
+        transition: background-color 0.3s ease, color 0.3s ease; /* 배경색과 글씨 색 변화를 위한 트랜지션 */
+	}
+	
+	#btn-more:hover {
+		background-color: #fff; /* 배경을 흰색으로 변경 */
+        color: #000; /* 글씨 색을 검정색으로 변경 */
 	}
 </style>
 </head>
@@ -212,108 +253,156 @@
                 
                 <div class="favorite-num">
                     <h1>보고싶은 영화</h1>
-                    <span>5건</span>
+                    <span>${favoriteList.size()}건</span>
                 </div>
 
                 <div class="year-search">
-                    <select name="year" id="year-select">
-                        <option value="1">등록일 순</option>
-                        <option value="2">개봉일 순</option>
+                    <select name="sort" id="year-select">
+                        <option value="asc">개봉일 오름차순</option>
+                        <option value="desc">개봉일 내림차순</option>
                     </select>
                     <button type="button" id="year-btn">검색</button>
                 </div>
             </div>
-            <!-- 예매 내역과 취소 내역을 합친 div -->
+
             <div class="favorite-body">
-            
-                <!-- 예매 내역들만 묶은 div -->
+
                 <div class="favorite-list">
+                
+                	<c:choose>
+	                	<c:when test="${empty favoriteList}">
+						    <div class="no-favorite">
+						        보고싶은 영화 목록이 없습니다.
+						    </div>
+						</c:when>
+					
+						<c:otherwise>
+							<c:forEach var="favorite" items="${favoriteList}" varStatus="status">
+	
+			                    <div class="favorite-item" id="favorite-item" style="display: ${status.index < 15 ? 'block' : 'none'};">
+			                        <div class="box-image">
+			                            <a href="#"><img src="${ pageContext.request.contextPath }/resources/images/posters/${ favorite.fileCodename }" class="poster"></a>
+			                        </div>
+			                        <div class="box-content">
+			                            <div>
+			                                <a href="#" class="movie-title">${ favorite.movieTitle }</a>
+			                                <p class="release-date">${ favorite.openDate } 개봉</p>
+			                                <div class="reserve-delete">
+			                                    <button  id="detailViewButton" class="reserve-btn" onClick="location.href='detail.mo?movieno=${favorite.movieNo}'">예매하기</button>
+			                                    <button class="delete-btn" data-movie-no="${favorite.movieNo}">삭제</button>
+			                                    <input type="hidden" id="userNo" value="${loginUser.userNo}">
+			                                </div>
+			                            </div>
+			                        </div>
+			                    </div>
+			                </c:forEach>
+	                    </c:otherwise>
+	                </c:choose>
 
-                    <div class="favorite-item">
-                        <div class="box-image">
-                            <a href="#"><img src="https://img.cgv.co.kr/Movie/Thumbnail/Poster/000088/88920/88920_185.jpg" class="poster"></a>
-                        </div>
-                        <div class="box-content">
-                            <div>
-                                <a href="#" class="movie-title">히든페이스</a>
-                                <p class="release-date">2024.11.20 개봉</p>
-                                <div class="reserve-delete">
-                                    <button class="reserve-btn">예매하기</button>
-                                    <button class="delete-btn">삭제</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="favorite-item">
-                        <div class="box-image">
-                            <a href="#"><img src="https://img.cgv.co.kr/Movie/Thumbnail/Poster/000077/77372/77372_185.jpg" class="poster"></a>
-                        </div>
-                        <div class="box-content">
-                            <div>
-                                <a href="#" class="movie-title">인터스텔라</a>
-                                <p class="release-date">2024.11.20 개봉</p>
-                                <div class="reserve-delete">
-                                    <button class="reserve-btn">예매하기</button>
-                                    <button class="delete-btn">삭제</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="favorite-item">
-                        <div class="box-image">
-                            <a href="#"><img src="https://img.cgv.co.kr/Movie/Thumbnail/Poster/000088/88797/88797_185.jpg" class="poster"></a>
-                        </div>
-                        <div class="box-content">
-                            <div>
-                                <a href="#" class="movie-title">하얼빈</a>
-                                <p class="release-date">2024.11.20 개봉</p>
-                                <div class="reserve-delete">
-                                    <button class="reserve-btn">예매하기</button>
-                                    <button class="delete-btn">삭제</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="favorite-item">
-                        <div class="box-image">
-                            <a href="#"><img src="https://img.cgv.co.kr/Movie/Thumbnail/Poster/000088/88992/88992_185.jpg" class="poster"></a>
-                        </div>
-                        <div class="box-content">
-                            <div>
-                                <a href="#" class="movie-title">소방관</a>
-                                <p class="release-date">2024.11.20 개봉</p>
-                                <div class="reserve-delete">
-                                    <button class="reserve-btn">예매하기</button>
-                                    <button class="delete-btn">삭제</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="favorite-item">
-                        <div class="box-image">
-                            <a href="#"><img src="https://img.cgv.co.kr/Movie/Thumbnail/Poster/000088/88076/88076_185.jpg" class="poster"></a>
-                        </div>
-                        <div class="box-content">
-                            <div>
-                                <a href="#" class="movie-title">위키드</a>
-                                <p class="release-date">2024.11.20 개봉</p>
-                                <div class="reserve-delete">
-                                    <button class="reserve-btn">예매하기</button>
-                                    <button class="delete-btn">삭제</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
                 </div>
+                
+                <div align="center">
+		            <button id="btn-more" onclick="more();">더보기</button>
+		        </div>
+		        
             </div>
         </div>
     </div>
     
     <jsp:include page="../common/footer.jsp" />
+    
+    <script>
+    
+	    let visibleCount = 15; // 현재 표시된 리스트 수 
+		
+	    // 페이지 로드 시 더보기 버튼 처리
+	    document.addEventListener("DOMContentLoaded", () => {
+	        const items = document.querySelectorAll(".favorite-item"); // 모든 카드 선택
+	        const btnMore = document.getElementById("btn-more"); // 더보기 버튼 선택
+	
+	        // 목록이 10개 미만이면 버튼 숨김
+	        if (items.length <= visibleCount) {
+	            btnMore.style.display = "none"; // 버튼 숨김
+	        }
+	    });
+	
+	    /* 더보기 버튼 클릭 시 발생하는 함수 */
+	    function more() {
+	        const items = document.querySelectorAll(".favorite-item"); // 모든 카드 선택 
+	        let count = 0;
+	
+	        // 숨겨진 카드 중 10개를 보여줌
+	        for (let i = visibleCount; i < items.length; i++) {
+	            items[i].style.display = "block";
+	            count++;
+	
+	            if (count === 15) break; // 10개까지만 표시
+	        }
+	
+	        visibleCount += count; // 표시된 카드 수 증가
+	
+	        // 더 이상 숨겨진 카드가 없으면 버튼 제거
+	        if (visibleCount >= items.length) {
+	            const btnMore = document.getElementById("btn-more"); // 버튼 선택
+	            btnMore.parentNode.removeChild(btnMore); // 버튼 삭제
+	        }
+	    }
+    
+	    $(document).on("click", ".delete-btn", function () {
+	        const movieNo = $(this).data("movie-no");
+	        const userNo = $("#userNo").val(); // 사용자 번호를 숨겨진 input 필드에서 가져오기
+	
+	        if (!userNo) {
+	            alert("사용자 정보가 없습니다. 다시 로그인해주세요.");
+	            return;
+	        }
+	
+	        if (confirm("해당 영화를 보고싶은 영화에서 삭제하시겠습니까?")) {
+	            $.ajax({
+	                url: "deleteFavorite.me",
+	                type: "POST",
+	                data: { 
+	                    userNo: userNo, 
+	                    movieNo: movieNo 
+	                },
+	                success: function (response) {
+	                    alert(response);
+	                    if (response === "보고싶은 영화에서 삭제되었습니다.") {
+	                        location.reload(); // 성공 시 페이지 새로고침
+	                    }
+	                },
+	                error: function () {
+	                    alert("삭제 중 오류가 발생했습니다. 다시 시도해주세요.");
+	                }
+	            });
+	        }
+	    });
+	    
+	    $(document).on("click", "#year-btn", function () {
+	        const sortOption = $("#year-select").val();
+
+	        $.ajax({
+	            url: "favoriteSort.me",
+	            type: "GET",
+	            data: { sort: sortOption },
+	            success: function (response) {
+	                $(".favorite-list").html(response); // 서버에서 받은 HTML을 favorite-body에 삽입
+	            },
+	            error: function () {
+	                alert("정렬 중 오류가 발생했습니다.");
+	            }
+	        });
+	    });
+	    
+	    $("input[name='movieDetailNo']").val(mainMovie.movieNo);
+        const movieNo = mainMovie.movieNo;
+        if (movieNo) {
+        	$("#detailViewButton").attr("onClick", "location.href='detail.mo?movieno=" + movieNo + "'");
+        }
+
+
+	</script>
+
 
 </body>
 </html>

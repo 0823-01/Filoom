@@ -3,6 +3,7 @@ package com.kh.filoom.member.model.service;
 import java.util.List;
 import java.util.Map;
 
+import com.kh.filoom.member.model.vo.Favorite;
 import com.kh.filoom.member.model.vo.History;
 import com.kh.filoom.member.model.vo.Member;
 import com.kh.filoom.member.model.vo.Reserve;
@@ -59,6 +60,21 @@ public interface MemberService {
 
 	// 비밀번호 찾기-> 비밀번호 변경 서비스 (update)
 	int updateUserPwd(Map<String, String> paramMap);
+
+	// 보고싶은 영화 목록 조회 서비스 (select)
+	List<Favorite> favoriteList(int userNo);
+
+	// 보고싶은 영화 목록 삭제 서비스 (delete)
+	int deleteFavorite(Map<String, Object> paramMap);
+
+	// 내가 본 영화 목록 삭제 서비스 (delete)
+	int deleteHistorySeat(Map<String, Object> paramMap);
+	int deleteHistory(Map<String, Object> paramMap);
+
+	List<Favorite> sortFavoriteMovies(int userNo, String sort);
+
+	boolean checkEmail(String email);
+
 
 	
 	

@@ -11,6 +11,7 @@ import lombok.ToString;
 @ToString
 public class History {
 	
+	private int bookNo;
 	private int movieNo;
 	private String movieTitle;
 	private String playtime;
