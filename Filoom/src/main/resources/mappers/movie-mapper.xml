@@ -596,7 +596,7 @@
 
 
 	<!-- === 영화 추가 페이지 === -->
-	<update id="addMovie" parameterType="movie">
+	<insert id="addMovie" parameterType="movie">
 		INSERT INTO MOVIE (
 			MOVIE_NO, MOVIE_TITLE, OPEN_DATE, DIRECTOR,
 			GENRE, RUNTIME, SCREEN_TYPE, FILM_RATE,
@@ -606,11 +606,17 @@
 			#{genre}, #{runtime}, #{screenType}, #{filmRate},
 			#{description}, #{starring}, #{trailer}
 		)
-	</update>
+	</insert>
 	
 	<!-- 이미지 추가 (영화 추가/수정 공통) -->
-	<!-- <update id="addPoster" parameterType="poster">
-	</update> -->
+	<insert id="addPoster" parameterType="poster">
+		INSERT INTO POSTER (
+		    IMAGE_ID, MOVIE_NO, FILE_NAME, FILE_CODENAME,
+		    IMAGE_PATH, FILE_LEVEL
+		) VALUES (
+		    SEQ_IMG.NEXTVAL, #{movieNo}, #{fileName}, #{fileCodename},
+		    #{imagePath}, 1)
+	</insert>
 	
 	<!-- === 영화 수정 페이지 === -->
 	<!-- 기존 영화 정보를 페이지 내 input의 value값으로 집어넣기 -->
@@ -700,11 +706,12 @@
 		VALUES(SEQ_PLA.NEXTVAL, #{playTime}, #{movieNo}, TO_NUMBER(#{screenName}))
 	</insert>
 	
-	<!-- <update id="removeRunInfo" parameterType="_int">
+	<!-- 상영 정보 삭제 - 충돌 해결 전 작성됨 -->
+	<update id="removeRunInfo" parameterType="_int">
 		UPDATE PLAYING
 		SET STATUS = 'Y'
 		WHERE PLAYING_NO = #{playingNo} 
-	</update> -->
+	</update>
 	
 	<!-- === 리뷰 관련 === -->
 	<!-- 리뷰 조회 - 사용자, 관리자 공통 -->
