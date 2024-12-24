@@ -324,7 +324,7 @@
                                 종료된 이벤트<input type="radio" name="eventStatus" value="Y" class="readonly-radio">
                                 
                                 <!-- 숨겨진 필드 -->
-                                <input type="hidden" name="eventStatus" value="${e.eventStatus }">
+                                <input type="hidden" name="eventStatus" value="${e.eventStatus}">
                             </div>
                         </div>
                         

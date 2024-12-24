@@ -58,7 +58,6 @@
 	<result column="COUPON_NO" property="couponNo" />
 </resultMap>
 
-
 <!-- coupon 테이블로부터 조회된 ResultSet을 Coupon VO 타입으로 옮겨주는 ResultMap -->
 <resultMap id="couponResultSet" type="coupon">
 	<id column="COUPON_NO" property="couponNo" />
@@ -69,7 +68,6 @@
 	<result column="COUPON_LEVEL" property="couponLevel" />
 	<result column="REF_ENO" property="refEno" />
 </resultMap>
-
 
 
 <!-- 사용자 -->
@@ -121,25 +119,27 @@
 <!-- 241213 한혜원 이벤트 게시글 상세조회 -->
 <select id="selectEvent" parameterType="_int" resultMap="eventResultSet">
 	SELECT EVENT_NO
-     , EVENT_TITLE
-     , TO_CHAR(START_DATE, 'YYYY-MM-DD') "START_DATE"
-     , TO_CHAR(END_DATE, 'YYYY-MM-DD') "END_DATE"
-     , EVENT_CONTENT
-     , EVENT_TYPE
-  FROM EVENT
- WHERE EVENT_NO = #{eventNo}
-   AND STATUS = 'Y'
+	     , EVENT_TITLE
+	     , CHANGE_NAME AS "CONTENTIMG1"
+	     , TO_CHAR(START_DATE, 'YYYY-MM-DD') "START_DATE"
+	     , TO_CHAR(END_DATE, 'YYYY-MM-DD') "END_DATE"
+	     , EVENT_CONTENT
+	  FROM EVENT E
+	  JOIN EVENT_ATTACHMENT ON (EVENT_NO = REF_ENO)
+	 WHERE EVENT_NO = #{eventNo}
+	   AND E.STATUS = 'Y'
+	   AND FILE_LEVEL = 1
 </select>
 
 <!-- 241213 한혜원 이벤트 게시글 첨부파일 상세조회 -->
 <select id="selectEventAttachment" resultMap="eventAttachmentResultSet">
 	SELECT EVENT_FILE_NO
-     , ORIGIN_NAME
-     , CHANGE_NAME
-     , FILE_PATH
-  FROM EVENT_ATTACHMENT
- WHERE REF_ENO = #{eventNo}
-   AND FILE_LEVEL = 2
+	     , ORIGIN_NAME
+	     , CHANGE_NAME
+	     , FILE_PATH
+	  FROM EVENT_ATTACHMENT
+	 WHERE REF_ENO = #{eventNo}
+	   AND FILE_LEVEL = 2
 </select>
 
 <!-- 241218 한혜원 이벤트 게시판 댓글 총 갯수 -->
@@ -160,6 +160,14 @@
 	  JOIN MEMBER ON (REPLY_WRITER = USER_NO)
 	 WHERE REF_ENO = #{eventNo}
 	   AND R.STATUS = 'Y'
+</select>
+
+<!-- 241222 한혜원 댓글 중복 확인 -->
+<select id="checkReplyWriter" parameterType="map" resultType="Integer">
+	SELECT COUNT(*)
+	  FROM REPLY
+	 WHERE REF_ENO = #{refEno}
+	   AND REPLY_WRITER = #{replyWriter}
 </select>
 
 <!-- 241217 한혜원 이벤트 게시판 댓글 작성 -->
@@ -212,7 +220,6 @@
 	INSERT INTO EVENT_ATTACHMENT(EVENT_FILE_NO, REF_ENO, ORIGIN_NAME, CHANGE_NAME, FILE_PATH, FILE_LEVEL)
 	VALUES(SEQ_EFNO.NEXTVAL, SEQ_ENO.CURRVAL, #{originName}, #{changeName}, #{filePath}, #{fileLevel})
 </insert>
-
 
 <!-- 241222 한혜원, 쿠폰 등록 -->
 <insert id="insertCoupon" parameterType="coupon">
@@ -267,6 +274,28 @@
 	 WHERE REF_ENO = #{eventNo}
 	   AND FILE_LEVEL = 2
 </select>
+
+<!-- 241224 한혜원, 이벤트 게시글 수정 -->
+<update id="updateEvent" parameterType="event">
+	UPDATE EVENT
+	   SET EVENT_TITLE = #{eventTitle}
+	     , START_DATE = #{startDate}
+	     , END_DATE = #{endDate}
+	     , EVENT_CONTENT = #{eventContent}
+	     , EVENT_TYPE = #{eventType}
+	     , EVENT_STATUS = #{eventStatus}
+	 WHERE EVENT_NO = #{eventNo}
+	   AND STATUS = 'Y' 
+</update>
+
+<!-- 241224 한혜원, 이벤트 게시글 첨부파일 수정 -->
+<update id="updateEventAttachment" parameterType="eventAttachment">
+	UPDATE EVENT
+	   SET ORIGIN_NAME = #{originName}
+	     , CHANGE_NAME = #{changeName}
+	     , UPLOAD_DATE = SYSDATE
+	 WEHRE EVENT_FILE_NO = #{eventFileNo}
+</update>
 
 <!-- 응모확인 -->
 <!-- 241219 한혜원, 댓글 개수 확인 -->

@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -28,6 +29,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.google.gson.Gson;
 import com.kh.filoom.common.model.vo.PageInfo;
 import com.kh.filoom.common.template.Pagination;
+import com.kh.filoom.coupon.model.vo.Coupon;
 import com.kh.filoom.event.model.service.EventService;
 import com.kh.filoom.event.model.vo.Applicant;
 import com.kh.filoom.event.model.vo.Event;
@@ -332,8 +334,8 @@ public class EventController {
 	    }
 
 	    // 디버깅용 로그 출력
-	    // System.out.println("Event: " + e);
-	    // System.out.println("Attachments: " + eventAttachmentList);
+	    System.out.println("Event: " + e);
+	    System.out.println("Attachments: " + eventAttachmentList);
 	    return mv;
 	}
 	
@@ -425,8 +427,8 @@ public class EventController {
 		mv.addObject("list", list);
 		mv.setViewName("admin/event/adminEventDetailView");
 		
-		// System.out.println(e);
-		// System.out.println(list);
+		//System.out.println("상세조회 : " + e);
+		//System.out.println("상세조회 : " + list);
 				
 				
 		return mv;
@@ -434,6 +436,132 @@ public class EventController {
 	
 	
 	/**
+	 * 241222 한혜원
+	 * 게시글 수정하기 페이지 요청
+	 * @param eventNo
+	 * @param model
+	 * @return
+	 */
+	@PostMapping("updateForm.ev")
+	public ModelAndView updateForm(int eno, ModelAndView mv) {
+		// System.out.println(eno);
+		
+		Event e = eventService.selectEvent(eno);
+		ArrayList<EventAttachment> list = eventService.selectEventAttachment(eno);
+		
+		// 조회된 이벤트 정보와 첨부파일 목록 모델에 추가하여 수정페이지로 전달 
+		mv.addObject("e", e);
+		mv.addObject("list", list);
+		
+		System.out.println(e);
+		System.out.println(list);
+		// System.out.println(e.getEventStatus());
+		
+		
+		// 수정 페이지로 이동
+		mv.setViewName("admin/event/eventUpdateForm");
+		return mv;
+		
+	}
+	
+	
+	/**
+	 * 241224 한혜원
+	 * 게시글 수정
+	 * @param e
+	 * @param newUpFiles
+	 * @param deletedFileNos
+	 * @param session
+	 * @param mv
+	 * @return
+	 */
+	@RequestMapping(value="update.ev", method=RequestMethod.POST)
+	public ModelAndView updateEvent(Event e,
+							  @RequestParam(value="newUpFiles", required=false) MultipartFile[] newUpFiles,
+							  @RequestParam(value="deletedFileNos", required=false) Integer[] deletedFileNos,
+	                          HttpSession session, ModelAndView mv) {
+	    
+	    // 새로 넘어온 첨부파일이 있을 경우, 첨부파일 목록을 처리 
+	    List<EventAttachment> list = new ArrayList<>();
+	    int fileLevel = 1; // 대표이미지 1, 일반 2 
+	    
+	    for(MultipartFile newUpFile : newUpFiles) {
+	    	if(!newUpFile.isEmpty()) {
+	    		String changeName = saveFile(newUpFile, session); // 파일 저장 및 이름 변경
+	    		
+	    		EventAttachment eventAttachment = new EventAttachment();
+	    		eventAttachment.setOriginName(newUpFile.getOriginalFilename());
+	    		eventAttachment.setChangeName("/resources/eventUploadFiles/" + changeName);
+	    		eventAttachment.setFilePath(changeName);
+	    		eventAttachment.setFileLevel(fileLevel);
+	    		
+	    		// 첫번재 파일은 대표이미지로 설정, 이후는 일반 파일로 설정 
+	    		if(fileLevel == 1) {
+	    			fileLevel = 2;
+	    			
+	    		}
+	    		
+	    		list.add(eventAttachment); // 첨부파일 리스트에 추가 
+	    	}
+	    	
+	    }
+	    	
+	    	// 1. 게시글 수정 서비스 호출 
+	    	int eventResult = eventService.updateEvent(e);
+	    	
+	    	if(eventResult>0) {
+	    		// 2. 새로 첨부된 파일들 추가 저장 
+	    		for(EventAttachment eventAttachment : list) {
+	    			eventAttachment.setRefEno(e.getEventNo()); // 게시글 번호 참조 
+	    			eventService.insertEventAttachment(eventAttachment);
+	    		}
+	    		
+	    		// 3. 삭제된 파일의 상태값을 "N" 으로 변경 
+	    		if(deletedFileNos != null && deletedFileNos.length>0) {
+	    			eventService.updateEventAttachment(Arrays.asList(deletedFileNos), "N");
+	    		}
+	    		
+	    		// 성공 메세지 
+	    		session.setAttribute("alertMsg", "이벤트 게시글 수정 성공!");
+	    		mv.setViewName("redirect:/detail.ev");
+	    	} else {
+	    		// 실패 시 에러 페이지로 이동 
+	    		mv.addObject("errorMsg", "이벤트 게시글 수정 실패").setViewName("common/errorPage");
+	    	}
+	    	
+	    	System.out.println(e);
+	    	System.out.println(list);
+	    	return mv;
+	    }
+	    
+
+	    
+		
+	
+	/*
+	public String deleteEvent(int eno, String filePath, Model model, HttpSession session) {
+		System.out.println(eno);
+		
+		int result = eventService.deleteEvent(eno);
+		
+		if(result>0) {
+			if(!filePath.equals("")) {
+				String realPath = session.getServletContext().getRealPath(filePath);
+				new File(realPath).delete();
+			}
+			
+			// 일회성 알람 문구를 담아서 게시판 리스트 페이지로 url 재요청 
+			session.setAttribute("alertMsg", "게시글 삭제 성공!");
+			return "redirect:/list.ev";
+		} else {
+			model.addAttribute("errorMsg", "게시글 삭제 실패!");
+			return "common/errorPage";
+		}
+	} */
+	
+	
+	/**
+
 	 * 241223 한혜원
 	 * 쿠폰목록조회
 	 * @param eventNo
@@ -472,8 +600,8 @@ public class EventController {
 		model.addAttribute("eventNo", eventNo);
 		System.out.println(params);
 		
-		System.out.println(listCount);
-		System.out.println(list);
+		// System.out.println(listCount);
+		// System.out.println(list);
 		
 		return "admin/event/adminCouponListView";
 
@@ -596,24 +724,6 @@ public class EventController {
 							 RedirectAttributes redirectAttributes) {
 		
 	} */
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	
 	// ------------------------------------------ 파일 저장 메소드
 	public String saveFile(MultipartFile upfile, HttpSession session) {

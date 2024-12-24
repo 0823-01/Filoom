@@ -9,7 +9,7 @@
 <style>
 
 	body{
-        background-color: #313131;
+        background-color: black;
     }
     	
     	

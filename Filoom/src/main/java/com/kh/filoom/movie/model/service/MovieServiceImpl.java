@@ -6,6 +6,7 @@ import java.util.HashMap;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.kh.filoom.movie.model.dao.MovieDao;
 import com.kh.filoom.movie.model.vo.Movie;
@@ -191,6 +192,27 @@ public class MovieServiceImpl implements MovieService {
 		return mDao.togglePremiere(sqlSession, map);
 	}
 
+	@Override
+	public ArrayList<Movie> showRunInfo(int movieNo) {
+		// TODO Auto-generated method stub
+		return mDao.showRunInfo(sqlSession, movieNo);
+	}
+
+	@Override
+	public int checkRunCount(int movieNo) {
+		// TODO Auto-generated method stub
+		return mDao.checkRunCount(sqlSession, movieNo);
+	}
+
+	@Override
+	public int newRunInfo(Movie m) {
+		// TODO Auto-generated method stub
+		return mDao.newRunInfo(sqlSession, m);
+	}
+	
+	 public int removeRunInfo(int playingNo) {
+		return mDao.removeRunInfo(sqlSession, playingNo);
+	 }
 	
 
 	

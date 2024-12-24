@@ -10,6 +10,7 @@ import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
 
 import com.kh.filoom.common.model.vo.PageInfo;
+import com.kh.filoom.coupon.model.vo.Coupon;
 import com.kh.filoom.event.model.vo.Applicant;
 import com.kh.filoom.event.model.vo.Event;
 import com.kh.filoom.event.model.vo.EventAttachment;
@@ -112,22 +113,28 @@ public class EventDao {
 		
 		Map<String, Object> paraMap = new HashMap<>();
 		paraMap.put("eventNo", eventNo);
+		paraMap.put("pi", pi);
 		
 		return (ArrayList)sqlSession.selectList("eventMapper.selectReplyList", paraMap, rowBounds);
 	}
 	
 	
 	/**
-	 * 241217 한혜원 
-	 * 댓글 작성여부 체크
-	 * @param eventNo
-	 * @param userNo
+	 * 241222 한혜원
+	 * 댓글 중복체크
+	 * @param sqlSession
+	 * @param refEno
+	 * @param replyWriter
 	 * @return
-	 
-	public int checkIfReplyExists(SqlSessionTemplate sqlSession, int eventNo, String replyWriter) {
-		// select 문(단행) : selectOne 메소드 
-		return sqlSession.selectOne("eventMappter.selectCheckReply", eventNo, replyWriter);
-	} */
+	 */
+	public boolean checkReplyWriter(SqlSessionTemplate sqlSession, int refEno, String replyWriter) {
+		Integer result = sqlSession.selectOne("eventMapper.checkReplyWriter", 
+										   	new HashMap<String, Object>() {{
+												   put("refEno", refEno);
+												   put("replyWriter", replyWriter);																	   
+											  }});
+		return result != null && result>0; // 이미 댓글 작성했으면 true;
+	}
 	
 	/**
 	 * 241217 한혜원
@@ -224,6 +231,17 @@ public class EventDao {
 	public int insertEventAttachment(SqlSessionTemplate sqlSession, EventAttachment eventAttachment) {
 		return sqlSession.insert("eventMapper.insertEventAttachment", eventAttachment); // 첨부파일 저장
 	}
+	
+	/**
+	 * 241222 한혜원
+	 * 관리자용 쿠폰 등록 메소드 
+	 * @param sqlSession
+	 * @param coupon
+	 * @return
+	 */
+	public int insertCoupon(SqlSessionTemplate sqlSession, Coupon coupon) {
+		return sqlSession.insert("eventMapper.insertCoupon", coupon);
+	}
 
 	/**
 	 * 241218 한혜원
@@ -275,6 +293,46 @@ public class EventDao {
 		// 여러행 select문 
 		return (ArrayList)sqlSession.selectList("eventMapper.adminSelectEventAttachment", eventNo);
 	}
+	
+	/**
+	 * 241224 한혜원
+	 * 관리자 게시글 수정
+	 * @param sqlSession
+	 * @param e
+	 * @return
+	 */
+	public int updateEvent(SqlSessionTemplate sqlSession, Event e) {
+		return sqlSession.update("eventMapper.updateEvent", e);
+	}
+
+	/**
+	 * 241224 한혜원
+	 * 관리자 게시글 첨부파일 수정
+	 * @param sqlSession
+	 * @param fileNos
+	 * @param status
+	 * @return
+	 */
+	public int updateEventAttachment(SqlSessionTemplate sqlSession, List<Integer> fileNos, String status) {
+		
+		Map<String, Object> parameters = new HashMap<>();
+		parameters.put("fileNos", fileNos);
+		parameters.put("status", status);
+		
+		return sqlSession.update("eventMapper.updateEventAttachment", parameters);
+	}
+	
+	/**
+	 * 241222 한혜원
+	 * 게시글 삭제
+	 * @param sqlSession
+	 * @param eventNo
+	 * @return
+	 */
+	public int deleteEvent(SqlSessionTemplate sqlSession, int eventNo) {
+		return sqlSession.update("eventMapper.deleteEvent", eventNo);
+	}
+
 
 	/**
 	 * 241219 한혜원
@@ -372,10 +430,13 @@ public class EventDao {
 		return sqlSession.insert("eventMapper.insertWinners", params);
 	}
 
-
 	public int couponInsertEx(SqlSessionTemplate sqlSession, Map<String, Object> params) {
 		return sqlSession.insert("couponMapper.couponInsertEx", params);
 	}
 
 
+
+
+
+	
 }

@@ -89,7 +89,10 @@
 
         .movie-info {
             font-size:20px;
-            
+        }
+        
+        .box-is-empty {
+        	filter:invert(100%) sepia(100%) saturate(2%) hue-rotate(74deg) brightness(104%) contrast(101%)
         }
 
     </style>

@@ -321,7 +321,6 @@
         	}
         	
         	// '이름순'을 눌렀을 때, '상영중인 영화만 표시' 스위치가 켜져 있으면 상영중인 영화만 가지고 정렬함
-        	// 아니 근데 지금 개봉 19편 전체 30편인데 왜 자꾸 3페이지까지 나옴???
         	function listbyName(cpage) {
 
         		$.ajax({
@@ -363,9 +362,9 @@
 	    					$(".movie-list").empty();
 	    					$(".movie-list").append(result);
 	    					$(".pagingbar").empty();
-	    					//refreshPagingBar(??);
-	    					// 검색 결과가 두 페이지 넘을 일이 있을까? 적어도 더미에선 없을 것 같은데
-	    					// 그래서 대신 이걸 함: $("pagingbar").empty();
+	    					/* 검색 기능은 더미 데이터에서 '아' 한 글자로 검색해도 10편 안팎으로 나오므로
+	    						굳이 페이징처리가 필요없다고 판단하여 '페이징바 없애기'만 구현했음
+	    					*/
 	    				},
 	    				error: function() {
 	    					alert("Mission Failure");
