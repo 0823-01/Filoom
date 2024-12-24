@@ -1,6 +1,5 @@
 package com.kh.filoom.member.model.service;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -10,7 +9,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.kh.filoom.member.model.dao.MemberDao;
-import com.kh.filoom.member.model.vo.Favorite;
 import com.kh.filoom.member.model.vo.History;
 import com.kh.filoom.member.model.vo.Member;
 import com.kh.filoom.member.model.vo.Reserve;
@@ -95,9 +93,15 @@ public class MemberServiceImpl implements MemberService{
 	}
 
 	@Override
-	public List<Reserve> couponList(int userNo) {
+	public List<Reserve> useCouponList(int userNo) {
 
-		return memberDao.couponList(sqlSession, userNo);
+		return memberDao.useCouponList(sqlSession, userNo);
+	}
+
+	@Override
+	public List<History> historyList(int userNo) {
+
+		return memberDao.historyList(sqlSession, userNo);
 	}
 	
 	@Override
@@ -125,49 +129,6 @@ public class MemberServiceImpl implements MemberService{
 		return memberDao.updateUserPwd(sqlSession, paramMap);
 	}
 
-	@Override
-	public List<Favorite> favoriteList(int userNo) {
-
-		return memberDao.favoriteList(sqlSession, userNo);
-	}
-
-	@Override
-	public int deleteFavorite(Map<String, Object> paramMap) {
-
-		return memberDao.deleteFavorite(sqlSession, paramMap);
-	}
-	
-	@Override
-	@Transactional
-	public int deleteHistorySeat(Map<String, Object> paramMap) {
-
-		return memberDao.deleteHistorySeat(sqlSession, paramMap);
-	}
-
-	@Override
-	@Transactional
-	public int deleteHistory(Map<String, Object> paramMap) {
-
-		return memberDao.deleteHistory(sqlSession, paramMap);
-	}
-
-	@Override
-	public List<Favorite> sortFavoriteMovies(int userNo, String sort) {
-		Map<String, Object> paramMap = new HashMap<>();
-	    paramMap.put("userNo", userNo);
-	    paramMap.put("sort", sort);
-	    return memberDao.sortFavoriteMovies(sqlSession, paramMap);
-	}
-
-	@Override
-	public boolean checkEmail(String email) {
-
-		return memberDao.checkEmail(sqlSession, email) > 0;
-	}
-
-	
-
-	
 	
 
 }

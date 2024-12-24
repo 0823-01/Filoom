@@ -7,7 +7,6 @@ import java.util.Map;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
 
-import com.kh.filoom.member.model.vo.Favorite;
 import com.kh.filoom.member.model.vo.History;
 import com.kh.filoom.member.model.vo.Member;
 import com.kh.filoom.member.model.vo.Reserve;
@@ -70,9 +69,14 @@ public class MemberDao {
 		return sqlSession.selectList("memberMapper.cancelList", userNo);
 	}
 
-	public List<Reserve> couponList(SqlSessionTemplate sqlSession, int userNo) {
+	public List<Reserve> useCouponList(SqlSessionTemplate sqlSession, int userNo) {
 
-		return sqlSession.selectList("memberMapper.couponList", userNo);
+		return sqlSession.selectList("memberMapper.useCouponList", userNo);
+	}
+
+	public List<History> historyList(SqlSessionTemplate sqlSession, int userNo) {
+
+		return sqlSession.selectList("memberMapper.historyList", userNo);
 	}
 	
 	public List<History> historyListByYear(SqlSessionTemplate sqlSession, int userNo, String year) {
@@ -98,40 +102,6 @@ public class MemberDao {
 
 		return sqlSession.update("memberMapper.updateUserPwd", paramMap);
 	}
-
-	public List<Favorite> favoriteList(SqlSessionTemplate sqlSession, int userNo) {
-
-		return sqlSession.selectList("memberMapper.favoriteList", userNo);
-	}
-
-	public int deleteFavorite(SqlSessionTemplate sqlSession, Map<String, Object> paramMap) {
-
-		return sqlSession.delete("memberMapper.deleteFavorite", paramMap);
-	}
-	
-	public int deleteHistorySeat(SqlSessionTemplate sqlSession, Map<String, Object> paramMap) {
-
-		return sqlSession.delete("memberMapper.deleteHistorySeat", paramMap);
-	}
-
-	public int deleteHistory(SqlSessionTemplate sqlSession, Map<String, Object> paramMap) {
-
-		return sqlSession.delete("memberMapper.deleteHistory", paramMap);
-	}
-
-	public List<Favorite> sortFavoriteMovies(SqlSessionTemplate sqlSession, Map<String, Object> paramMap) {
-
-		return sqlSession.selectList("memberMapper.sortFavoriteMovies", paramMap);
-	}
-
-	public int checkEmail(SqlSessionTemplate sqlSession, String email) {
-
-		return sqlSession.selectOne("memberMapper.checkEmail", email);
-	}
-
-	
-
-	
 
 	
 

@@ -250,24 +250,15 @@ public class EventServiceImpl implements EventService {
 		return eventDao.adminSelectEventAttachment(sqlSession, eventNo);
 	}
 
-	
 	/**
-	 * 241224 한혜원
-	 * 게시글 수정
+	 * 241222 한혜원 
+	 * 게시글 수정용
 	 */
 	@Override
 	@Transactional
 	public int updateEvent(Event e) {
-		return eventDao.updateEvent(sqlSession, e);
-	}
-
-	/**
-	 * 241224 한혜원
-	 * 게시글 첨부파일 수정
-	 */
-	@Override
-	public int updateEventAttachment(List<Integer> fileNos, String status) {
-		return eventDao.updateEventAttachment(sqlSession, fileNos, status);
+		// TODO Auto-generated method stub
+		return 0;
 	}
 
 	/**
@@ -344,18 +335,33 @@ public class EventServiceImpl implements EventService {
 		return 0;
 	}
 
-	
-	/*
 	@Override
 	public void deleteEventAttachment(List<Long> deleteFileIds) {
 		// TODO Auto-generated method stub
 		
-	} */
+	}
 	
 	
 	public int couponInsertEx(Map<String, Object> params) {
 		return eventDao.couponInsertEx(sqlSession, params);
 		
 	}
+	
 
+	
+	
+	
+	
+
+	
+
+	
+
+	
+
+	
+	
+	
+
+	
 }

@@ -362,8 +362,10 @@
 	    					$(".movie-list").empty();
 	    					$(".movie-list").append(result);
 	    					$(".pagingbar").empty();
-	    					/* 검색 기능은 더미 데이터에서 '아' 한 글자로 검색해도 10편 안팎으로 나오므로
-	    						굳이 페이징처리가 필요없다고 판단하여 '페이징바 없애기'만 구현했음
+	    					//refreshPagingBar(??);
+	    					/* 검색 기능에서는 일부러 페이징바를 넣지 않으려고 하는데
+	    					 더미데이터(30편)에서 '아' 한 글자로 검색해도 10편 정도밖에 안 되기 때문임
+	    					 대신 페이징바를 없애는 기능으로 구현하였음
 	    					*/
 	    				},
 	    				error: function() {
@@ -432,6 +434,7 @@
         <br><br>
 
         <!-- Paging Bar -->
+        <!-- 영화 상세 페이지 때문에 임시 화면 남겨둔 건데 해당 화면 완성되면 이 페이징바(임시)도 같이 삭제할 예정 -->
         <div class="pagingbar" align="center">
             <!-- if i > 1 -->
             <c:if test="${ requestScope.pi.currentPage gt 1 }">

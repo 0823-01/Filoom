@@ -4,7 +4,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>관리자용 이벤트 글수정</title>
+<title>관리자용 이벤트 글작성</title>
 <!--link rel="stylesheet" href="../main/admin.css" /> -->
 <style>
 body{
@@ -396,7 +396,7 @@ body{
 
                 <!-- 혜원 - 관리자 이벤트 글작성 -->
                 <div id = "admin_title_content">
-                    <div id="boardTitle">이벤트 글 수정</div>
+                    <div id="boardTitle">이벤트 글 작성</div>
                     <div id="sub">체크(<b style="color : red;">*</b>)된 항목은 필수 입력사항입니다.</div>
                 </div>
             </div>
@@ -410,22 +410,19 @@ body{
                     <input type="button" id ="button_sample" value="샘플">-->
                     
                     
-                    <form id="updateForm" action="update.ev" method="post" enctype="multipart/form-data">
-                    <!-- 어떤 게시글인지 정확하게 파악하기 위해 게시글 번호도 같이 넘기기 -->
-                    <input type="hidden" name="eventNo" value="${requestScope.e.eventNo }" >
-                    
+                    <form id="enrollForm" action="insert.ev" method="post" enctype="multipart/form-data">
                         <!--제목, 작성일, 조회수-->
                         <div class="title_date_count">
                             <div class="title">
-                                <label for="title">제목<b style="color : red;">*</b></label><input type="text" id="title" name="eventTitle" value="${requestScope.e.eventTitle }"></input>
+                                <label for="title">제목<b style="color : red;">*</b></label><input type="text" id="title" name="eventTitle"></input>
                             </div>
 
                             <div class="startDate">
-                                <label for="startDate">이벤트 시작일<b style="color : red;">*</b></label> <input type="date" id="startDate" min="" name="startDate" value="${requestScope.e.startDate }"></input>
+                                <label for="startDate">이벤트 시작일<b style="color : red;">*</b></label> <input type="date" id="startDate" min="" name="startDate"></input>
                             </div>
 
                             <div class="endDate">
-                                <label for="endDate">이벤트 종료일<b style="color : red;">*</b></label><input type="date" id="endDate" min="" name="endDate" value="${requestScope.e.endDate }"></input>
+                                <label for="endDate">이벤트 종료일<b style="color : red;">*</b></label><input type="date" id="endDate" min="" name="endDate"></input>
                             </div>
                         </div>
                         
@@ -455,23 +452,23 @@ body{
                         <!-- 내용 -->
                         <div class="contentArea">
                             <label for="content" class="content">내용<b style="color : red;">*</b></label>
-                            <textarea id="content" name="eventContent">${requestScope.e.eventContent }</textarea>
+                            <textarea id="content" name="eventContent"></textarea>
                         </div>
 
                         <!-- 사진첨부 -->
                         <div class="fileArea">
                             <label for="fileInput" id="file">사진<br>첨부<b style="color : red;">*</b></label>
                             
-                            <img id="contentImg1" src="#" alt="Preview Image 1" data-target="file1"/>
-							<img id="contentImg2" src="#" alt="Preview Image 2" data-target="file2"/>
-							<img id="contentImg3" src="#" alt="Preview Image 3" data-target="file3"/>
-							<img id="contentImg4" src="#" alt="Preview Image 4" data-target="file4"/>
+                            <img id="contentImg1" src="#" alt="Preview Image 1" data-target="file1" />
+							<img id="contentImg2" src="#" alt="Preview Image 2" data-target="file2" />
+							<img id="contentImg3" src="#" alt="Preview Image 3" data-target="file3" />
+							<img id="contentImg4" src="#" alt="Preview Image 4" data-target="file4" />
                             
                             <!-- 파일 입력받는 요소  -->
                             <div id="file-area" style="display : none;">
 	                            <!-- 썸네일은 필수입력사항으로 지정 -->
-	                            <input type="file" id="file1" name="upfiles" data-index="1" onchange="loadImg(this);" value="${e.contentImg1}multiple>
-								<input type="file" id="file2" name="upfiles" data-index="2" onchange="loadImg(this);" value="${file.contentImg2 }" multiple>
+	                            <input type="file" id="file1" name="upfiles" data-index="1" onchange="loadImg(this);" multiple required>
+								<input type="file" id="file2" name="upfiles" data-index="2" onchange="loadImg(this);" multiple>
 								<input type="file" id="file3" name="upfiles" data-index="3" onchange="loadImg(this);" multiple>
 								<input type="file" id="file4" name="upfiles" data-index="4" onchange="loadImg(this);" multiple>
                             </div>
@@ -501,24 +498,24 @@ body{
                             <div class="type">
                                 <div style="margin-top: 2px;">이벤트 참여 방법<b style="color : red;">*</b></div>
                                 <div id="type-method">
-                                    댓글<input type="radio" name="eventType" value="1" ${e.eventType == 1 ? 'checked' : ''} required>
-                                    응모버튼<input type="radio" name="eventType" value="2" ${e.eventType == 2 ? 'checked' : ''} required>
-                                    오프라인<input type="radio" name="eventType" value="3" ${e.eventType == 3 ? 'checked' : ''} required>
+                                    댓글<input type="radio" name="eventType" value="1" required>
+                                    응모버튼<input type="radio" name="eventType" value="2" required>
+                                    오프라인<input type="radio" name="eventType" value="3" required>
                                 </div>
                             </div>
 
                             <div class="status">
                                 <div style="margin-top: 2px;">이벤트 종료 여부<b style="color : red;">*</b></div>
                                 <div id="eventStatus">
-                                    진행중인 이벤트<input type="radio" name="eventStatus" value="N" ${e.eventStatus != null && e.eventStatus.equals("N") ? 'checked' : ''} required> <!-- N 으로 변경 -->
-                                    종료된 이벤트<input type="radio" name="eventStatus" value="Y" ${e.eventStatus != null && e.eventStatus.equals("Y") ? 'checked' : ''} required>  <!-- Y 으로 변경 -->
+                                    진행중인 이벤트<input type="radio" name="eventStatus" value="N" required> <!-- N 으로 변경 -->
+                                    종료된 이벤트<input type="radio" name="eventStatus" value="Y" disabled>  <!-- Y 으로 변경 -->
                                 </div>
                             </div>
                         
-                            <!--수정, 취소 버튼-->
+                            <!--등록, 취소 버튼-->
                             <div class="btn">
-                                <button id="cancle" style="width : 100px; margin-right : 5px;" onclick="javascript:history.go(-1);">취소</button>
-                                <button type="submit" id="submit" style="width : 130px;">수정하기</button>
+                                <button id="cancle" style="width : 100px; margin-right : 5px;" onclick="history.back()">취소</button>
+                                <button type="submit" id="submit" style="width : 130px;">게시글등록</button>
                             </div>
                         </div>
 

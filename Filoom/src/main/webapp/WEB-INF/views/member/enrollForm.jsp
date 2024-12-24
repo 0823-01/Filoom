@@ -467,39 +467,30 @@
     <jsp:include page="../common/footer.jsp" />
     
     <script>
-	 	// 이메일 인증번호 전송 요청 (중복 체크 포함)
+	    // 이메일 인증번호 전송 요청
 	    function sendCert() {
 	        let email = $("#email").val();
-	
-	        // 이메일 중복 체크 요청
 	        $.ajax({
-	            url: "checkEmailAndCert.do", // 중복 체크 및 인증번호 발급 통합 엔드포인트
+	            url: "cert.do",
 	            type: "post",
 	            data: {
 	                email: email,
 	            },
-	            success: function (response) {
-	                if (response.status === "duplicate") {
-	                    alert(response.message); // "중복된 이메일로 가입이 불가능합니다."
-	                } else if (response.status === "success") {
-	                    alert(response.message); // "인증번호가 이메일로 전송되었습니다."
+	            success: function (result) {
+	                alert(result);
+	                // 인증번호 입력 창 보이기
+	                $("#cert-section").show();
 	
-	                    // 인증번호 입력 창 보이기
-	                    $("#cert-section").show();
+	                // 인증번호 입력 창 및 확인 버튼 활성화
+	                $("#checkNo").attr("disabled", false).focus();
+	                $("#validate").attr("disabled", false);
 	
-	                    // 인증번호 입력 창 및 확인 버튼 활성화
-	                    $("#checkNo").attr("disabled", false).focus();
-	                    $("#validate").attr("disabled", false);
-	
-	                    // 이메일 입력창 및 인증번호 받기 버튼 비활성화
-	                    $("#email").attr("readonly", true);
-	                    $("#cert").attr("disabled", true);
-	                } else {
-	                    alert("오류가 발생했습니다. 다시 시도해주세요.");
-	                }
+	                // 이메일 입력창 및 인증번호 받기 버튼 비활성화
+	                $("#email").attr("readonly", true);
+	                $("#cert").attr("disabled", true);
 	            },
 	            error: function () {
-	                console.log("이메일 중복 체크 및 인증번호 발급 요청 실패");
+	                console.log("인증번호 발급용 ajax 통신 실패");
 	            },
 	        });
 	    }

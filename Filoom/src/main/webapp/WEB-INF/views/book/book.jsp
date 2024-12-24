@@ -14,22 +14,11 @@
     <link rel = "stylesheet" href="resources/css/caa.css"/>
     <style>
 
-        body{
-        
-	       	-webkit-user-select:none;
-		  	-moz-user-select:none;
-		  	-ms-user-select:none;
-		  	user-select:none
-        
-        }
-        
         #detail_1, #detail_2, #detail_3,
         #seat_1, #date, #seat_2,
         #buttonArea_1, #buttonArea_2, #buttonArea_3 {
             display: none;
         }
-        
-        
 
         /* 활성화된 요소만 보이도록 설정 */
         .active {
@@ -65,8 +54,6 @@
         }
 
         .step a {
-			font-weight:bolder;
-			font-size:40px;
             text-decoration: none; /* 밑줄 제거 */
             color: inherit; /* 부모 색상 따라감 */
             display: block; /* 중앙 정렬을 위해 block으로 설정 */
@@ -120,7 +107,6 @@
         
         }
         
-       
         
         
     </style>
@@ -508,7 +494,6 @@
 	            }
 
 	        
-	            
 	         	$(document).on("click", ".movie_selection", function () {
 		             selectedMovieNo = $(this).data("movie-no"); 
 		             console.log("movieNo:", selectedMovieNo);
@@ -907,12 +892,6 @@
 	    		    
 	    		    let selectedValue = $("#time input[name='playingNo']:checked").val();
 	    		    
-	    		    const selectedSeats = inputField.value.split(", ").filter(id => id.trim() !== "");
-	    		    if (!button.classList.contains("selected") && selectedSeats.length >= 4) {
-	    		        alert("이 이상 좌석을 예매할 수 없습니다");
-	    		        return;
-	    		    }
-	    		    
 	    		    if (button.classList.contains("selected")) {
 	    		        
 	    		        button.classList.remove("selected");
@@ -949,24 +928,15 @@
 	    		            ? inputField.value + ", " + seatId
 	    		            : seatId; 
 	    	
-	    		        let isProcessing = false;
-	    		        
 	    		        $.ajax({
 	    		            url: "book.err", // 중복 확인 URL
 	    		            type: "GET",
 	    		            data: { seatId: seatId, playingNo: selectedValue },
-	    		            beforeSend: function () {
-	    		                if (isProcessing) {
-	    		                    console.log("현재 처리 중입니다. 요청을 대기 중...");
-	    		                    return false; // 요청 중이라면 새 요청을 막음
-	    		                }
-	    		                isProcessing = true; // 요청 시작
-	    		            },
 	    		            success: function (response) {
 	    		            	
 	    		            	console.log("성공시 response" + response);
 	    		            	
-	    		                if (response.trim() === "SUCCESS") {
+	    		                if (response === "SUCCESS") {
 	    		                   
 	    		                	// 중복이 없으면
 	    		                    $.ajax({
@@ -976,8 +946,6 @@
 	    		                        success: function (response) {
 	    		                            
 	    		                            console.log("좌석 예약 성공:", response);
-	    		                            alert("좌석 예매 성공!");
-	    		                            
 	    		                        },
 	    		                        error: function (error) {
 	    		                            console.error("좌석 예약 오류:", error);
@@ -996,9 +964,6 @@
 	    		            },
 	    		            error: function (error) {
 	    		                console.error("중복 확인 오류:", error);
-	    		            },
-	    		            complete: function () {
-	    		                isProcessing = false; // 요청 완료 후 처리 상태 초기화
 	    		            }
 	    		        });
 		    		        
@@ -1055,7 +1020,7 @@
           	                success: function (response) {
           	                   
           	                	const movieTitle = response[0] && response[0].movieTitle ? response[0].movieTitle : "제목 없음";
-          	                    inputField2.value = "영화 : " + movieTitle; // input value 설정
+          	                    inputField2.value = movieTitle; // input value 설정
           	                    inputField2.setAttribute("value", movieTitle);
 
           	                    //formatDateTime(new Date(item.playTime))
@@ -1127,7 +1092,7 @@
 	                            
 	                            // movieDate 설정 (20xx-xx-xx HH:mm~HH:mm 형식)
 	                            const movieDate = playTime.substring(0, 6) + " " + startTime + "~" + endTime;
-	                            inputField3.value = "시간 : " + movieDate;
+	                            inputField3.value = movieDate; 
 	                            
 	                            console.log("무비데이터" + movieDate);
 	                            
@@ -1200,7 +1165,7 @@
                 
                 <div id = "detail_content_3">
                 
-                    <input type ="text" id ="movieTitle" readonly> <br>
+                    <input type ="text" id ="movieTitle" readonly><br>
                     <input type ="text" id ="movieDate" readonly><br>
                     <input type ="text" id ="movieSeat" readonly >
 

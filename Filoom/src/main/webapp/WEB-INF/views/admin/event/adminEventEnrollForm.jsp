@@ -365,6 +365,9 @@ body{
     button:active {
         background-color: #AB886D; !important;
     }
+    
+
+    </style>
 
 </style>
 
@@ -391,7 +394,7 @@ body{
         <div id = "admin_right">
             <div id ="admin_title">
 
-                <!-- 혜원 - 관리자 이벤트 상세조회 -->
+                <!-- 혜원 - 관리자 이벤트 글작성 -->
                 <div id = "admin_title_content">
                     <div id="boardTitle">이벤트 글 작성</div>
                     <div id="sub">체크(<b style="color : red;">*</b>)된 항목은 필수 입력사항입니다.</div>
@@ -512,7 +515,7 @@ body{
                             <!--등록, 취소 버튼-->
                             <div class="btn">
                                 <button id="cancle" style="width : 100px; margin-right : 5px;" onclick="history.back()">취소</button>
-                                <button type="submit" id="submit" style="width : 130px;">등록</button>
+                                <button type="submit" id="submit" style="width : 130px;">게시글등록</button>
                             </div>
                         </div>
 
@@ -524,6 +527,8 @@ body{
             </div>
         </div>
     </div>
+    
+    
     <script>
     document.addEventListener("DOMContentLoaded", function () {
         const navItems = document.querySelectorAll("#nav > ul > li");
@@ -598,6 +603,7 @@ body{
                 });
             });
         });
+        
     </script>
 </body>
 </html>

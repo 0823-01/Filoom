@@ -321,7 +321,7 @@
 
                 $("#posterDisplay").attr("src",e.target.result);
                 var photo = document.getElementById("posterDisplay").innerHTML;
-                // console.log(e.target.result);
+                //console.log(e.target.result);
             };
         }
         // if not

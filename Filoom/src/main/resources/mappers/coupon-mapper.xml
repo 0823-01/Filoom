@@ -46,19 +46,17 @@
 	</select>
 		
 	<!-- 쿠폰에 bookNo 추가하기(예비) -->
-	<update id="setCouponBookNo" parameterType="map">
+	<update id="updateCouponUserDone" parameterType="map">
 		UPDATE COUPON_USER
-		   SET BOOK_NO = #{bookNo} 
-		<where>
-			USER_NO = #{userNo}
-			<foreach item="item" collection="couponNos" open="AND COUPON_NO IN (" separator="," close=")" >
-				#{item}
-			</foreach>
-		</where>
-	
-	
+		   SET BOOK_NO = #{bookNo},
+		       COUPON_USE='O'
+			<where>
+				USER_NO = #{userNo}
+				<foreach item="item" collection="couponNos" open="AND COUPON_NO IN (" separator="," close=")" >
+					#{item}
+				</foreach>
+			</where>
 	</update>
-
 	
 	
 	<select id="selectListCouponUserList" parameterType="int" resultMap="couponUserResultSet">
@@ -86,6 +84,5 @@
 			WHERE #{eventNo}
 		)
 	</insert>
-
 	
 </mapper>

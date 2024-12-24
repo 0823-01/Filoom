@@ -25,7 +25,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.kh.filoom.member.model.service.MemberService;
-import com.kh.filoom.member.model.vo.Favorite;
 import com.kh.filoom.member.model.vo.History;
 import com.kh.filoom.member.model.vo.Member;
 import com.kh.filoom.member.model.vo.Reserve;
@@ -127,7 +126,7 @@ public class MemberController {
 		
 		session.removeAttribute("loginUser");
 		
-//		session.setAttribute("alertMsg", "로그아웃 성공");
+		session.setAttribute("alertMsg", "로그아웃 성공");
 		
 		return "redirect:/";
 	}
@@ -226,39 +225,6 @@ public class MemberController {
         
         return response;
 	}
-	
-	/**
-	 * 2024.12.24 김다훈
-	 * 이메일 중복체크
-	 * @param email
-	 * @return
-	 */
-	@ResponseBody
-	@PostMapping(value = "checkEmailAndCert.do", produces = "application/json; charset=UTF-8")
-	public Map<String, String> checkEmailAndCert(@RequestParam("email") String email) {
-	    Map<String, String> response = new HashMap<>();
-
-	    // 이메일 중복 체크
-	    boolean isDuplicate = memberService.checkEmail(email);
-
-	    if (isDuplicate) {
-	        response.put("status", "duplicate");
-	        response.put("message", "중복된 이메일로 가입이 불가능합니다.");
-	    } else {
-	        // 중복되지 않은 경우 기존 cert.do 호출
-	        String result = sendCertNo(email); // 기존 cert.do 메소드 호출
-	        if ("인증번호 발급 완료".equals(result)) {
-	            response.put("status", "success");
-	            response.put("message", "인증번호가 이메일로 전송되었습니다.");
-	        } else {
-	            response.put("status", "error");
-	            response.put("message", "인증번호 전송에 실패했습니다.");
-	        }
-	    }
-
-	    return response;
-	}
-
 	
 	/**
 	 * 2024.12.12 김다훈
@@ -402,27 +368,27 @@ public class MemberController {
 //		return "member/reserve";
 //	}
 	
-	/**
-	 * 2024.12.13 김다훈
-	 * 마이페이지(내가 본 영화 조회) 접속 요청
-	 * @return
-	 */
-	@GetMapping("history.me")
-	public String history() {
-		
-		return "member/history";
-	}
-	
 //	/**
 //	 * 2024.12.13 김다훈
-//	 * 마이페이지(보고싶은 영화 조회) 접속 요청
+//	 * 마이페이지(내가 본 영화 조회) 접속 요청
 //	 * @return
 //	 */
-//	@GetMapping("favorite.me")
-//	public String favorite() {
+//	@GetMapping("history.me")
+//	public String history() {
 //		
-//		return "member/favorite";
+//		return "member/history";
 //	}
+	
+	/**
+	 * 2024.12.13 김다훈
+	 * 마이페이지(보고싶은 영화 조회) 접속 요청
+	 * @return
+	 */
+	@GetMapping("favorite.me")
+	public String favorite() {
+		
+		return "member/favorite";
+	}
 	
 	/**
 	 * 2024.12.13 김다훈
@@ -678,7 +644,6 @@ public class MemberController {
 	    return "탈퇴 실패";
 	}
 
-
 	/**
 	 * 2024.12.17~19 김다훈
 	 * 예매 내역, 예매 취소 내역 조회 컨트롤러
@@ -694,25 +659,22 @@ public class MemberController {
         
         // 예매 내역 조회
         List<Reserve> reserveList = memberService.reserveList(loginUser.getUserNo());
-        
-        List<Reserve> couponList = memberService.couponList(loginUser.getUserNo());
-        
+        // 예매 시 사용한 쿠폰 목록 조회
+        List<Reserve> useCouponList = memberService.useCouponList(loginUser.getUserNo());
+        // 예매 취소 내역 조회
         List<Reserve> cancelList = memberService.cancelList(loginUser.getUserNo());
         
 //        System.out.println("reserveList = " + reserveList);
 //        System.out.println("useCouponList = " + useCouponList);
 //        System.out.println("cancelList = " + cancelList);
 
-
         // 모델에 예매 내역 데이터 담기
         model.addAttribute("reserveList", reserveList);
-        model.addAttribute("couponList", couponList);
-
+        model.addAttribute("useCouponList", useCouponList);
         model.addAttribute("cancelList", cancelList);
         
         return "member/reserve"; // 예매 내역 화면으로 이동
     }
-
 	
 	/**
 	 * 2024.12.20 김다훈
@@ -780,23 +742,13 @@ public class MemberController {
 	 * @return
 	 */
 	@PostMapping("findIdResult.me")
-	public String findIdResult(@RequestParam("userId") String userId, @RequestParam("userName") String userName, Model model) {
+	public String findIdResult(@RequestParam("userId") String userId, Model model) {
 		
 	    model.addAttribute("userId", userId); // userId를 모델에 추가
-	    model.addAttribute("userName", userName); // userName을 모델에 추가
 	    
 	    return "member/findIdResult";
 	}
 	
-	/**
-	 * 2024.12.23 김다훈
-	 * 비밀번호 찾기 컨트롤러
-	 * @param userName
-	 * @param userId
-	 * @param birth
-	 * @param email
-	 * @return
-	 */
 	@ResponseBody
 	@PostMapping(value = "findPwd.me", produces = "text/html; charset=UTF-8")
 	public String findPwd(@RequestParam("userName") String userName,
@@ -822,13 +774,6 @@ public class MemberController {
 	    }
 	}
 
-	/**
-	 * 2024.12.23 김다훈
-	 * 비밀번호 변경 페이지 이동 컨트롤러
-	 * @param userId
-	 * @param model
-	 * @return
-	 */
 	@PostMapping("updatePwdForm.me")
 	public String changePwdForm(@RequestParam("userId") String userId, Model model) {
 		
@@ -837,12 +782,6 @@ public class MemberController {
 	    return "member/updatePwdForm"; // JSP 경로
 	}
 	
-	/** 2024.12.23 김다훈
-	 * 비밀번호 변경 요청 컨트롤러
-	 * @param userId
-	 * @param newPwd
-	 * @return
-	 */
 	@ResponseBody
 	@PostMapping(value = "updatePwd.me", produces = "text/plain; charset=UTF-8")
 	public String updatePwd(@RequestParam("userId") String userId,
@@ -865,102 +804,13 @@ public class MemberController {
 	    } else {
 	        return "FAIL";
 	    }
+
 	}
 	
-	/**
-     * 2024.12.23 김다훈
-     * 좋아요(보고싶은 영화) 목록 조회 메소드
-     * @param session
-     * @param model
-     * @return
-     */
-    @GetMapping("favorite.me")
-    public String favoriteList(HttpSession session, Model model) {
-        
-        // 로그인된 사용자 정보를 가져오기
-        Member loginUser = (Member) session.getAttribute("loginUser");
-
-        // 좋아요 영화 목록 조회
-        List<Favorite> favoriteList = memberService.favoriteList(loginUser.getUserNo());
-
-        // 모델에 데이터 추가
-        model.addAttribute("favoriteList", favoriteList);
-
-        return "member/favorite"; // 좋아요 목록 JSP로 이동
-    }
 	
-    /**
-     * 2024.12.23 김다훈
-     * 좋아요(보고싶은 영화) 목록 삭제 메소드
-     * @param movieNo
-     * @param session
-     * @return
-     */
-    @ResponseBody
-    @PostMapping(value = "deleteFavorite.me", produces = "text/plain; charset=UTF-8")
-    public String deleteFavorite(@RequestParam("userNo") int userNo,
-                                 @RequestParam("movieNo") int movieNo) {
-
-        // 파라미터를 Map으로 묶기
-        Map<String, Object> paramMap = new HashMap<>();
-        paramMap.put("userNo", userNo);
-        paramMap.put("movieNo", movieNo);
-
-        // 서비스 호출
-        int result = memberService.deleteFavorite(paramMap);
-
-        if (result > 0) {
-            return "보고싶은 영화에서 삭제되었습니다.";
-        } else {
-            return "삭제 실패";
-        }
-    }
-
-    /**
-     * 2024.12.24 김다훈
-     * 내가 본 영화 기록 삭제 메소드
-     * @param movieNo
-     * @param session
-     * @return
-     */
-    @ResponseBody
-    @PostMapping(value = "deleteHistory.me", produces = "text/plain; charset=UTF-8")
-    public String deleteHistory(@RequestParam("userNo") int userNo,
-                                 @RequestParam("bookNo") int bookNo) {
-
-        // 파라미터를 Map으로 묶기
-        Map<String, Object> paramMap = new HashMap<>();
-        paramMap.put("userNo", userNo);
-        paramMap.put("bookNo", bookNo);
-
-        // 서비스 호출
-        int resultSeat = memberService.deleteHistorySeat(paramMap);
-        int resultHistory = memberService.deleteHistory(paramMap);
-
-        if (resultHistory > 0 && resultSeat > 0) {
-            return "내가 본 영화 기록에서 삭제되었습니다.";
-        } else {
-            return "삭제 실패";
-        }
-    }
-    
-    @ResponseBody
-    @GetMapping(value = "favoriteSort.me", produces = "text/html; charset=UTF-8")
-    public String sortFavoriteMovies(@RequestParam("sort") String sort, HttpSession session, Model model) {
-        
-        // 로그인된 사용자 정보 가져오기
-        Member loginUser = (Member) session.getAttribute("loginUser");
-        int userNo = loginUser.getUserNo();
-        
-        // 서비스 호출
-        List<Favorite> favoriteList = memberService.sortFavoriteMovies(userNo, sort);
-
-        // 데이터를 JSP로 렌더링
-        model.addAttribute("favoriteList", favoriteList);
-
-        return "member/favorite";
-    }
-
+	
+	
+	
 
 
 }

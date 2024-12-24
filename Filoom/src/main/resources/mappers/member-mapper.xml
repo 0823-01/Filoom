@@ -16,6 +16,7 @@
 	</resultMap>
 	
 	<resultMap id="reserveResultSet" type="reserve">
+		<result column="MOVIE_NO" property="movieNo" />
 		<result column="MOVIE_TITLE" property="movieTitle" />
 	    <result column="RUNTIME" property="runtime" />
 	    <result column="BOOK_NO" property="bookNo" />
@@ -40,25 +41,17 @@
 	    <result column="SEATNO" property="seatNo" />
 	</resultMap>
 	
-	<resultMap id="couponResultSet" type="reserve">
+	<resultMap id="useCouponResultSet" type="reserve">
 	    <result column="COUPON_NAME" property="couponName" />
+	    <result column="BOOK_NO" property="bookNo" />
 	</resultMap>
 	
 	<resultMap id="historyResultSet" type="history">
-		<result column="BOOK_NO" property="bookNo" />
 		<result column="MOVIE_NO" property="movieNo" />
 	    <result column="MOVIE_TITLE" property="movieTitle" />
 	    <result column="PLAYTIME" property="playtime" />
 	    <result column="SCREEN_NAME" property="screenName" />
 	    <result column="TOTALTICKETS" property="totalTickets" />
-	    <result column="FILE_CODENAME" property="fileCodename" />
-	    <result column="IMAGE_PATH" property="imagePath" />
-	</resultMap>
-	
-	<resultMap id="favoriteResultSet" type="favorite">
-		<result column="MOVIE_NO" property="movieNo" />
-	    <result column="MOVIE_TITLE" property="movieTitle" />
-	    <result column="OPEN_DATE" property="openDate" />
 	    <result column="FILE_CODENAME" property="fileCodename" />
 	    <result column="IMAGE_PATH" property="imagePath" />
 	</resultMap>
@@ -96,14 +89,6 @@
 	      FROM MEMBER
 	     WHERE USER_ID = #{userId}
 	</select>
-	
-	<select id="checkEmail" parameterType="string" resultType="int">
-	    SELECT COUNT(*)
-	      FROM MEMBER
-	     WHERE EMAIL = #{email}
-	       AND STATUS = 'Y'
-	</select>
-	
 	
 	<update id="changePwd" parameterType="member">
 	    UPDATE MEMBER
@@ -148,7 +133,8 @@
 	</update>
 	
 	<select id="reserveList" parameterType="int" resultMap="reserveResultSet">
-		SELECT m.MOVIE_TITLE AS MOVIE_TITLE,
+		SELECT m.MOVIE_NO AS MOVIE_NO,
+		       m.MOVIE_TITLE AS MOVIE_TITLE,
 		       m.RUNTIME AS RUNTIME,
 		       b.BOOK_NO AS BOOK_NO,
 		       b.BOOK_COST AS BOOK_COST,
@@ -171,9 +157,14 @@
 		 WHERE b.STATUS = 'Y'
 		   AND b.USER_NO = #{userNo}
 		   AND po.FILE_LEVEL = '1'
-		 GROUP BY m.MOVIE_TITLE, m.RUNTIME, b.BOOK_NO, b.BOOK_COST, b.BOOK_TOTAL_COST, b.COST_PROCESS, s.SCREEN_NAME, 
-		          p.PLAYTIME, (p.PLAYTIME + (m.RUNTIME / 1440)), po.FILE_CODENAME, po.IMAGE_PATH
-		 ORDER BY p.PLAYTIME DESC
+		   AND p.PLAYTIME >= ADD_MONTHS(SYSDATE, -1)
+		 GROUP BY m.MOVIE_NO, m.MOVIE_TITLE, m.RUNTIME, b.BOOK_NO, b.BOOK_COST, b.BOOK_TOTAL_COST, b.COST_PROCESS,
+		          s.SCREEN_NAME, p.PLAYTIME, (p.PLAYTIME + (m.RUNTIME / 1440)), po.FILE_CODENAME, po.IMAGE_PATH
+		 ORDER BY 
+		  CASE WHEN p.PLAYTIME + (m.RUNTIME / 1440) > SYSDATE 
+		       THEN 0
+		       ELSE 1
+		       END, p.PLAYTIME ASC
 	</select>
 	
 	<select id="cancelList" parameterType="int" resultMap="cancelResultSet">
@@ -191,6 +182,7 @@
 		  JOIN SCREEN_SEAT ss ON bs.SSEAT_NO = ss.SSEAT_NO
 		 WHERE b.STATUS = 'N'
 		   AND b.USER_NO = #{userNo}
+		   AND p.PLAYTIME >= SYSDATE - 7
 		 GROUP BY m.MOVIE_TITLE, s.SCREEN_NAME, p.PLAYTIME, b.MODIFY_DATE, b.BOOK_COST
 		 ORDER BY p.PLAYTIME ASC
 	</select>
@@ -207,8 +199,7 @@
 	</select>
 	
 	<select id="historyList" parameterType="int" resultMap="historyResultSet">
-		SELECT b.BOOK_NO AS BOOK_NO,
-			   m.MOVIE_NO AS MOVIE_NO,
+		SELECT m.MOVIE_NO AS MOVIE_NO,
 		       m.MOVIE_TITLE AS MOVIE_TITLE,
 		       TO_CHAR(p.PLAYTIME, 'YYYY.MM.DD (DY) HH24:MI') || ' ~ ' 
 		       || TO_CHAR(p.PLAYTIME + (m.RUNTIME / 1440), 'HH24:MI') AS PLAYTIME,
@@ -227,15 +218,13 @@
 		   AND b.USER_NO = #{userNo}
 		   AND (p.PLAYTIME + (m.RUNTIME / 1440)) &lt; SYSDATE
 		   AND po.FILE_LEVEL = '1'
-		 GROUP BY b.BOOK_NO, m.MOVIE_NO, m.MOVIE_TITLE, p.PLAYTIME, s.SCREEN_NAME, 
+		 GROUP BY m.MOVIE_NO, m.MOVIE_TITLE, p.PLAYTIME, s.SCREEN_NAME, 
 		          (p.PLAYTIME + (m.RUNTIME / 1440)), po.FILE_CODENAME, po.IMAGE_PATH
 		 ORDER BY p.PLAYTIME DESC
 	</select>
 	
-
 	<select id="historyListByYear" parameterType="map" resultMap="historyResultSet">
-	    SELECT b.BOOK_NO AS BOOK_NO,
-	    	   m.MOVIE_NO AS MOVIE_NO,
+	    SELECT m.MOVIE_NO AS MOVIE_NO,
 	           m.MOVIE_TITLE AS MOVIE_TITLE,
 	           TO_CHAR(p.PLAYTIME, 'YYYY.MM.DD (DY) HH24:MI') || ' ~ ' 
 	           || TO_CHAR(p.PLAYTIME + (m.RUNTIME / 1440), 'HH24:MI') AS PLAYTIME,
@@ -255,7 +244,7 @@
 	       AND (p.PLAYTIME + (m.RUNTIME / 1440)) &lt; SYSDATE
 	       AND po.FILE_LEVEL = '1'
 	       AND TO_CHAR(p.PLAYTIME, 'YYYY') = #{year}
-	     GROUP BY b.BOOK_NO, m.MOVIE_NO, m.MOVIE_TITLE, p.PLAYTIME, s.SCREEN_NAME, 
+	     GROUP BY m.MOVIE_NO, m.MOVIE_TITLE, p.PLAYTIME, s.SCREEN_NAME, 
 	              (p.PLAYTIME + (m.RUNTIME / 1440)), po.FILE_CODENAME, po.IMAGE_PATH
 	     ORDER BY p.PLAYTIME DESC
 	</select>
@@ -284,63 +273,6 @@
 	       SET USER_PWD = #{encryptedPwd}
 	     WHERE USER_ID = #{userId}
 	</update>
-	
-	<select id="favoriteList" parameterType="int" resultMap="favoriteResultSet">
-		SELECT m.MOVIE_NO AS MOVIE_NO,
-		       m.MOVIE_TITLE AS MOVIE_TITLE,
-		       TO_CHAR(m.OPEN_DATE, 'YYYY.MM.DD') AS OPEN_DATE,
-		       m.PREMIERE AS PREMIERE,
-		       p.FILE_CODENAME AS FILE_CODENAME,
-		       p.IMAGE_PATH AS IMAGE_PATH
-		  FROM FAVORITE f
-		  JOIN MOVIE m ON f.MOVIE_NO = m.MOVIE_NO
-		  LEFT JOIN POSTER p ON m.MOVIE_NO = p.MOVIE_NO
-		 WHERE f.USER_NO = #{userNo}
-		   AND p.FILE_LEVEL = '1'
-		 ORDER BY m.OPEN_DATE ASC
-	</select>
-	
-	<delete id="deleteFavorite" parameterType="map">
-	    DELETE FROM FAVORITE
-	    WHERE USER_NO = #{userNo}
-	      AND MOVIE_NO = #{movieNo}
-	</delete>
-	
-	<delete id="deleteHistorySeat">
-	    DELETE FROM BOOKING_SEAT
-	     WHERE BOOK_NO = #{bookNo}
-	</delete>
-	
-	<delete id="deleteHistory">
-	    DELETE FROM BOOKING
-	     WHERE USER_NO = #{userNo}
-	       AND BOOK_NO = #{bookNo}
-	</delete>
-	
-	<select id="sortFavoriteMovies" parameterType="map" resultMap="favoriteResultSet">
-	    SELECT m.MOVIE_NO AS movieNo,
-	           m.MOVIE_TITLE AS movieTitle,
-	           TO_CHAR(m.OPEN_DATE, 'YYYY.MM.DD') AS openDate,
-	           p.FILE_CODENAME AS fileCodename,
-	           p.IMAGE_PATH AS imagePath
-	      FROM FAVORITE f
-	      JOIN MOVIE m ON f.MOVIE_NO = m.MOVIE_NO
-	      LEFT JOIN POSTER p ON m.MOVIE_NO = p.MOVIE_NO
-	     WHERE f.USER_NO = #{userNo}
-	       AND p.FILE_LEVEL = '1'
-	     ORDER BY m.OPEN_DATE
-	     <choose>
-	         <when test="sort == 'asc'">
-	             ASC
-	         </when>
-	         <when test="sort == 'desc'">
-	             DESC
-	         </when>
-	     </choose>
-	</select>
-	
-
-	
 	
 	
 	

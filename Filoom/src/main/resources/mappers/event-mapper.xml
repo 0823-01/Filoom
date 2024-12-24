@@ -119,27 +119,25 @@
 <!-- 241213 한혜원 이벤트 게시글 상세조회 -->
 <select id="selectEvent" parameterType="_int" resultMap="eventResultSet">
 	SELECT EVENT_NO
-	     , EVENT_TITLE
-	     , CHANGE_NAME AS "CONTENTIMG1"
-	     , TO_CHAR(START_DATE, 'YYYY-MM-DD') "START_DATE"
-	     , TO_CHAR(END_DATE, 'YYYY-MM-DD') "END_DATE"
-	     , EVENT_CONTENT
-	  FROM EVENT E
-	  JOIN EVENT_ATTACHMENT ON (EVENT_NO = REF_ENO)
-	 WHERE EVENT_NO = #{eventNo}
-	   AND E.STATUS = 'Y'
-	   AND FILE_LEVEL = 1
+     , EVENT_TITLE
+     , TO_CHAR(START_DATE, 'YYYY-MM-DD') "START_DATE"
+     , TO_CHAR(END_DATE, 'YYYY-MM-DD') "END_DATE"
+     , EVENT_CONTENT
+     , EVENT_TYPE
+  FROM EVENT
+ WHERE EVENT_NO = #{eventNo}
+   AND STATUS = 'Y'
 </select>
 
 <!-- 241213 한혜원 이벤트 게시글 첨부파일 상세조회 -->
 <select id="selectEventAttachment" resultMap="eventAttachmentResultSet">
 	SELECT EVENT_FILE_NO
-	     , ORIGIN_NAME
-	     , CHANGE_NAME
-	     , FILE_PATH
-	  FROM EVENT_ATTACHMENT
-	 WHERE REF_ENO = #{eventNo}
-	   AND FILE_LEVEL = 2
+     , ORIGIN_NAME
+     , CHANGE_NAME
+     , FILE_PATH
+  FROM EVENT_ATTACHMENT
+ WHERE REF_ENO = #{eventNo}
+   AND FILE_LEVEL = 2
 </select>
 
 <!-- 241218 한혜원 이벤트 게시판 댓글 총 갯수 -->
@@ -275,26 +273,9 @@
 	   AND FILE_LEVEL = 2
 </select>
 
-<!-- 241224 한혜원, 이벤트 게시글 수정 -->
-<update id="updateEvent" parameterType="event">
-	UPDATE EVENT
-	   SET EVENT_TITLE = #{eventTitle}
-	     , START_DATE = #{startDate}
-	     , END_DATE = #{endDate}
-	     , EVENT_CONTENT = #{eventContent}
-	     , EVENT_TYPE = #{eventType}
-	     , EVENT_STATUS = #{eventStatus}
-	 WHERE EVENT_NO = #{eventNo}
-	   AND STATUS = 'Y' 
-</update>
+<!-- 241222 한혜원 -->
+<update id="deleteEvent" >
 
-<!-- 241224 한혜원, 이벤트 게시글 첨부파일 수정 -->
-<update id="updateEventAttachment" parameterType="eventAttachment">
-	UPDATE EVENT
-	   SET ORIGIN_NAME = #{originName}
-	     , CHANGE_NAME = #{changeName}
-	     , UPLOAD_DATE = SYSDATE
-	 WEHRE EVENT_FILE_NO = #{eventFileNo}
 </update>
 
 <!-- 응모확인 -->

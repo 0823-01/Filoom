@@ -295,34 +295,6 @@ public class EventDao {
 	}
 	
 	/**
-	 * 241224 한혜원
-	 * 관리자 게시글 수정
-	 * @param sqlSession
-	 * @param e
-	 * @return
-	 */
-	public int updateEvent(SqlSessionTemplate sqlSession, Event e) {
-		return sqlSession.update("eventMapper.updateEvent", e);
-	}
-
-	/**
-	 * 241224 한혜원
-	 * 관리자 게시글 첨부파일 수정
-	 * @param sqlSession
-	 * @param fileNos
-	 * @param status
-	 * @return
-	 */
-	public int updateEventAttachment(SqlSessionTemplate sqlSession, List<Integer> fileNos, String status) {
-		
-		Map<String, Object> parameters = new HashMap<>();
-		parameters.put("fileNos", fileNos);
-		parameters.put("status", status);
-		
-		return sqlSession.update("eventMapper.updateEventAttachment", parameters);
-	}
-	
-	/**
 	 * 241222 한혜원
 	 * 게시글 삭제
 	 * @param sqlSession
@@ -433,7 +405,6 @@ public class EventDao {
 	public int couponInsertEx(SqlSessionTemplate sqlSession, Map<String, Object> params) {
 		return sqlSession.insert("couponMapper.couponInsertEx", params);
 	}
-
 
 
 

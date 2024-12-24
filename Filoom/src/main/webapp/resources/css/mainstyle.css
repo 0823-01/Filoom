@@ -280,7 +280,7 @@ body {
     width: 170px;
     height: 240px;
     background-color: #3e769b;
-    transition-duration: 1s, 0.03s;
+    transition-duration: 1s, 5s;
 
 }
 

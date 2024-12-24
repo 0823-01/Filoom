@@ -20,23 +20,14 @@
                 
                 <ul>
    
-                    <li>공지사항</li> &nbsp;&nbsp;&nbsp;&nbsp;
-                    <li>문의</li>
+                    <li><a href="${ pageContext.request.contextPath }/list.no">공지사항</a></li> &nbsp;&nbsp;&nbsp;&nbsp;
+                    <li><a href="${ pageContext.request.contextPath }/list.fa">문의</a></li>
      
                 </ul>
      
-				<c:choose>
-					<c:when test = "${ empty sessionScope.loginUser }">
-					
-		                <a class="logo" href="${ pageContext.request.contextPath }">Filoom</a>
-					
-					</c:when>
-					<c:otherwise>
 
-		                <a class="logo" href="${ pageContext.request.contextPath }" style="margin-left:50px;">Filoom</a>
-					
-					</c:otherwise>
-				</c:choose>
+
+                <a class="logo" href="${ pageContext.request.contextPath }">Filoom</a>
     
 	                <c:choose>
 						<c:when test="${ empty sessionScope.loginUser }">
@@ -49,7 +40,7 @@
 			            <c:otherwise>    
 			                <!-- 로그인 후 -->
 			                <ul>
-		                    	<li><a href="${ pageContext.request.contextPath }/myPage.me" style="margin-right:10px;">마이페이지</a></li> &nbsp;&nbsp;&nbsp;&nbsp;
+		                    	<li><a href="${ pageContext.request.contextPath }/myPage.me">마이페이지</a></li> &nbsp;&nbsp;&nbsp;&nbsp;
 		                    	<li><a href="${ pageContext.request.contextPath }/logout.me">로그아웃</a></li>
 		                    </ul>
 			            </c:otherwise>
@@ -355,13 +346,6 @@
         function requireLoginAlert() {
 		    alert("로그인이 필요한 기능입니다!");
 		}
-
-        
-        function movieData(){
-        	
-        	
-        	
-        }
     </script>
 	
 	
