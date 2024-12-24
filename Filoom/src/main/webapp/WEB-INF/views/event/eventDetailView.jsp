@@ -83,7 +83,7 @@
         text-align: right;
     }
 
-    #listBtn>button {
+    #listBtn>button, #updateBtn, #deleteBtn {
         height : 30px;
         width : 100px;
         color : #E4E0E1;
@@ -94,7 +94,7 @@
         border : none;
     }
 
-    #listBtn>button:hover {
+    #listBtn>button:hover, #updateBtn:hover, #deleteBtn:hover  {
         background-color : #AB886D;
         cursor: pointer;
     }
@@ -178,82 +178,6 @@
         background-color: #AB886D;
     }
 
-    /*운영원칙 모달*/
-    #modalLink {
-        text-align: right;
-        margin : 0 13px 5px 0;
-    }
-
-    #modalLink>a:hover {
-        color : #AB886D;
-    }
-
-    .modal {
-        display: none;
-        position: fixed;
-        top: 50%;
-        left : 50%;
-        transform: translate(-50%, -50%);
-        background-color: #313131;
-        width : 800px;
-        padding: 20px;
-        margin: auto;
-        border-radius: 4px;
-    }
-
-    .modalTitle {
-        border-radius: 4px;
-        background-color: #E4E0E1;
-        color : #493628;
-        padding-left : 10px;
-        box-sizing: border-box;
-        height : 50px;
-        line-height: 50px;
-        display: flex;
-        justify-content: space-between;
-        margin-bottom: 15px;
-    }
-
-    #title {
-        font-size: 20px;
-        font-weight: bold;
-    }
-
-    #close {
-        font-size: 20px;
-        font-weight: bolder;
-        margin-right: 10px;
-    }
-
-    .modalContent {
-        text-align: left;
-        border-radius: 4px;
-        background-color: #F3F3F3;
-        box-sizing: border-box;
-        padding: 10px;
-    }
-
-    #deleteRull {
-        text-align: left;
-        background-color: #E4E0E1;
-        border-radius: 4px;
-        box-sizing: border-box;
-        margin: auto;
-        box-shadow : 3px 3px 3px rgb(0, 0, 0, 0.2);
-    }
-
-    p {
-        font-size: 18px;
-        font-weight: bold;
-        color : #493628;
-    }
-
-    #rull{
-        padding : 10px;
-        font-size: 18px;
-        font-weight: bold;
-        color : #493628;
-    }
 
     /*댓글 목록조회*/
        #replyWriter {
@@ -418,10 +342,33 @@
             	<c:forEach var="file" items="${requestScope.list}">
                 	<img id="event_img" src="${ pageContext.request.contextPath }${file.changeName}" alt="상세이미지">
                 </c:forEach>
+                
+                <form id="postForm" action="" method="post">
+                	<input type="hidden" name="eno" value="${requestScope.e.eventNo }">
+                	<input type="hidden" name="filePath" value="${file.changeName }">
+                </form>
+                
                 <div id="listBtn">
                     <button onclick="history.back()">목록으로</button>
+
+                    <c:if test="${sessionScope.loginUser.userNo eq 1 }">
+	                    <button id="updateBtn" onclick="postFormSubmit(1);">수정</button>
+	                    <button id="deleteBtn" onclick="postFormSubmit(2);">삭제</button>
+                    </c:if>
                 </div>
             </div>
+            
+            <script>
+            	function postFormSubmit(num) {
+            		console.log(num);
+            		
+            		if(num == 1) {
+            			$("#postForm").attr("action", "updateForm.ev").submit();
+            		} else {
+            			$("#postForm").attr("aciont", "${pageContext.request.contextPath}/delete.ev").submit();
+            		}
+            	}
+            </script>
             
             
             <!-- 이벤트 타입에 따라 보여지는 화면이 다름 -->
@@ -458,37 +405,7 @@
 		                                    </c:choose>
 		                                    
 		                                </div>
-		                                <div id="modalLink">
-		                                    <a href="#">운영원칙</a>
-		                                    <!--운영원칙 모달창-->
-		                                    <div class="modal">
-		                                        <div class="modalTitle">
-		                                            <div id="title">운영원칙</div>
-		                                            <div id="close">&times;</div>
-		                                        </div>
-		
-		                                        <div class="modalContent">
-		                                            <p>
-		                                                FILOOM 은 올바른 커뮤니티를 지향하기 위해 몇 가지 운영원칙을 마련하고 있습니다. <br>
-		                                                운영원칙에 어긋나는 게시물로 판단되는 글은 적발 시, 경고 없이 삭제되며 아이디 중지 등의 <br>
-		                                                제재 조치를 받을 수 있습니다.
-		                                            </p>
-		                                            <p>FILOOM 은 보다 건전한 인터넷 문화를 지향합니다.</p>
-		                                            <div id="deleteRull">
-		                                                <p id="rull">
-		                                                    <b style="font-size: 20px;">게시물 삭제 기준</b><br>
-		                                                    * 개인정보(실명, 상호명, 사진, 전화번호, 주민등록번호 등) 유포<br>
-		                                                    * 동일 내용의 게시글 / 댓글 반복(도배)<br>
-		                                                    * 특정인 대상의 <b style="color : red;">비방 / 욕설</b> 등의 표현으로 불쾌감을 주는 내용<br>
-		                                                    * 음란성 또는 청소년에게 부적합한 내용<br>
-		                                                    * 서비스 취지(성격)에 맞지 않은 내용<br>
-		                                                    * <b style="color : red;">비방 / 허위사실 유포</b> 등의 명예훼손 관련 게시물<br>
-		                                                    * 저작권 관련 게시물 등 기타 관련 법률에 위배되는 글<br>
-		                                                </p>
-		                                            </div>
-		                                        </div>
-		                                    </div>
-		                                </div>
+		                                
 		                            </td>
 		
 		                        </tr>
