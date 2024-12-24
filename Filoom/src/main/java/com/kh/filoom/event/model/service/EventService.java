@@ -69,6 +69,9 @@ public interface EventService {
 	
 	// 게시글 수정하기 서비스 
 	int updateEvent(Event e);
+
+	// 게시글 첨부파일 수정하기 서비스
+	int updateEventAttachment(List<Integer> fileNos, String status);
 	
 	// 게시글 삭제 서비스 
 	int deleteEvent(int eventNO);
@@ -109,10 +112,9 @@ public interface EventService {
 	// 쿠폰목록조회
 	ArrayList<Coupon> selectCouponList(Map<String, Object>params);
 
-	void deleteEventAttachment(List<Long> deleteFileIds);
-
 
 	int couponInsertEx(Map<String, Object> params);
+
 
 
 
