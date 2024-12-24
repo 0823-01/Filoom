@@ -306,7 +306,7 @@
             <div id="description" align="left">
                 <!-- 이미지 넣는 곳 -->
                 <div>
-                	<img src="${pageContext.request.contextPath}${requestScope.list.fileCodename}" alt="${requestScope.list.movieTitle}" class="thumbnail">
+                	<img src="${pageContext.request.contextPath}/resources/images/posters/${requestScope.list.fileCodename}" alt="${requestScope.list.movieTitle}" class="thumbnail">
                     <!-- <img src="resources/images/posters/wicked2.jpg" alt="위키드" id="thumbnail"> -->
                 </div>
 
@@ -350,64 +350,6 @@
                         </pre>
                     </div>
                 </div>
-                
-                <%--	예시 
-                <div id="description" align="left">
-                	// 여기에 이미지를 삽입이미지 넣는 곳
-                <div>
-                    <img src="resources/images/posters/${fileCodename}.jpg" alt="${movieTitle}" id="thumbnail">
-                </div>
-
-                제목과 설명을 넣는 곳
-                <div style="flex-grow: 1;">
-                    <table>
-                        <tr>
-                            <td style="padding-right:5px;"><img src="resources/images/posters/${filmrate}.svg" class="filmrate"></td>
-                            <td id="movieTitle">${movieTitle}</td>
-                        </tr>
-                    </table>
-                    <div>
-                        [여기에 여러모로 입력]
-                        <table style="width:100%;">
-                            <tr>
-                                <th>감독</th>
-                                <td>${director}</td>
-                            </tr>
-                            <tr>
-                                <th>배우</th>
-                                <td>${starring, 네 명까지만}</td>
-                            </tr>
-                            <tr>
-                                <th>장르</th>
-                                <td>${genre, 여러 개가 될 수 있음}</td>
-                            </tr>
-                            <tr>
-                                <th>상영시간</th>
-                                <td>${runtime}분</td>
-                            </tr>
-                            <tr>
-                                <th>${ premiere='y' ? '개봉' : '개봉예정' }</th>
-                                // 이것도 사실은 상영 종료 후에도 사이트에 남아 있는 영화들의 존재로 인해
-                                // 조건을 아래와 같이 적는 게 더 낫긴 함:
-                                // premiere = 'n' && open_date < today ? '개봉예정' : '개봉'
-                                // 설마 싶긴 한데 세미 시연 때 그 마인드로 놔뒀다가 피 본 적 있어서 미리 대비하는 게 맞음 
-                                <td>${open_date}</td>
-                            </tr>
-                        </table>
-
-                        <hr>
-                        ↓ 이거 길어지면 내부 스크롤 넣는 게 미관상으로도 좋아보임
-                        <pre>                
-    자신의 진정한 힘을 미처 발견하지 못한 '엘파바'(신시아 에리보)
-    자신의 진정한 본성을 아직 발견하지 못한 ‘글린다'(아리아나 그란데)
-    전혀 다른 두 사람은 마법 같은 우정을 쌓아간다.
-    그러던 어느 날, '마법사'의 초대를 받아 에메랄드 시티로 가게 되고
-    운명은 예상치 못한 위기와 모험으로 두 사람을 이끄는데…
-    
-    마법 같은 운명의 시작, 누구나 세상을 날아오를 수 있어
-                        </pre>
-                    </div>
-                </div> --%>
 
             </div>
 
@@ -419,7 +361,7 @@
                 <!-- display가 inline이 아닌데도 display:inline이라면서 width가 무시되는 현상 있음 -->
                 <a href="#reviewList" id="evalTotal">평점 4.55</a>
                 <!-- script를 통해 버튼이 왼쪽부터 평점/5 만큼만 밝은 색으로 나오게 할 계획  -->
-                <a href="" id="toBook">예매하기</a>
+                <a href="book.do" id="toBook">예매하기</a>
                 <a href="" id="like">♡ 1234</a>
                 <!-- 로그인 후 클릭시 ♥ 1235 으로 바뀌도록. 비로그인시 로그인하라고 얼럿함 -->
                 <!-- 좋아요 켜면 FAVORITE 테이블에 넣는 거니까 확인하고 넣을 것 -->
@@ -687,19 +629,14 @@
                 <br><br>
                 
                 <script>
-                function refreshPagingBar(sort, cpage) {
+                $(function() {
+                	//refreshPagingBar(cpage);
+                })
+                
+                function refreshPagingBar(cpage) {
             		$(".pagingbar").empty();
             		let link = '';
             		let pgbar = '';
-
-            		switch(sort) {
-            			case 'all' : link ="viewAll("; break;
-            			case 'open' : link ="openedOnly("; break;
-            			case 'order' : link = "listbyOpenedOrder("; break;
-            			case 'critic' : link = "listbyCritics("; break;
-            			case 'name' : link = "listbyName("; break;
-            			// default : alert('오류가 발생했습니다.'); return;
-            		}
 
             		// EL 태그를 function 안에 쓸 수 없어서 다른 방법을 연구하는 중
             		// 여기만 해결하면 진짜 끝남
@@ -745,8 +682,8 @@
 
                 <!-- Paging Bar -->
 				<div class="pagingbar" align="center">
-
-                
+					<!--  -->
+                </div>
             </div>
         </div>
     </div>

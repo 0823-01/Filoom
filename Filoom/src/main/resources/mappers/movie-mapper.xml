@@ -592,16 +592,6 @@
 		WHERE MOVIE_NO = #{movieNo} AND M.STATUS = 'Y' AND P.FILE_LEVEL = 1
 	
 	</select>
-	
-	<!-- 이거랑 showDetail이랑 통합해서 movieWithPoster 이용해서 쓸 수 있을라나?
-	<select id="showThumbnail" parameterType="movieNo" resultMap="">
-		SELECT FILE_NAME, FILE_CODENAME 
-		FROM POSTER
-		WHERE MOVIE_NO = #{movieNo} AND STATUS = 'Y'
-			AND FILE_LEVEL = 1
-	</select>
-
-	-->
 
 	<!-- === 영화 추가 페이지 === -->
 	<insert id="addMovie" parameterType="movie">
@@ -716,7 +706,11 @@
 	</select>
 	
 	<!-- 상영 정보 추가 -->
-	<!-- 상영관 정보 없으면 parent key not found 오류 남 -->
+	<!-- 상영관 정보 없으면 parent key not found 오류 남
+		없으면 아래의 더미데이터를 삽입할 것:
+		INSERT INTO SCREEN VALUES
+			(SEQ_SCR.NEXTVAL, 1, 60, null)
+	-->
 	<!-- 더미데이터 삽입 시에만 날짜 부분을 다음 예시와 같이 작성할 것↓
 		 TO_DATE('2024-12-27 15:15:00','YYYY-MM-DD HH24:MI:SS') -->
 	<insert id="newRunInfo" parameterType="movie">
