@@ -406,12 +406,20 @@
 	                        form.method = "post";
 	                        form.action = "findIdResult.me";
 
-	                        const input = document.createElement("input");
-	                        input.type = "hidden";
-	                        input.name = "userId";
-	                        input.value = response;
+	                        // userId 전달
+	                        const userIdInput = document.createElement("input");
+	                        userIdInput.type = "hidden";
+	                        userIdInput.name = "userId";
+	                        userIdInput.value = response;
+	                        form.appendChild(userIdInput);
 
-	                        form.appendChild(input);
+	                        // userName 전달
+	                        const userNameInput = document.createElement("input");
+	                        userNameInput.type = "hidden";
+	                        userNameInput.name = "userName";
+	                        userNameInput.value = userName;
+	                        form.appendChild(userNameInput);
+
 	                        document.body.appendChild(form);
 	                        form.submit();
 	                    }

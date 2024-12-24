@@ -9,14 +9,11 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class History {
+public class Favorite {
 	
-	private int bookNo;
 	private int movieNo;
 	private String movieTitle;
-	private String playtime;
-	private String screenName;
-	private int totalTickets;
+	private String openDate;
 	private String fileCodename;
 	private String imagePath;
 
