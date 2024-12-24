@@ -54,12 +54,17 @@ public interface BookService {
 	// 영화 검색 후 첫번째 영화
 	ArrayList<Movie> selectSearchFirstMovie(HashMap<String, Object> map);
 	
+	// 아래 2개는 사용자가 미성년자일 경우
+	ArrayList<Movie> selectListKid();
+	
+	ArrayList<Movie> selectFirstMovieKid();
+
+	ArrayList<Movie> movieSearchKid(HashMap<String, Object> map);
+
+	ArrayList<Movie> selectSearchFirstMovieKid(HashMap<String, Object> map);
 	
 	//결제============================================================
-	
-	//좌석 등록전 유효성 검사
-	int checkBookingSeat(int playingNo, ArrayList<String> seatNos);
-	
+
 	//좌석등록하기
 	int insertBookingSeats(int playingNo, ArrayList<String> seatNos);
 
@@ -67,7 +72,7 @@ public interface BookService {
 	ArrayList<BookingSeat> checkAndGetBookingSeatNoList(ArrayList<String> seatNoList, int playingNo,ArrayList<String> bookingSeatNos);
 
 	//좌석 유효시간 늘려주기
-	int updateTimeLimit(ArrayList<BookingSeat> bookingSeatNoList);
+	int updateTimeLimit(ArrayList<String> seatNos);
 
 	//영화예매번호 생성하기
 	int setBookNo(int userNo);
@@ -81,9 +86,6 @@ public interface BookService {
 	//상영번호로 영화정보 조회
 	Movie selectMovieForPlayingNo(int playingNo);
 
-	//상영좌석정보, 좌석번호 조회
-	ArrayList<BookingSeat> selectListBookingSeat(ArrayList<BookingSeat> bookingSeatNoList);
-
 	//결제전 쿠폰 유효성 검사
 	int selectCheckCoupon(List<Integer> couponNos, int userNo);
 
@@ -93,6 +95,7 @@ public interface BookService {
 	int deleteBookNo(int bookNo, int userNo);
 
 	
+
 
 
 	

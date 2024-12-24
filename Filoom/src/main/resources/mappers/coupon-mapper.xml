@@ -23,6 +23,7 @@
 		   AND USER_NO = #{userNo}
 		   AND BOOK_NO IS NULL
 		   AND COUPON_USE = 'X'
+		   AND COUPON_STATUS='Y'
 		 ORDER BY C.COUPON_EXP_DATE ASC 
 		   
 				
@@ -37,6 +38,7 @@
 			COUPON_USE = 'X'
 		  	AND BOOK_NO IS NULL
 		  	AND USER_NO = #{userNo}
+		  	AND COUPON_STATUS='Y'
 			<foreach item="item" collection="couponNos" open="AND C.COUPON_NO IN (" separator="," close=")" > 
 				#{item}
 			</foreach>
@@ -62,6 +64,7 @@
 		  FROM COUPON_USER CU
 		  JOIN COUPON C ON(CU.COUPON_NO = C.COUPON_NO)
 		 WHERE BOOK_NO = #{bookNo}
+		   AND COUPON_STATUS='Y'
 	</select>
 
 	<update id="cancelUpdateCouponUser" parameterType="map">
@@ -71,4 +74,15 @@
 		 WHERE BOOK_NO = #{bookNo}
 		   AND USER_NO = #{userNo}
 	</update>
+	
+	<!-- 응모자에게 쿠폰 등록해주기 -->
+	<insert id="couponInsertEx" parameterType="couponUser">
+		INSERT INTO COUPON_USER (COUPON_NO, USER_NO, BOOK_NO, COUPON_USE, COUPON_NAME)
+		VALUES(SEQ_CNO.NEXTVAL, #{userNo}, NULL, ${couponUse},
+			SELECT EVENT_TITLE
+			FROM EVENT
+			WHERE #{eventNo}
+		)
+	</insert>
+	
 </mapper>

@@ -2,6 +2,7 @@
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -136,9 +137,10 @@
 	}
 	
 	.history-item {
-	    border-bottom: 1px solid #aaa;
+	    border: 1px solid #444;
+	    border-radius: 10px;
 	    margin-top: 20px;
-	    padding-bottom: 20px;
+	    padding: 20px;
 	}
 	
 	.box-info {
@@ -170,7 +172,7 @@
 	    display: flex;
 	    justify-content: space-between;
 	    border-bottom: 1px solid #444;
-	    padding-bottom: 13px;
+	    padding-bottom: 5px;
 	    margin-bottom: 20px;
 	}
 	
@@ -228,19 +230,23 @@
                 
                 <div class="history-num">
                     <h1>내가 본 영화</h1>
-                    <span>25건</span>
+                    <span>${fn:length(historyList)}건</span>
                 </div>
 
-                <div class="year-search">
-                    <select name="year" id="year-select">
-                        <option value="all">전체</option>
-                        <option value="2021">2021</option>
-                        <option value="2022">2022</option>
-                        <option value="2023">2023</option>
-                        <option value="2024">2024</option>
-                    </select>
-                    <button type="button" id="year-btn">검색</button>
-                </div>
+				<form method="GET" action="/history.me">
+	                <div class="year-search">
+					    <select name="year" id="year-select">
+						    <option value="all" ${selectedYear == 'all' ? 'selected' : ''}>전체</option>
+						    <option value="2021" ${selectedYear == '2021' ? 'selected' : ''}>2021</option>
+						    <option value="2022" ${selectedYear == '2022' ? 'selected' : ''}>2022</option>
+						    <option value="2023" ${selectedYear == '2023' ? 'selected' : ''}>2023</option>
+						    <option value="2024" ${selectedYear == '2024' ? 'selected' : ''}>2024</option>
+						</select>
+
+					    <button type="button" id="year-btn">검색</button>
+					</div>
+				</form>
+
             </div>
             <!-- 예매 내역과 취소 내역을 합친 div -->
             <div class="history-body">
@@ -256,9 +262,9 @@
 						</c:when>
 							
 	                    <c:otherwise>
-							<c:forEach var="history" items="${historyList}">
+							<c:forEach var="history" items="${historyList}" varStatus="status">
 			                    <!-- 예매 내역 하나의 div -->
-			                    <div class="history-item">
+			                    <div class="history-item" id="history-item" style="display: ${status.index < 10 ? 'block' : 'none'};">
 			                        <div class="box-info">
 			                            <div class="box-image">
 			                                <a href="#"><img src="${ pageContext.request.contextPath }/resources/images/posters/${ history.fileCodename }" class="poster"></a>
@@ -283,6 +289,11 @@
 					</c:choose>
                     
                 </div>
+                
+                <div align="center">
+		            <button id="btn-more" onclick="more();">더보기</button>
+		        </div>
+                
             </div>
         </div>
     </div>
@@ -290,17 +301,88 @@
     <jsp:include page="../common/footer.jsp" />
 
     <script>
-        $(function () {
-            $("#year-btn").click(function () {
-                const selectedYear = $("#year-select").val();
-                if (selectedYear !== "all") {
-                    console.log(selectedYear);
-                    window.location.href = `/myPage-history?year=${selectedYear}`; // 원하는 URL로 이동
-                } else {
-                    alert("전체를 선택했습니다.");
-                }
-            });
-        });
+        
+	    let visibleCount = 10; // 현재 표시된 리스트 수 
+	
+	    // 페이지 로드 시 더보기 버튼 처리
+	    document.addEventListener("DOMContentLoaded", () => {
+	        const items = document.querySelectorAll(".history-item"); // 모든 카드 선택
+	        const btnMore = document.getElementById("btn-more"); // 더보기 버튼 선택
+	
+	        // 목록이 10개 미만이면 버튼 숨김
+	        if (items.length <= visibleCount) {
+	            btnMore.style.display = "none"; // 버튼 숨김
+	        }
+	    });
+	
+	    /* 더보기 버튼 클릭 시 발생하는 함수 */
+	    function more() {
+	        const items = document.querySelectorAll(".history-item"); // 모든 카드 선택 
+	        let count = 0;
+	
+	        // 숨겨진 카드 중 10개를 보여줌
+	        for (let i = visibleCount; i < items.length; i++) {
+	            items[i].style.display = "block";
+	            count++;
+	
+	            if (count === 10) break; // 10개까지만 표시
+	        }
+	
+	        visibleCount += count; // 표시된 카드 수 증가
+	
+	        // 더 이상 숨겨진 카드가 없으면 버튼 제거
+	        if (visibleCount >= items.length) {
+	            const btnMore = document.getElementById("btn-more"); // 버튼 선택
+	            btnMore.parentNode.removeChild(btnMore); // 버튼 삭제
+	        }
+	    }
+    	
+    	var contextPath = '<%= request.getContextPath() %>';
+        
+    	 $(function () {
+             $("#year-btn").click(function () {
+                 console.log("클릭됨");
+                 
+                 const selectedYear = $("#year-select").val(); // 선택된 연도를 가져옴
+                 const contextPath = '${pageContext.request.contextPath}'; // 컨텍스트 경로 가져오기
+     	        
+     	        console.log(selectedYear);
+     	        console.log(contextPath);
+     	        
+     	       if (selectedYear) {
+     	            // 선택된 연도로 URL 생성
+     	            window.location.href = contextPath + "/history.me?year=" + selectedYear;
+     	        } else {
+     	            alert("연도를 선택하세요.");
+     	        }
+     	     
+             });
+         });
+    	
+    	/*
+    	$(function () {
+    	    $("#year-btn").click(function () {
+    	    	
+    	    	console.log("클릭됨");
+    	    	const selectedYear = $("#year-select").val(); // 선택된 연도를 가져옴
+    	        const contextPath = '${pageContext.request.contextPath}'; // 컨텍스트 경로 가져오기
+    	        
+    	        console.log(selectedYear);
+    	        console.log(contextPath);
+    	        
+    	        if (selectedYear) {
+    	            // 선택된 연도로 URL 생성
+    	            window.location.href = `${pageContext.request.contextPath}/history.me?year=${selectedYear}`;
+    	        } else {
+    	            alert("연도를 선택하세요.");
+    	        }
+    	    });
+    	});
+
+*/
+
+
+    	
     </script>
 
 </body>

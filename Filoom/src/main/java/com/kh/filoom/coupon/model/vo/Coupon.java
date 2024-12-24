@@ -25,4 +25,7 @@ public class Coupon {
 	private int couponLevel;
 	//	REF_ENO	NUMBER
 	private int refEno;
+	
+	// 혜원추가
+	private String couponUser;
 }

@@ -85,7 +85,25 @@ public class BookDao {
 	}
 	
 	
+	public ArrayList<Movie> selectListKid(SqlSessionTemplate sqlSession) {
+		// TODO Auto-generated method stub
+		return (ArrayList)sqlSession.selectList("movieMapper.selectListKid");
+	}
 	
+	public ArrayList<Movie> selectFirstMovieKid(SqlSessionTemplate sqlSession) {
+		// TODO Auto-generated method stub
+		return (ArrayList)sqlSession.selectList("movieMapper.selectFirstMovieKid");
+	}
+	
+	public ArrayList<Movie> movieSearchKid(SqlSessionTemplate sqlSession, HashMap<String, Object> map) {
+		// TODO Auto-generated method stub
+		return (ArrayList)sqlSession.selectList("movieMapper.movieSearchKid", map);
+	}
+
+	public ArrayList<Movie> selectSearchFirstMovieKid(SqlSessionTemplate sqlSession, HashMap<String, Object> map) {
+		// TODO Auto-generated method stub
+		return (ArrayList)sqlSession.selectList("movieMapper.selectSearchFirstMovieKid", map);
+	}
 	
 	
 	
@@ -98,9 +116,9 @@ public class BookDao {
 	
 	//유효성 검사 + 좌석일렬번호 검사
 	public ArrayList<BookingSeat> checkAndGetBookingSeatNoList(SqlSessionTemplate sqlSession,
-														ArrayList<String> seatNos, 
-														int playingNo,
-														ArrayList<String> bookingSeatNos) {
+															   ArrayList<String> seatNos, 
+															   int playingNo,
+															   ArrayList<String> bookingSeatNos) {
 		HashMap<String,Object> map = new HashMap<>();
 		map.put("seatNos", seatNos);
 		map.put("playingNo", playingNo);
@@ -110,8 +128,8 @@ public class BookDao {
 
 	
 	//TIME_LIMIT 늘려주기
-	public int updateTimeLimit(SqlSessionTemplate sqlSession, ArrayList<BookingSeat> bookingSeatNoList) {
-		return sqlSession.update("bookMapper.updateTimeLimit",bookingSeatNoList);
+	public int updateTimeLimit(SqlSessionTemplate sqlSession, ArrayList<String> seatNos) {
+		return sqlSession.update("bookMapper.updateTimeLimit",seatNos);
 	}
 
 	//영화예매번호 생성 + 반환
@@ -158,13 +176,6 @@ public class BookDao {
 		map.put("bookNo", bookNo);
 		map.put("userNo", userNo);
 		return sqlSession.delete("bookMapper.deleteBookNo",map);
-	}
-
-	public int checkBookingSeat(SqlSessionTemplate sqlSession, int playingNo, ArrayList<String> seatNos) {
-		Map<String,Object>map=new HashMap();
-		map.put("playingNo", playingNo);
-		map.put("seatNos", seatNos);
-		return sqlSession.selectOne("bookMapper.checkBookingSeat",map);
 	}
 
 	public int insertBookingSeats(SqlSessionTemplate sqlSession, int playingNo, ArrayList<String> seatNos) {
@@ -252,5 +263,5 @@ public class BookDao {
 
 
 
-	
+
 }

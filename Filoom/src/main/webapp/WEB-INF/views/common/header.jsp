@@ -189,12 +189,29 @@
         <div id = "header_bottom">
             <ul>
                 <li><a href="${ pageContext.request.contextPath }/movies.mo">영화</a></li>
-                <li><a href="${ pageContext.request.contextPath }/book.do">예매</a></li>
+               
+                 <c:choose>
+		            <c:when test="${ empty sessionScope.loginUser }">
+		                <!-- 로그인 전 -->
+		                <li><a href="javascript:void(0);" onclick="requireLoginAlert();">예매</a></li>
+		            </c:when>
+		            <c:otherwise>
+		                <!-- 로그인 후 -->
+		                <li><a href="${ pageContext.request.contextPath }/book.do">예매</a></li>
+		            </c:otherwise>
+		        </c:choose>
+                
                 <li><a href="${ pageContext.request.contextPath }/list.ev">이벤트</a></li>
 
             </ul>
         </div>
 
     </div>
+    
+    <script>
+    	function requireLoginAlert() {
+		    alert("로그인이 필요한 기능입니다!");
+		}
+    </script>
 </body>
 </html>

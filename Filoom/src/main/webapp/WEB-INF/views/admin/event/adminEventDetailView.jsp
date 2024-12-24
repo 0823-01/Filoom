@@ -520,11 +520,6 @@
                             <input type="text" id="couponName" name="couponName" required placeholder="쿠폰 이름을 입력하세요">
                         </div>
                         
-                        <div class="couponQuantity">
-                        	<div><label for="couponQuantity">쿠폰 수량</label></div>
-                        	<input type="number" id="couponQuantity" name="couponQuantity" required>
-                        </div>
-                        
                         <div class="couponLevel">
                             <div><label for="couponLevel">타입</label></div>
                             <select id="type" name="couponLevel">
