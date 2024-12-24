@@ -281,7 +281,7 @@ body{
         <div id = "navbar">
             
             <div id = "logo">
-                <!-- <img src="${ pageContext.request.contextPath }/main/Filoom.png">-->
+                <img src="../main/Filoom.png">
             </div>
            
             <div id = "nav">
@@ -311,24 +311,24 @@ body{
                         <!--이건 버튼 이랑 text 샘플
                         <input type ="text" id ="text_sample">
                         <input type="button" id ="button_sample" value="샘플">-->
-                        <form id="enroll-form" action="insert.no" method="post">
+                        <form id="enroll-form" action="" method="post">
                             <!--제목-->
                             <div class="title_date_count">
                                 <div id="nTitlearea">
-                                    <label for="title">제목<b style="color : red;">*</b></label> <input type="text" id="ntitle" name="noticeTitle">
+                                    제목<b style="color : red;">*</b> <input type="text" id="ntitle">
                                 </div>
                             </div>
 
                             <!-- 내용 -->
                             <div class="content">
                                 <div id="nContentarea">
-                                    <label for="content">내용<b style="color : red;">*</b></label><textarea id="ncontent"  name="noticeContent"></textarea>
+                                    내용<b style="color : red;">*</b><textarea id="ncontent"></textarea>
                                 </div>
                             </div>
 
                             <!--등록, 취소 버튼-->
                             <div class="btn" style="font-size: 20px; font-weight: bold;">
-                                <!--게시물 상단 고정 <input id="check" type="checkbox">-->
+                                게시물 상단 고정 <input id="check" type="checkbox">
                                 <button id="cancle" style="width : 100px; margin-right : 5px;">취소</button>
                                 <button type="submit" id="submit" style="width : 130px;">등록</button>
                             </div> 

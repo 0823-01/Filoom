@@ -115,15 +115,21 @@ public class BookDao {
 
 	
 	//유효성 검사 + 좌석일렬번호 검사
+	public ArrayList<BookingSeat> getBookingseatNoList(SqlSessionTemplate sqlSession, ArrayList<String> seatNos, int playingNo) {
+		
+		}
 	public ArrayList<BookingSeat> checkAndGetBookingSeatNoList(SqlSessionTemplate sqlSession,
 															   ArrayList<String> seatNos, 
 															   int playingNo,
 															   ArrayList<String> bookingSeatNos) {
+
 		HashMap<String,Object> map = new HashMap<>();
 		map.put("seatNos", seatNos);
 		map.put("playingNo", playingNo);
-		map.put("bookingSeatNos", bookingSeatNos);
-		return (ArrayList)sqlSession.selectList("bookMapper.checkAndGetBookingSeatNoList",map); 							
+		
+		return (ArrayList)sqlSession.selectList("bookMapper.getBookingseatNoList",map); 
+										
+										
 	}
 
 	
@@ -153,6 +159,12 @@ public class BookDao {
 		return sqlSession.selectOne("movieMapper.selectMovieForPlayingNo",playingNo);
 	}
 
+	//상영좌석일렬번호, 좌석 정보
+	public ArrayList<BookingSeat> selectListBookingSeat(SqlSessionTemplate sqlSession,
+			ArrayList<BookingSeat> bookingSeatNoList) {
+
+		return (ArrayList)sqlSession.selectList("bookMapper.selectListBookingSeat",bookingSeatNoList);
+	}
 
 	//쿠폰조회
 	public ArrayList<CouponUser> selectListCouponUser(SqlSessionTemplate sqlSession, int userNo) {
@@ -171,12 +183,21 @@ public class BookDao {
 	}
 
 
+	public int setCouponBookNo(SqlSessionTemplate sqlSession, List<Integer> couponNos, int userNo, int bookNo) {
+		Map<String,Object> map = new HashMap();
+		map.put("couponNos", couponNos);
+		map.put("userNo", userNo);
+		map.put("bookNo", bookNo);
+		return sqlSession.update("couponMapper.setCouponBookNo",map);
+	}
+
 	public int deleteBookNo(SqlSessionTemplate sqlSession, int bookNo, int userNo) {
 		Map<String,Object> map = new HashMap();
 		map.put("bookNo", bookNo);
 		map.put("userNo", userNo);
 		return sqlSession.delete("bookMapper.deleteBookNo",map);
 	}
+
 
 	public int insertBookingSeats(SqlSessionTemplate sqlSession, int playingNo, ArrayList<String> seatNos) {
 		Map<String,Object>map=new HashMap();

@@ -325,40 +325,50 @@
            background-color: #AB886D;
        }
 
+       /*페이징영역*/
+       .pagingArea {
+           display: flex;
+           justify-content: center;
+           padding : 20px;
+           font-size: 20px;
+           font-weight: bold;
+
+       }
        .pagination {
-    margin: 20px 0;
-    text-align: center;
-}
+           list-style-type : none;
+           display: flex;
+           padding : 0;
+           margin: 0;
+           font-size: 20px;
+           font-weight: bold;
+       }
+       .pagination>li {
+           margin : 0 10px; /*리스트 항목 간의 간격*/
+           cursor: pointer;
+           transition: color 0.3s ease; /*색상 전환 효과*/
+           font-size: 25px;
+           font-weight: bold;
+           color : #F3F3F3;
+       }
 
-.pagination ul {
-    list-style-type: none;
-    padding: 0;
-    display: inline-block;
-}
+       li>a {
+           text-decoration: none;
+           color :  #493628;
+       }
 
-.pagination li {
-    display: inline-block;
-    margin: 0 5px;
-}
+       li>a:hover {
+           text-decoration: none;
+           color : #AB886D;
+       }
 
-.pagination a {
-    text-decoration: none;
-    color: #493628;
-    font-size : 15px;
-    font-weight : bold;
-    padding: 8px 12px;
-    
-    
-}
+       li>a.disabled {
+           color: #AB886D;
+           pointer-events: none;
+       }
 
-.pagination a:hover {
-   color: #AB886D;
-}
-
-.pagination .active a {
-    
-    color: #AB886D;
-   }
+       li>a.active {
+           color: #AB886D;
+       }
     
     /*응모버튼*/
     .apply {
@@ -531,7 +541,18 @@
 		                <!-- 댓글 페이징 영역 -->
 		                <div class="pagingArea">
 		                    <ul class="pagination" id="pagination">
-		                        <!-- ajax로 페이징처리 -->
+		                        <li class="page-item disabled"><a class="page-link" href="#">«</a></li>
+		                        <li class="page-item"><a class="page-link" href="#">1</a></li>
+		                        <li class="page-item"><a class="page-link" href="#">2</a></li>
+		                        <li class="page-item"><a class="page-link" href="#">3</a></li>
+		                        <li class="page-item"><a class="page-link" href="#">4</a></li>
+		                        <li class="page-item"><a class="page-link" href="#">5</a></li>
+		                        <li class="page-item"><a class="page-link" href="#">6</a></li>
+		                        <li class="page-item"><a class="page-link" href="#">7</a></li>
+		                        <li class="page-item"><a class="page-link" href="#">8</a></li>
+		                        <li class="page-item"><a class="page-link" href="#">9</a></li>
+		                        <li class="page-item"><a class="page-link" href="#">10</a></li>
+		                        <li class="page-item"><a class="page-link" href="#">»</a></li>
 		                    </ul>
 		                </div>
 		            </div>
@@ -603,12 +624,7 @@
 
                         // 댓글 작성자와 로그인 유저가 같으면 수정 및 삭제 버튼 추가
                         if (reply.replyWriter === loginUser) {
-                        	resultStr += "<td id='buttons'>"
-                                + "<button id='updateBtn' class='edit-reply-btn' data-reply-no='" + reply.replyNo + "' onclick='editReply(" + reply.replyNo + ")'>수정</button>"
-                                + "<button id='deleteBtn' onclick='deleteReply(" + reply.replyNo + ")'>삭제</button>"
-                                + "<button id='savedBtn' style='display:none;' onclick='saveReply(" + reply.replyNo + ")'>저장</button>"
-                                + "<button id='cancelBtn' style='display:none;' onclick='cancelEdit(" + reply.replyNo + ")'>취소</button>"
-                                + "</td>";
+                            resultStr += "<td id='buttons'><button id='updateBtn' onclick='editReply(" + reply.replyNo + ")'>수정</button><button id='deleteBtn' onclick='deleteReply(" + reply.replyNo + ")'>삭제</button></td>";
                         } else {
                             resultStr += "<td></td>";
                         }
@@ -620,12 +636,6 @@
                     $(".reply>tbody").html(resultStr); // 댓글 내용 업데이트
                     $("#rcount").text(response.list.length); // 댓글 갯수 표시
                     handlePagination(response.pi, cpage); // 페이징 처리
-                    
-                 	// 수정 버튼에 클릭 이벤트 리스너 등록
-                    $(".edit-reply-btn").click(function() {
-                        var replyNo = $(this).data("reply-no");
-                        editReply(replyNo); // 클릭된 댓글에 대한 수정 함수 호출
-                    });
                 }
             },
             error: function() {
@@ -636,26 +646,23 @@
 
     // 댓글 작성 함수
     function addReply() {
-    	let replyContent = $("#replyInput").val();
-        
+        let replyContent = $("#replyInput").val();
 
         if(replyContent.trim().length != 0) { 
             $.ajax({
                 url: "rinsert.ev", // 댓글 작성 API
                 type: "post",
-                contentType: "application/json",
-                data: JSON.stringify({
+                data: {
                     replyContent: replyContent,
                     replyWriter: "${ sessionScope.loginUser.userNo }",
                     refEno: ${requestScope.e.eventNo}
-                }),
-                success: function(response) {
-                    if(response.success) {
-                    	alert(response.message); // 댓글 작성 완료 표시
+                },
+                success: function(result) {
+                    if(result === "success") {
                         selectReplyList(); // 댓글 목록 갱신
                         $("#replyInput").val(""); // 입력창 비우기
                     } else {
-                        alert(response.message);
+                        alert("댓글 작성 실패");
                     }
                 },
                 error: function() {
@@ -668,113 +675,12 @@
     }
     
     
- 	// 댓글 수정
-    function editReply(replyNo) {
-        // 해당 댓글에 대한 수정 로직 처리
-        var replyRow = $("tr[data-reply-no='" + replyNo + "']"); // 해당 댓글 행 찾기
-        var replyContent = replyRow.find("#replyContent").text();  // 현재 댓글 내용
+   // 수정, 저장 다시
 
-        // 내용 수정 입력창으로 바꾸기
-        replyRow.find("#replyContent").html("<textarea id='updateReply'>" + replyContent + "</textarea>");
-        replyRow.find("#updateBtn").hide();  // 수정 버튼 숨기기
-        replyRow.find("#deleteBtn").hide();  // 삭제 버튼 숨기기
-        replyRow.find("#savedBtn, #cancelBtn").show();  // 저장, 취소 버튼 보이기
-        console.log("여긴 왜 안보여?")
-    }
- 	
- 	// 댓글 수정 처리 (저장 버튼 클릭 시)
-    function saveReply(replyNo) {
-        // 수정된 댓글 내용을 가져오기
-        var updatedContent = $("#updateReply").val(); // #updateReply가 textarea로 수정된 내용
-
-        // 서버로 AJAX 요청 보내기
-        $.ajax({
-            url: "rupdate.ev", // 댓글 수정 API URL
-            type: "POST", // POST 요청 방식
-            contentType: "application/json;charset=UTF-8", // JSON 형식
-            data: JSON.stringify({
-                replyNo: replyNo,              // 댓글 번호 (수정할 댓글의 ID)
-                replyContent: updatedContent,  // 수정된 댓글 내용
-                replyWriter: "${ sessionScope.loginUser.userNo }"     // 댓글 작성자 (로그인한 사용자 정보)
-            }),
-            success: function(response) {
-                if (response.status === "success") {
-                    alert("댓글이 수정되었습니다.");
-                    selectReplyList(); // 댓글 목록을 갱신
-                    cancelEdit(replyNo); // 취소하고 원래 상태로 복구
-                } else {
-                    alert("댓글 수정에 실패했습니다.");
-                }
-            },
-            error: function() {
-                alert("댓글 수정 중 오류가 발생했습니다.");
-            }
-        });
-    }
-
-    // 저장 버튼 클릭 시
-    $("#savedBtn").click(function() {
-        var replyNo = $(this).closest("tr").data("replyNo");  // 수정할 댓글의 번호
-        var replyContent = $(this).closest("tr").find("#updateReply").val();  // 수정된 댓글 내용
-        var replyWriter = $(this).closest("tr").find("#replyWriter").text();  // 댓글 작성자 정보
-
-        // 댓글 수정 요청
-        updateReply(replyNo, replyContent, replyWriter);
-
-        // 수정 상태 비활성화
-        $(this).closest("tr").find("#updateReply").attr("readonly", "readonly");
-        $(this).closest("tr").find("#savedBtn, #cancelBtn").hide();  // 저장, 취소 버튼 숨기기
-        $(this).closest("tr").find("#updateBtn, #deleteBtn").show();  // 수정, 삭제 버튼 다시 보여주기
-    });
-
- 	// 댓글 수정 상태 취소 (취소 버튼 클릭 시)
-    function cancelEdit(replyNo) {
-        var replyRow = $("tr[data-reply-no='" + replyNo + "']");
-
-        // 댓글 원본 내용을 가져오기 (예: 원본 내용이 data-original-content 속성에 저장돼있다면)
-        var originalContent = replyRow.data("originalContent") || replyRow.find("#replyContent").text();
-
-        // 댓글 내용을 원래대로 복구하기
-        replyRow.find("#replyContent").html(originalContent);
-
-        // 수정/삭제 버튼 보이기
-        replyRow.find("#updateBtn").show();
-        replyRow.find("#deleteBtn").show();
-
-        // 저장/취소 버튼 숨기기
-        replyRow.find("#savedBtn, #cancelBtn").hide();
-    }
-
-    // 댓글 수정 요청 함수
-    function updateReply(replyNo, replyContent, replyWriter) {
-        $.ajax({
-            url: "rupdate.ev",   // 댓글 수정 요청 URL (컨트롤러에서 처리할 URL)
-            type: "POST",        // POST 방식
-            contentType: "application/json;charset=UTF-8", // JSON 형식으로 전송
-            data: JSON.stringify({
-                replyNo: replyNo,           // 댓글 번호
-                replyContent: replyContent, // 수정된 댓글 내용
-                replyWriter: replyWriter    // 댓글 작성자 (작성자 ID 등)
-            }),
-            success: function(response) {
-                if (response.status === "success") {
-                    alert(response.message);  // 성공 메시지 표시
-                    // 댓글 목록 새로고침 또는 수정된 댓글 반영
-                    selectReplyList();  // 댓글 목록을 다시 로드하는 함수 호출
-                } else {
-                    alert(response.message);  // 실패 메시지 표시
-                }
-            },
-            error: function() {
-                alert("댓글 수정 오류");  // 오류 처리
-            }
-        });
-    }
-
-    /* 댓글 수정 취소
+    // 댓글 수정 취소
     function cancelEdit(replyNo) {
         selectReplyList(); // 댓글 목록 새로고침
-    } */
+    }
 
     // 댓글 삭제
     function deleteReply(replyNo) {
@@ -796,41 +702,28 @@
         });
     }
 
+    // 페이징 처리 함수
     function handlePagination(pi, currentPage) {
-        var pageList = $("#pagination");
-        pageList.empty(); // 기존 페이지 버튼을 비웁니다.
-        
-        // 이전 페이지 버튼
-        if (pi.startPage > 1) {
-            pageList.append("<li><a href='#' class='page-btn' data-page='1'><<</a></li>");
-        }
-        
+        const totalPages = pi.totalPage;
+        let paginationHtml = "";
+
         // 이전 페이지 버튼
         if (currentPage > 1) {
-            pageList.append("<li><a href='#' class='page-btn' data-page='" + (currentPage - 1) + "'>◀</a></li>");
+            paginationHtml += "<button class='pagination-btn' onclick='selectReplyList(" + (currentPage - 1) + ")'>«</button>";
         }
 
-        // 페이지 번호들
-        for (var i = pi.startPage; i <= pi.endPage; i++) {
-            var activeClass = (i === currentPage) ? "active" : "";
-            pageList.append("<li><a href='#' class='page-btn " + activeClass + "' data-page='" + i + "'>" + i + "</a></li>");
+        // 페이지 번호 버튼
+        for (let i = 1; i <= totalPages; i++) {
+            paginationHtml += "<button class='pagination-btn' onclick='selectReplyList(" + i + ")'>" + i + "</button>";
         }
 
         // 다음 페이지 버튼
-        if (currentPage < pi.maxPage) {
-            pageList.append("<li><a href='#' class='page-btn' data-page='" + (currentPage + 1) + "'>▶</a></li>");
-        }
-        
-        // 마지막 페이지 버튼
-        if (pi.endPage < pi.maxPage) {
-            pageList.append("<li><a href='#' class='page-btn' data-page='" + pi.maxPage + "'>>></a></li>");
+        if (currentPage < totalPages) {
+            paginationHtml += "<button class='pagination-btn' onclick='selectReplyList(" + (currentPage + 1) + ")'>»</button>";
         }
 
-        // 페이징 버튼 클릭 시 페이지 변경
-        $(".page-btn").on("click", function(event) {
-            var page = $(this).data("page");
-            selectReplyList(page); // 댓글 목록을 페이지에 맞게 다시 호출
-        });
+        // 페이징 영역 갱신
+        $(".pagination").html(paginationHtml);
     }
     
     

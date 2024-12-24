@@ -182,6 +182,7 @@
                         </div>
 
 
+
                         <div id="basicInfo">
                             <table>
                                 <tr>
@@ -197,6 +198,18 @@
                                 </tr>
                                 <tr>
                                     <th>상영 등급</th>
+                                    <!-- <td width="160">
+                                        <label for="rate3"><img class="filmrate" src="resources/images/posters/3.svg" onclick="rateFilm(3);" alt="ALL"></label>
+                                    </td>
+                                    <td width="160">
+                                        <label for="rate12"><img class="filmrate" src="resources/images/posters/12.svg" onclick="rateFilm(12);" alt="12"></label>
+                                    </td>
+                                    <td width="160">
+                                        <label for="rate15"><img class="filmrate" src="resources/images/posters/15.svg" onclick="rateFilm(15);" alt="15"></label>
+                                    </td>
+                                    <td width="60">
+                                        <label for="rate19"><img class="filmrate" src="resources/images/posters/19.svg" onclick="rateFilm(19);" alt="19"></label>
+                                    </td> -->
                                     <td colspan="4" width=540>
                                     	<div style="display:flex; justify-content: space-between;">
 	                                    	<label for="rate3"><img class="filmrate" src="resources/images/posters/3.svg" onclick="rateFilm(3);" alt="ALL"></label>
@@ -218,11 +231,10 @@
                                     <th>장르</th>
                                     <td colspan="4"><input type="text" id="genre" value=""></td>
                                 </tr>
-                                
                                 <!-- ↓ 년월일까지 표기라 'date'가 맞음 -->
                                 <tr>
                                     <th>개봉일자</th>
-                                    <td colspan="4"><input type="date" id="open_date" value=""></td>
+                                    <td colspan="4"><input type="date" id="premiere" value=""></td>
                                 </tr>
                                 <tr>
                                     <th>상영시간</th>
@@ -265,7 +277,6 @@
         </div>
     </div>
     <script>
-    // navigator 쪽 메뉴 호버시의 script
     document.addEventListener("DOMContentLoaded", function () {
         const navItems = document.querySelectorAll("#nav > ul > li");
     
@@ -302,7 +313,7 @@
 
                 $("#posterDisplay").attr("src",e.target.result);
                 var photo = document.getElementById("posterDisplay").innerHTML;
-                //console.log(e.target.result);
+                console.log(e.target.result);
             };
         }
         // if not

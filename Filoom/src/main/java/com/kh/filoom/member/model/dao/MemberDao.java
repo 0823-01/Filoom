@@ -7,7 +7,6 @@ import java.util.Map;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
 
-import com.kh.filoom.member.model.vo.History;
 import com.kh.filoom.member.model.vo.Member;
 import com.kh.filoom.member.model.vo.Reserve;
 
@@ -69,14 +68,9 @@ public class MemberDao {
 		return sqlSession.selectList("memberMapper.cancelList", userNo);
 	}
 
-	public List<Reserve> useCouponList(SqlSessionTemplate sqlSession, int userNo) {
+	public List<Reserve> couponList(SqlSessionTemplate sqlSession, int userNo) {
 
-		return sqlSession.selectList("memberMapper.useCouponList", userNo);
-	}
-
-	public List<History> historyList(SqlSessionTemplate sqlSession, int userNo) {
-
-		return sqlSession.selectList("memberMapper.historyList", userNo);
+		return sqlSession.selectList("memberMapper.couponList", userNo);
 	}
 	
 	public List<History> historyListByYear(SqlSessionTemplate sqlSession, int userNo, String year) {

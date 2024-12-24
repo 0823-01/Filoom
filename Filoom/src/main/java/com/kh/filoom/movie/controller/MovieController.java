@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -166,6 +165,7 @@ public class MovieController {
 	// 상영 예정작만 보기 - 페이지 띄우기
 	@GetMapping("preopen.mo")
 	public String viewNotOpened() {
+		// ArrayList<Movie> tbs = msi.selectMovieListPre();
 		return "movie/movieNotOpened";
 	}
 
@@ -211,10 +211,21 @@ public class MovieController {
 		return "movie/list_using_taglib";
 	}
 
-	// === 영화 상세 페이지 ===
+	
+	// 영화 상세 페이지
+	// specific.mo?movieNo=XXX
+	// 임시로 하드코딩한 <위키드>의 상세 페이지로 연결해놨으며, 이에 따라 boxOffice.jsp의 <위키드>에만 상세페이지를 링크해놨음
+	// 도메인 미확정
+	/*
+	@GetMapping("detail.mo")
+	public String selectMovie(int movieNo, Model model) {
+		
+		
+		return "movie/movieDetail";
+	}
+	*/
 	
 	// 영화 상세 정보 조회 (스틸컷까지만)
-	// detail.mo?movieNo=XXX
 	@GetMapping("detail.mo")
 	public String showDetail(int movieNo, Model model) {
 				
@@ -222,11 +233,10 @@ public class MovieController {
 		// System.out.println(list); // 확인용
 		
 		model.addAttribute("list", list);
-
 		return "movie/movieDetail";
 	}
 	
-	// 리뷰 목록 조회 (+ 페이징 처리) (AJAX 예정)
+	// 리뷰 목록 조회 (+ 페이징 처리) (AJAX 예상)
 	public void selectReview(@RequestParam(value="cpage", defaultValue="1")int cpage) {
 		int boardLimit = 10;
 		int listCount = 42; // 임시숫자
@@ -235,25 +245,21 @@ public class MovieController {
 	
 	
 	// 리뷰 작성 페이지
-	@GetMapping("review.mo") //?userNo=XXX&movieNo=XXX
 	public void reviewForm() {
-		// return "movie/reviewForm";
+		
 	}
 	
 	// 작성
-	@GetMapping("newreview.mo")
 	public void writeReview() {
 		
 	}
 	
 	// 수정
-	@GetMapping("modifyreview.mo")
 	public void updateReview() {
 		
 	}
 	
 	// 삭제
-	@GetMapping("deletereview.mo")
 	public void deleteReview() {
 		
 	}
@@ -318,10 +324,7 @@ public class MovieController {
 
 		// 4. 파일 업로드 - MultipartFile 객체에서 제공하는 transferTo 메소드를 활용함
 		try {
-			File target = new File(savePath + fileCodename);
-			upfile.transferTo(target);
-			// 저장경로 로그
-			System.out.println("An image has saved to : " + target.getAbsolutePath());
+			upfile.transferTo(new File(savePath + fileCodename));
 		} catch(IOException e) {
 			e.printStackTrace();
 		}
@@ -503,7 +506,7 @@ public class MovieController {
 	
 	
 	// (관리자) 리뷰 목록 확인 (+ 페이징 처리)
-	@GetMapping("managereview.mo")
+	@GetMapping("admin.managereview.mo")
 	public String reviewPatrol(/*PageInfo pi*/) {
 		return "admin/movie/manageReview";
 	}

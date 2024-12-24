@@ -6,14 +6,12 @@
 	
 	<resultMap id="bookingResultSet" type="booking">
 		<id column="BOOK_NO" property="bookNo"/>
-		<result column="USER_NO" property="userNo"/>
 		<result column="BOOK_DATE" property="bookDate"/>
-		<result column="BOOK_TOTAL_COST" property="bookTotalCost"/>
 		<result column="BOOK_COST" property="bookCost"/>
 		<result column="COST_PROCESS" property="costProcess"/>
-		<result column="COST_TID" property="costTid"/>
 		<result column="STATUS" property="status"/>
 		<result column="MODIFY_DATE" property="modifyDate"/>
+		<result column="USER_NO" property="userNo"/>
 	</resultMap>
 	
 	<resultMap id = "playingResultSet" type="playing">
@@ -121,6 +119,7 @@
 		WHERE 
 		    P.STATUS = 'Y'
 		    AND P.MOVIE_NO = #{movieNo}
+		    AND P.PLAYTIME &gt; SYSDATE
 	</select>
 	
 	<select id = "selectMovieSeat" parameterType="_int" resultMap="selectMovieSeat">
@@ -177,7 +176,8 @@
 		    BOOK_NO
 		)
 		VALUES (
-		    SEQ_BSNO.NEXTVAL, 
+
+		    SEQ_BSNO.NEXTVAL, -- 예약 좌석 일련번호 자동 증가
 		    TO_TIMESTAMP(#{timeLimit}, 'YYYY-MM-DD HH24:MI:SS.FF'),
 		    (SELECT SSEAT_NO
 		     FROM SCREEN_SEAT
@@ -250,6 +250,11 @@
 
 	<!-- 결제 -->
 	
+	<select id="getBookingseatNoList" parameterType="map" resultMap="bookingSeatResultSet">
+
+ 		SELECT BOOKING_SEAT_NO
+
+	</select>
 	<select id="checkAndGetBookingSeatNoList" parameterType="map" resultMap="bookingSeatResultSet">
  		SELECT BOOKING_SEAT_NO,
  			   TO_CHAR(TIMELIMIT, 'YYYY-MM-DD HH24:MI:SS') AS TIMELIMIT,
@@ -260,20 +265,11 @@
 		 WHERE BS.BOOK_NO IS NULL
 		   AND BS.PLAYING_NO = #{playingNo}
 		   AND TIMELIMIT > SYSDATE
-		   <choose>
-		   		<when test="seatNos != null" >
-				   AND
-				   	<foreach item="item" collection="seatNos" open="SEAT_NO IN (" separator="," close=")">
-				   		#{item}
-				   	</foreach>
-		   		</when>
-		   		<when test="bookingSeatNos != null">
-		   			And
-		   			<foreach item="item" collection="bookingSeatNos" open="BOOKING_SEAT_NO IN (" separator="," close=")">
-				   		#{item}
-				   	</foreach>
-		   		</when>
-		   </choose>
+		   AND
+		   	<foreach item="item" collection="seatNos" open="SEAT_NO IN (" separator="," close=")">
+		   		#{item}
+		   	</foreach>
+		   
 		   
 	</select>
 	
@@ -302,13 +298,25 @@
 		</selectKey>
 	</insert>
 	
+	<!-- 예약할 좌석 데이터 조회 -->
+	<select id="selectListBookingSeat" parameterType="list" resultMap="bookingSeatResultSet">
+	   SELECT BOOKING_SEAT_NO, TIMElIMIT, SEAT_NO
+	     FROM BOOKING_SEAT
+	     JOIN SCREEN_SEAT USING(SSEAT_NO)
+ 		 <where>
+		 	<foreach item="item" collection="list" open="BOOKING_SEAT_NO IN (" separator="," close=")" >
+		 		#{item.bookingSeatNo}
+		 	</foreach>
+		 </where>
+	</select>
+	
 	<!-- 데이터 삭제  -->
 	<delete id="deleteBookNo" parameterType="map">
 		DELETE FROM BOOKING
 		  WHERE USER_NO = #{userNo}
 		    AND BOOK_NO = #{bookNo}	
 	</delete>
-	
+
 	
  	<insert id="insertBookingSeats" parameterType="map">
 		INSERT INTO BOOKING_SEAT VALUES
