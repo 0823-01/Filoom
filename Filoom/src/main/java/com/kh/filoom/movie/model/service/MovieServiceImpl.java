@@ -6,7 +6,6 @@ import java.util.HashMap;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.kh.filoom.movie.model.dao.MovieDao;
 import com.kh.filoom.movie.model.vo.Movie;
@@ -132,7 +131,6 @@ public class MovieServiceImpl implements MovieService {
 	// 관리자 영화 검색의 경우, 쿼리 자체는 사용자 쪽과 동일하게 사용
 	
 	@Override
-	@Transactional
 	public int addMovie(Movie m) {
 		// TODO Auto-generated method stub
 		return mDao.addMovie(sqlSession, m);
@@ -146,7 +144,6 @@ public class MovieServiceImpl implements MovieService {
 
 	// POSTER 테이블에 첨부한 이미지를 추가하는 용도 (영화 추가, 수정)
 	@Override
-	@Transactional
 	public int addPoster(Poster p) {
 		// TODO Auto-generated method stub
 		return mDao.addPoster(sqlSession, p);
@@ -194,6 +191,27 @@ public class MovieServiceImpl implements MovieService {
 		return mDao.togglePremiere(sqlSession, map);
 	}
 
+	@Override
+	public ArrayList<Movie> showRunInfo(int movieNo) {
+		// TODO Auto-generated method stub
+		return mDao.showRunInfo(sqlSession, movieNo);
+	}
+
+	@Override
+	public int checkRunCount(int movieNo) {
+		// TODO Auto-generated method stub
+		return mDao.checkRunCount(sqlSession, movieNo);
+	}
+
+	@Override
+	public int newRunInfo(Movie m) {
+		// TODO Auto-generated method stub
+		return mDao.newRunInfo(sqlSession, m);
+	}
+	
+	// public int removeRunInfo(int playingNo) {
+	//	return mDao.removeRunInfo(sqlSession, playingNo);
+	// }
 	
 
 	

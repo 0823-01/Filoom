@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Map;
 
 import com.kh.filoom.common.model.vo.PageInfo;
-import com.kh.filoom.coupon.model.vo.Coupon;
 import com.kh.filoom.event.model.vo.Applicant;
 import com.kh.filoom.event.model.vo.Event;
 import com.kh.filoom.event.model.vo.EventAttachment;
@@ -36,9 +35,6 @@ public interface EventService {
 	// 댓글 리스트 조회 서비스 (Ajax) 
 	ArrayList<Reply> selectReplyList(int eventNo, PageInfo pi);
 	
-	// 댓글 중복체크
-	boolean checkReplyWriter(int refEno, String replyWriter);
-	
 	// 댓글 작성 서비스 (Ajax)
 	int insertReply(Reply r);
 	
@@ -64,9 +60,6 @@ public interface EventService {
 	// 이미지 등록하기 서비스 
 	int insertEventAttachment(EventAttachment eventAttachment);
 	
-	// 쿠폰 등록하기 서비스 
-	int insertCoupon(Coupon coupon);
-	
 	// 게시글 수정하기 서비스 
 	int updateEvent(Event e);
 
@@ -74,7 +67,7 @@ public interface EventService {
 	int updateEventAttachment(List<Integer> fileNos, String status);
 	
 	// 게시글 삭제 서비스 
-	int deleteEvent(int eventNO);
+	int deleteEvevnt(Event e);
 	
 	// 게시글 총 갯수 조회 
 	int selectListCount();

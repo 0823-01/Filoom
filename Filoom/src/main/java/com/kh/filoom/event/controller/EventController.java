@@ -29,7 +29,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.google.gson.Gson;
 import com.kh.filoom.common.model.vo.PageInfo;
 import com.kh.filoom.common.template.Pagination;
-import com.kh.filoom.coupon.model.vo.Coupon;
 import com.kh.filoom.event.model.service.EventService;
 import com.kh.filoom.event.model.vo.Applicant;
 import com.kh.filoom.event.model.vo.Event;
@@ -167,33 +166,14 @@ public class EventController {
 	 * @return
 	 */
 	@ResponseBody
-	@PostMapping(value="rinsert.ev", produces="application/json; charset=UTF-8")
-	public Map<String, Object> ajaxInsertReply(@RequestBody Reply r, HttpSession session) {
-		System.out.println(r);
+	@PostMapping(value="rinsert.ev", produces="text/html; charset=UTF-8")
+	public String ajaxInsertReply(Reply r) {
+		// System.out.println(r);
 		
-		Map<String, Object> response = new HashMap<>();
+		// 댓글 작성
+		int result = eventService.insertReply(r);
 		
-		// 중복체크 
-		boolean checkWriter = eventService.checkReplyWriter(r.getRefEno(), r.getReplyWriter());
-		
-		if(checkWriter) {
-			response.put("success", false);
-			response.put("message", "이미 댓글을 작성하셧습니다.");
-		} else {
-			// 댓글 작성
-			int result = eventService.insertReply(r);
-			
-			if(result>0) {
-				response.put("success", true);
-				response.put("message", "댓글 작성이 완료되었습니다!");
-			} else {
-				response.put("success", false);
-				response.put("message", "댓글 작성에 실패했습니다.");
-			}
-			
-		}
-
-		return response;
+		return (result>0) ? "success" : "fail";
 	}
 	
 	/**
@@ -202,7 +182,7 @@ public class EventController {
 	 * @return
 	 */
 	@ResponseBody
-	@PostMapping(value="rupdate.ev", produces = "application/json; charset=UTF-8")
+	@PostMapping(value="rupdate.ev")
 	public Map<String, String> ajaxUpdateReply(@RequestBody Reply r) {
 		System.out.println("수정 요청 데이터 : " + r);
 		
@@ -279,6 +259,7 @@ public class EventController {
 		return "admin/event/adminEventEnrollForm";
 	}
 	
+
 	/**
 	 * 241222 한혜원
 	 * 쿠폰 등록 페이지 요청
@@ -293,7 +274,7 @@ public class EventController {
 	
 	/**
 	 * 241211 ~ 241212 한혜원 
-	 * 게시글 작성 요청(+게시글, 쿠폰, 첨부파일)
+	 * 게시글 작성 요청
 	 * @param eventType
 	 * @param e
 	 * @param upfiles
@@ -302,9 +283,8 @@ public class EventController {
 	 * @return
 	 */
 	@PostMapping("insert.ev")
-	public ModelAndView insertEvent(@RequestParam("eventType") int eventType, Event e,
-	                                @RequestParam("upfiles") MultipartFile[] upfiles, 
-	                                HttpSession session, ModelAndView mv) {
+	public ModelAndView insertEvent(@RequestParam("eventType") int eventType, Event e, 
+	                                @RequestParam("upfiles") MultipartFile[] upfiles, HttpSession session, ModelAndView mv) {
 	    // 첨부파일 리스트 생성
 	    List<EventAttachment> eventAttachmentList = new ArrayList<>();
 
@@ -313,7 +293,7 @@ public class EventController {
 
 	    int fileLevel = 1; // 대표이미지 1, 일반파일 2
 
-	    // 1. 첨부파일 처리 로직
+	    // 첨부파일 처리 로직
 	    for (MultipartFile upfile : upfiles) {
 	        if (!upfile.getOriginalFilename().equals("")) {
 	            String changeName = saveFile(upfile, session); // 파일 저장 및 이름 변경
@@ -333,11 +313,10 @@ public class EventController {
 	        }
 	    }
 
-	    // 2. 게시글 저장 서비스 호출
-	    int eventResult = eventService.insertEvent(e);
+	    // 게시글 저장 서비스 호출
+	    int result = eventService.insertEvent(e);
 
-	    if (eventResult > 0) {
-	    	
+	    if (result > 0) {
 	        // 게시글 저장 성공 시, 첨부파일 저장 로직 실행
 	        for (EventAttachment eventAttachment : eventAttachmentList) {
 	            eventAttachment.setRefEno(e.getEventNo()); // 저장된 게시글 번호를 참조번호로 설정
@@ -359,6 +338,7 @@ public class EventController {
 	    return mv;
 	}
 	
+
 	/**
 	 * 241222 한혜원
 	 * 쿠폰 등록
@@ -580,6 +560,7 @@ public class EventController {
 	
 	
 	/**
+
 	 * 241223 한혜원
 	 * 쿠폰목록조회
 	 * @param eventNo
@@ -643,7 +624,6 @@ public class EventController {
 	public String selectApplicantList(@RequestParam("eventNo")int eventNo, 
 									  @RequestParam("eventType")int eventType, 
 									  @RequestParam(value="cpage", defaultValue="1")int currentpage,
-									  HttpSession session,
 									  Model model) {
 		
 		// System.out.println(eventNo);
@@ -681,7 +661,7 @@ public class EventController {
 			// 버튼 응모자 목록조회 
 			listCount = eventService.aplistCount(eventNo); // 응모자 수 조회 
 			pi = Pagination.getPageInfo(listCount, currentpage, pageLimit, boardLimit);
-			// System.out.println("응모자 페이지 정보 (pi): " + pi);
+			System.out.println("응모자 페이지 정보 (pi): " + pi);
 			
 			// 페이징 적용하여 응모자 목록 조회 
 			Map<String, Object> params = new HashMap<>();
@@ -743,8 +723,6 @@ public class EventController {
 							 RedirectAttributes redirectAttributes) {
 		
 	} */
-	
-	
 	
 	// ------------------------------------------ 파일 저장 메소드
 	public String saveFile(MultipartFile upfile, HttpSession session) {

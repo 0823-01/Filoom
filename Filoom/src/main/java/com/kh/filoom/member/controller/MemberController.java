@@ -25,7 +25,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.kh.filoom.member.model.service.MemberService;
-import com.kh.filoom.member.model.vo.History;
 import com.kh.filoom.member.model.vo.Member;
 import com.kh.filoom.member.model.vo.Reserve;
 
@@ -368,16 +367,16 @@ public class MemberController {
 //		return "member/reserve";
 //	}
 	
-//	/**
-//	 * 2024.12.13 김다훈
-//	 * 마이페이지(내가 본 영화 조회) 접속 요청
-//	 * @return
-//	 */
-//	@GetMapping("history.me")
-//	public String history() {
-//		
-//		return "member/history";
-//	}
+	/**
+	 * 2024.12.13 김다훈
+	 * 마이페이지(내가 본 영화 조회) 접속 요청
+	 * @return
+	 */
+	@GetMapping("history.me")
+	public String history() {
+		
+		return "member/history";
+	}
 	
 	/**
 	 * 2024.12.13 김다훈
@@ -644,6 +643,7 @@ public class MemberController {
 	    return "탈퇴 실패";
 	}
 
+
 	/**
 	 * 2024.12.17~19 김다훈
 	 * 예매 내역, 예매 취소 내역 조회 컨트롤러
@@ -659,22 +659,25 @@ public class MemberController {
         
         // 예매 내역 조회
         List<Reserve> reserveList = memberService.reserveList(loginUser.getUserNo());
-        // 예매 시 사용한 쿠폰 목록 조회
-        List<Reserve> useCouponList = memberService.useCouponList(loginUser.getUserNo());
-        // 예매 취소 내역 조회
+        
+        List<Reserve> couponList = memberService.couponList(loginUser.getUserNo());
+        
         List<Reserve> cancelList = memberService.cancelList(loginUser.getUserNo());
         
 //        System.out.println("reserveList = " + reserveList);
 //        System.out.println("useCouponList = " + useCouponList);
 //        System.out.println("cancelList = " + cancelList);
 
+
         // 모델에 예매 내역 데이터 담기
         model.addAttribute("reserveList", reserveList);
-        model.addAttribute("useCouponList", useCouponList);
+        model.addAttribute("couponList", couponList);
+
         model.addAttribute("cancelList", cancelList);
         
         return "member/reserve"; // 예매 내역 화면으로 이동
     }
+
 	
 	/**
 	 * 2024.12.20 김다훈

@@ -62,7 +62,6 @@ public interface MovieService {
 	
 	// === 영화 상세 페이지 ===
 	Movie showDetail(int movieNo); // 상세 정보 조회
-	Poster showThumbnail(int movieNo); // 영화 포스터 호호
 	// listScenes(); // 스틸컷 목록 조회
 	// selectReviewList(); // 리뷰 목록 조회
 	
@@ -76,7 +75,6 @@ public interface MovieService {
 	
 	// === 관리자 영화 추가 페이지 ===
 	int addMovie(Movie m);
-	int undoAddMovie(int movieNo); // 영화 추가 후 포스터 추가 실패시 써먹을 의도
 	
 	// === 관리자 영화 수정 페이지 ===
 	Movie selectMovietoModify(int movieNo); // 관리자 상세 페이지에서도 활용
@@ -90,4 +88,11 @@ public interface MovieService {
 	// 상세 조회는 selectMovietoModify(movieNo)를 사용
 	// premiere : 스위치 눌러서 바뀐 값 기준.
 	int togglePremiere(int movieNo, HashMap<String, Integer> map);
+	
+	// 상영 정보
+	ArrayList<Movie> showRunInfo(int movieNo); // 조회
+	int checkRunCount(int movieNo); // RunInfo 수 조회
+	
+	int newRunInfo(Movie m); // 추가
+	// int removeRunInfo(int playingNo); // 삭제
 }

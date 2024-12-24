@@ -591,47 +591,26 @@
 		FROM MOVIE M JOIN POSTER P USING (MOVIE_NO)
 		WHERE MOVIE_NO = #{movieNo} AND M.STATUS = 'Y' AND P.FILE_LEVEL = 1
 	
-	</select>
 	
-	<!-- 이거랑 showDetail이랑 통합해서 movieWithPoster 이용해서 쓸 수 있을라나?
-	<select id="showThumbnail" parameterType="movieNo" resultMap="">
-		SELECT FILE_NAME, FILE_CODENAME 
-		FROM POSTER
-		WHERE MOVIE_NO = #{movieNo} AND STATUS = 'Y'
-			AND FILE_LEVEL = 1
 	</select>
 
-	-->
 
 	<!-- === 영화 추가 페이지 === -->
-	<insert id="addMovie" parameterType="movie">
+	<update id="addMovie" parameterType="movie">
 		INSERT INTO MOVIE (
 			MOVIE_NO, MOVIE_TITLE, OPEN_DATE, DIRECTOR,
 			GENRE, RUNTIME, SCREEN_TYPE, FILM_RATE,
-			DESCRIPTION, STARRING, TRAILER)
-		VALUES (
-			SEQ_MNO.NEXTVAL, #{movieTitle}, #{openDate}, #{director},
+			DESCRIPTION, STARRING, TRAILER
+		) VALUES (
+			SEQ_MOV.NEXTVAL, #{movieTitle}, #{openDate}, #{director},
 			#{genre}, #{runtime}, #{screenType}, #{filmRate},
-			#{description}, #{starring}, #{trailer})
-		<selectKey keyProperty="movieNo" resultType="int" order="AFTER">
-			SELECT SEQ_MNO.CURRVAL FROM DUAL
-		</selectKey>
-	</insert>
-	
-	<delete id="undoAddMovie" parameterType="_int">
-		DELETE FROM MOVIE
-		WHERE MOVIE_NO = #{movieNo}
-	</delete>
+			#{description}, #{starring}, #{trailer}
+		)
+	</update>
 	
 	<!-- 이미지 추가 (영화 추가/수정 공통) -->
-	<insert id="addPoster" parameterType="poster">
-		INSERT INTO POSTER (
-		    IMAGE_ID, MOVIE_NO, FILE_NAME, FILE_CODENAME,
-		    IMAGE_PATH, FILE_LEVEL
-		) VALUES (
-		    SEQ_IMG.NEXTVAL, #{movieNo}, #{fileName}, #{fileCodename},
-		    #{imagePath}, 1)
-	</insert>
+	<!-- <update id="addPoster" parameterType="poster">
+	</update> -->
 	
 	<!-- === 영화 수정 페이지 === -->
 	<!-- 기존 영화 정보를 페이지 내 input의 value값으로 집어넣기 -->
@@ -703,5 +682,40 @@
 		SET PREMIERE = DECODE(#{premiere}, 1, 'Y', 0, 'N')
 		WHERE MOVIE_NO = #{movieNo}
 	</update>
+	
+	<!-- 상영 정보 조회 -->
+	<select id="showRunInfo" parameterType="_int" resultMap="movieResultSet">
+		SELECT PLAYING_NO, PLAYTIME, SCREEN_NO
+		FROM PLAYING PL JOIN MOVIE M USING (MOVIE_NO)
+		WHERE MOVIE_NO = #{movieNo} AND PL.STATUS = 'Y'
+	</select>
+	<select id="checkRunCount" parameterType="_int" resultType="_int">
+		SELECT COUNT(*) FROM PLAYING PL JOIN MOVIE M USING (MOVIE_NO)
+		WHERE PL.STATUS = 'Y' AND MOVIE_NO = #{movieNo}
+	</select>
+	
+	<!-- 상영 정보 추가 -->
+	<insert id="newRunInfo" paramterType="movie">
+		INSERT INTO PLAYING(PLAYING_NO, PLAYTIME, MOVIE_NO, SCREEN_NO)
+		VALUES(SEQ_PLA.NEXTVAL, #{playTime}, #{movieNo}, TO_NUMBER(#{screenName}))
+	</insert>
+	
+	<!-- <update id="removeRunInfo" parameterType="_int">
+		UPDATE PLAYING
+		SET STATUS = 'Y'
+		WHERE PLAYING_NO = #{playingNo} 
+	</update> -->
+	
+	<!-- === 리뷰 관련 === -->
+	<!-- 리뷰 조회 - 사용자, 관리자 공통 -->
+	<!-- 공사중 -->
+	
+	<!-- 리뷰 작성 (사용자) -->
+	
+	<!-- 리뷰 수정 (사용자) -->
+	
+	<!-- 리뷰 삭제 (사용자) -->
+	
+	<!-- 리뷰 강제 삭제 (관리자) -->
 
 </mapper>
