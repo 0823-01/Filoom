@@ -5,6 +5,9 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
+
+import java.net.URLEncoder;
+import java.net.http.HttpRequest;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -331,15 +334,37 @@ public class BookController {
 	
 	
 	//형문/////////////////////////////////////////////////////////////////////////
-	
+	@ResponseBody
+	@PostMapping("deleteSB.pm")
+	public String deleteSeatAndBook(ArrayList<String> bookingSeatNos
+									,int playingNo
+									,int bookNo) {
+		log.debug("좌석,북넘버 제거 " );
+		
+		
+		return "";
+	}
 	
 	@Autowired
 	private DataEncrypt sha256Enc;
 
 
 	
-	@GetMapping("paymentForm.pm")
-	public ModelAndView paymentForm(ModelAndView mv,HttpSession session,int playingNo,  @RequestParam("seatNos")ArrayList<String> seatNos) {
+	@PostMapping("paymentForm.pm")
+	public ModelAndView paymentFormRequest1(ModelAndView mv,HttpSession session,
+									int playingNo,  
+									@RequestParam("seatNos")ArrayList<String> seatNos
+									) {
+		//===============테스트RedirectAttributes redirectAttributes
+		
+		//redirectAttributes.addFlashAttribute("playingNo",playingNo);
+		//==============
+		
+		
+		log.debug("================================================");
+		log.debug("==결제폼 요청======================================");
+		log.debug("================================================");
+
 		
 		//session에서 회원번호 가져오기
 		Member loginUser = (Member)session.getAttribute("loginUser");
@@ -348,10 +373,43 @@ public class BookController {
 		int userNo = loginUser.getUserNo();
 		
 		
-		  
 		log.debug("1==결제폼 요청(상영번호+좌석번호 seatNos : "+seatNos +"상영번호 : "+playingNo + " ,회원번호 : " +userNo );
+
+		//0. 유효한지 체크...
+		
+		//1. 좌석번호seatNos 로 좌석정보 
+		int timeLimitUpdate = bookService.updateTimeLimit(seatNos);
+		
+		log.debug("1. 좌석 시간 늘려주기 처리된행의갯수 : " +timeLimitUpdate+"  (0실패/1이상 성공)");
 		
 		
+
+		//여기까지 DML (insert,update,delete)
+		//=====================================================
+		//여기서 부턴 조회
+		
+		//3.결제화면에 넘길 정보 조회, mv에 담기
+		//
+					
+		//*상영번호 -> 영화정보,이미지,상영정보, 상영관정보 조회
+		Movie movie = bookService.selectMovieForPlayingNo(playingNo);
+		log.debug("2. 보낼정보 영화정보(+포스터),상영정보,상영관 정보 movie : " + movie.toString());
+
+		
+		//*상영번호 -> 상영좌석, 상영관정보 조회
+		
+		ArrayList<BookingSeat> bookingSeatList = bookService.checkAndGetBookingSeatNoList(seatNos,playingNo,null);
+		log.debug("3. 좌석정보, 상영관정보 : bookingSeatList : " + bookingSeatList.toString() );
+		
+		mv.addObject("movie",movie);
+		mv.addObject("bookingSeatList",bookingSeatList);
+		mv.addObject("PRICE",PRICE);
+		
+		//여기서부터 테스트
+		//mv.setViewName("redirect:/paymentFormResult.pm");//2번째메소드 호출
+		mv.setViewName("book/paymentForm");
+		
+
 		//1.유효성검사 + 상영좌석일렬번호 구하기
 		//좌석번호리스트, 영화상영번호 넘기면서, 유효성검사 (둘중하나라도 예약불가 / 둘다 예약가능일경우)
 		
@@ -404,12 +462,48 @@ public class BookController {
 			
 		}
 
+
+
+		
+		return mv;
+	}
+	@GetMapping("paymentFormResult.pm")
+	public ModelAndView paymentFormResult(ModelAndView mv) {
+	
+		log.debug("두번재 핸들러 메소드 잘 호출됨");
+		//log.debug("전달받은 값 : playingNo : "+playingNo);
+
 		
 
 		return mv;
 
 	}
 	
+
+	
+	//상영좌석이 생성되었는지 체크
+	//
+	
+	/*
+	@ResponseBody
+	@PostMapping("reCheckBs.pm")
+	public String reCheckBookingSeatList (String seatNo,int playingNo) {
+		
+		log.debug("넘어온값 : ArrayList<String> seatNos : "+seatNo+", playingNo : "+playingNo);
+		
+		ArrayList<String> seatNos = new ArrayList();
+		seatNos.add(seatNo);
+		
+		int checkSeatResult = bookService.checkBookingSeat(playingNo,seatNos);
+					
+		
+		log.debug("reCheckBs Ajax 요청 결과 : "+checkSeatResult+" (0:생성안됌/1이상:생성됨)" );
+		return checkSeatResult+"";
+		
+	}
+	*/
+	
+
 	@ResponseBody
 	@PostMapping(value="couponList.co",produces="application/json; charset=UTF-8")
 	public String selectCouponList(int userNo){
@@ -513,11 +607,152 @@ public class BookController {
 
 	
 	
-	
 	//결제시 필요한 정보 암호화 메소드
 	public final synchronized String getyyyyMMddHHmmss(){
 		SimpleDateFormat yyyyMMddHHmmss = new SimpleDateFormat("yyyyMMddHHmmss");
 		return yyyyMMddHHmmss.format(new Date());
+	}
+	//결제 처리 컨트롤러 -> 결제 창 컨트롤러 호출
+ 	@PostMapping(value="payResult.pm")
+	public ModelAndView PaymentResult(ModelAndView mv,
+								@RequestParam Map<String, String> request,
+								@RequestParam(value="couponNos", required=false)ArrayList<Integer> couponNos,
+								@RequestParam("bookingSeatNos")ArrayList<String> bookingSeatNos,
+								HttpSession session
+								) throws Exception {
+ 		
+ 		log.debug("=========================");
+		log.debug("==결제후 결제 처리 메소드 실행==");
+		log.debug("=========================");
+		
+		
+		
+		int userNo = ((Member)session.getAttribute("loginUser")).getUserNo();
+		int bookNo = Integer.parseInt(request.get("bookNo"));
+		int playingNo = Integer.parseInt(request.get("playingNo"));
+		
+		log.debug("넘어온 값들 : ArrayList<String>bookingSeatNos = "+bookingSeatNos+"bookNo = "+ bookNo +", playingNo : "+ playingNo);
+				
+		
+		boolean seatTest = false;
+		int couponTest = 0;
+		
+
+		
+		//1. 좌석 유효성 검사
+		//		넘어온 좌석번호로 유효성 검사
+			
+		////
+		ArrayList<BookingSeat> bookingSeatList= bookService.checkAndGetBookingSeatNoList(null,playingNo,bookingSeatNos);
+		
+		log.debug("유효성 검사 통과한 좌석 정보 : "+bookingSeatList);
+		if(bookingSeatList.size() ==bookingSeatNos.size()) { 
+			seatTest = true;
+			log.debug("좌석 유효성 검사 통과 "+seatTest);
+		}else {
+			seatTest = false;
+			log.debug("좌석 유효성 검사 실패 "+seatTest);
+		}
+		
+		log.debug(" 좌석유효성 검사 결과 : "+seatTest + "상영좌석일렬번호 리스트"+ bookingSeatList);
+		
+		
+		
+		
+		//2. 쿠폰 유효성 검사
+		//		
+		
+		if(couponNos!=null) { //쿠폰 있는 경우		
+			int couponResult = bookService.selectCheckCoupon(couponNos,userNo);						
+			if(couponResult == couponNos.size()) {// 유효성테스트 통과
+				couponTest = 1;
+			}else { //유효성 테스트 실패
+				couponTest = 2;
+			}
+		}
+		log.debug(" 쿠폰 유효성 테스트 0(쿠폰x) 1(통과) 2(실패) 결과 : "+couponTest);
+		
+		
+		//3. 결제 테스트 
+		boolean payTest = payment(request,seatTest,couponTest);
+		log.debug(" 결제 결과 payTest" + payTest);
+		
+		//4. 데이터 업데이트 (좌석, 쿠폰, 예매)
+		
+		if(payTest) { //결제성공
+			//좌석 (타임리밋)
+			int seatResult = bookService.updateBookingSeatDone(bookingSeatList,bookNo);
+			log.debug("좌석 예매 성공 업데이트 처리된 행의 갯수 "+ seatResult);
+			
+			//쿠폰 (사용유무,예매번호)
+			if(couponTest==1) {	
+				int couponResult = bookService.updateCouponUserDone(couponNos,bookNo,userNo);
+				log.debug("사용 처리된 쿠폰 수 : "+couponResult);
+			}
+			
+			//예매(결제정보,
+			Booking bookingData = new Booking();
+			bookingData.setBookNo(bookNo);
+			bookingData.setUserNo(userNo);
+			bookingData.setBookTotalCost(Integer.parseInt(request.get("totalCost")));
+			bookingData.setBookCost(Integer.parseInt(request.get("Amt")));
+			bookingData.setCostProcess(request.get("PayMethod"));
+			if(request.get("TxTid")!=null) {
+				bookingData.setCostTid(request.get("TxTid"));
+			}else{
+				bookingData.setCostTid(null);
+			}
+			
+			int bookingResult = bookService.updateBookingDone(bookingData);
+			
+			log.debug("영화예매 처리(update)된 행의 갯수 : "+bookingResult+" (1성공,0실패)");
+			
+			
+			
+			
+			//보낼 정보 //조회하기 
+			//*상영번호 -> 영화정보,이미지,상영정보, 상영관정보 조회
+			Movie movie = bookService.selectMovieForPlayingNo(playingNo);
+			mv.addObject("movie",movie);
+			log.debug("보낼 정보 영화정보(+포스터),상영정보,상영관 정보 movie : " + movie.toString());
+			
+			//*상영좌석, 상영관정보 조회 (상영좌석번호로)
+		
+			mv.addObject("bookingSeatList",bookingSeatList); //상영좌석 정보 리스트
+			log.debug("좌석정보, 상영관정보 : bookingSeatList : " + bookingSeatList.toString() );
+			
+			mv.addObject("bookingSeatList",bookingSeatList);
+			mv.addObject("bookNo",bookNo);
+			
+			
+			//쿠폰정보 (북넘버)
+			ArrayList<CouponUser> couponUserList = new ArrayList();
+			couponUserList = bookService.selectListCouponUserList(bookNo);
+			log.debug("보낼정보 사용한 쿠폰 정보들(예매번호) couponUserList: "+couponUserList.toString() );
+			mv.addObject("couponUserList",couponUserList);
+			
+			//예약정보 (북넘버)
+			Booking booking = bookService.selectBooking(bookNo);
+			log.debug("보낼정보 예약된 정보들 : "+booking);
+			mv.addObject("booking",booking);
+			mv.setViewName("book/paymentResult");
+			
+		}else {
+			
+			
+			//좌석 삭제
+			int bookingSeatDeleteResult = bookService.deleteBookingSeats(bookingSeatNos);
+			log.debug("좌석삭제 처리된 행의 갯수 : "+ bookingSeatDeleteResult);
+			//쿠폰그대로
+			//예매번호 삭제
+			int bookingDeleteResult = bookService.deleteBooking(bookNo,userNo);
+			log.debug("예매번호 삭제 처리된 행의 갯수 : "+bookingDeleteResult);
+			
+			mv.setViewName("redirect:/");
+		}
+		
+		
+		return mv;
 	}
 	
 	

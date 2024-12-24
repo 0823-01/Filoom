@@ -139,6 +139,15 @@ public class BookServiceImple implements BookService {
 	
 	//결제===========================================================================
 
+
+	//좌석등록하기 
+	@Override
+	@Transactional
+	public int insertBookingSeats(int playingNo, ArrayList<String> seatNos) {
+		return bookDao.insertBookingSeats(sqlSession,playingNo,seatNos);
+		
+	}	
+	
 	//1. 좌석 유효성 검사 + 상영좌석일렬번호 반환
 	@Override
 	public ArrayList<BookingSeat> getBookingSeatNoList(ArrayList<String> seatNos,int playingNo) {
@@ -147,18 +156,16 @@ public class BookServiceImple implements BookService {
 		
 		
 		bookingSeatNoList = bookDao.getBookingseatNoList(sqlSession,seatNos,playingNo);
+
+		ArrayList<BookingSeat> bookingSeatNoList = bookDao.checkAndGetBookingSeatNoList(sqlSession,seatNos,playingNo,bookingSeatNos);
+
 		return bookingSeatNoList;
 	}
 
 	//3. 좌석 유효시간 sysdate + 5분
 	@Override
-	@Transactional
-	public int updateTimeLimit(ArrayList<BookingSeat> bookingSeatNoList) {
-		
-		//int updateTimeLimit=bookDao.updateTimeLimit(sqlSession, bookingSeatNoList);
-		int updateTeimLimit = 0;
-		
-		return updateTeimLimit;
+	public int updateTimeLimit(ArrayList<String> seatNos) {
+		return bookDao.updateTimeLimit(sqlSession,seatNos);
 	}
 
 	
@@ -215,7 +222,19 @@ public class BookServiceImple implements BookService {
 		return bookDao.deleteBookNo(sqlSession,bookNo,userNo);
 	}
 
-	
+
+
+	//영화 예매 처리
+	@Override
+	public int updateBookingDone(Booking booking) {
+		return bookDao.updateBookingDone(sqlSession,booking);
+	}
+
+	//예매된 좌석 처리
+	@Override
+	public int updateBookingSeatDone(ArrayList<BookingSeat> bookingSeatNoList,int bookNo) {
+		return bookDao.updateBookingSeatDone(sqlSession,bookingSeatNoList,bookNo);
+	}
 
 	
 

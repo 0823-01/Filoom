@@ -271,7 +271,6 @@
 
                     <input type="button" id ="button_sample"
                      name="movie_submit" value="추가 완료" onclick="submitMovie();">
-
                 </div>
 
             </div>
@@ -337,52 +336,67 @@
     }
     
     function submitMovie() {
-
-    	let movieTitle = $("#title").val();
-    	let filmRate = parseInt($("input[name=filmrate]").val(), 10); // 10진수로 parseInt
-    	let director = $("#director").val();
-    	let starring = $("#cast").val();
-    	let genre = $("#genre").val();
-    	let runtime = $("#runtime").val(); // number로 받고 있어서 parseInt 필요 없음
-    	let trailer = $("#trailer_link").val();
-    	let description = $("#synopsis").val();
-    	
-    	// adding checkbox selection of 'screenType'
-    	let screenType = [];
-    	$(".screentype").each(function() {
-    		if($(this).is(":checked")) {
-    			screenType.push($(this).val());
-    		}
-    	});
-
-    	$.ajax({
-    		url:"admin.insertmovie.mo",
-    		type:"post",
-    		data: {
-    			"movieTitle" : movieTitle,
-    			"filmRate" : filmRate,
-    			"director" : director,
-    			"starring" : starring,
-    			"genre" : genre,
-    			"screenType" : screenType,
-    			"runtime" : runtime,
-    			"trailer" : trailer,
-    			"description" : description
-    		},
-
-    		success: function(result) {
-    			if (result == "success") {
-    				alert('added successfully');
-    				return "redirect:/admin/movie/manageMovieList";
-    			} else {
-    				// if result = "failure"
-    				alert('movie was not added');
-    			}
-    		},
-    		error: function(result) {
-    			alert('DAMN!');
-    		}	
-    	});
+		console.log($("#posterInput").val());
+		// 포스터를 첨부하지 않은 경우
+    	if($("#posterInput").val() === '') {
+    		alert('포스터를 첨부해주세요.');
+    		return false;
+    	} else {
+	    	/* ↓ 이걸 해야 form 태그없이도 current request is not a multipart request
+	    		안 띄우고 이미지를 넣을 수 있다고 함 */
+			let formData = new FormData();
+	    	
+			// adding checkbox selection of 'screenType'
+			let screenType = [];
+	    	$(".screentype").each(function() {
+	    		if($(this).is(":checked")) {
+	    			screenType.push($(this).val());
+	    		}
+	    	});
+	    	
+			formData.append("movieTitle", $("#title").val());
+			formData.append("filmRate", parseInt($('input[name=filmrate]:checked').val(), 10));
+			// 10진수로 parseInt
+			formData.append("director", $("#director").val());
+			formData.append("starring", $("#cast").val());
+			formData.append("genre", $("#genre").val());
+			formData.append("openDate", $("#open_date").val());
+			formData.append("screenType", screenType.join(","));
+			formData.append("runtime", $("#runtime").val());
+			// ↑ number로 받고 있어서 굳이 parseInt 안 해도 됨
+			formData.append("trailer", $("#trailer_link").val());
+			formData.append("description",$("#synopsis").val());
+			formData.append("img", $("#posterInput")[0].files[0]);
+	
+	    	$.ajax({
+	    		url:"admin.insertmovie.mo",
+	    		type:"post",
+	    		data: formData,
+	    		
+	    		// 아래 두 줄을 안 넣으면 'illegal invocation' 오류가 남
+	    		// 사유 : https://repacat.tistory.com/38
+	    		contentType: false,
+	    		processData: false,
+	
+	    		success: function(result) {
+	    			if (result == "success") {
+	    				alert('added successfully');
+	    				
+						location.href = 'movielist_ad.mo';
+	    				// return redirect는 여기가 아니라 Controller에서 쓰는 거임
+	    			} else if (result == "half_failure") {
+	    				alert('movie was not added because poster was not uploaded');
+	    			}
+	    				else {
+	    				// if result = "failure"
+	    				alert('movie was not added');
+	    			}
+	    		},
+	    		error: function(result) {
+	    			alert('DAMN!');
+	    		}	
+	    	});
+    	}
 
    	}
     </script>

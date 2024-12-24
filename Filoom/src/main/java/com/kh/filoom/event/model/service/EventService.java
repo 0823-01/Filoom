@@ -93,6 +93,21 @@ public interface EventService {
 	// 당첨자 추가
 	int insertWinners(Map<String, Object> params);
 
+	// 쿠폰 발급
+	int sendCoupon(List<Applicant> alist, int eventNo);
+
+	// 쿠폰목록수
+	int selectCouponListCount(int eventNo);
+
+	// 쿠폰목록조회
+	ArrayList<Coupon> selectCouponList(Map<String, Object>params);
+
+	void deleteEventAttachment(List<Long> deleteFileIds);
+
+
+	int couponInsertEx(Map<String, Object> params);
+
+
 
 
 

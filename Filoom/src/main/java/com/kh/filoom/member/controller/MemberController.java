@@ -277,7 +277,7 @@ public class MemberController {
 
 
 	        // 이메일 설정
-	        helper.setFrom("dahoon0823@gmail.com");
+	        helper.setFrom("backlightfiloom@gmail.com");
 	        helper.setTo(email);
 	        helper.setSubject("[Filoom] 이메일 인증 번호입니다.");
 	        helper.setText(htmlContent, true); // true는 HTML 형식임을 명시
@@ -643,7 +643,15 @@ public class MemberController {
 	    return "탈퇴 실패";
 	}
 
-	@GetMapping("/reserve.me")
+
+	/**
+	 * 2024.12.17~19 김다훈
+	 * 예매 내역, 예매 취소 내역 조회 컨트롤러
+	 * @param session
+	 * @param model
+	 * @return
+	 */
+	@GetMapping("reserve.me")
     public String reserveList(HttpSession session, Model model) {
 		
         // 로그인된 사용자 세션에서 가져오기
@@ -656,10 +664,10 @@ public class MemberController {
         
         List<Reserve> cancelList = memberService.cancelList(loginUser.getUserNo());
         
-        System.out.println("reserveList = " + reserveList);
-        System.out.println("couponList = " + couponList);
-        
-        System.out.println("cancelList = " + cancelList);
+//        System.out.println("reserveList = " + reserveList);
+//        System.out.println("useCouponList = " + useCouponList);
+//        System.out.println("cancelList = " + cancelList);
+
 
         // 모델에 예매 내역 데이터 담기
         model.addAttribute("reserveList", reserveList);
@@ -670,7 +678,142 @@ public class MemberController {
         return "member/reserve"; // 예매 내역 화면으로 이동
     }
 
+	
+	/**
+	 * 2024.12.20 김다훈
+	 * 내가 본 영화 조회 요청 컨트롤러
+	 * @param session
+	 * @param model
+	 * @return
+	 */
+	@GetMapping("history.me")
+	public String historyList(
+	        @RequestParam(value = "year", required = false, defaultValue = "all") String year,
+	        HttpSession session, 
+	        Model model) {
+	    
+	    // 로그인된 사용자 정보 가져오기
+	    Member loginUser = (Member) session.getAttribute("loginUser");
+	    int userNo = loginUser.getUserNo();
+	    
+	    // 연도별 영화 기록 조회
+	    List<History> historyList = year.equals("all") 
+	        ? memberService.historyList(userNo) 
+	        : memberService.historyListByYear(userNo, year);
+	    
+	    model.addAttribute("historyList", historyList);
+	    model.addAttribute("selectedYear", year);
+	    
+	    return "member/history";
+	}
 
+	/**
+	 * 2024.12.22 김다훈
+	 * 아이디 찾기 요청 컨트롤러
+	 * @param userName
+	 * @param birth
+	 * @param email
+	 * @return
+	 */
+	@ResponseBody
+	@PostMapping(value = "findId.me", produces = "text/html; charset=UTF-8")
+	public String findId(@RequestParam("userName") String userName,
+	                     @RequestParam("birth") String birth,
+	                     @RequestParam("email") String email) {
+
+		// Map에 파라미터를 묶기
+	    Map<String, Object> paramMap = new HashMap<>();
+	    paramMap.put("userName", userName);
+	    paramMap.put("birth", birth);
+	    paramMap.put("email", email);
+		
+	    // DB에서 아이디 조회
+	    String userId = memberService.findUserId(paramMap);
+
+	    if (userId != null) {
+	        // 조회 결과가 있으면 아이디 반환
+	        return userId;
+	    } else {
+	        // 조회 결과가 없으면 에러 메시지 반환
+	        return "NOT_FOUND";
+	    }
+	}
+	
+	/**
+	 * 2024.12.22 김다훈
+	 * 아이디 찾기 결과 페이지 요청 컨트롤러
+	 * @return
+	 */
+	@PostMapping("findIdResult.me")
+	public String findIdResult(@RequestParam("userId") String userId, Model model) {
+		
+	    model.addAttribute("userId", userId); // userId를 모델에 추가
+	    
+	    return "member/findIdResult";
+	}
+	
+	@ResponseBody
+	@PostMapping(value = "findPwd.me", produces = "text/html; charset=UTF-8")
+	public String findPwd(@RequestParam("userName") String userName,
+	                      @RequestParam("userId") String userId,
+	                      @RequestParam("birth") String birth,
+	                      @RequestParam("email") String email) {
+
+	    // DB에서 사용자 정보 확인
+	    Map<String, Object> paramMap = new HashMap<>();
+	    paramMap.put("userName", userName);
+	    paramMap.put("userId", userId);
+	    paramMap.put("birth", birth);
+	    paramMap.put("email", email);
+
+	    String encodedPassword = memberService.findUserPwd(paramMap);
+
+	    if (encodedPassword != null) {
+	        // 비밀번호를 암호화된 상태로 반환
+	        return encodedPassword;
+	    } else {
+	        // 사용자 정보가 틀림
+	        return "NOT_FOUND";
+	    }
+	}
+
+	@PostMapping("updatePwdForm.me")
+	public String changePwdForm(@RequestParam("userId") String userId, Model model) {
+		
+	    model.addAttribute("userId", userId); // JSP에 userId 전달
+	    
+	    return "member/updatePwdForm"; // JSP 경로
+	}
+	
+	@ResponseBody
+	@PostMapping(value = "updatePwd.me", produces = "text/plain; charset=UTF-8")
+	public String updatePwd(@RequestParam("userId") String userId,
+	                        @RequestParam("newPwd") String newPwd) {
+	    
+	    // 비밀번호 암호화
+	    String encryptedPwd = bcryptPasswordEncoder.encode(newPwd);
+	    
+	    // Map 객체에 파라미터 묶기
+	    Map<String, String> paramMap = new HashMap<>();
+	    paramMap.put("userId", userId);
+	    paramMap.put("encryptedPwd", encryptedPwd);
+
+	    // 서비스 계층 호출
+	    int result = memberService.updateUserPwd(paramMap);
+
+	    // 결과 반환
+	    if (result > 0) {
+	        return "SUCCESS";
+	    } else {
+	        return "FAIL";
+	    }
+
+	}
+	
+	
+	
+	
+	
 
 
 }

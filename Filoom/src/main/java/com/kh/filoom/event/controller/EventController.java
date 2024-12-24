@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.google.gson.Gson;
 import com.kh.filoom.common.model.vo.PageInfo;
@@ -257,6 +258,18 @@ public class EventController {
 		return "admin/event/adminEventEnrollForm";
 	}
 	
+
+	/**
+	 * 241222 한혜원
+	 * 쿠폰 등록 페이지 요청
+	 * @return
+	 */
+	@GetMapping("couponForm.ev")
+	public String couponForm(@RequestParam("eventNo") int eventNo, Model model) {
+		model.addAttribute("eventNo", eventNo); // 쿠폰 등록에서 사용할 이벤트 번호 전달
+		return "admin/event/couponEnrollForm"; // 쿠폰 등록 폼 html 반환
+	}
+	
 	
 	/**
 	 * 241211 ~ 241212 한혜원 
@@ -308,6 +321,7 @@ public class EventController {
 	            eventAttachment.setRefEno(e.getEventNo()); // 저장된 게시글 번호를 참조번호로 설정
 	            eventService.insertEventAttachment(eventAttachment); // 첨부파일 저장
 	        }
+	        
 
 	        // 성공 메시지 설정
 	        session.setAttribute("alertMsg", "이벤트 게시글 작성 성공!");
@@ -321,6 +335,37 @@ public class EventController {
 	    // System.out.println("Event: " + e);
 	    // System.out.println("Attachments: " + eventAttachmentList);
 	    return mv;
+	}
+	
+
+	/**
+	 * 241222 한혜원
+	 * 쿠폰 등록
+	 * @param eventNo
+	 * @param coupon
+	 * @param session
+	 * @param mv
+	 * @return
+	 */
+	@PostMapping("insertCoupon.ev")
+	public ModelAndView insertCoupon(@RequestParam("eventNo")int eventNo, Coupon coupon, HttpSession session, ModelAndView mv) {
+		
+		// System.out.println(eventNo);
+		// 쿠폰 객체 설정 
+		coupon.setRefEno(eventNo);
+		
+		// 1. 쿠폰 등록 
+		int couponResult = eventService.insertCoupon(coupon);
+		
+		if(couponResult>0) {
+			session.setAttribute("alertMsg", "쿠폰 등록 성공!");
+			mv.setViewName("redirect:/clist.ev?eventNo=" + eventNo); // 쿠폰 등록 후 이벤트 게시글 등록 폼으로 포워딩
+		} else {
+			mv.addObject("errorMsg", "쿠폰 등록 실패!").setViewName("common/errorPage");
+		}
+		
+		// System.out.println(coupon);
+		return mv;
 	}
 	
 	
@@ -387,11 +432,56 @@ public class EventController {
 		return mv;
 	}
 	
-	// 게시글 수정 
 	
-	// 게시글 삭제 
+	/**
+	 * 241223 한혜원
+	 * 쿠폰목록조회
+	 * @param eventNo
+	 * @param currentPage
+	 * @param model
+	 * @return
+	 */
+	@GetMapping("clist.ev")
+	public String selectCouponList(@RequestParam(value="eventNo", required=false)int eventNo,
+								   @RequestParam(value="cpage", defaultValue="1")int currentPage, 
+								   Model model) {
+		
+		System.out.println(eventNo);
+		
+		if(eventNo == 0) {
+			return "errorPage";
+		}
+		
+		// 쿠폰 목록 조회 후 페이징 처리 변수 필요
+		int listCount = eventService.selectCouponListCount(eventNo);
+		
+		int pageLimit = 10;
+		int boardLimit = 10;
+		PageInfo pi = Pagination.getPageInfo(listCount, currentPage, pageLimit, boardLimit);
+		
+		// 페이징처리된 쿠폰목록조회 
+		Map<String, Object> params = new HashMap<>();
+		params.put("eventNo", eventNo);
+		params.put("pi", pi);
+		
+		ArrayList<Coupon> list = eventService.selectCouponList(params);
+		
+		// 응답데이터로 목록 및 페이징 관련 객체 넘기기
+		model.addAttribute("list", list);
+		model.addAttribute("pi", pi);
+		model.addAttribute("eventNo", eventNo);
+		System.out.println(params);
+		
+		System.out.println(listCount);
+		System.out.println(list);
+		
+		return "admin/event/adminCouponListView";
+
+	}
 	
-	// 응모자 확인 (댓글+버튼)
+	
+	
+	// 응모자 확인 (댓글+버튼) + 버튼 응모자들에게 쿠폰 발급하기 
 	/**
 	 * 241219 한혜원
 	 * 응모자 확인 버튼 클릭시, 해당 타입에 맞는 응모자 목록조회 페이지 요청 
@@ -409,8 +499,8 @@ public class EventController {
 									  @RequestParam(value="cpage", defaultValue="1")int currentpage,
 									  Model model) {
 		
-		System.out.println(eventNo);
-		System.out.println(eventType);
+		// System.out.println(eventNo);
+		// System.out.println(eventType);
 		
 		// 페이지 정보를 계산하기 위한 코드 
 		int listCount = 0; 
@@ -427,7 +517,7 @@ public class EventController {
 			// 댓글 목록일 경우
 			listCount = eventService.rlistCount(eventNo); // 댓글 개수 조회 
 			pi = Pagination.getPageInfo(listCount, currentpage, pageLimit, boardLimit);
-			System.out.println("댓글 페이지 정보 (pi): " + pi);
+			// System.out.println("댓글 페이지 정보 (pi): " + pi);
 			
 			// 페이징 적용하여 댓글 목록 조회 
 			Map<String, Object> params = new HashMap<>();
@@ -451,8 +541,11 @@ public class EventController {
 			params.put("eventNo", eventNo);
 			params.put("pi", pi);
 			
+			
 			alist = eventService.adminSelectApplicantList(params);
-			System.out.println("응모자 목록: " + alist);
+			// System.out.println("응모자 목록: " + alist);
+			
+			System.out.println("alist 는 " +alist);
 			
 			model.addAttribute("alist", alist);
 			model.addAttribute("pi", pi); // 페이징 정보 넘기기
@@ -496,6 +589,13 @@ public class EventController {
 	        return "error/adminEventErrorPage";
 	    }
 	}
+	
+	/*
+	public String sendCoupon(@RequestParam("eventNo")int eventNo,
+							 @RequestParam("couponNo")int couponNo,
+							 RedirectAttributes redirectAttributes) {
+		
+	} */
 	
 	
 	
@@ -546,6 +646,24 @@ public class EventController {
 	}
 
 	
+	
+	@PostMapping("insertCoupon.co")
+	public int couponInsertEx(@RequestBody Map<String, Object> params) {
+	   
+		// 전달된 파라미터에서 값을 추출
+	    String userNo = (String) params.get("userNo");
+	    int eventNo = (int) params.get("eventNo");
+	    
+	    // 출력
+	    System.out.println("userNo: " + userNo);  // 상태 출력
+	    System.out.println("eventNo: " + eventNo);  // 이벤트 번호 출력
+	    
+	    // 서비스 호출
+	    int result = eventService.couponInsertEx(params);
+	    
+	    // 결과 반환
+	    return result;
+	}
 	
 	
 	

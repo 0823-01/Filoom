@@ -1,6 +1,8 @@
 package com.kh.filoom.member.model.dao;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
@@ -70,5 +72,31 @@ public class MemberDao {
 
 		return sqlSession.selectList("memberMapper.couponList", userNo);
 	}
+	
+	public List<History> historyListByYear(SqlSessionTemplate sqlSession, int userNo, String year) {
+		
+	    Map<String, Object> params = new HashMap<>();
+	    params.put("userNo", userNo);
+	    params.put("year", year);
+	    return sqlSession.selectList("memberMapper.historyListByYear", params);
+	}
+
+
+	public String findUserId(SqlSessionTemplate sqlSession, Map<String, Object> paramMap) {
+
+		return sqlSession.selectOne("memberMapper.findUserId", paramMap);
+	}
+
+	public String findUserPwd(SqlSessionTemplate sqlSession, Map<String, Object> paramMap) {
+
+		return sqlSession.selectOne("memberMapper.findUserPwd", paramMap);
+	}
+
+	public int updateUserPwd(SqlSessionTemplate sqlSession, Map<String, String> paramMap) {
+
+		return sqlSession.update("memberMapper.updateUserPwd", paramMap);
+	}
+
+	
 
 }

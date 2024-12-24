@@ -56,9 +56,9 @@
 		<property name="host" value="smtp.gmail.com" />
 		<!-- smtp 는 보통 25 번 포트번호를 씀 -->
 		<property name="port" value="25" />
-		<property name="username" value="dahoon0823@gmail.com" />
+		<property name="username" value="backlightfiloom@gmail.com" />
 		<!-- 2차 앱 비밀번호 발급받은 것을 공백없이 쓴다. -->
-		<property name="password" value="mhecrvetaygmahgr" />
+		<property name="password" value="dakycriaifndfhgl" />
 		
 		<!-- email 전송 시 필요한 SMTP 규칙에 대한 설정 지정 -->
 		<property name="javaMailProperties">

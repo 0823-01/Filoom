@@ -169,7 +169,7 @@
             <div id = "nav">
                 <ul>
                     <li><a>회원 관리</a></li>
-                    <li><a>영화 관리</a></li>
+                    <li><a href="movielist_ad.mo">영화 관리</a></li>
                     <li><a>예약 관리</a></li>
                     <li><a>공지사항 관리</a></li>
                     <li><a>이벤트 관리</a></li>
@@ -191,10 +191,9 @@
                     <!-- fontawesome 무료 플랜이 한 달에 페이지뷰 1만 번 제한이 있는데
                      프리뷰 창의 페이지뷰도 세는 것 같아서 임시로 다른 img 태그로 대체했음
                      i 태그는 시연할 때만 활성화할 것! -->
-                     <!-- 목록이 임시로 사용자 페이지와 동일한 DB 기반으로 나오게 만든 관계로 검색 버튼을 임시로 상세관리 페이지로 이어놨음 -->
                     <div class="middle">
-                        <input type="search" class="search-bar" placeholder="1승...">
-                        <i class="fa-solid fa-magnifying-glass" onclick="location.href = 'admin.managemovie.mo';"></i>
+                        <input type="search" class="search-bar" placeholder="제목으로 검색..." value=${requestScope.keyword }>
+                        <i class="fa-solid fa-magnifying-glass" onclick="searchMovie();"></i>
                         <!-- <img class="fa-magnifying-glass" src="resources/images/posters/searchicon_pngtree.png"
                             style="width:25px; height: 26px;" onclick="location.href = 'admin.managemovie.mo';"> -->
                     </div>
@@ -233,7 +232,8 @@
                         -->
                         
                         <!--  현재 사용자 쪽 박스 오피스 페이지와 목록 조회 쿼리를 공유하고 있어서
-                        	16개만 나오고 있는 것이 정상 -->
+                        	링크도 사용자 쪽 상세 페이지로 연결되고 있는 것이 정상이고
+                        	내용물도 16개만 나오고 있는 것이 정상 -->
 
                         <br>
                        	<div class="movie-list">
@@ -281,32 +281,21 @@
      최초 설정은 OFF
     */
     $(function() {
-    	/*
-			let sw = 0;
-    		viewMovieList(sw);
-    		// sw = 1 → viewOpenedOnly(), sw = 0 → viewAll()
-    		로 만들고 싶은데 고민 중
-    	*/
-    	viewAll();
+    	adminList(0);
     })
     
     function toggleSwitch() {
-		if(!$("#openedOnly").prop("checked")) {
-			viewAll();
-		} else {
-			openedOnly();
-		}
-		
-		/* 이렇게 안되나?
-			sw = $("#openedOnly").prop("checked") ? 1 : 0;
-			viewAll(sw);
-			
-			만약 sw을 boolean으로 하면 밑에 ajax에서
-			url : sw ? "openedorder.mo" : "viewall.mo"로 하면
-			사용되는 함수를 하나로 줄일 수 있음
-		*/
+    	let isOpen = $("#openedOnly").prop("checked") ? 1 : 0;
+    	adminList(isOpen);
+// 		if(!$("#openedOnly").prop("checked")) {
+// 			viewAll();
+// 		} else {
+// 			openedOnly();
+// 		}
     }
     
+    /*
+    // same function as adminList(0)
     function viewAll() {
 		$.ajax({
 			url: "viewall.mo",
@@ -323,6 +312,7 @@
 		});	
 	}
 	
+    // same function as adminList(1)
 	function openedOnly() {
 		$.ajax({
 			url: "viewopened.mo",
@@ -337,6 +327,54 @@
 				alert("Mission Failure");
 			}
 		});
+	}
+	*/
+	
+	function adminList(isOpen) {
+		$.ajax({
+			url: "admin.viewlist.mo",
+			type: "get",
+			data: {"isOpen" : isOpen},
+			dataType: "html",
+			
+			success:function(result) {
+				// console.log(result);
+				$(".movie-list").empty();
+				$(".movie-list").append(result);
+			},
+			error: function() {
+				alert("박스오피스 조회에 실패하였습니다.");
+			}
+		})
+	}
+	
+	function searchMovie() {
+		let keyword = $("input[name=keyword]").val();
+		console.log(keyword);
+		// status = '상영중인 영화만 표시' 스위치 체크 여부
+		let status = $("#openedOnly").prop("checked") ? 1 : 0;
+		if(keyword != "") {
+			$.ajax({
+    			url: "admin.searchMovie.mo",
+    			type: "get",
+    			data: {"keyword" : keyword, "status" : status},
+    			dataType:"html",
+    			
+    			success: function(result) {
+					$(".movie-list").empty();
+					$(".movie-list").append(result);
+					//$(".pagingbar").empty();
+					//refreshPagingBar(??);
+					/* 검색 기능에서는 일부러 페이징바를 넣지 않으려고 하는데
+					 더미데이터(30편)에서 '아' 한 글자로 검색해도 10편 정도밖에 안 되기 때문임
+					 대신 페이징바를 없애는 기능으로 구현하였음
+					*/
+				},
+				error: function() {
+					alert("Mission Failure");
+				}
+			});
+		}
 	}
     </script>
     

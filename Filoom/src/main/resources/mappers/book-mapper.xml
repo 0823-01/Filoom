@@ -158,7 +158,6 @@
 		    P.PLAYING_NO =  #{playingNo}
 	</select>
 	
-	
 	<select id="isSeatAlreadyBooked" parameterType="map" resultType="int">
 	    SELECT COUNT(*)
 		FROM BOOKING_SEAT BS
@@ -177,6 +176,7 @@
 		    BOOK_NO
 		)
 		VALUES (
+
 		    SEQ_BSNO.NEXTVAL, -- 예약 좌석 일련번호 자동 증가
 		    TO_TIMESTAMP(#{timeLimit}, 'YYYY-MM-DD HH24:MI:SS.FF'),
 		    (SELECT SSEAT_NO
@@ -253,6 +253,12 @@
 	<select id="getBookingseatNoList" parameterType="map" resultMap="bookingSeatResultSet">
 
  		SELECT BOOKING_SEAT_NO
+
+	</select>
+	<select id="checkAndGetBookingSeatNoList" parameterType="map" resultMap="bookingSeatResultSet">
+ 		SELECT BOOKING_SEAT_NO,
+ 			   TO_CHAR(TIMELIMIT, 'YYYY-MM-DD HH24:MI:SS') AS TIMELIMIT,
+ 			   SEAT_NO
 		  FROM BOOKING_SEAT BS
 		  JOIN SCREEN_SEAT SS ON (BS.SSEAT_NO  = SS.SSEAT_NO)
 		  JOIN PLAYING P ON (BS.PLAYING_NO = P.PLAYING_NO)
@@ -268,13 +274,18 @@
 	</select>
 	
 	<update id="updateTimeLimit" parameterType="list" >
-		UPDATE BOOKING_SEAT 
+		UPDATE BOOKING_SEAT
 		   SET TIMELIMIT = SYSDATE+INTERVAL '5' MINUTE
-		 WHERE 
-		 <foreach item="item" collection="list" open="BOOKING_SEAT_NO IN(" separator="," close=")">
-		 	#{item.bookingSeatNo}
-		 </foreach>
-	</update>
+		 WHERE SSEAT_NO IN (
+		 		SELECT SSEAT_NO
+		  		  FROM SCREEN_SEAT
+		  		  WHERE SEAT_NO IN
+		  		  <foreach item="item" collection="list" open="(" separator="," close=")">
+		  		 	#{item} 
+		  		  </foreach>
+		  		   
+		  		  )
+	</update>	
 	
 
 	<!-- 북킹 데이터 생성과 동시에 bookNo 반환 -->	
@@ -305,4 +316,89 @@
 		  WHERE USER_NO = #{userNo}
 		    AND BOOK_NO = #{bookNo}	
 	</delete>
+
+	
+ 	<insert id="insertBookingSeats" parameterType="map">
+		INSERT INTO BOOKING_SEAT VALUES
+		           (SEQ_BSNO.NEXTVAL,
+		            SYSDATE+INTERVAL '5' MINUTE,
+		            (SELECT SSEAT_NO
+		               FROM SCREEN_SEAT
+		              WHERE SEAT_NO = #{seatNo}
+		                AND SCREEN_NO = (SELECT SCREEN_NO 
+		                                    FROM PLAYING
+		                                   WHERE PLAYING_NO = #{playingNo})
+					 ),
+		            #{playingNo},
+		            NULL)
+	</insert>
+	
+	<update id="updateBookingSeatDone" parameterType="map">
+		UPDATE BOOKING_SEAT
+		   SET TIMELIMIT = '2999-01-01',
+		       BOOK_NO = #{bookNo}
+	    WHERE							  
+			 <foreach item="item" collection="bookingSeatNoList" open="BOOKING_SEAT_NO IN (" separator="," close=")"> 
+			 	#{item.bookingSeatNo}
+		 	</foreach>
+	</update>
+	
+	<update id="updateBookingDone" parameterType="booking">
+		UPDATE BOOKING
+		   SET BOOK_DATE=SYSDATE,
+		       BOOK_TOTAL_COST=#{bookTotalCost},
+		       BOOK_COST=#{bookCost},
+		       COST_PROCESS=#{costProcess},
+		       COST_TID=#{costTid},
+		       STATUS='Y'
+		 WHERE BOOK_NO=#{bookNo}
+		   AND USER_NO=#{userNo}
+	</update>
+	
+	
+	<delete id="deleteBookingSeats" parameterType="list">
+		DELETE FROM BOOKING_SEAT
+		 WHERE 
+		 <foreach item="item" collection="list" open="BOOKING_SEAT_NO IN (" separator="," close=")">
+		 	#{item}
+		 </foreach>
+	</delete>
+	
+	<delete id="deleteBooking" parameterType="map">
+		DELETE FROM BOOKING
+		 WHERE BOOK_NO = #{bookNo}
+		   AND USER_NO = #{userNo}
+	</delete>
+	
+	<select id="selectBooking" parameterType="int" resultMap="bookingResultSet">
+		SELECT *
+		  FROM BOOKING
+		 WHERE BOOK_NO = #{bookNo}
+	</select>
+	
+	<update id="cancelUpdateBooking" parameterType="map">
+		UPDATE BOOKING
+		   SET STATUS ='N',
+		       MODIFY_DATE=SYSDATE
+		 WHERE BOOK_NO=#{bookNo}
+		   AND USER_NO=#{userNo}
+	</update>
+	
+	<select id="checkCancelBooking" parameterType="map" resultType="int">
+		SELECT COUNT(B.BOOK_NO)
+		  FROM BOOKING B
+		  JOIN BOOKING_SEAT BS ON (B.BOOK_NO = BS.BOOK_NO)
+		  JOIN PLAYING P ON (BS.PLAYING_NO = P.PLAYING_NO)
+		 WHERE B.BOOK_NO = #{bookNo}
+		   AND PLAYTIME > SYSDATE
+		   AND USER_NO = #{userNo}
+		   AND B.STATUS = 'Y'
+		   AND MODIFY_DATE IS NULL
+	</select>
+	
+	<delete id="cancelupdateBookingSeat" parameterType="int">
+		DELETE FROM BOOKING_SEAT
+	 	 WHERE BOOK_NO = #{bookNo}
+	</delete>
+	
 </mapper>

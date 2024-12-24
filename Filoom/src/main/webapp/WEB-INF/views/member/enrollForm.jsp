@@ -697,7 +697,7 @@
 	            
 	            if (!userName) {
 	                alert("이름을 입력해주세요.");
-	                $("#checkPwd").focus().css("border-color", "red");
+	                $("#userName").focus().css("border-color", "red");
 	                return;
 	            }
 	

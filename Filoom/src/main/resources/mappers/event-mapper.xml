@@ -44,6 +44,7 @@
 	<result column="USER_NO" property="userNo" />
 	<result column="APPLICATION_DATE" property="applicationDate" />
 	<result column="DRAWING_STATUS" property="drawingStatus" />
+	<result column="EVENT_NO" property="eventNo" />
 </resultMap>
 
 <!-- Winners 테이블로부터 조회된 ResultSet을 winners VO 타입으로 옮겨주는 ResultMap -->
@@ -56,6 +57,19 @@
 	<result column="WIN_DATE" property="winDate" />
 	<result column="COUPON_NO" property="couponNo" />
 </resultMap>
+
+
+<!-- coupon 테이블로부터 조회된 ResultSet을 Coupon VO 타입으로 옮겨주는 ResultMap -->
+<resultMap id="couponResultSet" type="coupon">
+	<id column="COUPON_NO" property="couponNo" />
+	<result column="COUPON_USER" property="couponUser" />
+	<result column="COUPON_NAME" property="couponName" />
+	<result column="COUPON_EXPDATE" property="couponExpDate" />
+	<result column="COUPON_STATUS" property="couponStatus" />
+	<result column="COUPON_LEVEL" property="couponLevel" />
+	<result column="REF_ENO" property="refEno" />
+</resultMap>
+
 
 
 <!-- 사용자 -->
@@ -199,6 +213,13 @@
 	VALUES(SEQ_EFNO.NEXTVAL, SEQ_ENO.CURRVAL, #{originName}, #{changeName}, #{filePath}, #{fileLevel})
 </insert>
 
+
+<!-- 241222 한혜원, 쿠폰 등록 -->
+<insert id="insertCoupon" parameterType="coupon">
+	INSERT INTO COUPON(COUPON_NO, REF_ENO, COUPON_NAME,COUPON_LEVEL)
+	VALUES(SEQ_CNO.NEXTVAL, #{refEno}, #{couponName}, #{couponLevel})
+</insert>
+
 <!-- 241218 한혜원, 이벤트 게시글 총 갯수 -->
 <select id="selectListCount" resultType="_int">
 	SELECT COUNT(*)
@@ -285,11 +306,30 @@
 	     , TO_CHAR(APPLICATION_DATE, 'YYYY-MM-DD AM HH:MI:SS') AS "APPLICATION_DATE"
 	     , DRAWING_STATUS
 	     , WIN_STATUS
+	     ,  A.REF_ENO AS EVENT_NO
 	  FROM APPLICANT A
 	  JOIN MEMBER M ON (A.USER_NO = M.USER_NO)
 	  LEFT JOIN WINNERS W ON (A.REF_ENO = W.REF_ENO)
 	 WHERE A.REF_ENO = #{eventNo}
 	 ORDER BY APPLICANT_NO DESC
+</select>
+
+<!-- 241223 한혜원 쿠폰 목록 수 -->
+<select id="selectCouponListCount" resultType="_int">
+	SELECT COUNT(*)
+	  FROM COUPON
+	 WHERE REF_ENO = #{evetNo}
+</select>
+
+<!-- 241223 한혜원 쿠폰목록조회 -->
+<select id="selectCouponList" resultMap="couponResultSet">
+		SELECT COUPON_NO
+		     , COUPON_NAME
+		     , TO_CHAR(COUPON_EXP_DATE, 'YYYY-MM-DD') AS "COUPON_EXP_DATE"
+		     , COUPON_STATUS
+		     , COUPON_LEVEL
+		  FROM COUPON C
+		 WHERE REF_ENO = #{eventNo} 
 </select>
 
 <!-- 당첨자 -->
@@ -298,5 +338,7 @@
 	INSERT INTO WINNERS(WINNER_NO, REF_ENO, WINNER, WINNER_TYPE, WIN_STATUS, WIN_DATE)
 	VALUES(SEQ_WNO.NEXTVAL, #{refEno}, #{winner}, #{winnerType}, 'Y', SYSDATE)
 </insert>
+
+
 
 </mapper>

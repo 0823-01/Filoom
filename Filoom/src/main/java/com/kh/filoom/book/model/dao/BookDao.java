@@ -117,7 +117,12 @@ public class BookDao {
 	//유효성 검사 + 좌석일렬번호 검사
 	public ArrayList<BookingSeat> getBookingseatNoList(SqlSessionTemplate sqlSession, ArrayList<String> seatNos, int playingNo) {
 		
-		
+		}
+	public ArrayList<BookingSeat> checkAndGetBookingSeatNoList(SqlSessionTemplate sqlSession,
+															   ArrayList<String> seatNos, 
+															   int playingNo,
+															   ArrayList<String> bookingSeatNos) {
+
 		HashMap<String,Object> map = new HashMap<>();
 		map.put("seatNos", seatNos);
 		map.put("playingNo", playingNo);
@@ -129,8 +134,8 @@ public class BookDao {
 
 	
 	//TIME_LIMIT 늘려주기
-	public int updateTimeLimit(SqlSessionTemplate sqlSession, ArrayList<BookingSeat> bookingSeatNoList) {
-		return sqlSession.update("bookMapper.updateTimeLimit",bookingSeatNoList);
+	public int updateTimeLimit(SqlSessionTemplate sqlSession, ArrayList<String> seatNos) {
+		return sqlSession.update("bookMapper.updateTimeLimit",seatNos);
 	}
 
 	//영화예매번호 생성 + 반환
@@ -193,8 +198,21 @@ public class BookDao {
 		return sqlSession.delete("bookMapper.deleteBookNo",map);
 	}
 
+
+	public int insertBookingSeats(SqlSessionTemplate sqlSession, int playingNo, ArrayList<String> seatNos) {
+		Map<String,Object>map=new HashMap();
+		map.put("playingNo", playingNo);
+		int insertResult =1;
+		for(String seatNo : seatNos) {
+			map.put("seatNo", seatNo);
+			insertResult *= sqlSession.insert("bookMapper.insertBookingSeats",map);
+		}
+
+		return insertResult; 
+		
+	}
 	
 
 
-	
+
 }
