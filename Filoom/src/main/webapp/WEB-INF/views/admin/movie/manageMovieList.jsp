@@ -160,23 +160,8 @@
 </head>
 <body>
     <div id = "admin_content">
-        <div id = "navbar">
-            
-            <div id = "logo">
-                <img src="resources/images/icons/Filoom.png">
-            </div>
-           
-            <div id = "nav">
-                <ul>
-                    <li><a>회원 관리</a></li>
-                    <li><a href="movielist_ad.mo">영화 관리</a></li>
-                    <li><a>예약 관리</a></li>
-                    <li><a>공지사항 관리</a></li>
-                    <li><a>이벤트 관리</a></li>
-                </ul>
-    
-            </div>
-        </div>
+    	<jsp:include page="../../common/adminHeader.jsp" />
+        
         <div id = "admin_right">
             <div id ="admin_title">
 

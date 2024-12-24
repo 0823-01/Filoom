@@ -175,23 +175,8 @@
 </head>
 <body>
     <div id = "admin_content">
-        <div id = "navbar">
-            
-            <div id = "logo">
-                <img src="resources/images/icons/Filoom.png">
-            </div>
-           
-            <div id = "nav">
-                <ul>
-                    <li><a>회원 관리</a></li>
-                    <li><a>영화 관리</a></li>
-                    <li><a>예약 관리</a></li>
-                    <li><a>공지사항 관리</a></li>
-                    <li><a>이벤트 관리</a></li>
-                </ul>
-    
-            </div>
-        </div>
+        <jsp:include page="../../common/adminHeader.jsp" />
+        
         <div id = "admin_right">
             <div id ="admin_title">
 
@@ -232,7 +217,7 @@
                              (불필요하거나 시간 부족할 경우 삭제) -->
                             <div id="manageBar" align="right" style="width:100%;">
                                 <button id="button_sample">이미지 관리</button>
-                                <button id="button_sample" onclick="location.href='managereview.mo?movieNo=${requestScope.target.movieNo}';">리뷰 관리</button>
+                                <button id="button_sample" onclick="location.href='admin.managereview.mo?movieNo=${requestScope.target.movieNo}';">리뷰 관리</button>
                                 <button id="button_sample" onclick="location.href='modifymovie.mo?movieNo=${requestScope.target.movieNo}';">수정</button>
                                 <button id="button_sample" class="unready" style="background-color:red;">삭제</button>
                                 	<!-- location.href='admin.deletemovie.mo?movieNo=${requestScope.target.movieNo}' -->
@@ -584,7 +569,7 @@
     		}
     	})
     	
-    	$("#play"+ num).remove();
+    	//$("#play"+ num).remove();
     	
     	console.log("X");
     }

@@ -716,6 +716,9 @@
 	</select>
 	
 	<!-- 상영 정보 추가 -->
+	<!-- 상영관 정보 없으면 parent key not found 오류 남 -->
+	<!-- 더미데이터 삽입 시에만 날짜 부분을 다음 예시와 같이 작성할 것↓
+		 TO_DATE('2024-12-27 15:15:00','YYYY-MM-DD HH24:MI:SS') -->
 	<insert id="newRunInfo" parameterType="movie">
 		INSERT INTO PLAYING(PLAYING_NO, PLAYTIME, MOVIE_NO, SCREEN_NO)
 		VALUES(SEQ_PLA.NEXTVAL, #{playTime}, #{movieNo}, TO_NUMBER(#{screenName}))
@@ -739,5 +742,12 @@
 	<!-- 리뷰 삭제 (사용자) -->
 	
 	<!-- 리뷰 강제 삭제 (관리자) -->
+	
+	<!-- 상세 페이지 조회시 좋아요 수 조회 용도
+		투입값 : int movieNo, 결과값 : COUNT(*) -->
+	<!-- <select id="selectFavCount" parameterType="int" resultType="int">
+		SELECT COUNT(*) FROM FAVORITE
+		WHERE MOVIE_NO = #{movieNo}
+	</select> --> 
 
 </mapper>
