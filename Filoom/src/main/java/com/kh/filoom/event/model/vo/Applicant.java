@@ -21,5 +21,8 @@ public class Applicant {
 	private int bookNo;
 	private int couponNo;
 	private String couponUse;
+	
+	// 추가 
+	private String eventTitle;
 
 }

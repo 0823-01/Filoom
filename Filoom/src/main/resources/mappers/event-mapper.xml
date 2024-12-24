@@ -224,7 +224,7 @@
 <!-- 241222 한혜원, 쿠폰 등록 -->
 <insert id="insertCoupon" parameterType="coupon">
 	INSERT INTO COUPON(COUPON_NO, REF_ENO, COUPON_NAME, COUPON_LEVEL, COUPON_EXP_DATE, COUPON_STATUS)
-	VALUES(SEQ_CNO.NEXTVAL, #{refEno}, #{couponName}, #{couponLevel}, #{couponExpDate}, #{couponStatus})
+	VALUES(SEQ_CNO.NEXTVAL, SEQ_ENO.CURRVAL, #{couponName}, #{couponLevel}, #{couponExpDate}, NULL)
 </insert>
 
 <!-- 241218 한혜원, 이벤트 게시글 총 갯수 -->
@@ -331,6 +331,7 @@
 <!-- 241219 한혜원, 응모목록조회 -->
 <select id="adminSeletApplicantList" resultMap="applicantResultSet">
 	SELECT APPLICANT_NO
+	     , EVENT_TITLE
 	     , USER_ID AS "USER_NO"
 	     , TO_CHAR(APPLICATION_DATE, 'YYYY-MM-DD AM HH:MI:SS') AS "APPLICATION_DATE"
 	     , DRAWING_STATUS
@@ -339,6 +340,7 @@
 	  FROM APPLICANT A
 	  JOIN MEMBER M ON (A.USER_NO = M.USER_NO)
 	  LEFT JOIN WINNERS W ON (A.REF_ENO = W.REF_ENO)
+	  JOIN EVENT E ON (A.REF_ENO = E.EVENT_NO)
 	 WHERE A.REF_ENO = #{eventNo}
 	 ORDER BY APPLICANT_NO DESC
 </select>

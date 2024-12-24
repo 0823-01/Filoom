@@ -409,10 +409,12 @@ body{
                     
                     <form id="enrollForm" action="insert.ev" method="post" enctype="multipart/form-data">
                     	<!-- 쿠폰 정보 넘기기 -->
-                    	<input type="hidden" id="couponName" name="couponName" value="">
-                    
-                    
-                    
+                    	<input type="hidden" id="couponNo" name="couponNo" value="${couponNo != null ? couponNo : 0}">
+                    	<input type="hidden" id="refEno" name="refEno" value="${eventNo != null ? eventNo : 0}">
+                    	<input type="hidden" id="couponName" name="coupoName" value="${requestScope.e.eventTitle }">
+                    	<input type="hidden" id="couponLevel" name="couponLevel" value="${requestScope.e.eventType }">
+                    	<input type="hidden" id="couponExpDate" name="couponExpDate" value="${couponExpDate != null ? couponExpDate.toString('yyyy-MM-dd') : ''}">
+                    	<input type="hidden" id="couponStatus" name="couponStatus" value="${requestScope.c.couponStatus }">
                     
                         <!--제목, 작성일, 조회수-->
                         <div class="title_date_count">
@@ -604,6 +606,33 @@ body{
                 });
             });
         });
+        
+        // 쿠폰 데이터 넘기는 스크립트 
+        function setCouponData() {
+	    // 서버에서 받은 값을 JavaScript 변수에 할당
+	    var couponNo = "${requestScope.c.couponNo}"; // 쿠폰 번호 (서버에서 전달받은 값)
+	    var refEno = "${requestScope.e.eventNo}"; // 이벤트 번호 (서버에서 전달받은 값)
+	    var couponName = "${requestScope.e.eventTitle}"; // 이벤트 제목 (쿠폰 이름)
+	    var couponLevel = "${requestScope.c.couponLevel}"; // 쿠폰 레벨 (서버에서 전달받은 값)
+	    var couponExpDate = "${requestScope.c.couponExpDate}"; // 만료일 (서버에서 전달받은 값)
+	    var couponStatus = "${requestScope.c.couponStatus}"; // 쿠폰 상태 (서버에서 전달받은 값)
+	
+	    
+	    
+	    console.log("couponExpDate : " + couponExpDate);
+	    
+	    
+	    // hidden input에 쿠폰 정보 설정
+	    document.getElementById("couponNo").value = couponNo;
+	    document.getElementById("refEno").value = refEno;
+	    document.getElementById("couponName").value = couponName;
+	    document.getElementById("couponLevel").value = couponLevel;
+	    document.getElementById("couponExpDate").value = couponExpDate;
+	    document.getElementById("couponStatus").value = couponStatus;
+	
+	    // 폼 제출
+	    document.getElementById("eventForm").submit(); // 폼 ID가 "eventForm"이면 이를 사용하여 제출
+	}
     </script>
 </body>
 </html>

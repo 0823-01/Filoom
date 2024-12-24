@@ -3,6 +3,9 @@ package com.kh.filoom.event.controller;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -24,7 +27,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.google.gson.Gson;
 import com.kh.filoom.common.model.vo.PageInfo;
@@ -285,8 +287,7 @@ public class EventController {
 	 */
 	@PostMapping("insert.ev")
 	public ModelAndView insertEvent(@RequestParam("eventType") int eventType, Event e, 
-	                                @RequestParam("upfiles") MultipartFile[] upfiles, 
-	                                Coupon coupon, HttpSession session, ModelAndView mv) {
+	                                @RequestParam("upfiles") MultipartFile[] upfiles, HttpSession session, ModelAndView mv) {
 	    // 첨부파일 리스트 생성
 	    List<EventAttachment> eventAttachmentList = new ArrayList<>();
 
@@ -319,26 +320,63 @@ public class EventController {
 	    int result = eventService.insertEvent(e);
 
 	    if (result > 0) {
+	    	int eventNo = e.getEventNo();  // 새로 삽입된 이벤트 번호 가져오기
+	        // System.out.println("Inserted eventNo: " + eventNo); // 추가된 이벤트 번호 확인
+	    	
 	        // 게시글 저장 성공 시, 첨부파일 저장 로직 실행
 	        for (EventAttachment eventAttachment : eventAttachmentList) {
-	            eventAttachment.setRefEno(e.getEventNo()); // 저장된 게시글 번호를 참조번호로 설정
+	            eventAttachment.setRefEno(eventNo); // 저장된 게시글 번호를 참조번호로 설정
 	            eventService.insertEventAttachment(eventAttachment); // 첨부파일 저장
 	        }
-	        
-	        // 쿠폰 객체 추가 정보 설정 
-	        coupon.setRefEno(e.getEventNo());
-	        coupon.setCouponName(e.getEventTitle());
-	        
-	        // 쿠폰 등록 서비스 호출 
-	        int couponResult = eventService.insertCoupon(coupon);
-	        
-	        if(couponResult>0) {
-	        	session.setAttribute("alertMsg", "이벤트 및 쿠폰 등록 성공");
-	        	mv.setViewName("redirect:/list.ev");
-	        } else {
-	        	session.setAttribute("alertMsg", "이벤트 등록 성공, 하지만 쿠폰 등록 실패!");
-	        	mv.setViewName("redirect:/list.ev");
-	        }
+
+	        Coupon coupon = new Coupon();
+
+		     // 쿠폰 객체 추가 정보 설정
+		     coupon.setRefEno(eventNo);
+		     coupon.setCouponName(e.getEventTitle());
+		     coupon.setCouponLevel(e.getEventType());
+	
+		     // System.out.println("Event Start Date: " + e.getStartDate());
+	
+		     // DateTimeFormatter 사용하여 문자열을 LocalDate로 변환
+		     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+		     LocalDate date = LocalDate.parse(e.getStartDate(), formatter);
+	
+		     // 6개월 더하기
+		     LocalDate newDate = date.plusMonths(6);
+	
+		     // 결과 출력
+		     // System.out.println("Start Date: " + e.getStartDate());
+		     // System.out.println("New Date (6 months later): " + newDate);
+	
+		     // LocalDate를 java.util.Date로 변환
+		     Date finalDate = java.util.Date.from(newDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
+	
+		     // finalDate를 set
+		     coupon.setCouponExpDate(finalDate);
+	
+		     // finalDate를 'yyyy-MM-dd' 형식으로 포맷팅하여 문자열로 출력 (디버깅)
+		     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		     String formattedDate = sdf.format(finalDate);  // "yyyy-MM-dd" 형식으로 변환
+	
+		     // System.out.println("Formatted Coupon Expiry Date: " + formattedDate);
+		     // System.out.println("Coupon Info: " + coupon);
+	
+		     // 쿠폰 등록 서비스 호출
+		     int couponResult = eventService.insertCoupon(coupon);
+	
+		     // 결과 확인
+		     if (couponResult > 0) {
+		         // 등록 성공 처리
+		          session.setAttribute("alertMsg", "이벤트 및 쿠폰 등록 성공");
+		          mv.setViewName("redirect:/list.ev");
+		     } else {
+		         // 실패 시 처리
+		          session.setAttribute("alertMsg", "이벤트 등록 성공, 하지만 쿠폰 등록 실패!");
+		          mv.setViewName("redirect:/list.ev");
+		     }
+		     
+		    
 
 	    } else {
 	        // 실패 시 에러 페이지로 이동
@@ -346,9 +384,11 @@ public class EventController {
 	    }
 
 	    // 디버깅용 로그 출력
-	    System.out.println("Event: " + e);
-	    System.out.println("Attachments: " + eventAttachmentList);
+	    // System.out.println("Event: " + e);
+	    // System.out.println("Attachments: " + eventAttachmentList);
 	    return mv;
+	         
+	
 	}
 	
 	
@@ -601,7 +641,7 @@ public class EventController {
 	 */
 	@RequestMapping("aplist.ev")
 	public String selectApplicantList(@RequestParam("eventNo")int eventNo, 
-									  @RequestParam("eventType")int eventType, 
+									  @RequestParam("eventType")int eventType,
 									  @RequestParam(value="cpage", defaultValue="1")int currentpage,
 									  Model model) {
 		
@@ -628,7 +668,7 @@ public class EventController {
 			// 페이징 적용하여 댓글 목록 조회 
 			Map<String, Object> params = new HashMap<>();
 			params.put("eventNo", eventNo);
-			 params.put("pi", pi);
+			params.put("pi", pi);
 			
 			rlist = eventService.adminSelectReplyList(params);
 			model.addAttribute("rlist", rlist);

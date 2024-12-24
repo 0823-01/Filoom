@@ -263,10 +263,10 @@
                         	<c:forEach var="a" items="${requestScope.alist }">
 	                        	<tr id="list" class="applicant-item">
 		                          
-		                            <td id="applicantNo" class="ano">${a.applicantNo }</td>
-		                            <td id="eventTitle">버튼클릭!</td>
-		                           <td id="applicant">${a.userNo}</td>
-		                            <td id="applicantDate">${a.applicationDate }</td>
+		                           	<td id="applicantNo" class="ano">${a.applicantNo }</td>
+		                           	<td id="eventTitle">${a.eventTitle}</td>
+		                           	<td id="applicant">${a.userNo}</td>
+		                          	<td id="applicantDate">${a.applicationDate }</td>
 		                            <td id="a">
 		                            	<select name ="drawingStatus" id="drawingStatusSelect" >
 																												

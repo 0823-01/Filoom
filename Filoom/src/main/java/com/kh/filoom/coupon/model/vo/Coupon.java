@@ -28,4 +28,5 @@ public class Coupon {
 	
 	// 혜원추가
 	private String couponUser;
+	private int eventNo;
 }
