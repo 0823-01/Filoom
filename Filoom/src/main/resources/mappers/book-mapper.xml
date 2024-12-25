@@ -394,4 +394,27 @@
 	 	 WHERE BOOK_NO = #{bookNo}
 	</delete>
 	
+	
+	
+	<!-- 관리자 -->
+	
+	
+		<select id="selectBookingCount" parameterType="map" resultType="int">
+		SELECT COUNT(BOOK_NO)
+		  FROM BOOKING B
+		  JOIN MEMBER M ON (B.USER_NO = M.USER_NO)
+		  <where>
+		  	<if test="bookNo != null">
+		  		AND BOOK_NO = #{bookNo}
+		  	</if>
+
+		  	<if test="userId != null">
+		  		AND USER_ID = #{userId}
+		  	</if>
+		  
+		  </where>
+		  	
+	
+	
+		</select>
 </mapper>

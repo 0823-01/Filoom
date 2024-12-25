@@ -261,6 +261,19 @@ public class BookDao {
 		return sqlSession.delete("bookMapper.cancelupdateBookingSeat",bookNo);
 	}
 
+	
+	
+	/////////////////////////////////////////////
+	//관리자 예매관리
+	
+	
+	public int selectBookingCount(SqlSessionTemplate sqlSession, Integer bookNo, String userId) {
+		Map<String,Object> map = new HashMap();
+		map.put("bookNo", bookNo);
+		map.put("userId", userId);
+		
+		return sqlSession.selectOne("bookMapper.selectBookingCount",map);
+	}
 
 
 

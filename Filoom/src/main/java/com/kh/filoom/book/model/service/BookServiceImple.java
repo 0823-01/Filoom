@@ -270,6 +270,11 @@ public class BookServiceImple implements BookService {
 		return bookDao.checkCancelBooking(sqlSession,bookNo,userNo);
 	}
 
+	@Override
+	public int selectBookingCount(Integer bookNo, String userId) {
+		return bookDao.selectBookingCount(sqlSession,bookNo,userId);
+	}
+
 
 
 }

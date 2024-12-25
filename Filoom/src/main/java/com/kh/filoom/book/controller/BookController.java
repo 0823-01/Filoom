@@ -1081,4 +1081,43 @@ public class BookController {
 
 	
 	
+	
+	//예매 관리 관리자 계정
+	/////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	
+	
+	
+	@GetMapping("adminBooking.ad")
+	public ModelAndView amdminBookingList(ModelAndView mv,
+										  @RequestParam(value="sorting", required=false,defaultValue="desc") String sorting,
+										  @RequestParam(value="bookNo", required=false)Integer bookNo,
+										  @RequestParam(value="userId", required=false)String userId,
+										  @RequestParam(value="currentPage", required=false, defaultValue="1")Integer currentPage
+										  ) {
+		
+		log.debug("==관리자(예매내역관리) 핸들러 메소드 실행 ");
+		log.debug("넘어온 값들");
+		log.debug("-String sorting:" +sorting);
+		log.debug("-Integer bookNo :" +bookNo);
+		log.debug("-String userId:" +userId);
+		log.debug("-currentPage : "+ currentPage);
+		
+		//전체 갯수 먼저 구하기
+		int totalCount = bookService.selectBookingCount(bookNo,userId);
+		log.debug("조건에 맞는 전체 booking 테이블 데이터 수 " + totalCount);
+		
+		
+		//페이지정보 pi 에 담기
+		
+		//데이터 조회
+		
+		
+		
+		
+		log.debug("관리자 - 예약페이지 메소드 실행");
+		mv.setViewName("admin/book/adminBook");
+		
+		return mv;
+	}
+	
 }

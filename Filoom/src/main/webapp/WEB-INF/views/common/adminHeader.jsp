@@ -90,9 +90,10 @@
            
             <div id = "nav">
                 <ul>
+                	<li><a href="/filoom/ad.li">관리자메인</a></li>
                     <li><a>회원 관리</a></li>
                     <li><a href="movielist_ad.mo">영화 관리</a></li>
-                    <li><a>예약 관리</a></li>
+                    <li><a href="/filoom/adminBooking.ad">예약 관리</a></li>
                     <li><a>공지사항 관리</a></li>
                     <li><a>이벤트 관리</a></li>
                 </ul>

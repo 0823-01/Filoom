@@ -129,7 +129,11 @@ public interface BookService {
 
 	
 	
-
+	////////////////////////////////////////////////
+	//관리자 페이지 - 예매관리
+	
+	//전체 예매내역 조회
+	int selectBookingCount(Integer bookNo, String userId);
 	
 
 }
