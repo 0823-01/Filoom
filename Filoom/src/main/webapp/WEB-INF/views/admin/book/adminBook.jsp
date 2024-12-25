@@ -172,7 +172,8 @@
 		}
 
 		.pagination > li>a.active {
-		    color: #493628; 
+			color:gray;
+		   
 		}
 		
 		.pagination .active .page-link {
@@ -212,6 +213,7 @@
 
 					<div>예약 관리</div>
 					<div>
+						
 					</div> 
 
                 </div>
@@ -224,7 +226,7 @@
                 <div id ="admin_page">
       				
       				<form action="adminBooking.ad" method="get">
-	      				<table class="table">
+	      				<table class="">
 							<tr>
 								<td>정렬</td>
 								<td>
@@ -247,7 +249,7 @@
 								<td>사용자 아이디를 입력하세요.</td>
 							</tr>
 							<tr>
-								<td><input type="button" id ="button_sample" value="검색"></td>
+								<td><input type="submit" id ="button_sample" value="검색"></td>
 								<td></td>
 								<td></td>
 							</tr>
@@ -262,92 +264,87 @@
 							<tr>
 								<th>예약번호</th>
 								<th>회원번호</th>
-								<th>
-									<div>회원아이디</div>
-									<div>회원이름</div>
-								</th>
+								<th>회원아이디</th>
 								<th>회원이름</th>
-								<th>
-									<div>총금액</div>
-									<div>결제금액</div>
-								</th>
-								<th>쿠폰사용유무</th>
 								<th>결제방식</th>
-								<th>결제상태</th>
-								<th>
-									<div>예매날짜</div>
-									<div>취소날짜</div>
-								</th>
+								<th>총금액</th>
+								<th>결제금액</th>
+								<th>예매날짜</th>
+								<th>상영시간</th>
+								<th>취소날짜</th>
 								<th>결제취소</th>
+								<th>결제상태</th>
 							</tr>
 						</thead>
 						
 						<tbody>
-							<!-- 더미데이터 -->
-							<tr>
-								<td>예약번호</td>
-								<td>회원번호</td>
-								<td>
-									<div>회원아이디</div>
-									<div>회원이름</div>
-								</td>
-								<td>회원이름</td>
-								<td>
-									<div>총금액</div>
-									<div>결제금액</div>
-								</td>
-								<td>쿠폰사용유무</td>
-								<td>결제방식</td>
-								<td>결제상태</td>
-								<td>
-									<div>예매날짜</div>
-									<div>취소날짜</div>
-								</td>
-								<td>결제취소</td>
-							</tr>							
+							<c:forEach var="booking" items="${requestScope.bookingList}">
+								<tr>
+									<td>${booking.bookNo}</td>
+									<td>${booking.userNo}</td>
+									<td>${booking.userId }</td>
+									<td>${booking.userName}</td>
+									<td>${booking.costProcess}</td>
+									<td>${booking.bookTotalCost}</td>
+									<td>${booking.bookCost}</td>
+									<td>${booking.bookDate}</td>
+									<td>${booking.playTime}</td>
+									<td>${booking.modifyDate}</td>
+									<td><button onclick="cancelRequest(${booking.bookNo},${booking.userNo})">결제취소</button></td>
+									<td>${booking.status}</td>
+								</tr>		
+							</c:forEach>
 						</tbody>
-					
-					
 					</table>
+					
+					
       				
                     <div class="foot" style="box-sizing: border-box;">
                          <!-- 페이징바 -->
 					    <div class="pagingArea">
 					        <ul class="pagination" id="pagination">
 					            <!-- 이전 페이지 버튼 -->
+					             
 					            <c:choose>
-					                <c:when test="${requestScope.pi.currentPage == 1}">
+					                <c:when test="${requestScope.pi.currentPage < requestScope.pi.pageLimit}"> 
 					                    <li class="page-item disabled">
-					                        <a class="page-link" href="#">«</a>
+					                        <a class="page-link" href="adminBooking.ad${requestScope.url}${requestScope.pi.startPage-1}">«</a>
 					                    </li>
+					                    
 					                </c:when>
 					                <c:otherwise>
 					                    <li class="page-item">
-					                        <a class="page-link" href="alist.ev?cpage=${requestScope.pi.currentPage - 1}">«</a>
+					                        <a class="page-link" href="adminBooking.ad${requestScope.url}${requestScope.pi.currentPage-1}">«</a>
+					                        					 
 					                    </li>
 					                </c:otherwise>
 					            </c:choose>
-					
+								
 					            <!-- 페이지 번호 출력 -->
-					            <c:forEach var="p" begin="${requestScope.pi.startPage}" end="${requestScope.pi.endPage}">
-					                <li class="page-item ${p == requestScope.pi.currentPage ? 'active' : ''}">
-					                    <a class="page-link" href="alist.ev?cpage=${p}">${p}</a>
+				           	   <c:forEach var="p" begin="${requestScope.pi.startPage}" end="${requestScope.pi.endPage}" >
+					            	<!-- <li }" >-->
+					                <li>
+					                    <a class="page-item ${requestScope.pi.currentPage == p ?'active' : '' }" href="adminBooking.ad${requestScope.url}${p}">${p}</a>
 					                </li>
 					            </c:forEach>
 					
 					            <!-- 다음 페이지 버튼 -->
+					           
 					            <c:choose>
-					                <c:when test="${requestScope.pi.currentPage < requestScope.pi.maxPage}">
+					                <c:when test="${requestScope.pi.currentPage < requestScope.pi.maxPage && requestScope.pi.endPage < requestScope.pi.maxPage }">
 					                    <li class="page-item">
-					                        <a class="page-link" href="alist.ev?cpage=${requestScope.pi.currentPage + 1}">»</a>
+					                        <a class="page-link" href="adminBooking.ad${requestScope.url}${requestScope.pi.endPage+1}">»</a>
 					                    </li>
+					                    
 					                </c:when>
 					                <c:otherwise>
 					                    <li class="page-item disabled">
 					                        <a class="page-link" href="#">»</a>
 					                    </li>
+					                    
 					                </c:otherwise>
 					            </c:choose>
+					           
 					        </ul>
 					    </div>
 			
@@ -384,6 +381,36 @@
         });
 
 
+        function cancelRequest(bookNo,userNo){
+    		
+    		let cancelConfirm = confirm("예메를 취소 하시겠습니까 ? ");
+    		if(cancelConfirm){
+    			$.ajax({
+    				url:"cancelRequest.pm",
+    				type:"post",
+    				data:{bookNo:bookNo,
+    					  userNo:userNo},
+    				success:function(result){
+    					console.log("결제취소요청성공-ajax")
+    					console.log(result);
+    					if(result==="success"){
+    						alert("결제가 취소되었습니다. ");
+    						location.reload();
+    						
+    					}else{
+    						alert("죄송합니다. 상영시간 이후 취소/환불은 불가합니다.)")
+    						
+    					}
+    					
+    				},
+    				error:function(){
+    					console.log("결제취소요청실패-ajax")
+    				}
+    			});
+    		}
+    	}
+        
+        
    
     </script>
     

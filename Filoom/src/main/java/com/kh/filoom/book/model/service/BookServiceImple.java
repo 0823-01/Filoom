@@ -14,6 +14,7 @@ import com.kh.filoom.book.model.dao.BookDao;
 import com.kh.filoom.book.model.vo.Booking;
 import com.kh.filoom.book.model.vo.BookingSeat;
 import com.kh.filoom.book.model.vo.Playing;
+import com.kh.filoom.common.model.vo.PageInfo;
 import com.kh.filoom.coupon.model.vo.CouponUser;
 import com.kh.filoom.member.model.vo.Member;
 import com.kh.filoom.movie.model.vo.Movie;
@@ -271,8 +272,15 @@ public class BookServiceImple implements BookService {
 	}
 
 	@Override
-	public int selectBookingCount(Integer bookNo, String userId) {
+	public int selectBookingCount(String bookNo, String userId) {
 		return bookDao.selectBookingCount(sqlSession,bookNo,userId);
+	}
+
+	
+	
+	@Override
+	public ArrayList<Booking> selectBookingListAdmin(PageInfo pi, String sorting, String bookNo, String userId) {
+		return bookDao.selectBookingListAdmin(sqlSession,pi,sorting,bookNo,userId);
 	}
 
 

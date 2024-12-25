@@ -17,8 +17,13 @@ public class Pagination {
 			endPage = maxPage;
 		}
 		
+		//rowNum 에 대입할 시작, 끝 수
+		int startNum = (currentPage-1) * boardLimit;
+		int endNum = currentPage * boardLimit;
+		
+		
 		return new PageInfo(listCount, currentPage, pageLimit,
-			boardLimit, maxPage, startPage, endPage);
+			boardLimit, maxPage, startPage, endPage,startNum, endNum);
 	}
 
 }

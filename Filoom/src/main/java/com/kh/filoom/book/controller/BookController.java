@@ -41,6 +41,8 @@ import com.kh.filoom.book.model.vo.Booking;
 import com.kh.filoom.book.model.vo.BookingSeat;
 import com.kh.filoom.book.model.vo.Playing;
 import com.kh.filoom.book.payment.DataEncrypt;
+import com.kh.filoom.common.model.vo.PageInfo;
+import com.kh.filoom.common.template.Pagination;
 import com.kh.filoom.coupon.model.vo.CouponUser;
 import com.kh.filoom.member.model.vo.Member;
 import com.kh.filoom.movie.model.vo.Movie;
@@ -64,6 +66,8 @@ public class BookController {
 	
 	@Autowired
 	private DataEncrypt sha256Enc;
+
+
 
 	
 	
@@ -664,14 +668,19 @@ public class BookController {
  	@PostMapping(value="cancelRequest.pm")
  	@ResponseBody
  	public String paymentCancelRequest(int bookNo,
- 									   HttpSession session) throws Exception {
+ 									   HttpSession session,
+ 									   @RequestParam(value="userNo",required=false,defaultValue="0")int userNo) throws Exception {
  		String result= "false";
  		//boolean cancelPayment(Booking booking)
  		log.debug("====================================");
  		log.debug("====결제취소요청 : bookNo : "+bookNo);
  		log.debug("====================================");
  		
- 		int userNo = ((Member)session.getAttribute("loginUser")).getUserNo();
+ 		
+ 		if(userNo==0) {
+ 			userNo = ((Member)session.getAttribute("loginUser")).getUserNo();
+ 		}
+ 		
  		Booking booking = bookService.selectBooking(bookNo);
  		
  		//취소 가능한지 유효성 검사(지금시간, 상영시간 비교
@@ -1090,10 +1099,12 @@ public class BookController {
 	@GetMapping("adminBooking.ad")
 	public ModelAndView amdminBookingList(ModelAndView mv,
 										  @RequestParam(value="sorting", required=false,defaultValue="desc") String sorting,
-										  @RequestParam(value="bookNo", required=false)Integer bookNo,
-										  @RequestParam(value="userId", required=false)String userId,
+										  @RequestParam(value="bookNo", required=false,defaultValue="")String bookNo,
+										  @RequestParam(value="userId", required=false,defaultValue="")String userId,
 										  @RequestParam(value="currentPage", required=false, defaultValue="1")Integer currentPage
 										  ) {
+		
+		
 		
 		log.debug("==관리자(예매내역관리) 핸들러 메소드 실행 ");
 		log.debug("넘어온 값들");
@@ -1102,19 +1113,31 @@ public class BookController {
 		log.debug("-String userId:" +userId);
 		log.debug("-currentPage : "+ currentPage);
 		
-		//전체 갯수 먼저 구하기
-		int totalCount = bookService.selectBookingCount(bookNo,userId);
-		log.debug("조건에 맞는 전체 booking 테이블 데이터 수 " + totalCount);
-		
-		
-		//페이지정보 pi 에 담기
+		//페이징 처리
+		int listCount = bookService.selectBookingCount(bookNo,userId);
+		log.debug("listCount : " + listCount);
+		PageInfo pi = Pagination.getPageInfo(listCount, currentPage, 3, 5);
 		
 		//데이터 조회
+		ArrayList<Booking> bookingList = bookService.selectBookingListAdmin(pi,sorting,bookNo,userId);
 		
 		
+		log.debug("조횐된 bookingList : " + bookingList.toString());
+		log.debug("pi : " + pi);
+
+		
+		String url = "?sorting="+sorting;
+
+		if(!bookNo.equals("")) {url+= "&bookNo="+bookNo;}
+		if(!userId.equals("")) {url+= "&userId="+userId;}
+		
+		url += "&currentPage=";
 		
 		
-		log.debug("관리자 - 예약페이지 메소드 실행");
+		mv.addObject("bookingList",bookingList);
+		mv.addObject("pi",pi);
+		mv.addObject("url",url);
+		
 		mv.setViewName("admin/book/adminBook");
 		
 		return mv;

@@ -1,5 +1,7 @@
 package com.kh.filoom.book.model.vo;
 
+import java.util.Date;
+
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -22,6 +24,9 @@ public class Booking {
 	private String modifyDate;
 	
 	//예매내역페이지에 뿌려주기 위해 필요한 데이터들
+	private String userId;
+	private String userName;
+	private String playTime;
 	
 }
 

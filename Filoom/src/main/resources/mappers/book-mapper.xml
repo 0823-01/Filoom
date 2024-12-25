@@ -14,6 +14,11 @@
 		<result column="COST_TID" property="costTid"/>
 		<result column="STATUS" property="status"/>
 		<result column="MODIFY_DATE" property="modifyDate"/>
+		
+		<!-- 추가:관리자(예매내역)-->
+		<result column="USER_ID" property="userId"/>
+		<result column="USER_NAME" property="userName"/>
+		<result column="PLAYTIME" property="playTime"/>
 	</resultMap>
 	
 	<resultMap id = "playingResultSet" type="playing">
@@ -403,18 +408,46 @@
 		SELECT COUNT(BOOK_NO)
 		  FROM BOOKING B
 		  JOIN MEMBER M ON (B.USER_NO = M.USER_NO)
+		  
 		  <where>
-		  	<if test="bookNo != null">
+		  	<if test="bookNo != ''">
 		  		AND BOOK_NO = #{bookNo}
 		  	</if>
 
-		  	<if test="userId != null">
+		  	<if test="userId != ''">
 		  		AND USER_ID = #{userId}
 		  	</if>
 		  
 		  </where>
-		  	
-	
-	
+		  
 		</select>
+		
+		<select id="selectBookingListAdmin" parameterType="map" resultMap="bookingResultSet">
+			SELECT * 
+			FROM ( SELECT ROWNUM AS RNUM,SB.*
+			         FROM ( SELECT B.*, USER_NAME, USER_ID, PLAYTIME
+			                  FROM BOOKING B
+			                  LEFT JOIN MEMBER M ON (B.USER_NO = M.USER_NO)
+			                  LEFT JOIN BOOKING_SEAT BS ON (B.BOOK_NO = BS.BOOK_NO)
+			                  LEFT JOIN PLAYING P ON (BS.PLAYING_NO = P.PLAYING_NO)
+			                  <where>
+							  	<if test="bookNo != ''">
+							  		B.BOOK_NO = #{bookNo}
+							  	</if>
+							  	<if test="userId != ''">
+							  		AND USER_ID = #{userId}
+							  	</if>
+							  </where>
+			                  		ORDER BY B.BOOK_NO ${sorting}      
+	                  ) SB 
+             )
+			 WHERE RNUM > #{startNum}
+			 AND #{endNum} >= RNUM
+		</select>
+		
 </mapper>
+
+
+
+
+
