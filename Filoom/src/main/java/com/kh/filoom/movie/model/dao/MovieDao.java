@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import com.kh.filoom.movie.model.vo.Movie;
 import com.kh.filoom.movie.model.vo.Poster;
+import com.kh.filoom.movie.model.vo.Review;
 
 @Repository
 public class MovieDao {
@@ -186,6 +187,19 @@ public class MovieDao {
 	public int removeRunInfo(SqlSessionTemplate sqlSession, int playingNo) {
 		// TODO Auto-generated method stub
 		return sqlSession.update("movieMapper.removeRunInfo", playingNo);
+	}
+
+	
+	// === 리뷰 관련 기능 ===
+	// 리뷰 수 체크 (사용자, 관리자 공통)
+	public int checkReviewCount(SqlSessionTemplate sqlSession, int movieNo) {
+		// TODO Auto-generated method stub
+		return sqlSession.selectOne("movieMapper.checkReviewCount", movieNo);
+	}
+
+	public ArrayList<Review> selectReview(SqlSessionTemplate sqlSession, HashMap<String, Integer> map) {
+		// TODO Auto-generated method stub
+		return (ArrayList) sqlSession.selectList("movieMapper.selectReview", map);
 	}
 
 	

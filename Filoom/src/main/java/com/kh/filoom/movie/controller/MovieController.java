@@ -26,10 +26,11 @@ import com.kh.filoom.common.template.Pagination;
 import com.kh.filoom.movie.model.service.MovieServiceImpl;
 import com.kh.filoom.movie.model.vo.Movie;
 import com.kh.filoom.movie.model.vo.Poster;
+import com.kh.filoom.movie.model.vo.Review;
 
 /**
  * @author 정원섭
- * === MovieController v 0.5.4 ===
+ * === MovieController v 0.5.5 ===
  * 작업 착수일 : 2024-12-13
  * 최종 수정일 : 2024-12-25
  */
@@ -47,7 +48,7 @@ import com.kh.filoom.movie.model.vo.Poster;
  * 	└ v 0.5.2d - 프로젝트 충돌로 인한 재생성 및 기능 복구
  * 	v 0.5.3 - 관리자페이지 좌측 navigator가 별도 헤더로 바뀜
  * 	v 0.5.4 - 상영 정보 조회, 추가 완료
- * 
+ *	v 0.5.5 - 리뷰 기능 구현을 위한 사전 작업
  * */
 @Controller
 public class MovieController {
@@ -224,20 +225,39 @@ public class MovieController {
 	// detail.mo?movieNo=XXX
 	@GetMapping("detail.mo")
 	public String showDetail(int movieNo, Model model) {
-				
+		// 1) 선택한 영화 정보 담기
 		Movie list = msi.showDetail(movieNo);
 		// System.out.println(list); // 확인용
 		
 		model.addAttribute("list", list);
+		
+		// 2) 선택한 영화의 이미지 정보 담기 - 스틸컷으로 띄우기, file_level 무관
+		//ArrayList<Poster> album = msi.selectImageList(movieNo);
+		// System.out.println(album); // 확인용
+		
+		// model.addAttribute("album", album);
 
 		return "movie/movieDetail";
 	}
 	
-	// 리뷰 목록 조회 (+ 페이징 처리) (AJAX 예정)
-	public void selectReview(@RequestParam(value="cpage", defaultValue="1")int cpage) {
+	// [사용자] 리뷰 목록 조회 (+ 페이징 처리) (Ajax)
+	@GetMapping("reviewlist.mo")
+	public String selectReview(@RequestParam(value="cpage", defaultValue="1")int cpage, int mno, Model model) {
+		// 1) 페이징 처리
 		int boardLimit = 10;
-		int listCount = 42; // 임시숫자
+		int listCount = msi.checkReviewCount(mno);
+		System.out.println(listCount);
 		PageInfo pi = Pagination.getPageInfo(listCount, cpage, pgLimit, boardLimit);
+		
+		// 2) 리뷰 조회
+		HashMap<String, Integer> map = new HashMap<>();
+		map.put("movieNo", mno);
+		map.put("cPage", cpage);
+		ArrayList<Review> rv = msi.selectReview(map);
+		
+		model.addAttribute("rv", rv);
+		model.addAttribute("pi", pi);
+		return "movie/reviewlist";
 	}
 	
 	
@@ -552,7 +572,15 @@ public class MovieController {
 	
 	// (관리자) 리뷰 목록 확인 (+ 페이징 처리)
 	@GetMapping("admin.managereview.mo")
-	public String reviewPatrol(/*PageInfo pi*/) {
+	public String reviewPatrol(int mno) {
+		// 1) 페이징 처리
+		int boardLimit = 10;
+		int listCount = msi.checkReviewCount(mno);
+		PageInfo pi = Pagination.getPageInfo(listCount, mno, pgLimit, boardLimit);
+		
+		// 2) 리뷰 조회
+		
+		
 		return "admin/movie/manageReview";
 	}
 	
