@@ -17,6 +17,8 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     
     <style>
+    	body { overflow : auto; }
+    
         #admin_right * {
             font-family: "Poppins", sans-serif;
             font-size:25px;
@@ -220,7 +222,6 @@
                                 <button id="button_sample" onclick="location.href='admin.managereview.mo?movieNo=${requestScope.target.movieNo}';">리뷰 관리</button>
                                 <button id="button_sample" onclick="location.href='modifymovie.mo?movieNo=${requestScope.target.movieNo}';">수정</button>
                                 <button id="button_sample" class="unready" style="background-color:red;">삭제</button>
-                                	<!-- location.href='admin.deletemovie.mo?movieNo=${requestScope.target.movieNo}' -->
                             </div>
                             
                             <div id="movie-title">
@@ -286,21 +287,26 @@
                                     <!-- onclick → 상영 정보 추가 탭 toggle(0.5s~1s 사이) -->
                                 </div>
 
-                                <div style="background-color: #8b8b8b; width:100%;">
+                                <div style="background-color: #8b8b8b;">
                                     <table id="playList" border=1>
                                     	<thead>
 	                                        <tr id="toprow">
-	                                            <th>날짜</th>
-	                                            <th>시작 시간</th>
+	                                            <th colspan="2">시작 일자</th>
 	                                            <th colspan="2">상영관</th>
 	                                        </tr>
                                         </thead>
                                         
+                                        <!-- 
+                                        	<td class="minus" style="display:none;">
+	                                        	<button style="background-color: red; width:100%;" onclick="deletePlaying();">
+	                                            	<img id="minus" src="resources/images/icons/dash-lg.svg"></button>
+	                                        </td>
+                                        
+                                         -->
+                                        
                                         <tbody></tbody>
                                         <!-- 이 밑으로는 ajax로 추가/삭제 구현 -->
-                                        <!-- 추가할 때 맨 오른쪽 버튼은 'OK', 추가 후 '-'로 변경
-                                            ajax 추가할 때는 아래 tr을 table에 "append"하면 됨 
-                                        -->
+                                        <!-- ajax 추가할 때는 아래 tr을 table에 "append"하면 됨 --> 
                                         
                                         <tfoot id="addPlaying" style="display:none;">
 	                                        <tr>
@@ -317,11 +323,7 @@
 	                                                </select>
 	                                            </td>
 	                                            <td class="plus">
-	                                                <button style="background-color:red; color:white;" onclick="confirmPlaying();">OK</button>
-	                                            </td>
-	                                            <td class="minus" style="display:none;">
-	                                                <button style="background-color: red;" onclick="deletePlaying();">
-	                                                	<img id="minus" src="resources/images/icons/dash-lg.svg"></button>
+	                                                <button style="color:red;" onclick="confirmPlaying();">OK</button>
 	                                            </td>
 	                                        </tr>
 	                                    </tfoot>
@@ -365,10 +367,10 @@
 		});
 		
     	// 상영 정보 조회 함수 제작 후, 해당 함수로 통합
-    	if($("#playList tr").not(":hidden").length == 1) {
-    		$("#toprow").hide();
-    	}
-    	// viewPlayList();
+//     	if($("#playList tr").not(":hidden").length == 1) {
+//     		$("#toprow").hide();
+//     	}
+    	viewPlayList();
     	
     	// let row = $("#addPlaying");
     });
@@ -380,9 +382,9 @@
     	// 즉, 미개봉(false)일 때 눌러서 true로 만들면 isOpen = true, premiere = 1
     	
     	$.ajax({
-    		url:"admin.premiere.mo?movieNo="+mno,
+    		url:"admin.premiere.mo?mno="+mno,
     		type:"post",
-    		data: {"movieNo" : mno, "premiere" : premiere},
+    		data: {"mno" : mno, "premiere" : premiere},
     		
     		success:function(result) {
     			if(result === "success") {
@@ -407,7 +409,6 @@
     }
     
     function removeMovie(isOpen) {
-    	    	
     	if(isOpen) {
     		alert("현재 상영중인 영화는 삭제할 수 없습니다.");
     		return false;
@@ -444,23 +445,34 @@
     function viewPlayList() {
     	let mno = $("#mno").val();
 		$.ajax({
-			url:"admin.moviePlay.mo?movieNo="+mno,
-    		type:"post",
-    		data:{"movieNo" : mno},
+			url:"admin.playlist.mo?mno="+mno,
+    		type:"get",
+    		data:{"mno" : mno},
     		
     		success:function(result) {
-    			if(result == "success") {
-    				let resultStr = '';
-//     				for())
-    				
-    				
-    				$("#toprow").hide();
-        			$("#playList>tfoot").remove();
-        			$("#plus").attr("disabled","true");
-    			} else {
-    				// result == "empty"
-    				$("#toprow").hide();
-    			}
+   				// GSON으로 받음
+   				console.log(result);
+   				
+   				let resultStr = '';
+   				for(let i = 0; i < result.length; i++) {
+   					resultStr += "<tr>"
+   					+ "<td style='display:none;'>" + result[i].playingNo + "</td>"
+   					+ "<td colspan='2'>" + result[i].playTime + "</td>"
+   					+ "<td>" + result[i].screenNo + "</td>"
+   					+ "<td class='minus'><button style='background-color:red; width:100%;'"
+   						+ "onclick='deletePlaying(" + result[i].playingNo + ");'>"
+   						+ "<img id='minus' src='resources/images/icons/dash-lg.svg'></button></td>"
+   					+ "</tr>";
+   				}
+
+   				$("#playList>tbody").html(resultStr);
+   				
+   				// 미관 정리
+   				if(result.length <= 0)
+	   				// result == "empty" (failure 역할도 겸함)
+   					$("#toprow").hide();
+       			$("#playList>tfoot").hide();
+   			
     		},
     		error:function() {
     			// 상영 정보 추가가 불가능하도록 막기
@@ -534,6 +546,8 @@
     					$("#addPlaying").find("input").val("");
     					$("#addPlaying").hide();
     					viewPlayList();
+        			} else if (result == "no_screen") {
+        				alert("선택한 상영관을 먼저 추가해주세요.");
         			} else {
         				// result == "failure"
         				alert("failed to add playing information");
@@ -553,9 +567,9 @@
     function deletePlaying(num) {
     	
     	$.ajax({
-    		url:"admin.movieStop.mo?pno="+pno,
+    		url:"admin.movieStop.mo?pno="+num,
     		type:"post",
-    		data:{},
+    		data:{"pno" : num},
     		
     		success:function(result) {
     			if(result == "success") {

@@ -95,6 +95,8 @@ public interface MovieService {
 	ArrayList<Movie> showRunInfo(int movieNo); // 조회
 	int checkRunCount(int movieNo); // RunInfo 수 조회
 	
+	int checkScreen(int screenNo); // 상영관 확인
 	int newRunInfo(Movie m); // 추가
+	
 	int removeRunInfo(int playingNo); // 삭제
 }

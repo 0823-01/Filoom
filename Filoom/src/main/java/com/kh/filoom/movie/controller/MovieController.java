@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.google.gson.Gson;
 import com.kh.filoom.common.model.vo.PageInfo;
 import com.kh.filoom.common.template.Pagination;
 import com.kh.filoom.movie.model.service.MovieServiceImpl;
@@ -28,9 +29,9 @@ import com.kh.filoom.movie.model.vo.Poster;
 
 /**
  * @author 정원섭
- * === MovieController v 0.5.2d ===
+ * === MovieController v 0.5.4 ===
  * 작업 착수일 : 2024-12-13
- * 최종 수정일 : 2024-12-24
+ * 최종 수정일 : 2024-12-25
  */
 
 /* 작업 내역
@@ -38,12 +39,15 @@ import com.kh.filoom.movie.model.vo.Poster;
  * v 0.2 - 영화 목록 출력 (평점순 제외)
  * v 0.3 - 검색을 제외한 각 영화 목록에 페이징바 추가
  * v 0.4 - 관리자 영화 추가 페이지 & 수정 페이지 착수
- * v 0.4.1 - 관리자 영화 추가 페이지 완료, 이미지가 안 뜨는 문제 원인 확인
- * v 0.4.2 - 상세 페이지 리뷰 페이징바 삭제 외 일부 사소한 변경 사항
+ * 	v 0.4.1 - 관리자 영화 추가 페이지 완료, 이미지가 안 뜨는 문제 원인 확인
+ * 	v 0.4.2 - 상세 페이지 리뷰 페이징바 삭제 외 일부 사소한 변경 사항
  * v 0.5 - 영화 수정 페이지 & 삭제 페이지 완료, 상세 페이지 내 스위치 클릭시 개봉 여부 바뀜
- * v 0.5.1 - 박스오피스 기본 정렬 기준 변경 외 크고 작은 문제 수정 
- * v 0.5.2 - 상영정보 조회 및 추가 기능 거의 완료
- * └ v 0.5.2d - 프로젝트 충돌로 인한 재생성 및 기능 복구
+ * 	v 0.5.1 - 박스오피스 기본 정렬 기준 변경 외 크고 작은 문제 수정 
+ * 	v 0.5.2 - 상영정보 조회 및 추가 기능 거의 완료
+ * 	└ v 0.5.2d - 프로젝트 충돌로 인한 재생성 및 기능 복구
+ * 	v 0.5.3 - 관리자페이지 좌측 navigator가 별도 헤더로 바뀜
+ * 	v 0.5.4 - 상영 정보 조회, 추가 완료
+ * 
  * */
 @Controller
 public class MovieController {
@@ -463,27 +467,28 @@ public class MovieController {
 	// (관리자) 상영 여부 변경
 	@ResponseBody
 	@PostMapping("admin.premiere.mo")
-	public String togglePremiere(int movieNo, boolean premiere) {
+	public String togglePremiere(int mno, boolean premiere) {
 		// premiere = 눌렀을 때 바뀐 스위치 값 (= 미개봉(false)상태에서 눌러 실행시키면 true로 받음)
 		// String isOpen = premiere ? "Y" : "N"; // 굳이?
 		System.out.println(premiere);
 		HashMap<String, Integer> map = new HashMap<>();
-		map.put("movieNo", movieNo);
+		map.put("movieNo", mno);
 		map.put("premiere", premiere ? 1 : 0);
 		
-		int result = msi.togglePremiere(movieNo, map);
+		int result = msi.togglePremiere(mno, map);
 		
 		return (result > 0) ? "success" : "failure"; 
 	}
 	
 	// 상영 정보 조회
 	@ResponseBody
-	@PostMapping("admin.playlist.mo")
-	public String showRunInfo(int movieNo) {
-		ArrayList<Movie> list = msi.showRunInfo(movieNo);
+	@GetMapping(value = "admin.playlist.mo", produces="application/json; charset=UTF-8")
+	public String showRunInfo(int mno) {
+		ArrayList<Movie> list = msi.showRunInfo(mno);
+		//System.out.println(list);
 		
-		int count = msi.checkRunCount(movieNo);
-		return (count > 0) ? "success" : "empty";
+		int count = msi.checkRunCount(mno); // 근데 이제 이걸 어따 씀?
+		return new Gson().toJson(list);
 	}
 	
 	
@@ -503,11 +508,17 @@ public class MovieController {
 		Movie m = new Movie();
 		m.setMovieNo(mno);
 		m.setPlayTime(playTime);
-		m.setScreenName(String.valueOf(screen));
+		m.setScreenNo(screen);
+		System.out.println(m);
 		
-		int result = msi.newRunInfo(m);
+		// checkScreen : 'screen'관이 있는지 확인하는 용도 
+		if(msi.checkScreen(screen) <= 0) {
+			return "no_screen";
+		} else {
+			int result = msi.newRunInfo(m);
+			return (result > 0) ? "success" : "failure";
+		}
 		
-		return (result > 0) ? "success" : "failure";
 	}
 	
 	// 상영 정보 제거 - 충돌 해결 이전에 작성됨

@@ -212,6 +212,11 @@ public class MovieServiceImpl implements MovieService {
 		return mDao.newRunInfo(sqlSession, m);
 	}
 	
+	// 상영관 있는지 확인
+	public int checkScreen(int screenNo) {
+		return mDao.checkScreen(sqlSession, screenNo);
+	}
+	
 	public int removeRunInfo(int playingNo) {
 		return mDao.removeRunInfo(sqlSession, playingNo);
 	}

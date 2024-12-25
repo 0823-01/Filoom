@@ -30,6 +30,7 @@
 		<result column="PLAYTIME" property="playTime"/>
 		<result column="SCREEN_NAME" property="screenName"/>
 		<result column="SCREEN_INFO" property="screenInfo"/>
+		<result column="SCREEN_NO" property="screenNo" />
 		
 		
 	</resultMap>
@@ -695,6 +696,9 @@
 	</update>
 	
 	<!-- 상영 정보 조회 -->
+	
+	<!-- 원래 PLAYTIME을 PDATE와 STIME으로 나눠서 TO_CHAR하려 했다가 바꿨음 -->
+	<!-- 이거랑 newRunInfo의 resultMap을 playingResultSet으로 바꿔도 괜찮은가? -->
 	<select id="showRunInfo" parameterType="_int" resultMap="movieResultSet">
 		SELECT PLAYING_NO, PLAYTIME, SCREEN_NO
 		FROM PLAYING PL JOIN MOVIE M USING (MOVIE_NO)
@@ -706,24 +710,32 @@
 	</select>
 	
 	<!-- 상영 정보 추가 -->
-	<!-- 상영관 정보 없으면 parent key not found 오류 남
-		없으면 아래의 더미데이터를 삽입할 것:
+	<!-- 정보 추가 전, 선택한 상영관(1 or 2)이 존재하는지 확인하기 -->
+	<!-- 상영관 정보가 없으면 #newRunInfo 실행시 'parent key not found' 오류남
+		에러나지 말라고 굳이 만들었음 -->
+	<select id="checkScreen" parameterType="int" resultType="int">
+		SELECT COUNT(*) FROM SCREEN
+		WHERE SCREEN_NO = #{screenNo}
+	</select>
+	
+	<!-- 만약 '상영관이 없다'고 뜰 경우, SQL에 다음 쿼리로 더미 상영관을 넣어주세요.
 		INSERT INTO SCREEN VALUES
 			(SEQ_SCR.NEXTVAL, 1, 60, null)
 	-->
-	<!-- 더미데이터 삽입 시에만 날짜 부분을 다음 예시와 같이 작성할 것↓
+	
+	<!-- 상영 정보 조회 기능 확인 용도로 더미데이터 삽입 시, PLAYTIME 부분만 다음 예시와 같이 바꿔 입력할 것↓
 		 TO_DATE('2024-12-27 15:15:00','YYYY-MM-DD HH24:MI:SS') -->
 	<insert id="newRunInfo" parameterType="movie">
 		INSERT INTO PLAYING(PLAYING_NO, PLAYTIME, MOVIE_NO, SCREEN_NO)
-		VALUES(SEQ_PLA.NEXTVAL, #{playTime}, #{movieNo}, #{screenName})
+		VALUES(SEQ_PLA.NEXTVAL, #{playTime}, #{movieNo}, #{screenNo})
 	</insert>
 	
 	<!-- 상영 정보 삭제 - 충돌 해결 전 작성됨 -->
-<!-- 	<update id="removeRunInfo" parameterType="_int"> -->
-<!-- 		UPDATE PLAYING -->
-<!-- 		SET STATUS = 'Y' -->
-<!-- 		WHERE PLAYING_NO = #{playingNo}  -->
-<!-- 	</update> -->
+	<update id="removeRunInfo" parameterType="_int">
+		UPDATE PLAYING
+		SET STATUS = 'N'
+		WHERE PLAYING_NO = #{playingNo} 
+	</update>
 	
 	<!-- === 리뷰 관련 === -->
 	<!-- 리뷰 조회 - 사용자, 관리자 공통 -->

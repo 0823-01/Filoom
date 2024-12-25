@@ -172,6 +172,10 @@ public class MovieDao {
 		return sqlSession.insert("movieMapper.newRunInfo", m);
 	}
 
+	public int checkScreen(SqlSessionTemplate sqlSession, int screenNo) {
+		// TODO Auto-generated method stub
+		return sqlSession.selectOne("movieMapper.checkScreen", screenNo);
+	}
 	
 	/**
 	 * @param sqlSession - DB 접속용 객체
@@ -183,6 +187,8 @@ public class MovieDao {
 		// TODO Auto-generated method stub
 		return sqlSession.update("movieMapper.removeRunInfo", playingNo);
 	}
+
+	
 
 	
 
