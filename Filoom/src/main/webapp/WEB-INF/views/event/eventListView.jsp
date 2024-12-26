@@ -224,10 +224,10 @@
             <!-- 필터링 영역 -->
             <div id="winner"><a href="${pageContext.request.contextPath}/list.ev">전체 이벤트&emsp;</a>|</div>
             <div id="eventing"><a href="${pageContext.request.contextPath}/list.ev?eventStatus=N">진행중인 이벤트&emsp;</a>|</div>
+            <div id="evented"><a href="${pageContext.request.contextPath}/list.ev?eventStatus=Y">지난 이벤트&emsp;</a></div>
             <!--
-            <div id="winner"><a href="#">당첨자 발표&emsp;</a>|</div>
-            <div id="evented"><a href="${pageContext.request.contextPath}/list.ev?eventStatus=Y">지난 이벤트&emsp;</a></div> -->
-
+            <div id="winner"><a href="#">당첨자 발표&emsp;</a>|</div> -->
+           
         </div>
 
         <!-- 추천 이벤트 영역 -->

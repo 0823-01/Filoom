@@ -346,7 +346,7 @@
                 <form id="postForm" action="" method="post" enctype="multipart/form-data">
                 	<input type="hidden" name="eno" value="${requestScope.e.eventNo }">
                 	<c:forEach var="file" items="${list}">
-				        <input type="hidden" name="filePaths" value="${file.changeName}">
+				        <input type="hidden" name="changeName" value="${file.changeName}">
 				    </c:forEach>
                 	
                 </form>

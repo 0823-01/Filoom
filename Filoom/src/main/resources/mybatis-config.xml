@@ -33,7 +33,6 @@
 		<typeAlias type = "com.kh.filoom.event.model.vo.EventAttachment" alias="eventAttachment" />
 		<typeAlias type = "com.kh.filoom.event.model.vo.Reply" alias="reply" />
 		<typeAlias type = "com.kh.filoom.event.model.vo.Applicant" alias="applicant" />
-		<typeAlias type = "com.kh.filoom.event.model.vo.Winners" alias="winners" />
 		
 		<typeAlias type = "com.kh.filoom.notice.model.vo.Notice" alias="notice" />
 		

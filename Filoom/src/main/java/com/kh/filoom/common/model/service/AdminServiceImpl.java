@@ -8,6 +8,8 @@ import org.springframework.stereotype.Service;
 
 import com.kh.filoom.common.model.dao.AdminDao;
 import com.kh.filoom.common.model.vo.Chart;
+import com.kh.filoom.movie.model.vo.Movie;
+import com.kh.filoom.movie.model.vo.Poster;
 
 @Service
 public class AdminServiceImpl implements AdminService{
@@ -60,6 +62,37 @@ public class AdminServiceImpl implements AdminService{
 		// TODO Auto-generated method stub
 		return adminDao.adminTodayInput(sqlSession);
 	}
+
+	
+	// Main 관련 
+	
+	@Override
+	public ArrayList<Movie> selectMovieMainMovieList() {
+		// TODO Auto-generated method stub
+		return adminDao.selectMovieMainMovieList(sqlSession);
+	}
+
+	@Override
+	public ArrayList<Movie> seletMovieReview() {
+		// TODO Auto-generated method stub
+		return adminDao.seletMovieReview(sqlSession);
+	}
+
+	
+	@Override
+	public ArrayList<Poster> selectMovieReviewPoster() {
+		// TODO Auto-generated method stub
+		return null;//adminDao.selectMovieReviewPoster(sqlSession);
+	}
+	
+	@Override
+	public ArrayList<Movie> selectMovieMainList() {
+		// TODO Auto-generated method stub
+		return adminDao.selectMovieMainList(sqlSession);
+	}
+
+
+	
 
 
 }

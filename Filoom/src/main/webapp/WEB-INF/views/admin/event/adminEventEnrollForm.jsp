@@ -531,56 +531,66 @@ body{
         });
     });
     
-    document.addEventListener("DOMContentLoaded", function() {
-	    	const images = document.querySelectorAll("img[data-target]");
-	
-	        images.forEach(img => {
-	            img.addEventListener("click", function() {
-	                const fileInputId = img.getAttribute("data-target");
-	                const fileInput = document.getElementById(fileInputId);
-	                if (fileInput) fileInput.click();  // 파일 입력창 열기
-	            });
-	        });
+ 	// 이미지 첨부 스크립트 (중복 방지 적용)
+    document.addEventListener("DOMContentLoaded", function () {
+        const images = document.querySelectorAll("img[data-target]");
+        const fileInputs = document.querySelectorAll('input[name="upfiles"]');
+
+        // 이미지 클릭 시 파일 입력창 열기
+        images.forEach((img) => {
+            const boundClickEvent = img.getAttribute("data-bound-click");
+
+            // 중복 클릭 방지를 위한 속성 확인
+            if (!boundClickEvent) {
+                img.addEventListener("click", function () {
+                    const fileInputId = img.getAttribute("data-target");
+                    const fileInput = document.getElementById(fileInputId);
+                    if (fileInput) fileInput.click(); // 파일 입력창 열기
+                });
+                img.setAttribute("data-bound-click", "true"); // 이벤트 등록 표기
+            }
         });
 
-        // 이미지 파일 선택 후 미리보기 업데이트
-        function loadImg(input) {
-        	// index를 data-index 속성에서 가져옵니다. 
-        	const index = input.dataset.index; 
-            const previewImg = document.getElementById(`contentImg\${index}`);
-            
-	         	// previewImg가 null인지 확인
-	            if (!previewImg) {
-	                console.error(`Image element with id 'contentImg\${index}' not found.`);
-	                return;  // 요소가 없다면 함수 종료
-	            }
-            
-            
-            
-            const file = input.files[0];
+        // 파일 입력 변화 시 미리보기 업데이트
+        fileInputs.forEach((input) => {
+            const boundChangeEvent = input.getAttribute("data-bound-change");
 
-            console.log(previewImg, file);  // 미리보기 이미지 요소와 파일 확인
-            
-            if (file) {
-            	
-            	if(file.type.startsWith('image/')) {  // 이미지 파일인지 체크
-	                const reader = new FileReader();
-	                reader.onload = function(e) {
-	                	// console.log("파일 읽기 성공:", e.target.result); // 읽은 데이터 URL을 출력
-	                	
-	                    previewImg.src = e.target.result;  // 파일 읽기 후 미리보기 이미지에 설정
-	                    
-	                    // previesImg.style.display = 'block'; // 미리보기 이미지 표시
-	                    // console.log("미리보기 설정 완료");
-	                };
-                
-                	reader.readAsDataURL(file); // 파일을 DataURL 로 읽기
-                
-            	} else {
-	                alert('이미지 파일만 선택 가능합니다.');
-	            }
-        	}
-      	}
+            // 중복 체인지 방지를 위한 속성 확인
+            if (!boundChangeEvent) {
+                input.addEventListener("change", function () {
+                    loadImg(input); // 이미지 처리
+                });
+                input.setAttribute("data-bound-change", "true"); // 이벤트 등록 표기
+            }
+        });
+    });
+
+    // 파일을 선택하면 미리보기 이미지에 표시
+    function loadImg(input) {
+        const index = input.dataset.index;
+        const previewImg = document.getElementById("contentImg" + index);
+        const file = input.files[0];
+        
+        previewImg.addEventListener('click', () => {
+            // console.log(`contentImg${index} clicked`);
+        });
+
+        if (!previewImg) {
+            console.error(`Image element with id 'contentImg${index}' not found.`);
+            return;
+        }
+
+        if (file && file.type.startsWith("image/")) {
+            // console.log("Selected File:", file); // 단일 로그
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                previewImg.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        } else {
+            alert("이미지 파일만 선택 가능합니다.");
+        }
+    }
 
         document.addEventListener('DOMContentLoaded', function() {
             const fileInputs = document.querySelectorAll('input[name="upfiles"]');

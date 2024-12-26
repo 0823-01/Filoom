@@ -52,17 +52,6 @@
 	<result column="COUPON_EXP_DATE" property="couponExpDate" />
 </resultMap>
 
-<!-- Winners 테이블로부터 조회된 ResultSet을 winners VO 타입으로 옮겨주는 ResultMap -->
-<resultMap id="winnersResultSet" type="winners">
-	<id column="WINNER_NO" property="winnerNo" />
-	<result column="REF_ENO" property="refEno" />
-	<result column="WINNER" property="winner" />
-	<result column="WINNER_TYPE" property="winnerType" />
-	<result column="WIN_STATUS" property="winStatus" />
-	<result column="WIN_DATE" property="winDate" />
-	<result column="COUPON_NO" property="couponNo" />
-</resultMap>
-
 <!-- coupon 테이블로부터 조회된 ResultSet을 Coupon VO 타입으로 옮겨주는 ResultMap -->
 <resultMap id="couponResultSet" type="coupon">
 	<id column="COUPON_NO" property="couponNo" />
@@ -76,6 +65,14 @@
 
 
 <!-- 사용자 -->
+<!-- 이벤트 종료여부에 따른 상태값 변경 -->
+<update id="updateEventStatus">
+	UPDATE EVENT
+     SET EVENT_STATUS = 'Y'
+   WHERE END_DATE &lt; SYSDATE
+     AND EVENT_STATUS = 'N'
+</update>
+
 <!-- 241218 한혜원, 이벤트 추천게시글 목록조회 -->
 <select id="selectHotEventList" resultMap="eventResultSet">
 	SELECT EVENT_NO
@@ -111,8 +108,7 @@
      , EVENT_TITLE
      , CHANGE_NAME AS "CONTENTIMG1"
      , TO_CHAR(START_DATE, 'YYYY-MM-DD') "START_DATE"
-     , TO_CHAR(END_DATE, 'YYYY-MM-DD') "END_DATE"
-     
+     , TO_CHAR(END_DATE, 'YYYY-MM-DD') "END_DATE" 
   FROM EVENT E
   JOIN EVENT_ATTACHMENT ON (EVENT_NO = REF_ENO)
  WHERE E.EVENT_STATUS = #{eventStatus} 
@@ -307,6 +303,8 @@
 	     , UPLOAD_DATE = SYSDATE
 	 WEHRE EVENT_FILE_NO = #{eventFileNo}
 </update>
+
+
 
 <!-- 한혜원, 이벤트 게시글 삭제 -->
 <update id="deleteEvent" parameterType="_int">

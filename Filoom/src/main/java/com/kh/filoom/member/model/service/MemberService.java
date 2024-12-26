@@ -1,8 +1,10 @@
 package com.kh.filoom.member.model.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import com.kh.filoom.common.model.vo.PageInfo;
 import com.kh.filoom.member.model.vo.Favorite;
 import com.kh.filoom.member.model.vo.History;
 import com.kh.filoom.member.model.vo.Member;
@@ -74,6 +76,29 @@ public interface MemberService {
 	List<Favorite> sortFavoriteMovies(int userNo, String sort);
 
 	boolean checkEmail(String email);
+
+	
+	
+	
+	
+	
+	
+	
+	// 관리자
+	int selectListCount();
+
+	ArrayList<Member> memberList(PageInfo pi);
+	
+	int selectSearchListCount(String keyword);
+	
+	ArrayList<Member> searchMemberList(PageInfo pi, String keyword);
+	
+	int selectStatusListCount(String status);
+	
+	ArrayList<Member> selectStatusMemberList(PageInfo pi, String status);
+
+	int updateMemberStatus(int userNo, String status);
+
 
 
 	
