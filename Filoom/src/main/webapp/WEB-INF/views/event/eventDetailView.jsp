@@ -343,7 +343,7 @@
                 	<img id="event_img" src="${ pageContext.request.contextPath }${file.changeName}" alt="상세이미지">
                 </c:forEach>
                 
-                <form id="postForm" action="" method="post" enctype="multipart/form-data">
+                <form id="postForm" action="" method="get" enctype="multipart/form-data">
                 	<input type="hidden" name="eno" value="${requestScope.e.eventNo }">
                 	<c:forEach var="file" items="${list}">
 				        <input type="hidden" name="changeName" value="${file.changeName}">
@@ -772,14 +772,21 @@
         }
     });
  	
-	function postFormSubmit(num) {
-		console.log("num:", num);
-		if(num == 1) {
-	        $("#postForm").attr("action", "${pageContext.request.contextPath}/updateForm.ev").submit();
-	    } else {
-	        $("#postForm").attr("action", "${pageContext.request.contextPath}/delete.ev").submit();
-	    }
-	}
+    function postFormSubmit(num) {
+        console.log("num:", num);
+
+        if (num == 1) {
+            // 수정 요청: GET 방식으로
+            $("#postForm").attr("action", "${pageContext.request.contextPath}/updateForm.ev")
+                          .attr("method", "get") // method를 GET으로 설정
+                          .submit();
+        } else {
+            // 삭제 요청: POST 방식으로
+            $("#postForm").attr("action", "${pageContext.request.contextPath}/delete.ev")
+                          .attr("method", "post") // method를 POST로 설정
+                          .submit();
+        }
+    }
  
 </script>
 
