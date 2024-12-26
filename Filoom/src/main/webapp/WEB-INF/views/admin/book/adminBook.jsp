@@ -193,6 +193,65 @@
 		    cursor: default;
 		}
 		
+		/*------------*/
+    
+	    #admin_title_content {
+	    display: flex;
+	    flex-direction: column;
+	    justify-content: center; /* 수직 중앙 정렬 */
+	    align-items: center; /* 수평 중앙 정렬 */
+	    
+	    margin: 20px auto;
+	    padding: 20px;
+	    border: 1px solid #ddd;
+	    border-radius: 8px;
+	    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+	    
+		}
+		
+		#admin_title_content form {
+		    display: flex;
+		    flex-wrap: wrap;
+		    justify-content: center; 
+		    gap: 15px; 
+		    align-items: center;
+		}
+	    
+	    #admin_title_content select,
+	    #admin_title_content input[type="text"],
+	    #admin_title_content input[type="submit"] {
+	        padding: 8px 12px;
+	        font-size: 14px;
+	        border: 1px solid #ccc;
+	        border-radius: 4px;
+	        outline: none;
+	    }
+	
+	    #admin_title_content select:focus,
+	    #admin_title_content input[type="text"]:focus {
+	        border-color: #007bff;
+	        box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+	    }
+	
+	  
+	
+	    #admin_title_content input[type="submit"]:hover {
+	        background-color: #0056b3;
+	    }
+	
+	    #admin_title_content label {
+	        font-weight: bold;
+	        font-size: 14px;
+	        margin-right: 5px;
+	    }
+	
+	    #admin_title_content .form-item {
+	        display: flex;
+	        align-items: center;
+	        gap: 5px;
+	    }
+		
+				
 				
 			
 	</style>
@@ -212,10 +271,10 @@
                 <div id = "admin_title_content">
 
 
-					예매내역 관리
 					<div>      				
 						<form action="adminBooking.ad" method="get" id="searchForm">
 						
+							예매내역 관리
 							정렬
 							<select name="sorting"  id="sortingSelect">
 								<option value="desc">최신순</option>
@@ -225,8 +284,10 @@
 							</select>
 							예매번호</td>
 							<input type ="text" id ="text_sample"name="bookNo" value="${requestScope.bookNo}">
-							사용자아이디
+							&nbsp;&nbsp;&nbsp;&nbsp;사용자아이디
+							&nbsp;
 							<input type ="text" id ="text_sample" name="userId" value="${requestScope.userId}">
+							&nbsp;
 							<input type="submit" id ="button_sample" value="검색">
 						</form>
 					</div> 
