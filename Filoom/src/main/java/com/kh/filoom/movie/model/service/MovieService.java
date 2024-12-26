@@ -64,11 +64,18 @@ public interface MovieService {
 	// === 영화 상세 페이지 ===
 	Movie showDetail(int movieNo); // 상세 정보 조회
 	Poster showThumbnail(int movieNo); // 영화 포스터 호호
-	// ArrayList<Poster> selectImageList(int movieNo); // 스틸컷 목록 조회
+	ArrayList<Poster> selectImageList(int movieNo); // 스틸컷 목록 조회
 	
+	// === 사용자 리뷰 관련 기능 ===
 	// 리뷰 목록 조회
 	int checkReviewCount(int movieNo);
 	ArrayList<Review> selectReview(HashMap<String, Integer> map); // 리뷰 목록 조회 (사용자)
+	double checkAverage(int movieNo);
+	double checkEvalNo(int movieNo, int k);
+	
+	int writeReview(Review r);
+	int updateReview(Review r);
+	int deleteReview(HashMap<String, Integer> map);
 	
 	// 이미지 추가 - 영화 추가/수정 공통
 	int addPoster(Poster p); // 이미지 추가
@@ -103,4 +110,9 @@ public interface MovieService {
 	int newRunInfo(Movie m); // 추가
 	
 	int removeRunInfo(int playingNo); // 삭제
+	
+	
+	// === 관리자 리뷰 관련 기능 ===
+	ArrayList<Review> adminSelectReview(HashMap<String, Integer> map);
+	int adminDeleteReview(int reviewId);
 }
