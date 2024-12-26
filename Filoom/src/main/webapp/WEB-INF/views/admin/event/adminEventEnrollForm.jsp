@@ -5,7 +5,7 @@
 <head>
 <meta charset="UTF-8">
 <title>관리자용 이벤트 글작성</title>
-<!--link rel="stylesheet" href="../main/admin.css" /> -->
+<link rel="stylesheet" href="resources/css/admin.css" />
 <style>
 body{
     width: 100%;
@@ -371,23 +371,7 @@ body{
 </head>
 <body>
     <div id = "admin_content">
-        <div id = "navbar">
-            
-            <div id = "logo">
-                <!-- img src="..admin/main/Filoom.png">-->
-            </div>
-           
-            <div id = "nav">
-                <ul>
-                    <li><a>회원 관리</a></li>
-                    <li><a>회원 관리</a></li>
-                    <li><a>회원 관리</a></li>
-                    <li><a>회원 관리</a></li>
-                    <li><a>회원 관리</a></li>
-                </ul>
-    
-            </div>
-        </div>
+    <jsp:include page="../../common/adminHeader.jsp" />   
         <div id = "admin_right">
             <div id ="admin_title">
 

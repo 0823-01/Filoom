@@ -195,7 +195,7 @@
 		
 				<div class="form-group">
 					<label for="newPwd">새 비밀번호</label>
-					<input type="password" id="newPwd" name="newPwd" placeholder="영문, 숫자, 특수기호를 포함한 10자 이상의 비밀번호를 입력해주세요." required>
+					<input type="password" id="newPwd" name="newPwd" placeholder="영문, 숫자, 특수기호를 포함한 8자 이상의 비밀번호를 입력해주세요." required>
 				</div>
 		
 				<div class="form-group">
@@ -217,7 +217,7 @@
 	<script>
 
 		$(function() {
-			const pwdRegexp = /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[!@#$%^&*()_+~`|}{[\]:;?><,./-]).{10,}$/;
+			const pwdRegexp = /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[!@#$%^&*()_+~`|}{[\]:;?><,./-]).{8,}$/;
 
 			// 비밀번호 유효성 검사
 	        $("#newPwd").on("keyup", function () {
@@ -252,13 +252,13 @@
 	            }
 
 				if (!pwdRegexp.test(newPwd)) {
-					alert("비밀번호는 영문, 숫자, 특수기호를 포함하여 10자 이상 입력해야 합니다.");
+					alert("비밀번호는 영문, 숫자, 특수기호를 포함하여 8자 이상 입력해야 합니다.");
 					$("#newPwd").focus().css("border-color", "red");
 					return;
 				}
 
 				if (!confirmPwd) {
-	                alert("비밀번호 확인을 입력해주세요.");
+	                alert("비밀번호 확인란을 입력해주세요.");
 	                $("#confirmPwd").focus().css("border-color", "red");
 	                return;
 	            }

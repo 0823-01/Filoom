@@ -55,6 +55,20 @@
 	    <result column="FILE_LEVEL" property="fileLevel"/>
 	</resultMap>
 	
+	<resultMap id="reviewResultSet" type="review">
+		<id column="REVIEW_ID" property="reviewId" />
+		<result column="USER_NO" property="userNo" />
+		<result column="MOVIE_NO" property="movieNo" />
+		<result column="REVIEW_TITLE" property="reviewTitle" />
+		<result column="REVIEW_DATE" property="reviewDate" />
+		<result column="SCORE" property="score" />
+		<result column="IS_WATCHED" property="isWatched" />
+		<result column="REVIEW_CONTENT" property="reviewContent" />
+		<result column="IS_DELETED" property="isDeleted" />
+	    
+	    <!-- 다른 필드에서 가져온 것 -->
+	    <result column="USER_ID" property="userId" />
+	</resultMap>
 	
 	<!-- 이거 영화 예매 페이지 첫페이지 정보 가져오기 -->
 	<select id ="selectList" resultMap="movieResultSet">
@@ -745,19 +759,25 @@
 	
 	<!-- === 리뷰 관련 === -->
 	<!-- 리뷰 수 체크 -->
-	<!-- <select id="checkReviewCount" parameterType="_int" resultType="_int">
+	<select id="checkReviewCount" parameterType="_int" resultType="_int">
 		SELECT COUNT(*) FROM REVIEW
 		WHERE MOVIE_NO = #{movieNo} AND IS_DELETED = 'N'
 	</select>
 	
-	리뷰 조회 (사용자, 관리자 공통)
-	이것도 보안 문제로 관리자는 별도 메소드로 조회하나, 쿼리 자체는 동일함
-	<select id="selectReview" parameterType="hashmap" resultType="reviewResultSet">
-		SELECT REVIEW_ID, USER_ID, REVIEW_TITLE, REVIEW_DATE,
-			SCORE, IS_WATCHED, REVIEW_CONTENT 
-		FROM REVIEW R JOIN MEMBER M ON (R.USER_NO = M.USER_NO)
-		WHERE MOVIE_NO = #{movieNo} AND IS_DELETED = 'N'
-	</select> -->
+	<!-- 리뷰 조회 (사용자, 관리자 공통) -->
+	<!-- 이것도 보안 문제로 관리자는 별도 메소드로 조회하나, 쿼리 자체는 동일함 -->
+	<select id="selectReview" parameterType="hashmap" resultMap="reviewResultSet">
+		SELECT * FROM (
+			SELECT ROWNUM RNUM, A.* FROM (
+				SELECT REVIEW_ID, 
+					USER_NO, SUBSTR(MEM.USER_ID,1,4) || '****' AS USER_ID,
+					REVIEW_TITLE, REVIEW_DATE,
+					SCORE, IS_WATCHED, REVIEW_CONTENT 
+				FROM REVIEW R JOIN MEMBER MEM USING (USER_NO)
+				WHERE MOVIE_NO = #{movieNo} AND IS_DELETED = 'N'
+			) A
+		) WHERE RNUM BETWEEN 10*(#{cpage}-1)+1 AND 10*#{cpage}
+	</select>
 	
 	<!-- 리뷰 작성 (사용자) -->
 	

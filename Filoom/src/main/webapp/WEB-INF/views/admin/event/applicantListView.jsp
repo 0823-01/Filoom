@@ -213,23 +213,7 @@
 </head>
 <body>
     <div id = "admin_content">
-        <div id = "navbar">
-            
-            <div id = "logo">
-                <img src="../main/Filoom.png">
-            </div>
-           
-            <div id = "nav">
-                <ul>
-                    <li><a>회원 관리</a></li>
-                    <li><a>회원 관리</a></li>
-                    <li><a>회원 관리</a></li>
-                    <li><a>회원 관리</a></li>
-                    <li><a>회원 관리</a></li>
-                </ul>
-    
-            </div>
-        </div>
+    <jsp:include page="../../common/adminHeader.jsp" />  
         <div id = "admin_right">
             <div id ="admin_title">
 

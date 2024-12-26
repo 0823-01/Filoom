@@ -789,22 +789,6 @@ public class EventController {
 	    return response;
 	}
 		
-		
-		/*
-		// 전달된 파라미터에서 값을 추출
-	    String userNo = (String) params.get("userNo");
-	    int eventNo = (int) params.get("eventNo");
-	    
-	    // 출력
-	    System.out.println("userNo: " + userNo);  // 상태 출력
-	    System.out.println("eventNo: " + eventNo);  // 이벤트 번호 출력
-	    
-	    // 서비스 호출
-	    int result = eventService.couponInsertEx(params);
-	    
-	    // 결과 반환
-	    return result;
-	} */
 	
 	/**
 	 * 241220 한혜원
