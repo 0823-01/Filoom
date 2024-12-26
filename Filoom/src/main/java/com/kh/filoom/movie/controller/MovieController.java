@@ -49,6 +49,7 @@ import com.kh.filoom.movie.model.vo.Review;
  * 	v 0.5.3 - 관리자페이지 좌측 navigator가 별도 헤더로 바뀜
  * 	v 0.5.4 - 상영 정보 조회, 추가 완료
  *	v 0.5.5 - 리뷰 기능 구현을 위한 사전 작업
+ * v 0.6 - 사용자 리뷰 내용 조회 성공
  * */
 @Controller
 public class MovieController {
@@ -252,10 +253,11 @@ public class MovieController {
 		// 2) 리뷰 조회
 		HashMap<String, Integer> map = new HashMap<>();
 		map.put("movieNo", mno);
-		map.put("cPage", cpage);
-		ArrayList<Review> rv = msi.selectReview(map);
+		map.put("cpage", cpage);
+		ArrayList<Review> list = msi.selectReview(map);
+		System.out.println(list);
 		
-		model.addAttribute("rv", rv);
+		model.addAttribute("list", list);
 		model.addAttribute("pi", pi);
 		return "movie/reviewlist";
 	}
@@ -572,14 +574,13 @@ public class MovieController {
 	
 	// (관리자) 리뷰 목록 확인 (+ 페이징 처리)
 	@GetMapping("admin.managereview.mo")
-	public String reviewPatrol(int mno) {
+	public String reviewPatrol(int movieNo) {
 		// 1) 페이징 처리
 		int boardLimit = 10;
-		int listCount = msi.checkReviewCount(mno);
-		PageInfo pi = Pagination.getPageInfo(listCount, mno, pgLimit, boardLimit);
+		int listCount = msi.checkReviewCount(movieNo);
+		PageInfo pi = Pagination.getPageInfo(listCount, movieNo, pgLimit, boardLimit);
 		
 		// 2) 리뷰 조회
-		
 		
 		return "admin/movie/manageReview";
 	}

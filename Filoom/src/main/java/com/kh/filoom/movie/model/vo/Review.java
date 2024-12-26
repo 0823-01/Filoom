@@ -23,4 +23,7 @@ public class Review {
 	private String isWatched; // IS_WATCHED CHAR(1)
 	private String reviewContent; // REVIEW_CONTENT VARCHAR2(2000)
 	private String isDeleted; // IS_DELETED CHAR(1)
+	
+	// 추가 필드
+	private String userId; // USER_ID (from MEMBER)
 }
