@@ -323,11 +323,11 @@ public class EventDao {
 	 */
 	public int updateEventAttachment(SqlSessionTemplate sqlSession, List<Integer> fileNos, String status) {
 		
-		Map<String, Object> parameters = new HashMap<>();
-		parameters.put("fileNos", fileNos);
-		parameters.put("status", status);
+		Map<String, Object> params = new HashMap<>();
+		params.put("fileNos", fileNos);
+		params.put("status", status);
 		
-		return sqlSession.update("eventMapper.updateEventAttachment", parameters);
+		return sqlSession.update("eventMapper.updateEventAttachment", params);
 	}
 	
 	/**

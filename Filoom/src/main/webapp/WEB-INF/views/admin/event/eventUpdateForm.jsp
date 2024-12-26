@@ -278,7 +278,7 @@ body{
     }
     
     
-    #contentImg1, #changeName1, #changeName2, #changeName3
+    #contentImg1, #contentImg2, #contentImg3, #contentImg4
     #emptyImage1, #emptyImage2, #emptyImage3, #emptyImage4 {
             height: 170px;
             width : 170px;
@@ -396,7 +396,7 @@ body{
                     <input type="button" id ="button_sample" value="샘플">-->
                     
                     
-                    <form id="updateForm" action="update.ev" method="post" enctype="multipart/form-data">
+                    <form id="updateForm" action="update.ev" method="POST" enctype="multipart/form-data">
                     <!-- 어떤 게시글인지 정확하게 파악하기 위해 게시글 번호도 같이 넘기기 -->
                     <input type="hidden" name="eventNo" value="${requestScope.e.eventNo }" >
                     
@@ -446,44 +446,166 @@ body{
 
                         <!-- 사진첨부 -->
                         <div class="fileArea">
-                            <label for="fileInput" id="file">사진<br>첨부<b style="color : red;">*</b></label>
-                            
-                            <!-- 기존의 이미지 불러오기 -->
-                            <img id="contentImg1" src="${pageContext.request.contextPath}${e.contentImg1}" alt="Preview Image 1" data-target="file1"/>
-                            
-                            <!-- 두 번째부터 네 번째 이미지 처리 -->
-							<div>
-							    <c:forEach var="i" begin="1" end="3">
-							        <c:choose>
-							            
-							            <c:when test="${i <= list.size()}">
-							                <c:set var="file" value="${list[i - 1]}" />
-							                <label for="file${i + 1}"></label>
-							                <img id="changeName${i + 1}" src="${pageContext.request.contextPath}${file.changeName}" alt="Attachment Preview ${i + 1}" data-target="file${i + 1}">
-							            </c:when>
+					    <label for="fileInput1" id="file">사진<br>첨부<b style="color : red;">*</b></label>
 
-							            <c:otherwise>
-							                <label for="file${i + 1}"></label>
-							                <img id="emptyImage${i + 1}" src="#" alt="Empty Preview ${i + 1}" data-target="file${i + 1}" >
-							            </c:otherwise>
-							        </c:choose>
-							    </c:forEach>
-							</div>
-                            
-                            <!--  
-                           	<img id="contentImg2" src="#" alt="Preview Image 2" data-target="file2" />
-							<img id="contentImg3" src="#" alt="Preview Image 3" data-target="file3" />
-							<img id="contentImg4" src="#" alt="Preview Image 4" data-target="file4" /> -->
-							
-                            <!-- 새로운 파일 입력받는 요소  -->
-                            <div id="file-area" style="display : none;">
-	                            <!-- 썸네일은 필수입력사항으로 지정 -->
-	                            <input type="file" id="file1" name="upfiles" data-index="1" onchange="loadImg(this);" multiple required>
-								<input type="file" id="file2" name="upfiles" data-index="2" onchange="loadImg(this);" multiple>
-								<input type="file" id="file3" name="upfiles" data-index="3" onchange="loadImg(this);" multiple>
-								<input type="file" id="file4" name="upfiles" data-index="4" onchange="loadImg(this);" multiple>
-                            </div>
-                            
+					    <!-- 첫 번째 이미지 -->
+					    <img id="contentImg1" 
+					    src="${pageContext.request.contextPath}${e.contentImg1}" alt="Preview Image 1" 
+					    data-target="file1" onclick="confirmAndDeleteImage(1, '${e.contentImg1}', this)" />
+					    <input type = "hidden" name="contentImg1" value="${e.contentImg1}"/>
+					    <!-- 첫 번째 이미지에 맞는 파일 입력 창 -->
+						<input type="file" id="file1" name="currentImage1" data-index="1" onchange="loadImg(this);" multiple required>
+						
+						<!-- 두 번째부터 네 번째 이미지 처리 -->
+					    <!-- 첫 번째 이미지 -->
+					    <img id="contentImg1" 
+					    src="${pageContext.request.contextPath}${e.contentImg1}" alt="Preview Image 1" 
+					    data-target="file1" onclick="confirmAndDeleteImage(1, '${e.contentImg1}', this)" />
+					    <input type = "hidden" name="contentImg1" value="${e.contentImg1}"/>
+					    <!-- 첫 번째 이미지에 맞는 파일 입력 창 -->
+						<input type="file" id="file1" name="currentImage1" data-index="1" onchange="loadImg(this);" multiple required>
+					    
+						
+						
+						
+						
+						
+						
+						
+						
+						
+					    <!-- 두 번째부터 네 번째 이미지 처리 -->
+					    <div>
+					        <c:forEach var="i" begin="1" end="3">
+					            <c:choose>
+					                <c:when test="${i <= list.size()}">
+					                    <c:set var="file" value="${list[i - 1]}" />
+					                    <label for="file${i + 1}"></label>
+					                    <img id="contentImg${i + 1}" src="${pageContext.request.contextPath}${file.changeName}" alt="Attachment Preview ${i + 1}" data-target="file${i + 1}" onclick="confirmAndDeleteImage(${i + 1}, '${file.changeName}', this)" />
+					                    <!-- 해당 이미지를 위한 파일 입력 창 -->
+					                    <input type ="hidden" name="contentImg${i + 1}" value="${pageContext.request.contextPath}${file.changeName}"/>
+					                    <input type="file" id="file${status.index + 1}" name="newUpfiles" data-index="${status.index + 1}" onchange="loadImg(this);" multiple>
+					                   
+					                </c:when>
+					                <c:otherwise>
+					                    <label for="file${i + 1}"></label>
+					                    <img id="emptyImage${i + 1}" src="#" alt="Empty Preview ${i + 1}" data-target="file${i + 1}">
+					                </c:otherwise>
+					            </c:choose>
+					        </c:forEach>
+					    </div>
+					    
+					    
+					    
+					    
+					    <script>
+					 	// 이미지 첨부 스크립트 (중복 방지 적용)
+					    document.addEventListener("DOMContentLoaded", function () {
+					        const images = document.querySelectorAll("img[data-target]");
+					        const fileInputs = document.querySelectorAll('input[name="upfiles"]');
+
+					        // 이미지 클릭 시 파일 입력창 열기
+					        images.forEach((img) => {
+					            const boundClickEvent = img.getAttribute("data-bound-click");
+
+					            // 중복 클릭 방지를 위한 속성 확인
+					            if (!boundClickEvent) {
+					                img.addEventListener("click", function () {
+					                    const fileInputId = img.getAttribute("data-target");
+					                    const fileInput = document.getElementById(fileInputId);
+					                    if (fileInput) fileInput.click(); // 파일 입력창 열기
+					                });
+					                img.setAttribute("data-bound-click", "true"); // 이벤트 등록 표기
+					            }
+					        });
+
+					        // 파일 입력 변화 시 미리보기 업데이트
+					        fileInputs.forEach((input) => {
+					            const boundChangeEvent = input.getAttribute("data-bound-change");
+
+					            // 중복 체인지 방지를 위한 속성 확인
+					            if (!boundChangeEvent) {
+					                input.addEventListener("change", function () {
+					                    loadImg(input); // 이미지 처리
+					                });
+					                input.setAttribute("data-bound-change", "true"); // 이벤트 등록 표기
+					            }
+					        });
+					    });
+
+					    // 파일을 선택하면 미리보기 이미지에 표시
+					    function loadImg(input) {
+					        const index = input.dataset.index;
+					        const previewImg = document.getElementById("contentImg" + index);
+					        const file = input.files[0];
+
+					        if (!previewImg) {
+					            console.error(`Image element with id 'contentImg${index}' not found.`);
+					            return;
+					        }
+
+					        if (file && file.type.startsWith("image/")) {
+					            const reader = new FileReader();
+					            reader.onload = function (e) {
+					                previewImg.src = e.target.result;
+					                previewImg.style.display = "block"; // 미리보기 이미지 보이게 처리
+					            };
+					            reader.readAsDataURL(file); // 파일을 데이터 URL로 변환하여 미리보기 이미지를 설정
+					        } else {
+					            alert("이미지 파일만 선택 가능합니다.");
+					        }
+					    }
+
+					    // 이미지 삭제 및 상태값 변경, 새로운 파일 미리보기 처리
+					    function confirmAndDeleteImage(fileIndex, filePath, imgElement) {
+					        const userConfirmed = confirm("해당 이미지를 삭제하시겠습니까?");
+					        if (userConfirmed) {
+					            // 삭제 상태값을 서버에 전달할 수 있도록 업데이트 (상태를 "n"으로 설정)
+					            const deletedFileInput = document.getElementById('deletedFile' + fileIndex);
+					            if (deletedFileInput) {
+					                deletedFileInput.value = "Y";  // 'n' 값으로 상태값 설정
+					            }
+
+					            // 이미지를 화면에서 "보이지 않게 처리"
+					            imgElement.style.display = "none";  // 이미지 숨기기
+					            imgElement.src = '';  // 이미지를 빈 이미지로 변경
+
+					            // 파일 입력창 열기 (기존 이미지가 삭제된 후 파일 업로드 창을 보여줌)
+					            const fileInput = document.getElementById('file' + fileIndex);
+					            if (fileInput) {
+					                fileInput.style.display = "block";  // 파일 입력창 보이게 하기
+					            } else {
+					                console.error('File input element with id "fileInput' + fileIndex + '" not found');
+					            }
+					        }
+					    }
+
+					   		 // 파일을 첨부하면서 이미지 업로드 후 미리보기 갱신 및 상태값 업데이트
+						    function updateImagePreview(fileIndex, inputElement) {
+						    const file = inputElement.files[0];
+						    const imgElement = document.getElementById('contentImg' + fileIndex);
+						
+						    if (file) {
+						        const reader = new FileReader();
+						        
+						        // 이미지 파일을 데이터 URL로 읽어들여 `img` 엘리먼트에 표시
+						        reader.onload = function (e) {
+						            imgElement.src = e.target.result;  // 이미지를 읽어온 데이터로 설정
+						            imgElement.style.display = "block";  // 이미지를 보이도록 설정
+
+						            // 새 파일이 선택되었으면 기존 "삭제" 버튼 등을 초기화 처리하기
+						            const deletedFileInput = document.getElementById('deletedFile' + fileIndex);
+						            if (deletedFileInput) {
+						                deletedFileInput.value = "";  // 삭제된 상태값을 초기화 (빈 값으로 설정)
+						            }
+						        };
+
+						        reader.readAsDataURL(file); // 파일을 읽어서 base64 URL 형식으로 변환하여 미리보기 처리
+						    }
+						}
+					</script>
+					<!-- 파일 입력 태그 예시 -->
+					                            
                             <div class="comment" style="padding : 10px;">
                                 <!--button type="button" class="btn" id="fileButton" style="width : 140px; text-align: center;">파일첨부</button>
                                 <!--input type="file" id="fileInput" style="display:none;"> -->
@@ -554,89 +676,6 @@ body{
 	        });
 	    });
 	    
-	    document.addEventListener("DOMContentLoaded", function () {
-	        const navItems = document.querySelectorAll("#nav > ul > li");
-	    
-	        navItems.forEach(item => {
-	            item.addEventListener("click", function () {
-	                // 모든 항목에서 selected 클래스 제거
-	                navItems.forEach(nav => nav.classList.remove("selected"));
-	    
-	                // 클릭된 항목에 selected 클래스 추가
-	                this.classList.add("selected");
-	            });
-	        });
-	    });
-	    
-	 	// 이미지 첨부 스크립트 (중복 방지 적용)
-	    document.addEventListener("DOMContentLoaded", function () {
-	        const images = document.querySelectorAll("img[data-target]");
-	        const fileInputs = document.querySelectorAll('input[name="upfiles"]');
-	
-	        // 이미지 클릭 시 파일 입력창 열기
-	        images.forEach((img) => {
-	            const boundClickEvent = img.getAttribute("data-bound-click");
-	
-	            // 중복 클릭 방지를 위한 속성 확인
-	            if (!boundClickEvent) {
-	                img.addEventListener("click", function () {
-	                    const fileInputId = img.getAttribute("data-target");
-	                    const fileInput = document.getElementById(fileInputId);
-	                    if (fileInput) fileInput.click(); // 파일 입력창 열기
-	                });
-	                img.setAttribute("data-bound-click", "true"); // 이벤트 등록 표기
-	            }
-	        });
-	
-	        // 파일 입력 변화 시 미리보기 업데이트
-	        fileInputs.forEach((input) => {
-	            const boundChangeEvent = input.getAttribute("data-bound-change");
-	
-	            // 중복 체인지 방지를 위한 속성 확인
-	            if (!boundChangeEvent) {
-	                input.addEventListener("change", function () {
-	                    loadImg(input); // 이미지 처리
-	                });
-	                input.setAttribute("data-bound-change", "true"); // 이벤트 등록 표기
-	            }
-	        });
-	    });
-	
-	    // 파일을 선택하면 미리보기 이미지에 표시
-	    function loadImg(input) {
-	        const index = input.dataset.index;
-	        const previewImg = document.getElementById("contentImg" + index);
-	        const file = input.files[0];
-	        
-	        previewImg.addEventListener('click', () => {
-	            // console.log(`contentImg${index} clicked`);
-	        });
-	
-	        if (!previewImg) {
-	            console.error(`Image element with id 'contentImg${index}' not found.`);
-	            return;
-	        }
-	
-	        if (file && file.type.startsWith("image/")) {
-	            // console.log("Selected File:", file); // 단일 로그
-	            const reader = new FileReader();
-	            reader.onload = function (e) {
-	                previewImg.src = e.target.result;
-	            };
-	            reader.readAsDataURL(file);
-	        } else {
-	            alert("이미지 파일만 선택 가능합니다.");
-	        }
-	    }
-	
-        document.addEventListener('DOMContentLoaded', function() {
-            const fileInputs = document.querySelectorAll('input[name="upfiles"]');
-            fileInputs.forEach((input, index) => {
-                input.addEventListener('change', function() {
-                    loadImg(input, index + 1);  // 1부터 시작하도록 index + 1
-                });
-            });
-        });
         
     </script>
 </body>

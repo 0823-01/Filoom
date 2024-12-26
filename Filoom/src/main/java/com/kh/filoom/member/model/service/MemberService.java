@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.kh.filoom.common.model.vo.PageInfo;
+import com.kh.filoom.member.model.vo.Coupon;
 import com.kh.filoom.member.model.vo.Favorite;
 import com.kh.filoom.member.model.vo.History;
 import com.kh.filoom.member.model.vo.Member;
@@ -64,7 +65,7 @@ public interface MemberService {
 	int updateUserPwd(Map<String, String> paramMap);
 
 	// 보고싶은 영화 목록 조회 서비스 (select)
-	List<Favorite> favoriteList(int userNo);
+	List<Favorite> favoriteList(int userNo, String sort);
 
 	// 보고싶은 영화 목록 삭제 서비스 (delete)
 	int deleteFavorite(Map<String, Object> paramMap);
@@ -73,11 +74,9 @@ public interface MemberService {
 	int deleteHistorySeat(Map<String, Object> paramMap);
 	int deleteHistory(Map<String, Object> paramMap);
 
-	List<Favorite> sortFavoriteMovies(int userNo, String sort);
-
 	boolean checkEmail(String email);
 
-	
+	List<Coupon> couponList(int userNo);
 	
 	
 	
@@ -98,6 +97,10 @@ public interface MemberService {
 	ArrayList<Member> selectStatusMemberList(PageInfo pi, String status);
 
 	int updateMemberStatus(int userNo, String status);
+
+	
+
+	
 
 
 

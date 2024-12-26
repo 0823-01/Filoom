@@ -284,26 +284,33 @@
 
 <!-- 241224 한혜원, 이벤트 게시글 수정 -->
 <update id="updateEvent" parameterType="event">
-	UPDATE EVENT
+	UPDATE EVENT 
 	   SET EVENT_TITLE = #{eventTitle}
 	     , START_DATE = #{startDate}
 	     , END_DATE = #{endDate}
 	     , EVENT_CONTENT = #{eventContent}
+	     , CONTENTIMG1 = (SELECT CHANGE_NAME
+                          FROM EVENT_ATTACHMENT EA
+                         WHERE REF_ENO = #{eventNo}
+                           AND FILE_LEVEL = 1) AS "CONTENTIMG1", -- 'fileLevel'에 맞는 조건을 설정
 	     , EVENT_TYPE = #{eventType}
 	     , EVENT_STATUS = #{eventStatus}
 	 WHERE EVENT_NO = #{eventNo}
-	   AND STATUS = 'Y' 
+	   AND STATUS = 'Y'  
 </update>
 
 <!-- 241224 한혜원, 이벤트 게시글 첨부파일 수정 -->
 <update id="updateEventAttachment" parameterType="eventAttachment">
+	<foreach item="fileNo" index="index" collection="fileNos" open="BEGIN" close="END" separator=";">
 	UPDATE EVENT
 	   SET ORIGIN_NAME = #{originName}
 	     , CHANGE_NAME = #{changeName}
 	     , UPLOAD_DATE = SYSDATE
-	 WEHRE EVENT_FILE_NO = #{eventFileNo}
+	     , STATUS = #{status}
+	 WHERE EVENT_FILE_NO = #{eventFileNo}
+	   AND FILE_LEVEL = 2
+	 </foreach>
 </update>
-
 
 
 <!-- 한혜원, 이벤트 게시글 삭제 -->

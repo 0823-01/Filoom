@@ -189,7 +189,7 @@
 	            <c:otherwise>    
 	                <!-- 로그인 후 -->
 	                <ul>
-                    	<li><a href="${ pageContext.request.contextPath }/myPage.me">마이페이지</a></li> &nbsp;&nbsp;&nbsp;&nbsp;
+                    	<li><a href="${ pageContext.request.contextPath }/profile.me">마이페이지</a></li> &nbsp;&nbsp;&nbsp;&nbsp;
                     	<li><a href="${ pageContext.request.contextPath }/logout.me">로그아웃</a></li>
                     </ul>
 	            </c:otherwise>

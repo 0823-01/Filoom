@@ -420,7 +420,7 @@
 
     <div class="mypage-container">
         <div class="mypage-sidebar">
-            <h2><a href="myPage.me">마이 페이지</a></h2>
+            <h2><a href="#">마이 페이지</a></h2>
             <ul class="menu-list">
                 <li><a href="profile.me">내 정보</a></li>
                 <li><a href="coupon.me">쿠폰 조회</a></li>
@@ -454,15 +454,15 @@
 			                    <div class="reserve-item">
 			                        <div class="box-info">
 			                            <div class="box-image">
-			                                <a href="#"><img src="${ pageContext.request.contextPath }/resources/images/posters/${ reserve.fileCodename }" class="poster"></a>
+			                                <a href="detail.mo?movieNo=${reserve.movieNo}"><img src="${ pageContext.request.contextPath }/resources/images/posters/${ reserve.fileCodename }" class="poster"></a>
 			                            </div>
 			                            <input type="hidden" id="hiddenEndTime" value="${reserve.endTime}">
 			                            <div class="reserve-info">
 			                                <div class="title-price">
-			                                    <div><a href="#" class="movie-title">${reserve.movieTitle}</a></div>
+			                                    <div><a href="detail.mo?movieNo=${reserve.movieNo}" class="movie-title">${reserve.movieTitle}</a></div>
 			                                    <div class="cancel-review">
 			                                    	<button type="button" class="cancel-btn" onclick="canelRequest(${reserve.bookNo})">예매 취소</button>
-			                                    	<button type="button" class="review-btn">리뷰 남기러 가기</button>
+			                                    	<button type="button" class="review-btn" onClick="location.href='detail.mo?movieNo=${reserve.movieNo}'">리뷰 남기러 가기</button>
 			                                    </div>
 			                                </div>
 			                                <div class="reserve-content">
@@ -686,13 +686,12 @@
     
         // 소득공제 슬라이드 다운
         $(function() {
+		    $('.open-content-btn').on('click', function() {
+		        // 현재 클릭한 버튼의 부모 요소를 기준으로 슬라이드 토글
+		        $(this).closest('.reserve-item').find('.incomeDeduction-content').slideToggle();
+		    });
+		});
 
-            $('.open-content-btn').on('click', function () {
-
-                $('.incomeDeduction-content').slideToggle();
-            });
-        });
-        
         $(function () {
             $(".reserve-item").each(function () {
                 // 각 reserve-item 내에서 작업
