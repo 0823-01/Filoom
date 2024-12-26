@@ -12,6 +12,7 @@ import org.springframework.stereotype.Repository;
 import com.kh.filoom.book.model.vo.Booking;
 import com.kh.filoom.book.model.vo.BookingSeat;
 import com.kh.filoom.book.model.vo.Playing;
+import com.kh.filoom.common.model.vo.PageInfo;
 import com.kh.filoom.coupon.model.vo.CouponUser;
 import com.kh.filoom.member.model.vo.Member;
 import com.kh.filoom.movie.model.vo.Movie;
@@ -261,6 +262,42 @@ public class BookDao {
 		return sqlSession.delete("bookMapper.cancelupdateBookingSeat",bookNo);
 	}
 
+	
+	
+	/////////////////////////////////////////////
+	//관리자 예매관리
+	
+	
+	public int selectBookingCount(SqlSessionTemplate sqlSession, String bookNo, String userId) {
+		Map<String,Object> map = new HashMap();
+		map.put("bookNo", bookNo);
+		map.put("userId", userId);
+		
+		return sqlSession.selectOne("bookMapper.selectBookingCount",map);
+	}
+
+	public ArrayList<Booking> selectBookingListAdmin(SqlSessionTemplate sqlSession, 
+													 PageInfo pi, 
+													 String sorting,
+													 String bookNo, 
+													 String userId) {
+		
+		//인젝션 어택 방지
+		sorting = sorting.equals("desc") ? "desc" : "asc";
+		
+		Map<String,Object> map = new HashMap();
+		map.put("startNum", pi.getStartNum());
+		map.put("endNum", pi.getEndNum());
+		map.put("sorting",sorting);
+		map.put("userId", userId);
+		map.put("bookNo", bookNo);
+		
+		
+		System.out.println(userId);
+		System.out.println(bookNo);
+		
+		return (ArrayList)sqlSession.selectList("bookMapper.selectBookingListAdmin",map);
+	}
 
 
 

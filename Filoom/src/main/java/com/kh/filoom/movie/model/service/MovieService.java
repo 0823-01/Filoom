@@ -5,6 +5,7 @@ import java.util.HashMap;
 
 import com.kh.filoom.movie.model.vo.Movie;
 import com.kh.filoom.movie.model.vo.Poster;
+import com.kh.filoom.movie.model.vo.Review;
 
 public interface MovieService {
 	// 작품 수 체크 - 전체
@@ -63,8 +64,11 @@ public interface MovieService {
 	// === 영화 상세 페이지 ===
 	Movie showDetail(int movieNo); // 상세 정보 조회
 	Poster showThumbnail(int movieNo); // 영화 포스터 호호
-	// listScenes(); // 스틸컷 목록 조회
-	// selectReviewList(); // 리뷰 목록 조회
+	// ArrayList<Poster> selectImageList(int movieNo); // 스틸컷 목록 조회
+	
+	// 리뷰 목록 조회
+	int checkReviewCount(int movieNo);
+	ArrayList<Review> selectReview(HashMap<String, Integer> map); // 리뷰 목록 조회 (사용자)
 	
 	// 이미지 추가 - 영화 추가/수정 공통
 	int addPoster(Poster p); // 이미지 추가
@@ -95,6 +99,8 @@ public interface MovieService {
 	ArrayList<Movie> showRunInfo(int movieNo); // 조회
 	int checkRunCount(int movieNo); // RunInfo 수 조회
 	
+	int checkScreen(int screenNo); // 상영관 확인
 	int newRunInfo(Movie m); // 추가
+	
 	int removeRunInfo(int playingNo); // 삭제
 }

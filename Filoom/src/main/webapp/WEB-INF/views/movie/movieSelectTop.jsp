@@ -86,6 +86,9 @@
             /* font-size:24px; */
             text-align:left;
         }
+        .movie:hover {
+        	cursor:pointer;
+        }
 
         .movie-info {
             font-size:20px;
@@ -115,7 +118,7 @@
             <c:choose>
             	<c:when test="${not empty now}">
 					<c:forEach var="pic" items="${now}">
-		            	<div class="movie">
+		            	<div class="movie" onclick="location.href='detail.mo?movieNo=${pic.movieNo}';">
 			                <img src="${pageContext.request.contextPath}/resources/images/posters/${pic.fileCodename}" class="poster">
 			                <table class="movie-info">
 			                    <tr>
@@ -153,7 +156,7 @@
 			<c:choose>
 				<c:when test="${not empty pre}">
 					<c:forEach var="pic" items="${pre}">
-		            	<div class="movie">
+		            	<div class="movie" onclick="location.href='detail.mo?movieNo=${pic.movieNo}';">
 			                <img src="${pageContext.request.contextPath}/resources/images/posters/${pic.fileCodename}" class="poster">
 			                <table class="movie-info">
 			                    <tr>

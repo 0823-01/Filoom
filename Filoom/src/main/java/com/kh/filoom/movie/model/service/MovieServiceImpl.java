@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.kh.filoom.movie.model.dao.MovieDao;
 import com.kh.filoom.movie.model.vo.Movie;
 import com.kh.filoom.movie.model.vo.Poster;
+import com.kh.filoom.movie.model.vo.Review;
 
 @Service
 public class MovieServiceImpl implements MovieService {
@@ -119,6 +120,11 @@ public class MovieServiceImpl implements MovieService {
 		return mDao.showThumbnail(sqlSession, movieNo);
 	}
 	
+	/* public ArrayList<Poster> selectImageList(int movieNo) {
+	 * 	return mDao.selectImageList(sqlSession, movieNo);
+	 * }
+	 * */
+	
 	// ======
 	
 	// === 관리자 메뉴 ===
@@ -212,8 +218,26 @@ public class MovieServiceImpl implements MovieService {
 		return mDao.newRunInfo(sqlSession, m);
 	}
 	
+	// 상영관 있는지 확인
+	public int checkScreen(int screenNo) {
+		return mDao.checkScreen(sqlSession, screenNo);
+	}
+	
 	public int removeRunInfo(int playingNo) {
 		return mDao.removeRunInfo(sqlSession, playingNo);
+	}
+
+	// === 리뷰 관련 기능 ===
+	public int checkReviewCount(int movieNo) {
+		// TODO Auto-generated method stub
+		return mDao.checkReviewCount(sqlSession, movieNo);
+	}
+
+	// 사용자용
+	@Override
+	public ArrayList<Review> selectReview(HashMap<String, Integer> map) {
+		// TODO Auto-generated method stub
+		return mDao.selectReview(sqlSession, map);
 	}
 
 	

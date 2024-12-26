@@ -266,6 +266,14 @@
             });
         });
     });
+    
+    $(function() {
+    	// selectReviewList();
+    });
+    
+    function selectReviewList(/*cpage*/) {
+    	//
+    }
     </script>
     
 </body>

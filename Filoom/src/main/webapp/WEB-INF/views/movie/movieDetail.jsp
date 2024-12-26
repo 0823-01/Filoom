@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
     <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+    <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -361,7 +362,9 @@
                 <!-- display가 inline이 아닌데도 display:inline이라면서 width가 무시되는 현상 있음 -->
                 <a href="#reviewList" id="evalTotal">평점 4.55</a>
                 <!-- script를 통해 버튼이 왼쪽부터 평점/5 만큼만 밝은 색으로 나오게 할 계획  -->
-                <a href="book.do" id="toBook">예매하기</a>
+                <c:if test="${requestScope.list.premiere eq 'Y' }">
+                	<a href="book.do" id="toBook">예매하기</a>
+                </c:if>
                 <a href="" id="like">♡ 1234</a>
                 <!-- 로그인 후 클릭시 ♥ 1235 으로 바뀌도록. 비로그인시 로그인하라고 얼럿함 -->
                 <!-- 좋아요 켜면 FAVORITE 테이블에 넣는 거니까 확인하고 넣을 것 -->
@@ -369,16 +372,18 @@
 
 
             <!-- 순서대로 IMAX, 4DX, screenX이며, 필요한 것만 우측부터 배치 -->
-             <!-- 나중에 size = 80x56으로 넣을 예정 -->
             <div class="screenType" style="float:right; margin-right:10px;">
                 <!-- float로 별개로 배치 -->
                  <!-- CGV가 이 로고들을 넣는데, 클릭 시 사이트 내 설명 페이지로 이동 -->
-                <!-- <div><img src="resources/images/posters/IMAX.svg">대충 IMAX 로고</div>
-                <div>대충 4DX 로고</div>
-                <div>대충 ScreenX 로고</div>-->
-                <a href="#" id="imax">IMAX</a>
-                <a href="#" id="4dx">4DX</a>
-                <a href="#" id="screenx">SCREENX</a>
+                <c:if test="${fn:contains(requestScope.list.screenType,'IMAX')}">
+                	<a href="#" id="imax">IMAX</a>
+                </c:if>
+                <c:if test="${fn:contains(requestScope.list.screenType,'4DX')}">
+	                <a href="#" id="4dx">4DX</a>
+                </c:if>
+                <c:if test="${fn:contains(requestScope.list.screenType,'SCREENX')}">
+	                <a href="#" id="screenx">SCREENX</a>
+                </c:if>
             </div>
 
             <br><br>
@@ -398,6 +403,8 @@
                 <div id="container">
                     <div class="swiper">
                         <div class="swiper-wrapper" align="center">
+                        	<%-- <c:forEach var="pic" items="${album}"> --%>
+                        	<!-- <div class="swiper-slide"><img src="resources/images/posters/${pic.fileCodename}"></div> -->
                             <div class="swiper-slide"><img src="resources/images/posters/wicked1.jpg"></div>
                             <div class="swiper-slide"><img src="resources/images/posters/wicked2.jpg"></div>
                         </div>
@@ -630,7 +637,8 @@
                 
                 <script>
                 $(function() {
-                	//refreshPagingBar(cpage);
+                	//selectReviewList(1,1);
+                	//refreshPagingBar(1);
                 })
                 
                 function refreshPagingBar(cpage) {
@@ -678,6 +686,26 @@
             		$(".pagingbar").html(pgbar);
             		
             	}
+                
+                function selectReviewList(mno, cpage) {
+                	$.ajax({
+                		url:'',
+                		type:'',
+                		data:{
+                			'mno' : mno,
+                			'userlv' : 1,
+                			'cpage' : cpage
+                		},
+                		
+                		success: function(result) {
+                			// ???
+                			// refreshPagingBar(cpage);
+                		}
+                		error: function() {
+                			alert("An error has occurred.");
+                		}
+                	})
+                }
                 </script>
 
                 <!-- Paging Bar -->
