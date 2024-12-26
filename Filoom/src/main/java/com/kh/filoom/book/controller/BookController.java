@@ -190,7 +190,7 @@ public class BookController {
 
 		Calendar calendar = Calendar.getInstance();
 	    calendar.setTime(currentDate);
-	    calendar.add(Calendar.MINUTE, 10);
+	    calendar.add(Calendar.MINUTE, 10000);
 
 	    Date updatedTime = calendar.getTime();
 	    // System.out.println("10분 후 시간: " + updatedTime);
@@ -380,25 +380,32 @@ public class BookController {
 	
 	
 	@PostMapping("paymentForm.pm")
-	public ModelAndView paymentFormRequest1(RedirectAttributes redirectAttributes,
-											ModelAndView mv,HttpSession session,
+	public ModelAndView paymentFormRequest1(ModelAndView mv,HttpSession session,
 											int playingNo,  
 											@RequestParam("seatNos")ArrayList<String> seatNos
 											) {
 		log.debug("==결제폼 요청==");
 		
+		Member loginUser = (Member)session.getAttribute("loginUser");
+		
+		log.debug("매개변수 데이터 : 좌석번호 Array<String> seatNos : "+seatNos +", 상영번호 : "+playingNo + ", 회원정보: " +loginUser );
+		
 		//상영번호 -> 상영좌석, 상영관정보 조회		
 		ArrayList<BookingSeat> bookingSeatList = bookService.checkAndGetBookingSeatNoList(seatNos,playingNo,null);
-		if(bookingSeatList.size()==0) { //실패 
-			
+		log.debug("좌석정보, 상영관정보 : bookingSeatList : " + bookingSeatList);
+		
+	
+		
+		if(bookingSeatList.size()==0) { //실패
+		
+			log.debug("좌석 조회 실패 ");
 			session.setAttribute("alertMsg", "다시 시도해주시기 바랍니다");
 			mv.setViewName("redirect:book.do");
 			
-		}else { //성공 
-			log.debug("3. 좌석정보, 상영관정보 : bookingSeatList : " + bookingSeatList.toString() );
+		
+		}else { //성공
 			
-			Member loginUser = (Member)session.getAttribute("loginUser");
-			log.debug("매개변수 데이터 : 좌석번호 Array<String> seatNos : "+seatNos +", 상영번호 : "+playingNo + ", 회원정보: " +loginUser );
+			
 			
 			Movie movie = bookService.selectMovieForPlayingNo(playingNo);
 			log.debug("2. 보낼정보 영화정보(+포스터),상영정보,상영관 정보 movie : " + movie.toString());

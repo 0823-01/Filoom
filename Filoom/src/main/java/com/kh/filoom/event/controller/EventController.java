@@ -498,14 +498,15 @@ public class EventController {
 		ArrayList<EventAttachment> list = eventService.selectEventAttachment(eno);
 		
 		// 조회된 이벤트 정보와 첨부파일 목록 모델에 추가하여 수정페이지로 전달 
-		System.out.println("List: " + (list != null ? list : "null") + " | Size: " + (list != null ? list.size() : "0"));
+		// System.out.println("List: " + (list != null ? list : "null") + " | Size: " + (list != null ? list.size() : "0"));
 		mv.addAttribute("e", e);
 		mv.addAttribute("list", list);
 		
-		 System.out.println(e);
-		 System.out.println(list);
-		 // System.out.println(e.getEventStatus());
-		 System.out.println(mv);
+	    // System.out.println(e);
+		// System.out.println(list);
+		// System.out.println(e.getEventStatus());
+		// System.out.println(mv);
+		 
 		 
 		// 수정 페이지로 이동
 		//mv.setViewName("admin/event/eventUpdateForm");
@@ -855,6 +856,26 @@ public class EventController {
 	    
 
 	    return changeName; // 변경된 파일명 반환
+	}
+	
+	// 첨부파일 처리 Helper 메서드
+	public List<EventAttachment> processNewFiles(MultipartFile[] newUpFiles, HttpSession session) {
+	    List<EventAttachment> attachments = new ArrayList<>();
+	    int fileLevel = 1; // 대표이미지: 1, 일반 파일: 2
+
+	    for (MultipartFile newUpFile : newUpFiles) {
+	        if (!newUpFile.isEmpty()) {
+	            String changeName = saveFile(newUpFile, session); // 파일 저장 및 이름 변경
+	            EventAttachment attachment = new EventAttachment();
+	            attachment.setOriginName(newUpFile.getOriginalFilename());
+	            attachment.setChangeName("/resources/eventUploadFiles/" + changeName);
+	            attachment.setFilePath(changeName);
+	            attachment.setFileLevel(fileLevel); // 대표이미지(1) 이후는 일반파일(2)
+	            fileLevel = 2; // 이후로는 모두 일반 파일로 설정
+	            attachments.add(attachment);
+	        }
+	    }
+	    return attachments;
 	}
 
 	
