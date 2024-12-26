@@ -13,9 +13,16 @@
 </head>
 <body>
 	
-	<a href="/filoom/ad.li" style="font-size:100px; color:red;">관리자 메인페이지 </a>
-	<pre>관리자 페이지는 이곳으로 통해 들어갈수 있게 해주세요 ~~</pre>
-	
+	<c:choose>
+	    <c:when test="${!empty sessionScope.loginUser && sessionScope.loginUser == 'admin'}">
+	        <!-- 로그인한 사용자가 admin일 경우 -->
+	        <a href="/filoom/ad.li" style="font-size:100px; color:white; background-color: #000000">관리자 메인페이지</a>
+	        <pre>관리자 페이지는 이곳으로 통해 들어갈 수 있게 해주세요 ~~</pre>
+	    </c:when>
+	    <c:otherwise>
+	        <!-- 로그인한 사용자가 admin이 아닐 경우 아무것도 표시되지 않음 -->
+	    </c:otherwise>
+	</c:choose>
 		
 	
 	<div id = "main_content1">
@@ -84,21 +91,15 @@
                         <div id="blank_blank"></div>
                         <!-- 여기에 영화 제목 -->
                         <div id="detail_title">
-                            <a>조커</a>
+                            <a></a>
                         </div>
                     </div>
                     <div id="main_detail">
                         <div id="detail_sum">
-                            <a>영화 상세 설명영화 상세</a>
-                            <br><br>
-                            <button>상세보기 ></button>
+                        <!--  -->
                         </div>
                         <div id="another_movie">
-                            <div class="movie-card" id="movie1">조커</div>
-                            <div class="movie-card" id="movie2">글래디에이터</div>
-                            <div class="movie-card" id="movie3">영화3</div>
-                            <div class="movie-card" id="movie4">영화4</div>
-                            <div class="movie-card" id="movie5">영화5</div>
+                            
                         </div>
                         
                     </div>
@@ -204,6 +205,9 @@
 
 
     <script>
+    	
+       const contextPath = "${pageContext.request.contextPath}";
+    
        document.addEventListener('DOMContentLoaded', function() {
             // 첫 번째 영화 카드 선택
             setSelectedCard('movie1');
@@ -222,18 +226,21 @@
 
             // 선택된 카드에 'selected' 클래스를 추가하는 함수
             function setSelectedCard(selectedId) {
-                // 모든 movie-card에서 'selected' 클래스를 제거
-                var allCards = document.querySelectorAll('.movie-card');
-                allCards.forEach(function(card) {
-                    card.classList.remove('selected');
-                });
-
-                // 클릭된 카드에 'selected' 클래스를 추가
-                var selectedCard = document.getElementById(selectedId);
-                selectedCard.classList.add('selected');
-            }
+			    // 모든 movie-card에서 'selected' 클래스를 제거
+			    var allCards = document.querySelectorAll('.movie-card');
+			    allCards.forEach(function(card) {
+			        card.classList.remove('selected');
+			    });
+			
+			    // 클릭된 카드에 'selected' 클래스를 추가
+			    var selectedCard = document.getElementById(selectedId);
+			    if (selectedCard) {
+			        selectedCard.classList.add('selected');
+			    }
+			}
         });
 
+       /*
         function changeVideo(videoSrc, videoTitle) {
             var videoElement = document.getElementById('movie-video');
             var sourceElement = document.getElementById('video-source');
@@ -243,6 +250,24 @@
                 // 비디오 소스 변경
                 sourceElement.src = videoSrc;
                 videoElement.load();  // 비디오 재로드
+            }
+
+            // 제목 변경
+            if (titleElement) {
+                titleElement.textContent = videoTitle;
+            }
+        }
+		*/
+        
+        function changeVideo(videoSrc, videoTitle) {
+            var videoElement = document.getElementById('movie-video');
+            var sourceElement = document.getElementById('video-source');
+            var titleElement = document.getElementById('detail_title').querySelector('a');
+
+            if (sourceElement) {
+                // 비디오 소스 변경
+                sourceElement.src = videoSrc;
+                videoElement.load(); // 비디오 재로드
             }
 
             // 제목 변경
@@ -264,23 +289,69 @@
 
             // 초기 데이터 로드
             callMainEndpoint();
-
+            
+            
             // AJAX 요청 함수
+            
             function callMainEndpoint() {
                 $.ajax({
-                    url: "main.do", // 요청 URL
-                    type: "POST",  // HTTP 메서드
-                    dataType: "json", // 서버에서 반환하는 데이터 유형 (JSON)
+                    url: "main.do", 
+                    type: "POST",
+                    dataType: "json",
                     success: function (response) {
                         console.log("Response from main.do:", response);
                         moviesData.push(...response.list3); // 영화 데이터를 배열에 추가
                         renderMovies(); // 초기 렌더링
+                        
+                        if (response.list1) {
+                            renderAnotherMovies(response.list1); // list1 데이터를 렌더링
+                        } else {
+                            console.error("No data in response.list1:", response);
+                            alert("데이터가 없습니다.");
+                        }
+                        
                     },
                     error: function (xhr, status, error) {
                         console.error("AJAX Error:", status, error);
                         alert("데이터를 가져오는 데 실패했습니다.");
                     }
                 });
+            }
+            
+
+            function renderAnotherMovies(moviesData) {
+                // 영화 데이터를 렌더링할 대상 div
+                var anotherMovieDiv = document.getElementById('another_movie');
+                anotherMovieDiv.innerHTML = ''; // 기존 내용을 초기화
+
+                console.log("무비 데이터: ", moviesData);
+
+                
+                // moviesData 배열의 각 항목을 순회하며 HTML 생성
+                moviesData.forEach(function(movie, index) {
+                    var movieCard =
+                        '<div class="movie-card" id="movie' + (index + 1) + '" onclick="updateMovieDetail(' + index + ')">' +
+                            '<img src="' + contextPath + '/resources/images/posters/' + movie.fileCodename + '" alt="' + movie.movieTitle + '"' +
+                            ' onerror="this.onerror=null; this.src=\'' + contextPath + '/resources/images/default.jpg\';">' +
+                            '<p>' + movie.movieTitle + '</p>' +
+                        '</div>';
+                    anotherMovieDiv.innerHTML += movieCard; // 새 카드 추가
+                });
+                
+                moviesData.forEach(function(movie, index) {
+                    const movieCardElement = document.getElementById('movie' + (index + 1));
+                    if (movieCardElement) {
+                        movieCardElement.addEventListener('click', function () {
+                            // 비디오와 제목 업데이트
+                            changeVideo(movie.imagePath + '/' + movie.fileCodename, movie.movieTitle);
+                            setSelectedCard('movie' + (index + 1)); // 선택된 카드 강조
+                        });
+                    }
+                });
+
+                // 전역 변수로 영화 데이터를 저장
+                window.moviesData = moviesData;
+
             }
 
             // 영화 데이터를 동적으로 렌더링
@@ -297,7 +368,10 @@
 			        // 영화 카드 HTML 문자열 생성
 			       const movieCard = '<div id="content2_card">' +
 					    '<div id="content2_img">' +
-					    '<img src="${pageContext.request.contextPath}/resources/images/posters/' + movie.fileCodename + '" alt="' + movie.movieTitle + '"' +
+					    '<img src="${pageContext.request.contextPath}/resources/images/posters/' 
+					    + movie.fileCodename 
+					    + '" alt="' 
+					    + movie.movieTitle + '"' +
 				        ' onerror="this.onerror=null; this.src=\'${pageContext.request.contextPath}/resources/images/default.jpg\';">' +
 					    '</div>' +
 					    '<div class="movie-title">' + movie.movieTitle + '</div>' +
@@ -313,6 +387,8 @@
 			        $("#content2_booking button").hide();
 			    }
 			}
+           
+
 
             // "더보기" 버튼 클릭 이벤트
             $("#content2_booking button").click(function () {

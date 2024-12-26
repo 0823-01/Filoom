@@ -174,26 +174,32 @@
 	<!-- 영화의 영상 첫번쨰 메인  -->
 	<select id = "selectMovieMainMovieList" resultMap = "movieResultSet">
 		SELECT 
-	    MOVIE_TITLE,
-	    CASE 
-	        WHEN LENGTH(DESCRIPTION) &gt; 20 THEN SUBSTR(DESCRIPTION, 1, 20) || '...'
-	        ELSE DESCRIPTION
-	    END AS SHORT_DESCRIPTION,
-	    TRAILER
-	FROM 
-	    (SELECT 
-	         MOVIE_TITLE, 
-	         DESCRIPTION, 
-	         TRAILER, 
-	         OPEN_DATE
-	     FROM 
-	         MOVIE
-	     WHERE 
-	         PREMIERE = 'Y'
-	     ORDER BY 
-	         OPEN_DATE DESC)
-	WHERE 
-	    ROWNUM &lt;= 5
+		    M.MOVIE_TITLE,
+		    CASE 
+		        WHEN LENGTH(M.DESCRIPTION) &gt; 20 THEN SUBSTR(M.DESCRIPTION, 1, 16) || '...'
+		        ELSE M.DESCRIPTION
+		    END AS DESCRIPTION,
+		    M.TRAILER AS TRAILER,
+		    P.FILE_NAME AS FILE_CODENAME,
+		    P.IMAGE_PATH AS IMAGE_PATH
+		FROM 
+		    (SELECT 
+		         MOVIE_NO,
+		         MOVIE_TITLE, 
+		         DESCRIPTION, 
+		         TRAILER, 
+		         OPEN_DATE
+		     FROM 
+		         MOVIE
+		     WHERE 
+		         PREMIERE = 'Y'
+		     ORDER BY 
+		         OPEN_DATE DESC) M
+		LEFT JOIN POSTER P
+		ON M.MOVIE_NO = P.MOVIE_NO
+		WHERE 
+		    P.FILE_LEVEL = 1
+		    AND ROWNUM &lt;= 5
 	</select>
 	
 	
