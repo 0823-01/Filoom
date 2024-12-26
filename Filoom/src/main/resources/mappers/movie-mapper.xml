@@ -617,6 +617,18 @@
 		ORDER BY IMAGE_ID DESC
 	</select>
 	
+	<!-- 상세 페이지 조회시 좋아요 수 조회 용도
+		투입값 : int movieNo, 결과값 : COUNT(*) -->
+	<select id="checkFavCount" parameterType="int" resultType="int">
+		SELECT COUNT(*) FROM FAVORITE
+		WHERE MOVIE_NO = #{movieNo}
+	</select>
+	
+	<select id="checkTaste" parameterType="hashmap" resultType="int">
+		SELECT COUNT(*) FROM FAVORITE
+		WHERE MOVIE_NO = #{movieNo} AND USER_NO = #{userNo}
+	</select>
+	
 	<!-- 좋아요 추가 -->
 	<insert id="likeThis" parameterType="hashmap">
 		INSERT INTO FAVORITE VALUES(#{userNo}, #{movieNo})
@@ -805,19 +817,31 @@
 		WHERE MOVIE_NO = #{movieNo} AND SCORE = #{score}
 	</select>
 	
+	<!-- 상단 미관 용도로 제목 조회 (관리자) -->
+	<select id="checkMovieTitle" parameterType="_int" resultMap="movieResultSet">
+		SELECT MOVIE_TITLE,MOVIE_NO FROM MOVIE
+		WHERE MOVIE_NO = #{movieNo}
+	</select>
+	
 	<!-- 리뷰 작성 (사용자) -->
+	<insert id="writeReview">
+		INSERT INTO REVIEW(
+    		REVIEW_ID, USER_NO, MOVIE_NO, REVIEW_TITLE,
+    		REVIEW_DATE, SCORE, IS_WATCHED, REVIEW_CONTENT
+		) VALUES(
+    		SEQ_REV.NEXTVAL, #{userNo} #{movieNo},
+    		#{reviewDate}, SYSDATE, #{SCORE}
+    		#{isWatched}, #{reviewContent} )
+	</insert>
 	
 	<!-- 리뷰 수정 (사용자) -->
 	
-	<!-- 리뷰 삭제 (사용자) -->
+	<!-- 리뷰 삭제 (사용자, 관리자 공통) -->
+	<update id="deleteReview">
+		UPDATE REVIEW
+		SET IS_DELETED = 'Y'
+		WHERE REVIEW_ID = #{reviewId}
+	</update>
 	
-	<!-- 리뷰 강제 삭제 (관리자) -->
-	
-	<!-- 상세 페이지 조회시 좋아요 수 조회 용도
-		투입값 : int movieNo, 결과값 : COUNT(*) -->
-	<!-- <select id="selectFavCount" parameterType="int" resultType="int">
-		SELECT COUNT(*) FROM FAVORITE
-		WHERE MOVIE_NO = #{movieNo}
-	</select> --> 
 
 </mapper>

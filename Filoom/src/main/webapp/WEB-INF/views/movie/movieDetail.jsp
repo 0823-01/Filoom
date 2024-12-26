@@ -368,14 +368,15 @@
                 <!-- display가 inline이 아닌데도 display:inline이라면서 width가 무시되는 현상 있음 -->
                 <a href="#reviewList" id="evalTotal">평점 로딩 중</a>
                 <!-- script를 통해 버튼이 왼쪽부터 평점/5 만큼만 밝은 색으로 나오게 할 계획  -->
+                <input type="hidden" id="uid" value="${not empty sessionScope.loginUser ? sessionScope.loginUser.userNo : 0}"> 
                 <c:if test="${requestScope.list.premiere eq 'Y' }">
                 	<a href="book.do" id="toBook">예매하기</a>
                 </c:if>
                 <c:if test="${not empty sessionScope.loginUser}">
-                		<a href="#" id="like">♡ 1234</a>
+                	<a href="javascript:favCheck(uid);" id="like" value="${requestScope.favCount}"></a>
                	</c:if>
                	<otherwise>
-                		<a href="javascript:alert('영화를 찜해두려면 로그인해야 합니다.');" id="like">♡ 1234</a>
+                		<a href="javascript:alert('영화를 찜하려면 로그인해야 합니다.');" id="like">♡ ${requestScope.favCount}</a>
                	</otherwise>
                	
 <!--                 <a href="" id="like">♡ 1234</a> -->
@@ -531,15 +532,18 @@
                 
                 <script>
                 const mno = $("#mno").val();
+                let uid = $("#uid").val();
                 let count = $("#listcount");
                 $(function() {
+                	if(uid > 0)
+                		favCheck(uid);
                 	selectReviewList(mno,1);
                 	getAverage(mno);
                 });
                 
                 function refreshPagingBar(cpage) {
             		$(".pagingbar").empty();
-            		let link = '';
+            		let link = 'detail.mo?movieNo=';
             		let pgbar = '';
 
             		// EL 태그를 function 안에 쓸 수 없어서 다른 방법을 연구하는 중
@@ -644,8 +648,53 @@
                 	});
                 }
                 
-                function changeTaste(num) {
+                function favCheck(uid) {
+                	let sw = '';
+                	$.ajax({
+                			url:"favcheck.mo?userNo="+uid+"&movieNo="+mno,
+                			type:"post",
+                			data:{"userNo" : uid, "movieNo" : mno},
+                			
+                			success:function(result) {
+                				if(result == 1) {
+                					sw = '♥';
+                				} else {
+                					sw = '♡';
+                				}
+                				sw += $("#like").val();
+                				$("#like").text(sw);
+                			},
+                			error:function() {
+                				sw = '♨ERROR';
+                				$("#favSw").text(sw);
+                			}
+                		});
+                }
+                
+                function favToggle(uid) {
                 	
+                	// 비로그인일 땐 애초에 가지도 않지만 혹시 몰라서..
+                	if(uid == 0) {
+                		alert('영화를 찜하려면 로그인해야 합니다.');
+                		return false;
+                	} else {
+                		$.ajax({
+                			url:"likethis.mo?userNo="+uid+"&movieNo="+mno,
+                			type:"post",
+                			data:{"userNo" : uid, "movieNo" : mno},
+                			
+                			success:function(result) {
+                				if(result == "success") {
+                					favCheck(uid);
+                				} else {
+                					alert("좋아요가 반영되지 않았습니다.");
+                				}
+                			},
+                			error:function() {
+                				alert("오류가 발생했습니다.");
+                			}
+                		});	
+                	}
                 }
 
                 </script>
