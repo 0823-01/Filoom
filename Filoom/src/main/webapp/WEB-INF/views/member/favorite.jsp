@@ -86,7 +86,7 @@
 	    justify-content: space-between;
 	    align-items: center;
 	    border-bottom: 1px solid #333;
-	    margin-bottom: 10px;
+	    margin-bottom: 30px;
 	    padding-bottom: 10px;
 	}
 	
@@ -108,7 +108,6 @@
 	
 	.favorite-list {
 	    padding: 10px 20px;
-	    margin-top: 30px;
 	    display: grid; /* flex 대신 grid를 사용 */
 	    grid-template-columns: repeat(3, 1fr); /* 한 줄에 3개 */
 	    gap: 30px; /* 요소 간의 간격 */

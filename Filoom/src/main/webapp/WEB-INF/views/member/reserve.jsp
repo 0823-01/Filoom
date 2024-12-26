@@ -350,18 +350,6 @@
 		height: 60px;
 	}
 
-
-
-
-
-
-
-
-
-
-
-
-	
 	.sect-box-descri {
 	    margin-top: 70px;
 	    border: 1px solid #aaa;
@@ -416,6 +404,14 @@
 	.sect-box-descri dd ul li {
 	    margin-bottom: 10px;
 	}
+	
+	.no-reserve {
+		padding: 10px 0 100px 0;
+		text-align: center;
+		font-size: 20px;
+		/* font-weight: bold; */
+    	color: #aaa;
+	}
 </style>
 </head>
 <body>
@@ -448,7 +444,7 @@
                     
 	                    <c:when test="${empty reserveList}">
 						    <div class="no-reserve">
-						        예매 내역이 존재하지 않습니다.
+						        최근 1개월간 예매 내역이 존재하지 않습니다.
 						    </div>
 						</c:when>
 						

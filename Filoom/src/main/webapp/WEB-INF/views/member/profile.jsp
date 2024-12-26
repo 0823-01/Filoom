@@ -613,7 +613,7 @@
 
         $(function() {
             // 비밀번호 유효성 검사 정규식
-            const pwdRegexp = /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[!@#$%^&*()_+~`|}{[\]:;?><,./-]).{10,}$/;
+            const pwdRegexp = /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[!@#$%^&*()_+~`|}{[\]:;?><,./-]).{8,}$/;
 
             // 새 비밀번호 유효성 검사
             $("#newPwd").on("keyup", function() {
@@ -652,20 +652,20 @@
 
                 // 새 비밀번호 조건 확인
                 if (!pwdRegexp.test(newPwd)) {
-                    alert("새 비밀번호는 영문, 숫자, 특수문자를 포함한 10자 이상이어야 합니다.");
+                    alert("새 비밀번호는 영문, 숫자, 특수문자를 포함한 8자 이상이어야 합니다.");
                     $("#newPwd").focus().css("border-color", "red");
                     return;
                 }
                 
                 if (!confirmNewPwd) {
-	                alert("비밀번호 확인을 입력해주세요.");
+	                alert("비밀번호 확인란을 입력해주세요.");
 	                $("#confirmNewPwd").focus().css("border-color", "red");
 	                return;
 	            }
 
                 // 새 비밀번호와 확인 비밀번호 일치 확인
                 if (newPwd !== confirmNewPwd) {
-                    alert("새 비밀번호와 확인 비밀번호가 일치하지 않습니다.");
+                    alert("새 비밀번호가 일치하지 않습니다.");
                     $("#confirmNewPwd").focus().css("border-color", "red");
                     return;
                 }

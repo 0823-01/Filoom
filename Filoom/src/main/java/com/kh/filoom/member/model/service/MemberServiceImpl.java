@@ -1,5 +1,6 @@
 package com.kh.filoom.member.model.service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -9,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.kh.filoom.common.model.vo.PageInfo;
 import com.kh.filoom.member.model.dao.MemberDao;
 import com.kh.filoom.member.model.vo.Favorite;
 import com.kh.filoom.member.model.vo.History;
@@ -170,6 +172,47 @@ public class MemberServiceImpl implements MemberService{
 
 		return memberDao.checkEmail(sqlSession, email) > 0;
 	}
+
+	
+	
+	// 관리자
+	@Override
+	public int selectListCount() {
+
+		return memberDao.selectListCount(sqlSession);
+	}
+
+	@Override
+	public ArrayList<Member> memberList(PageInfo pi) {
+
+		return memberDao.memberList(sqlSession, pi);
+	}
+	
+	@Override
+	public int selectSearchListCount(String keyword) {
+	    return memberDao.selectSearchListCount(sqlSession, keyword);
+	}
+
+	@Override
+	public ArrayList<Member> searchMemberList(PageInfo pi, String keyword) {
+	    return memberDao.searchMemberList(sqlSession, pi, keyword);
+	}
+	
+	@Override
+	public int selectStatusListCount(String status) {
+	    return memberDao.selectStatusListCount(sqlSession, status);
+	}
+
+	@Override
+	public ArrayList<Member> selectStatusMemberList(PageInfo pi, String status) {
+	    return memberDao.selectStatusMemberList(sqlSession, pi, status);
+	}
+
+	@Override
+	public int updateMemberStatus(int userNo, String status) {
+	    return memberDao.updateMemberStatus(sqlSession, userNo, status);
+	}
+
 
 	
 
