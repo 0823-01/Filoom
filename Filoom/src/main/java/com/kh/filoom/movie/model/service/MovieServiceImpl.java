@@ -120,10 +120,10 @@ public class MovieServiceImpl implements MovieService {
 		return mDao.showThumbnail(sqlSession, movieNo);
 	}
 	
-	/* public ArrayList<Poster> selectImageList(int movieNo) {
-	 * 	return mDao.selectImageList(sqlSession, movieNo);
-	 * }
-	 * */
+	public ArrayList<Poster> selectImageList(int movieNo) {
+		return mDao.selectImageList(sqlSession, movieNo);
+	}
+	  
 	
 	// ======
 	
@@ -238,6 +238,45 @@ public class MovieServiceImpl implements MovieService {
 	public ArrayList<Review> selectReview(HashMap<String, Integer> map) {
 		// TODO Auto-generated method stub
 		return mDao.selectReview(sqlSession, map);
+	}
+	
+	// 평점 체크
+	public double checkAverage(int movieNo) {
+		return mDao.checkAverage(sqlSession, movieNo);
+	};
+	
+	public double checkEvalNo(int movieNo, int k) {
+		return mDao.checkEvalNo(sqlSession, movieNo, k);
+	}
+
+	@Override
+	public int writeReview(Review r) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int updateReview(Review r) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int deleteReview(HashMap<String, Integer> map) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public ArrayList<Review> adminSelectReview(HashMap<String, Integer> map) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public int adminDeleteReview(int reviewId) {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 
 	
