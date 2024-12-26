@@ -15,8 +15,18 @@
             <c:forEach var="rev" items="${list}">
             	<div id="review">
                 	<!-- full id = 'tenletterstunman' -->
-                    <div id="reviewerName" style="float:left;">${rev.userId}</div>
-                    <div id="writtenDate" style="float:right;">${rev.reviewDate}</div><br>
+                    <div style="display:flex; justify-content: space-between;">
+                   	<!-- MEMBER 테이블에 닉네임 개념이 따로 없어 아이디만을 사용함 -->
+                   		<div id="reviewerName">${rev.userId}</div>
+                    	<div id="writtenDate">${rev.reviewDate}</div>
+						<c:if test="${rev.userNo eq sessionScope.loginUser.userNo}">
+						<a class="open-modal-btn" data-target="reviewModal" id="modifyReview">수정</a>
+						</button>
+						<button id="deleteButton" style="background-color: red; color:white;" onclick="deleteReview(${rev.reviewId});">
+							<img src="resources/images/icons/dash-lg.svg" id="minus">
+	                    </button>
+                       </c:if>
+                   </div>
 					<label style='display:none;'>${rev.isWatched}</label>
 					<label style='display:none;'>${rev.reviewId}</label>
                     <table>

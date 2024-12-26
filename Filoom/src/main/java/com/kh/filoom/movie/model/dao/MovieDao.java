@@ -252,6 +252,37 @@ public class MovieDao {
 		return sqlSession.selectOne("movieMapper.checkMovieTitle", movieNo);
 	}
 
+	public int checkUserReview(SqlSessionTemplate sqlSession, int userNo) {
+		// TODO Auto-generated method stub
+		return sqlSession.selectOne("movieMapper.checkUserReview", userNo);
+	}
+
+	public int writeReview(SqlSessionTemplate sqlSession, Review r) {
+		// TODO Auto-generated method stub
+		return sqlSession.insert("movieMapper.writeReview", r);
+	}
+	
+	public int checkRid(SqlSessionTemplate sqlSession, int userNo, int movieNo) {
+		HashMap<String, Integer> form = new HashMap<>();
+		form.put("userNo", userNo);
+		form.put("movieNo", movieNo);
+		return sqlSession.selectOne("movieMapper.checkRid", form);
+	}
+	
+	public int updateReview(SqlSessionTemplate sqlSession, Review r) {
+		return sqlSession.update("movieMapper.updateReview", r);
+	}
+
+	public int adminDeleteReview(SqlSessionTemplate sqlSession, int reviewId) {
+		// TODO Auto-generated method stub
+		return sqlSession.update("movieMapper.adminDeleteReview", reviewId);
+	}
+
+	public int deleteReview(SqlSessionTemplate sqlSession, HashMap<String, Integer> map) {
+		// TODO Auto-generated method stub
+		return sqlSession.update("movieMapper.deleteReview", map);
+	}
+
 	
 
 	

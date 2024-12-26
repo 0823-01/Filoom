@@ -347,29 +347,42 @@ public class MovieController {
 		return map;
 	}
 	
-	// 리뷰 작성 페이지
-	@GetMapping("review.mo") //?userNo=XXX&movieNo=XXX
-	public void reviewForm() {
-		// return "movie/reviewForm";
+	// 로그인된 유저가 리뷰를 작성했는지 체크
+	@ResponseBody
+	@PostMapping("checkreview.mo")
+	public int checkUserReview(int userNo) {
+		return msi.checkUserReview(userNo);
 	}
 	
-	// 작성
-	@GetMapping("newreview.mo")
-	public void writeReview() {
-		
+	// 리뷰 작성, 수정 페이지 : 상세 페이지 내 모달창으로 대체함
+	
+	// 리뷰 작성
+	@ResponseBody
+	@PostMapping("newreview.mo")
+	public String writeReview(Review r) {
+		System.out.println(r);
+		int result = msi.writeReview(r);
+		return (result > 0) ? "success" : "failure";
 	}
 	
 	// 수정
+	@ResponseBody
 	@GetMapping("modifyreview.mo")
-	public void updateReview() {
+	public String updateReview(Review r) {
+		int reviewId = msi.checkRid(r.getUserNo(), r.getMovieNo());
+		r.setReviewId(reviewId);
 		
+		System.out.println(r);
+		int result = msi.updateReview(r);
+		return (result > 0) ? "success" : "failure";
 	}
 	
 	// 삭제
 	@ResponseBody
 	@PostMapping("deletereview.mo")
-	public String deleteReview(int mno, int rid) {
+	public String deleteReview(int uid, int mno, int rid) {
 		HashMap<String, Integer> map = new HashMap<>();
+		map.put("userNo", uid);
 		map.put("movieNo", mno);
 		map.put("reviewId", rid);
 		
@@ -520,6 +533,7 @@ public class MovieController {
 		
 		// 굳이 이것부터 하는 이유 : 수정은 이미지를 새로 첨부할 필요가 없으므로
 		int result = msi.updateMovie(m);
+		
 		if(result > 0) {
 			// img == null이면 변경 로직 안 거치고 끝
 			if(img != null) {
@@ -688,11 +702,11 @@ public class MovieController {
 	}
 	
 	// 관리자가 리뷰 삭제 (목록에서 해당 리뷰 상단의 '-' 버튼을 눌렀을 때)
-//	@ResponseBody
-//	@PostMapping("admin.f_delrv.mo")
-//	public String adminDeleteReview(int rid) {
-//		int result = msi.deleteReview(rid);
-//		return (result > 0) ? "success" : "failure";
-//	}
+	@ResponseBody
+	@PostMapping("admin.f_delrv.mo")
+	public String adminDeleteReview(int rid) {
+		int result = msi.adminDeleteReview(rid);
+		return (result > 0) ? "success" : "failure";
+	}
 	
 }

@@ -392,15 +392,15 @@
 
     		success: function(result) {
     			if (result == "success") {
-    				alert('modified successfully');
+    				alert('수정되었습니다.');
     				
     				location.href = 'admin.managemovie.mo?movieNo='+mno;
     			} else if (result == "half_success") {
-    				alert('poster is not uploaded but information is modified');
+    				alert('영화 정보만 수정되었습니다.');
     				location.href = 'admin.managemovie.mo?movieNo='+mno;
     			} else {
     				// if result == "failure"
-    				alert('movie was not modified');
+    				alert('영화 정보가 수정되지 않았습니다.');
     			}
     		},
     		error: function(result) {
