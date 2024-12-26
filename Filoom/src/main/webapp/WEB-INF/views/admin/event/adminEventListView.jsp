@@ -229,23 +229,7 @@
 </head>
 <body>
     <div id = "admin_content">
-        <div id = "navbar">
-            
-            <div id = "logo">
-                <img src="../main/Filoom.png">
-            </div>
-           
-            <div id = "nav">
-                <ul>
-                    <li><a>회원 관리</a></li>
-                    <li><a>회원 관리</a></li>
-                    <li><a>회원 관리</a></li>
-                    <li><a>회원 관리</a></li>
-                    <li><a>회원 관리</a></li>
-                </ul>
-    
-            </div>
-        </div>
+     <jsp:include page="../../common/adminHeader.jsp" />
         <div id = "admin_right">
             <div id ="admin_title">
 
@@ -356,7 +340,9 @@
 					    </div>
            					<!--버튼--> 
 	                        <div class="btn">
-	                        	<a href="enrollForm.ev"><button id="enrollForm">이벤트 등록</button></a>
+	                        	<c:if test="${sessionScope.loginUser.userNo eq 1 }">
+	                        		<a href="enrollForm.ev"><button id="enrollForm">이벤트 등록</button></a>
+	                        	</c:if>
 	                        </div>
            				
            				
