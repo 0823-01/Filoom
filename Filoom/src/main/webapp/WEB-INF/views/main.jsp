@@ -69,7 +69,7 @@
 			            <c:otherwise>    
 			                <!-- 로그인 후 -->
 			                <ul>
-		                    	<li><a href="${ pageContext.request.contextPath }/profile.me">마이페이지</a></li> &nbsp;&nbsp;&nbsp;&nbsp;
+		                    	<li><a href="${ pageContext.request.contextPath }/myPage.me">마이페이지</a></li> &nbsp;&nbsp;&nbsp;&nbsp;
 		                    	<li><a href="${ pageContext.request.contextPath }/logout.me">로그아웃</a></li>
 		                    </ul>
 			            </c:otherwise>
@@ -144,16 +144,21 @@
             <div id = "content3_real">
 
                 <div id = "content3_thumbnail">
-                    <img src="movie2.jpg" alt="영화 2">
+                    <img src="resources/images/posters/wicked1.jpg" alt="위키드">
                 </div>
                 <div id = "content3_detail">
-                    <div id = "cotent3_summary">
-
+                    <div id = "content3_summary" style="height:50%; color:white;">
+						<h1>위키드</h1><br>
+						<h3>작성자 : tenl****</h3>
+						<h3>★★★★★</h3>
+						<br><br>
+						<p>동명의 소설을 N번, 동명의 뮤지컬을 1N번 본 사람으로써, 원작 팬으로써의 엄격한 잣대를 가지고 영화를 보러 갔다. 조금이라도 맘에 안 들면 바로 1점 때릴 생각으로.  그런데 이 영화는, 맘에 안 드는 구석을 전혀 찾을 수 없었다...</p>
+						
                     </div>
                     <div id = "content3_subimg">
-                        <img src="movie2.jpg" alt="영화 2">
-                        <img src="movie2.jpg" alt="영화 2">
-                        <img src="movie2.jpg" alt="영화 2">
+                        <img src="resources/images/posters/wicked3.jpg" alt="영화 2">
+                        <img src="resources/images/posters/wicked4.jpg" alt="영화 2">
+                        <img src="resources/images/posters/wicked5.jpg" alt="영화 2">
                     </div>
                 </div>
 
