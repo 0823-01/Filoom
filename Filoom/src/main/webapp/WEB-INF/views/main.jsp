@@ -354,8 +354,9 @@
                     var movieCard =
                         '<div class="movie-card" id="movie' + (index + 1) + '" onclick="updateMovieDetail(' + index + ')">' +
                             '<img src="' + contextPath + '/resources/images/posters/' + movie.fileCodename + '" alt="' + movie.movieTitle + '"' +
-                            ' onerror="this.onerror=null; this.src=\'' + contextPath + '/resources/images/default.jpg\';">' +
-                            '<p style = "width">' + movie.movieTitle + '</p>' +
+                            ' onerror="this.onerror=null; this.src=\'' + contextPath + '/resources/images/default.jpg\';">' 
+                            +
+                            //'<p style = "width">' + movie.movieTitle + '</p>' +
                         '</div>';
                     anotherMovieDiv.innerHTML += movieCard; // 새 카드 추가
                 });
