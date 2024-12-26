@@ -30,7 +30,7 @@ import com.kh.filoom.movie.model.vo.Review;
 
 /**
  * @author 정원섭
- * === MovieController v 0.8.1 ===
+ * === MovieController v 0.9.1 ===
  * 작업 착수일 : 2024-12-13
  * 최종 수정일 : 2024-12-26
  */
@@ -54,7 +54,8 @@ import com.kh.filoom.movie.model.vo.Review;
  * v 0.7 - 평점 표기+그래프, 스틸컷 DB 참조 완료 
  * v 0.8 - 좋아요 기능 및 관리자 리뷰 삭제 버튼 구현 성공
  * 	v 0.8.1 - 좋아요 버튼이 좋아요 수를 반영함. (실시간은 안 되고 새로고침해야 반영됨)
- * 
+ * v 0.9 - 리뷰 작성 / 삭제 (사용자, 관리자 공통) 완료
+ * 	└ v 0.9.1 - 메인 하드 코딩 부분 완료
  * */
 @Controller
 public class MovieController {
@@ -370,6 +371,7 @@ public class MovieController {
 	@GetMapping("modifyreview.mo")
 	public String updateReview(Review r) {
 		int reviewId = msi.checkRid(r.getUserNo(), r.getMovieNo());
+		System.out.println(reviewId);
 		r.setReviewId(reviewId);
 		
 		System.out.println(r);

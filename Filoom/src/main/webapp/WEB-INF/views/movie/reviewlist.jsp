@@ -20,8 +20,8 @@
                    		<div id="reviewerName">${rev.userId}</div>
                     	<div id="writtenDate">${rev.reviewDate}</div>
 						<c:if test="${rev.userNo eq sessionScope.loginUser.userNo}">
-						<a class="open-modal-btn" data-target="reviewModal" id="modifyReview">수정</a>
-						</button>
+						<a class="edit-modal-btn" data-target="modifyModal"
+							data-review-id="${rev.reviewId}" data-score="${rev.score}" id="modifyReview">수정</a>
 						<button id="deleteButton" style="background-color: red; color:white;" onclick="deleteReview(${rev.reviewId});">
 							<img src="resources/images/icons/dash-lg.svg" id="minus">
 	                    </button>
@@ -54,6 +54,8 @@
                     </table>
                 </div>
             </c:forEach>
+            
+            
             
             
 </body>
