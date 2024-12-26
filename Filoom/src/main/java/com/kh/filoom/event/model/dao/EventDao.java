@@ -147,6 +147,7 @@ public class EventDao {
 		// insert문 : insert 메소드 
 		return sqlSession.insert("eventMapper.insertReply", r);
 	}
+
 	
 	/**
 	 * 241217 한혜원
@@ -433,6 +434,34 @@ public class EventDao {
 	public int couponInsertEx(SqlSessionTemplate sqlSession, Map<String, Object> params) {
 		return sqlSession.insert("couponMapper.couponInsertEx", params);
 	}
+
+	/**
+	 * 쿠폰 발송하는거 
+	 * @param sqlSession
+	 * @param userNo
+	 * @param couponNo
+	 * @return
+	 */
+	public int insertCouponUser(SqlSessionTemplate sqlSession, int userNo, int couponNo, int eventNo) {
+		Map<String, Object> params = new HashMap<>();
+        params.put("userNo", userNo);
+        params.put("couponNo", couponNo);
+        params.put("eventNo", eventNo);
+
+        return sqlSession.insert("couponMapper.insertCouponUser", params);
+	}
+
+	public int updateDrawingStatus(SqlSessionTemplate sqlSession, int userNo, int eventNo, String drawingStatus) {
+		// SQL을 실행하여 응모자의 상태를 "Y"로 업데이트
+	    Map<String, Object> params = new HashMap<>();
+	    params.put("userNo", userNo);
+	    params.put("eventNo", eventNo);
+	    params.put("drawingStatus", drawingStatus);
+
+	    return sqlSession.update("eventMapper.updateDrawingStatus", params); // 매퍼의 이름과 메소드 호출
+		
+	}
+
 
 
 

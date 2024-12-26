@@ -13,6 +13,18 @@
 		<result column="COUPON_EXP_DATE" property="couponExpDate"/>
 	</resultMap>
 
+	<!-- 혜원 쿠폰 발송 -->
+	<insert id="insertCouponUser" parameterType="map">
+		INSERT INTO COUPON_USER(COUPON_NO, USER_NO)
+		SELECT C.COUPON_NO
+		     , A.USER_NO
+		  FROM APPLICANT A
+		  JOIN COUPON C ON (A.REF_ENO = C.REF_ENO)
+		 WHERE A.REF_ENO = #{eventNo}
+		   AND A.USER_NO = #{userNo}
+	</insert>
+
+
 
 	<!-- 사용가능한 쿠폰조회(사용기한,상태유뮤) -->
 	<select id="selectListCouponUser" parameterType="int" resultMap="couponUserResultSet">
@@ -75,14 +87,5 @@
 		   AND USER_NO = #{userNo}
 	</update>
 	
-	<!-- 응모자에게 쿠폰 등록해주기 -->
-	<insert id="couponInsertEx" parameterType="couponUser">
-		INSERT INTO COUPON_USER (COUPON_NO, USER_NO, BOOK_NO, COUPON_USE, COUPON_NAME)
-		VALUES(SEQ_CNO.NEXTVAL, #{userNo}, NULL, ${couponUse},
-			SELECT EVENT_TITLE
-			FROM EVENT
-			WHERE #{eventNo}
-		)
-	</insert>
 	
 </mapper>

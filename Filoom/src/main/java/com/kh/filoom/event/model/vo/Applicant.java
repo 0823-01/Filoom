@@ -1,5 +1,7 @@
 package com.kh.filoom.event.model.vo;
 
+import java.util.Date;
+
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -24,5 +26,7 @@ public class Applicant {
 	
 	// 추가 
 	private String eventTitle;
+	private Date couponExpDate;
+	private String userId;
 
 }
