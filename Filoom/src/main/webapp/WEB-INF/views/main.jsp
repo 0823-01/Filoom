@@ -486,16 +486,6 @@
 	
 	
 	<jsp:include page="common/footer.jsp" />
-	<div style="border: 3px solid black; height: 500px">
-
-		<br><br>
-		<a href="/filoom/movies.mo"><s>영화 탭 홈으로</s></a> 헤더로 이어놨음<br>
-		<a href="/filoom/movielist_ad.mo">관리자 영화 관리 페이지 바로가기</a>
-		<br>
-		
-	</div>
-	
-	<a href="${ pageContext.request.contextPath }/ad.li">관리자</a>
 	
 	<!--Start of Tawk.to Script-->
 	<script type="text/javascript">
