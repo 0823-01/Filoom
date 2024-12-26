@@ -151,7 +151,7 @@ public class BookServiceImple implements BookService {
 	}	
 	
 	
-	//1. 좌석 유효성 검사 + 상영좌석일렬번호 반환
+	//1. 좌석 유효성 검사 + 상영좌석일렬번호 반환 oo
 	@Override
 	public ArrayList<BookingSeat> checkAndGetBookingSeatNoList(ArrayList<String> seatNos,int playingNo,ArrayList<String> bookingSeatNos) {
 		
@@ -159,14 +159,7 @@ public class BookServiceImple implements BookService {
 		return bookingSeatNoList;
 	}
 
-	//3. 좌석 유효시간 sysdate + 5분
-	@Override
-	public int updateTimeLimit(ArrayList<String> seatNos) {
-		return bookDao.updateTimeLimit(sqlSession,seatNos);
-	}
 
-	
-	
 	//4. 영화예매번호 생성 + 반환
 	@Override
 	@Transactional
@@ -227,6 +220,7 @@ public class BookServiceImple implements BookService {
 	}
 
 	//좌석 삭제처리
+	//
 	@Override
 	public int deleteBookingSeats(ArrayList<String> bookingSeatNos) {
 		return bookDao.deleteBookingSeats(sqlSession,bookingSeatNos);
