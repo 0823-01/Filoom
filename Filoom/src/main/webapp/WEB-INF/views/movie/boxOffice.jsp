@@ -214,7 +214,7 @@
                     <!-- <p>정렬 기준 |</p> -->
                     정렬 기준 |
                     <a href="javascript:listbyOpenedOrder(1);">개봉순</a>
-                    <a href="javascript:listbyCritics();">평점순</a>
+                    <a href="javascript:listbyCritics(1);">평점순</a>
                     <a href="javascript:listbyName(1);">이름순</a>
                 </div>
                 <div class="right" style="padding-right:30px;">
@@ -301,23 +301,21 @@
     			});
         	}
         	
-        	
-        	function listbyCritics(/*cpage*/) {
-//         		$.ajax({
-//     				url: "criticchoice.mo?cpage="+cpage,
-//     				type: "get",
-//     				dataType:"html",
+        	function listbyCritics(cpage) {
+        		$.ajax({
+    				url: "criticchoice.mo?cpage="+cpage,
+    				type: "get",
+    				dataType:"html",
     				
-//     				success: function(result) {    					
-//     					$(".movie-list").empty();
-//     					$(".movie-list").append(result);
-    					//refreshPagingBar('critic', cpage);
-//     				},
-//     				error: function() {
-//     					alert("Mission Failure");
-//     				}
-//     			});
-        		alert("공사중입니다.");
+    				success: function(result) {    					
+    					$(".movie-list").empty();
+    					$(".movie-list").append(result);
+    					refreshPagingBar('critic', cpage);
+    				},
+    				error: function() {
+    					alert("Mission Failure");
+    				}
+    			});
         	}
         	
         	// '이름순'을 눌렀을 때, '상영중인 영화만 표시' 스위치가 켜져 있으면 상영중인 영화만 가지고 정렬함
