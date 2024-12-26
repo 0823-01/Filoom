@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %> 
 <!DOCTYPE html>
 <html>
 <head>
@@ -277,7 +278,8 @@ body{
     }
     
     
-    #contentImg1, #changeName {
+    #contentImg1, #changeName1, #changeName2, #changeName3
+    #emptyImage1, #emptyImage2, #emptyImage3, #emptyImage4 {
             height: 170px;
             width : 170px;
             border: none;
@@ -449,20 +451,25 @@ body{
                             <!-- 기존의 이미지 불러오기 -->
                             <img id="contentImg1" src="${pageContext.request.contextPath}${e.contentImg1}" alt="Preview Image 1" data-target="file1"/>
                             
-                            <p>List size: ${not empty list ? list.size() : 'No list available'}</p>
-							<p>List type: ${requestScope.list.getClass().name}</p>  <!-- 리스트 타입 확인 -->
-							
-							<!-- List 내용 확인 -->
-							<c:forEach var="file" items="${list}">
-							    <p>File class: ${file.envetContent}</p>
-							</c:forEach>
+                            <!-- 두 번째부터 네 번째 이미지 처리 -->
+							<div>
+							    <c:forEach var="i" begin="1" end="3">
+							        <c:choose>
+							            
+							            <c:when test="${i <= list.size()}">
+							                <c:set var="file" value="${list[i - 1]}" />
+							                <label for="file${i + 1}"></label>
+							                <img id="changeName${i + 1}" src="${pageContext.request.contextPath}${file.changeName}" alt="Attachment Preview ${i + 1}" data-target="file${i + 1}">
+							            </c:when>
+
+							            <c:otherwise>
+							                <label for="file${i + 1}"></label>
+							                <img id="emptyImage${i + 1}" src="#" alt="Empty Preview ${i + 1}" data-target="file${i + 1}" >
+							            </c:otherwise>
+							        </c:choose>
+							    </c:forEach>
+							</div>
                             
-                            
-                            <c:forEach var="file" items="${list}">
-                            	<c:if test="${file.fileLevel eq 2}">
-                            		<img id="changeName" src="${pageContext.request.contextPath}${file.changeName}" alt="Priview Image" data-target="file">
-                            	</c:if>
-                            </c:forEach>
                             <!--  
                            	<img id="contentImg2" src="#" alt="Preview Image 2" data-target="file2" />
 							<img id="contentImg3" src="#" alt="Preview Image 3" data-target="file3" />
