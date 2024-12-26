@@ -30,7 +30,7 @@ import com.kh.filoom.movie.model.vo.Review;
 
 /**
  * @author 정원섭
- * === MovieController v 0.7 ===
+ * === MovieController v 0.8.1 ===
  * 작업 착수일 : 2024-12-13
  * 최종 수정일 : 2024-12-26
  */
@@ -52,7 +52,9 @@ import com.kh.filoom.movie.model.vo.Review;
  * == ↓ at 12/26 ==
  * v 0.6 - 사용자 리뷰 내용 조회 성공
  * v 0.7 - 평점 표기+그래프, 스틸컷 DB 참조 완료 
- * v 0.8 - 좋아요 기능 및 관리자 리뷰 삭제 버튼 구현 성공  
+ * v 0.8 - 좋아요 기능 및 관리자 리뷰 삭제 버튼 구현 성공
+ * 	v 0.8.1 - 좋아요 버튼이 좋아요 수를 반영함. (실시간은 안 되고 새로고침해야 반영됨)
+ * 
  * */
 @Controller
 public class MovieController {
@@ -249,6 +251,12 @@ public class MovieController {
 		model.addAttribute("favCount", favCount);
 
 		return "movie/movieDetail";
+	}
+	
+	@ResponseBody
+	@PostMapping("updateFav.mo")
+	public int updateFav(int movieNo) {
+		return msi.checkFavCount(movieNo);
 	}
 	
 	@ResponseBody

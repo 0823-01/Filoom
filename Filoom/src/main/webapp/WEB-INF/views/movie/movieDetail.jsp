@@ -372,12 +372,14 @@
                 <c:if test="${requestScope.list.premiere eq 'Y' }">
                 	<a href="book.do" id="toBook">예매하기</a>
                 </c:if>
-                <c:if test="${not empty sessionScope.loginUser}">
-                	<a href="javascript:favCheck(uid);" id="like" value="${requestScope.favCount}"></a>
-               	</c:if>
-               	<otherwise>
+                <c:choose>
+                	<c:when test="${not empty sessionScope.loginUser}">
+                	<a href="javascript:favToggle(uid);" id="like"></a>
+               		</c:when>
+               		<c:otherwise>
                 		<a href="javascript:alert('영화를 찜하려면 로그인해야 합니다.');" id="like">♡ ${requestScope.favCount}</a>
-               	</otherwise>
+               		</c:otherwise>
+               	</c:choose>
                	
 <!--                 <a href="" id="like">♡ 1234</a> -->
                 <!-- 로그인 후 클릭시 ♥ 1235 으로 바뀌도록. 비로그인시 로그인하라고 얼럿함 -->
@@ -657,16 +659,16 @@
                 			
                 			success:function(result) {
                 				if(result == 1) {
-                					sw = '♥';
+                					sw = '♥ ${requestScope.favCount}';
                 				} else {
-                					sw = '♡';
+                					sw = '♡ ${requestScope.favCount}';
                 				}
-                				sw += $("#like").val();
-                				$("#like").text(sw);
+                				//sw += $("#like").val();
+                				$("#like").html(sw);
                 			},
                 			error:function() {
                 				sw = '♨ERROR';
-                				$("#favSw").text(sw);
+                				$("#like").text(sw);
                 			}
                 		});
                 }
