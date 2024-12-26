@@ -23,6 +23,13 @@ public class EventDao {
 	// 사용자
 	
 	/**
+	 * 이벤트 상태값 변경
+	 */
+	public void updateEventStatus(SqlSessionTemplate sqlSession) {
+		sqlSession.update("eventMapper.updateEventStatus");
+	}
+	
+	/**
 	 * 241218 한혜원 
 	 * 게시글 추천이벤트 목록조회
 	 * @param sqlSession
@@ -461,6 +468,7 @@ public class EventDao {
 	    return sqlSession.update("eventMapper.updateDrawingStatus", params); // 매퍼의 이름과 메소드 호출
 		
 	}
+
 
 
 

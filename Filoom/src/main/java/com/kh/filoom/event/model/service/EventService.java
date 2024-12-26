@@ -15,6 +15,9 @@ public interface EventService {
 
 	// 사용자 
 	
+	// 이벤트 종료여부 상태 변경
+	void updateEventStatus();
+	
 	// 추천 이벤트 조회 (startDate 또는 endDate가 null 인 이벤트들) 
 	List<Event> selectHotEventList();
 	

@@ -58,6 +58,9 @@ public class EventController {
 	@GetMapping("list.ev")
 	public String selectList(@RequestParam(value="eventStatus", required=false)String eventStatus, Model model) {
 		
+		// 먼저 이벤트 상태를 갱신 
+		eventService.updateEventStatus(); // 이벤트 상태 업데이트 호출
+		
 		// 페이징 처리 필요없음 
 		// eventStatus 가 없으면 전체 목록, 있으면 그에 맞는 목록을 가져옴
 		ArrayList<Event> list;
@@ -124,7 +127,7 @@ public class EventController {
 		mv.setViewName("event/eventDetailView");
 		
 		 // System.out.println(e);
-		 // System.out.println(list);
+		 System.out.println("상세조회 첨부파일 리스트 : " + list);
 		
 		
 		return mv;
@@ -488,24 +491,25 @@ public class EventController {
 	 * @return
 	 */
 	@PostMapping("updateForm.ev")
-	public ModelAndView updateForm(int eno, ModelAndView mv) {
-		System.out.println(eno);
+	public String updateForm(int eno, Model mv) {
+		// System.out.println(eno);
 		
 		Event e = eventService.selectEvent(eno);
 		ArrayList<EventAttachment> list = eventService.selectEventAttachment(eno);
 		
 		// 조회된 이벤트 정보와 첨부파일 목록 모델에 추가하여 수정페이지로 전달 
-		mv.addObject("e", e);
-		mv.addObject("list", list);
+		System.out.println("List: " + (list != null ? list : "null") + " | Size: " + (list != null ? list.size() : "0"));
+		mv.addAttribute("e", e);
+		mv.addAttribute("list", list);
 		
 		 System.out.println(e);
 		 System.out.println(list);
-		 System.out.println(e.getEventStatus());
-		
-		
+		 // System.out.println(e.getEventStatus());
+		 System.out.println(mv);
+		 
 		// 수정 페이지로 이동
-		mv.setViewName("admin/event/eventUpdateForm");
-		return mv;
+		//mv.setViewName("admin/event/eventUpdateForm");
+		return "admin/event/eventUpdateForm";
 		
 	}
 	

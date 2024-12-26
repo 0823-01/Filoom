@@ -272,14 +272,17 @@
                     <div class="thumbnailArea">
                         <div id="thumbnail">사진<br>첨부<b style="color : red;">*</b></div>
                         <img id="contentImg1" src="${ pageContext.request.contextPath }${e.contentImg1}">
-                        <c:forEach var="file" items="${requestScope.list }">
+                        
+                        
+                        <!-- 첨부된 파일 수만큼 이미지 보여주기 (순차적으로 추가) -->
+                        <c:forEach var="file" items="${requestScope.list }" >
                         	 <img id="event_img" src="${ pageContext.request.contextPath }${file.changeName}">
                         </c:forEach>
-                        
-                        <!--<img id="thumb1" src="../../resources/event_images/wicked_thum.jpg">
-                        <img id="thumb" src="../../resources/event_images/wicked_thum.jpg">
-                        <img id="thumb" src="../../resources/event_images/wicked_thum.jpg">
-                        <img id="thumb" src="../../resources/event_images/wicked_thum.jpg">  -->
+                        <!-- 
+                        <img id="contentImg1" src="${ pageContext.request.contextPath }${e.contentImg1}">
+                        <img id="event_img" src="${ pageContext.request.contextPath }${file.changeName}">
+                        <img id="event_img" src="${ pageContext.request.contextPath }${file.changeName}">
+                        <img id="event_img" src="${ pageContext.request.contextPath }${file.changeName}"> -->
                         <div class="comment" style="padding : 10px;">
                             <div style="color : #493628; font-size: 16px; font-weight : bold; margin-top: 10px;">
                                 * JPEG, PNG 형식의 5M 이하의 파일만 첨부 가능합니다.(최대 4개)<br><br>
