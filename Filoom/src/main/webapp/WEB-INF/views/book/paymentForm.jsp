@@ -532,14 +532,12 @@ function nicepayClose(){
 		
 		//러닝타임
 		const runTime = "${requestScope.movie.runtime}";
- 
-		let timeLimit = "${requestScope.bookingSeatList[0].timeLimit}"
 		
 		let Amt = ""; //결제할 금액
 		
 		const playingNo = "${requestScope.movie.playingNo}";
 		
-		
+		let timeLimit = 300; //5분
 		
 		
 		//전체 로드 다 된후 실행
@@ -555,33 +553,24 @@ function nicepayClose(){
 		//좌석삭제 요청 ajax 요청 메소드
 		function deleteSeatAndBook(){
 			console.log("deleteSeatAndBook()실행");
-			
-			if(performance.navigation.type !==1){ //새로고침이 아닌경우
-				let seatNos = [];
-				$("#submitData>input[name='bookingSeatNos']").each(function(index,item){
-					seatNos.push($(item).val());
-				});
-				console.log(seatNos);
-				$.ajax({
-					url:"deleteSB.pm",
-					type:"post",
-					contentType: "application/json",
-					data:JSON.stringify(seatNos),
-					success:function(){
-						console.log("ajax-deleteSeatAndBook 통신 성공");
-					},
-					error:function(){
-						console.log("ajax-deleteSeatAndBook 통신 실패");
-					}
-				});
-				
-			}else{ //새로고침
-				
-				console.log("페이지 새로고침");
-			}
-			
-			
-			
+			let seatNos = [];
+			$("#submitData>input[name='bookingSeatNos']").each(function(index,item){
+				seatNos.push($(item).val());
+			});
+			console.log(seatNos);
+			$.ajax({
+				url:"deleteSB.pm",
+				type:"post",
+				contentType: "application/json",
+				data:JSON.stringify(seatNos),
+				success:function(){
+					console.log("ajax-deleteSeatAndBook 통신 성공");
+				},
+				error:function(){
+					console.log("ajax-deleteSeatAndBook 통신 실패");
+				}
+			});
+		
 		}
 		
 		// beforeunload 이벤트
@@ -622,18 +611,17 @@ function nicepayClose(){
 
 		//카운트다운
 		
+		let seconds = 1;
 		function countDown(){
-			let timeLimitDate = new Date(timeLimit.replace(' ','T')); 
-			let date = new Date;
-	
-			let differnceTime =  Math.floor((timeLimitDate-date)/1000)-1;
-			//console.log("카운트 다운 : " + differnceTime);
+					
+			--seconds;
 			
-			if(differnceTime<0){
+			let differenceTime = timeLimit - seconds; 
+			if(differenceTime==0){
 				location.href='${request.contextRoot}/filoom/book.do';
 				alert("죄송합니다. 제한시간이 초과되었습니다.")
 			}
-			$("#payiTmeLimit").text(differnceTime);
+			$("#payiTmeLimit").text(differenceTime);
 		}
 		
 		

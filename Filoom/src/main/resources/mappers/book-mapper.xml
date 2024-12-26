@@ -265,7 +265,6 @@
 		  JOIN PLAYING P ON (BS.PLAYING_NO = P.PLAYING_NO)
 		 WHERE BS.BOOK_NO IS NULL
 		   AND BS.PLAYING_NO = #{playingNo}
-		   AND TIMELIMIT > SYSDATE
 		   <choose>
 		   		<when test="seatNos != null" >
 				   AND
