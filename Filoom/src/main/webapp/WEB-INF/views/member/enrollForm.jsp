@@ -336,7 +336,7 @@
                 
                 <div class="form-group">
                     <label for="password">비밀번호 *</label>
-                    <input type="password" id="userPwd" name="userPwd" placeholder="영문, 숫자, 특수기호를 포함한 10자 이상의 비밀번호를 입력해주세요." required>
+                    <input type="password" id="userPwd" name="userPwd" placeholder="영문, 숫자, 특수기호를 포함한 8자 이상의 비밀번호를 입력해주세요." required>
                 </div>
                 
                 <div class="form-group">
@@ -553,8 +553,8 @@
 	        // 아이디 조건 : 영문, 숫자를 조합한 5-20자
 	        const idRegexp = /^[a-zA-Z0-9]{5,20}$/;
 	
-	        // 비밀번호 조건 : 영문, 숫자, 특수기호를 포함한 10자 이상
-	        const pwdRegexp = /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[!@#$%^&*()_+~`|}{[\]:;?><,./-]).{10,}$/;
+	        // 비밀번호 조건 : 영문, 숫자, 특수기호를 포함한 8자 이상
+	        const pwdRegexp = /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[!@#$%^&*()_+~`|}{[\]:;?><,./-]).{8,}$/;
 	
 	        // 이름 조건 : 한글 또는 영문, 최소 2자 이상 20자 이하
 	        const nameRegexp = /^[가-힣a-zA-Z]{2,20}$/;
@@ -687,13 +687,13 @@
 	            }
 	
 	            if (!pwdRegexp.test(userPwd)) {
-	                alert("비밀번호는 영문, 숫자, 특수기호를 포함한 10자 이상이어야 합니다.");
+	                alert("비밀번호는 영문, 숫자, 특수기호를 포함한 8자 이상이어야 합니다.");
 	                $("#userPwd").focus().css("border-color", "red");
 	                return;
 	            }
 	            
 	            if (!checkPwd) {
-	                alert("비밀번호 확인을 입력해주세요.");
+	                alert("비밀번호 확인란을 입력해주세요.");
 	                $("#checkPwd").focus().css("border-color", "red");
 	                return;
 	            }

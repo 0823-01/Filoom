@@ -88,7 +88,7 @@
 	    justify-content: space-between;
 	    align-items: center;
 	    border-bottom: 1px solid #333;
-	    margin-bottom: 10px;
+	    margin-bottom: 30px;
 	    padding-bottom: 10px;
 	}
 	
@@ -143,7 +143,7 @@
 	.history-item {
 	    border: 1px solid #444;
 	    border-radius: 10px;
-	    margin-top: 20px;
+	    margin-bottom: 30px;
 	    padding: 20px;
 	}
 	
@@ -185,6 +185,11 @@
 	    color: #fff;
 	    font-size: 22px;
 	    font-weight: bold;
+		overflow: hidden; /* 넘치는 텍스트 숨기기 */
+	    text-overflow: ellipsis; /* ... 표시 */
+		white-space: nowrap; /* 한 줄로 유지 */
+		max-width: 440px;
+		display: block;
 	}
 	
 	.history-delete-btn, .review-plz {
@@ -232,6 +237,14 @@
 	#btn-more:hover {
 		background-color: #fff; /* 배경을 흰색으로 변경 */
         color: #000; /* 글씨 색을 검정색으로 변경 */
+	}
+
+	.no-history {
+		padding: 10px 0 100px 0;
+		text-align: center;
+		font-size: 20px;
+		/* font-weight: bold; */
+    	color: #aaa;
 	}
 	
 </style>

@@ -232,7 +232,11 @@
 								<td>
 									<select name="sorting">
 										<option value="desc">최신순</option>
-										<option value="asc">오래된순</option>
+											<option value="asc"
+												<c:if test="${requestScope.sorting=='asc'}">
+												 selected		
+												</c:if>
+																>오래된순</option>
 									</select>
 								</td>
 								<td></td>
@@ -240,12 +244,12 @@
 							
 							<tr>
 								<td>예매번호</td>
-								<td><input type ="text" id ="text_sample"name="bookNo"></td>
+								<td><input type ="text" id ="text_sample"name="bookNo" value="${requestScope.bookNo}"></td>
 								<td>예매번호를 입력하세요</td>
 							</tr>
 							<tr>
 								<td>사용자아이디</td>
-								<td><input type ="text" id ="text_sample" name="userId"></td>
+								<td><input type ="text" id ="text_sample" name="userId" value="${requestScope.userId}"></td>
 								<td>사용자 아이디를 입력하세요.</td>
 							</tr>
 							<tr>

@@ -1,12 +1,15 @@
 package com.kh.filoom.member.model.dao;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.ibatis.session.RowBounds;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
 
+import com.kh.filoom.common.model.vo.PageInfo;
 import com.kh.filoom.member.model.vo.Favorite;
 import com.kh.filoom.member.model.vo.History;
 import com.kh.filoom.member.model.vo.Member;
@@ -133,8 +136,67 @@ public class MemberDao {
 
 		return sqlSession.selectOne("memberMapper.checkEmail", email);
 	}
-
 	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	// 관리자
+
+	public int selectListCount(SqlSessionTemplate sqlSession) {
+
+		return sqlSession.selectOne("memberMapper.selectListCount", sqlSession);
+	}
+
+	public ArrayList<Member> memberList(SqlSessionTemplate sqlSession, PageInfo pi) {
+
+		int offset = (pi.getCurrentPage()-1) * pi.getBoardLimit();
+		int limit = pi.getBoardLimit();
+		
+		RowBounds rowBounds = new RowBounds(offset, limit);
+		
+		return (ArrayList)sqlSession.selectList("memberMapper.memberList", null, rowBounds);
+	}
+
+	public int selectSearchListCount(SqlSessionTemplate sqlSession, String keyword) {
+	    return sqlSession.selectOne("memberMapper.selectSearchListCount", keyword);
+	}
+
+	public ArrayList<Member> searchMemberList(SqlSessionTemplate sqlSession, PageInfo pi, String keyword) {
+	    int offset = (pi.getCurrentPage() - 1) * pi.getBoardLimit();
+	    int limit = pi.getBoardLimit();
+
+	    RowBounds rowBounds = new RowBounds(offset, limit);
+
+	    return (ArrayList) sqlSession.selectList("memberMapper.searchMemberList", keyword, rowBounds);
+	}
+
+	public int selectStatusListCount(SqlSessionTemplate sqlSession, String status) {
+	    return sqlSession.selectOne("memberMapper.selectStatusListCount", status);
+	}
+
+	public ArrayList<Member> selectStatusMemberList(SqlSessionTemplate sqlSession, PageInfo pi, String status) {
+	    int offset = (pi.getCurrentPage() - 1) * pi.getBoardLimit();
+	    int limit = pi.getBoardLimit();
+
+	    RowBounds rowBounds = new RowBounds(offset, limit);
+
+	    return (ArrayList) sqlSession.selectList("memberMapper.selectStatusMemberList", status, rowBounds);
+	}
+	
+	public int updateMemberStatus(SqlSessionTemplate sqlSession, int userNo, String status) {
+	    Map<String, Object> params = new HashMap<>();
+	    params.put("userNo", userNo);
+	    params.put("status", status);
+	    return sqlSession.update("memberMapper.updateMemberStatus", params);
+	}
+
+
 
 	
 

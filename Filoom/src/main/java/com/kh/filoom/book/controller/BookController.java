@@ -1125,18 +1125,22 @@ public class BookController {
 		log.debug("조횐된 bookingList : " + bookingList.toString());
 		log.debug("pi : " + pi);
 
+		 
 		
+		//검색결과에 따른 페이징 처리 유지
 		String url = "?sorting="+sorting;
-
 		if(!bookNo.equals("")) {url+= "&bookNo="+bookNo;}
 		if(!userId.equals("")) {url+= "&userId="+userId;}
-		
 		url += "&currentPage=";
 		
 		
 		mv.addObject("bookingList",bookingList);
 		mv.addObject("pi",pi);
 		mv.addObject("url",url);
+		mv.addObject("sorting",sorting);
+		mv.addObject("bookNo",bookNo);
+		mv.addObject("userId",userId);
+		
 		
 		mv.setViewName("admin/book/adminBook");
 		

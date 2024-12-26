@@ -1,5 +1,6 @@
 package com.kh.filoom.member.controller;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
@@ -24,6 +25,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.kh.filoom.common.model.vo.PageInfo;
+import com.kh.filoom.common.template.Pagination;
 import com.kh.filoom.member.model.service.MemberService;
 import com.kh.filoom.member.model.vo.Favorite;
 import com.kh.filoom.member.model.vo.History;
@@ -951,6 +954,73 @@ public class MemberController {
 
         return "member/favorite";
     }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    // 관리자
+    
+    @GetMapping("memberList_ad.me")
+    public String memberList(
+            @RequestParam(value = "cpage", defaultValue = "1") int currentPage,
+            @RequestParam(value = "status", required = false) String status,
+            @RequestParam(value = "keyword", required = false) String keyword,
+            Model model) {
+
+    	System.out.println("Received status: " + status);
+        // 상태 및 검색어에 따라 회원 수 조회
+        int listCount;
+        if (status != null && !status.trim().isEmpty()) {
+            listCount = memberService.selectStatusListCount(status);
+        } else if (keyword != null && !keyword.trim().isEmpty()) {
+            listCount = memberService.selectSearchListCount(keyword);
+        } else {
+            listCount = memberService.selectListCount();
+        }
+
+        int pageLimit = 5;
+        int boardLimit = 8;
+        PageInfo pi = Pagination.getPageInfo(listCount, currentPage, pageLimit, boardLimit);
+
+        // 상태 및 검색어에 따라 회원 목록 조회
+        ArrayList<Member> memberList;
+        if (status != null && !status.trim().isEmpty()) {
+            memberList = memberService.selectStatusMemberList(pi, status);
+        } else if (keyword != null && !keyword.trim().isEmpty()) {
+            memberList = memberService.searchMemberList(pi, keyword);
+        } else {
+            memberList = memberService.memberList(pi);
+        }
+
+        model.addAttribute("memberList", memberList);
+        model.addAttribute("pi", pi);
+        model.addAttribute("status", status); // 현재 상태 필터 전달
+        model.addAttribute("keyword", keyword); // 검색어 유지
+
+        return "admin/member/memberListView";
+    }
+
+    @PostMapping("updateStatus.me")
+    @ResponseBody
+    public String updateStatus(@RequestParam("userNo") int userNo, @RequestParam("status") String status) {
+        int result = memberService.updateMemberStatus(userNo, status);
+        if (result > 0) {
+            return "success";
+        } else {
+            return "fail";
+        }
+    }
+
 
 
 

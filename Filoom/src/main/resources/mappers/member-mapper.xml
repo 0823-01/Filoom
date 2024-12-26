@@ -93,7 +93,7 @@
 		                 , #{marketing})
 	</insert>
 	
-	<select id="idCheck" parameterType="string" resultType="_int">
+	<select id="idCheck" parameterType="string" resultType="int">
 	    SELECT COUNT(*)
 	      FROM MEMBER
 	     WHERE USER_ID = #{userId}
@@ -346,6 +346,78 @@
 	         </when>
 	     </choose>
 	</select>
+	
+	
+	
+	
+	
+	
+	
+	<!-- 관리자 -->
+	<select id="selectListCount" resultType="int">
+		SELECT COUNT(*)
+		  FROM MEMBER
+	</select>
+	
+	<select id="memberList" resultMap="memberResultSet">
+		SELECT USER_NO,
+		       USER_ID,
+		       USER_NAME,
+		       BIRTH,
+		       EMAIL,
+		       GENDER,
+		       STATUS,
+		       TO_CHAR(ENROLL_DATE, 'YYYY-MM-DD') AS ENROLL_DATE
+		  FROM MEMBER
+		 ORDER BY USER_NO DESC
+	</select>
+	
+	<select id="selectSearchListCount" resultType="int">
+	    SELECT COUNT(*)
+	      FROM MEMBER
+	     WHERE USER_ID LIKE '%' || #{keyword} || '%'
+	</select>
+	
+	<select id="searchMemberList" resultMap="memberResultSet">
+	    SELECT USER_NO,
+		       USER_ID,
+		       USER_NAME,
+		       BIRTH,
+		       EMAIL,
+		       GENDER,
+		       STATUS,
+		       TO_CHAR(ENROLL_DATE, 'YYYY-MM-DD') AS ENROLL_DATE
+	      FROM MEMBER
+	     WHERE USER_ID LIKE '%' || #{keyword} || '%'
+	     ORDER BY USER_NO DESC
+	</select>
+	
+	<select id="selectStatusListCount" parameterType="string" resultType="int">
+	    SELECT COUNT(*)
+	    FROM MEMBER
+	    WHERE STATUS = #{status}
+	</select>
+	
+	<select id="selectStatusMemberList" parameterType="string" resultMap="memberResultSet">
+	    SELECT USER_NO,
+		       USER_ID,
+		       USER_NAME,
+		       BIRTH,
+		       EMAIL,
+		       GENDER,
+		       STATUS,
+		       TO_CHAR(ENROLL_DATE, 'YYYY-MM-DD') AS ENROLL_DATE
+	    FROM MEMBER
+	    WHERE STATUS = #{status}
+	    ORDER BY USER_NO DESC
+	</select>
+	
+	<update id="updateMemberStatus">
+	    UPDATE MEMBER
+	    SET STATUS = #{status}
+	    WHERE USER_NO = #{userNo}
+	</update>
+	
 	
 
 	
