@@ -462,19 +462,33 @@ body{
                         <div class="fileArea">
                             <label for="fileInput" id="file">사진<br>첨부<b style="color : red;">*</b></label>
                             
-                            <img id="contentImg1" src="#" alt="Preview Image 1" data-target="file1"/>
-							<img id="contentImg2" src="#" alt="Preview Image 2" data-target="file2"/>
-							<img id="contentImg3" src="#" alt="Preview Image 3" data-target="file3"/>
-							<img id="contentImg4" src="#" alt="Preview Image 4" data-target="file4"/>
-                            
+                            <!-- 이미지 미리보기 (기존 파일) -->
+						        
+				            <img id="contentImg1" src="${pageContext.request.contextPath}${e.contentImg1}" alt="Preview Image 1" data-target="file1"/>
+				        
+				            <c:choose>
+						    <c:when test="${not empty list}">
+						        <c:forEach var="file" items="${list}" varStatus="status">
+						            <div>
+						                Index: ${status.index}, 원본 파일명: ${file.originName}, 저장 파일명: ${file.changeName}
+						                <!-- 이미지를 미리보기로 출력 -->
+						                <img src="${file.changeName}" alt="${file.originName}" />
+						            </div>
+						        </c:forEach>
+						    </c:when>
+						    <c:otherwise>
+						        <p>No files found.</p>
+						    </c:otherwise>
+						</c:choose>
+							
+	
                             <!-- 파일 입력받는 요소  -->
-                            <div id="file-area" style="display : none;">
-	                            <!-- 썸네일은 필수입력사항으로 지정 -->
-	                            <input type="file" id="file1" name="upfiles" data-index="1" onchange="loadImg(this);" value="${e.contentImg1}multiple>
-								<input type="file" id="file2" name="upfiles" data-index="2" onchange="loadImg(this);" value="${file.contentImg2 }" multiple>
-								<input type="file" id="file3" name="upfiles" data-index="3" onchange="loadImg(this);" multiple>
-								<input type="file" id="file4" name="upfiles" data-index="4" onchange="loadImg(this);" multiple>
-                            </div>
+                            <div id="file-area" style="display: none;">
+						        <input type="file" id="file1" name="newUpFiles" data-index="1" onchange="loadImg(this);" multiple>
+						        <input type="file" id="file2" name="newUpFiles" data-index="2" onchange="loadImg(this);" multiple>
+						        <input type="file" id="file3" name="newUpFiles" data-index="3" onchange="loadImg(this);" multiple>
+						        <input type="file" id="file4" name="newUpFiles" data-index="4" onchange="loadImg(this);" multiple>
+						    </div>
                             
                             
                             <div class="comment" style="padding : 10px;">

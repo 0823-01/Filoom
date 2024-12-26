@@ -1,5 +1,16 @@
 package com.kh.filoom.common.model.vo;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter
+@ToString
 public class PageInfo {
 	
 	// 페이징처리를 위한 7개의 변수를 필드로 지정
@@ -12,8 +23,13 @@ public class PageInfo {
 	private int startPage;
 	private int endPage;
 	
-	public PageInfo() { }
-
+	
+	//추가 rownum 에 필요한 변수
+	private int startNum;
+	private int endNum;
+	
+	
+	/*
 	public PageInfo(int listCount, int currentPage, int pageLimit, int boardLimit, int maxPage, int startPage,
 			int endPage) {
 		super();
@@ -88,4 +104,5 @@ public class PageInfo {
 				+ ", boardLimit=" + boardLimit + ", maxPage=" + maxPage + ", startPage=" + startPage + ", endPage="
 				+ endPage + "]";
 	}
+	*/
 }

@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.kh.filoom.book.model.vo.Booking;
 import com.kh.filoom.book.model.vo.BookingSeat;
 import com.kh.filoom.book.model.vo.Playing;
+import com.kh.filoom.common.model.vo.PageInfo;
 import com.kh.filoom.coupon.model.vo.CouponUser;
 import com.kh.filoom.member.model.vo.Member;
 import com.kh.filoom.movie.model.vo.Movie;
@@ -129,7 +130,14 @@ public interface BookService {
 
 	
 	
+	////////////////////////////////////////////////
+	//관리자 페이지 - 예매관리
+	
+	//전체 예매내역 조회
+	int selectBookingCount(String bookNo, String userId);
 
+	//booking 리스트 조회 - 관리자
+	ArrayList<Booking> selectBookingListAdmin(PageInfo pi, String sorting,String bookNo, String userId);
 	
 
 }

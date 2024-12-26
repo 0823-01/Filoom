@@ -6,6 +6,7 @@
 <head>
 <meta charset="UTF-8">
 <title>관리자용 이벤트 상세조회</title>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link rel="stylesheet" href="resources/css/admin.css" />
     <style>
         #admin_title_content {
@@ -354,13 +355,33 @@
 					        });
 					    });
 					</script>
+					
+					<form id="postForm" action="" method="post">
+	                	<input type="hidden" name="eno" value="${requestScope.e.eventNo }">
+	                	<input type="hidden" name="filePath" value="${file.changeName }">
+                	</form>
                     
                         <!--목록, 수정, 삭제 버튼-->
                         <div class="btn">
                             <button id="backList" style="width : 100px; margin-right : 5px;" onclick="history.back()">목록</button>
-                            <button id="update" style="width : 130px; margin-right : 5px;" onclick="location.href='updateForm.ev'">수정</button>
-                            <button id="delete" style="width : 130px;" onclick="location.href='delete.ev'">삭제</button>
+                            
+                            <c:if test="${sessionScope.loginUser.userNo eq 1 }">
+	                            <button id="update" style="width : 130px; margin-right : 5px;" onclick="postFormSubmit(1);">수정</button>
+	                            <button id="delete" style="width : 130px;" onclick="postFormSubmit(2);">삭제</button>
+                            </c:if>
                         </div>
+                        
+                        <script>
+			            	function postFormSubmit(num) {
+			            		console.log(num);
+			            		
+			            		if(num == 1) {
+			            			$("#postForm").attr("action", "updateForm.ev").submit();
+			            		} else {
+			            			$("#postForm").attr("action", "delete.ev").submit();
+			            		}
+			            	}
+			            </script>
                     </div>
 
                 </div>
@@ -371,49 +392,7 @@
     </div>
 
     
-    <!-- 쿠폰 모달 -->
-    <div id="couponModalContainer">
-    	<!--쿠폰 등록 모달-->
-        <div id="couponModal">
-            <div class="modalTitle">
-                <div>쿠폰 등록</div>
-            </div>
-
-
-            <form id="coupon" action="insertCoupon.ev" method="post">
-            <!-- 이벤트 번호를 히든 값으로 전송 -->
-            <input type="hidden" name="eventNo" value="${e.eventNo}" /> 
-                <div class="modalContent" style="box-sizing: border-box;">
-                    <div class="content1">
-                        
-                        <div class="couponName">
-                            <div><label for="couponName">쿠폰 이름</label></div>
-                            <input type="text" id="couponName" name="couponName" required placeholder="쿠폰 이름을 입력하세요">
-                        </div>
-                        
-                        <div class="couponLevel">
-                            <div><label for="couponLevel">타입</label></div>
-                            <select id="type" name="couponLevel">
-                                <option value="1">무대/시사회</option>
-                                <option value="2">관람권</option>
-                                <option value="3">기타</option>
-                            </select>
-                            
-                        </div>
-                    </div>
-                 
-                    <!--목록, 수정, 삭제 버튼-->
-                    <div class="back-update-delete">
-                        <div class="btn">
-                            <button id="backList" onclick="closeCouponModal();">취소</button>
-                            <button type="submit" id="submit">등록</button>
-                           
-                        </div>
-                    </div>
-                    
-                    </form>
-                </div>
-        </div>
+    
     </div>
     </div>
     <script>

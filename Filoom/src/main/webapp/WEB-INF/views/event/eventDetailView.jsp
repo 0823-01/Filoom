@@ -343,9 +343,12 @@
                 	<img id="event_img" src="${ pageContext.request.contextPath }${file.changeName}" alt="상세이미지">
                 </c:forEach>
                 
-                <form id="postForm" action="" method="post">
+                <form id="postForm" action="" method="post" enctype="multipart/form-data">
                 	<input type="hidden" name="eno" value="${requestScope.e.eventNo }">
-                	<input type="hidden" name="filePath" value="${file.changeName }">
+                	<c:forEach var="file" items="${list}">
+				        <input type="hidden" name="filePaths" value="${file.changeName}">
+				    </c:forEach>
+                	
                 </form>
                 
                 <div id="listBtn">
@@ -358,17 +361,7 @@
                 </div>
             </div>
             
-            <script>
-            	function postFormSubmit(num) {
-            		console.log(num);
-            		
-            		if(num == 1) {
-            			$("#postForm").attr("action", "updateForm.ev").submit();
-            		} else {
-            			$("#postForm").attr("aciont", "${pageContext.request.contextPath}/delete.ev").submit();
-            		}
-            	}
-            </script>
+            
             
             
             <!-- 이벤트 타입에 따라 보여지는 화면이 다름 -->
@@ -413,34 +406,7 @@
 		
 		                    <tbody>
 		                       <tr>
-	                            <!--수정상황-->
-	                            <td id="replyWriter">us****</td>
-	                            <td id="replyContent">
-	                                <textarea id="updateReply" readonly>모아나 정말 보고싶어용! 저희 엄마가 좋아해여!</textarea>
-	                            </td>
-	                            <td id="buttons">
-	                                <button id="savedBtn">저장</button>
-	                                <button id="cancelBtn">취소</button>
-	                            </td>
-	                            <td id="replyDate">2024-11-21 오후 2:12:00</td>
-		                        </tr>
-		
-		                        <!--댓글작성자인 경우, 수정 삭제 버튼 -->
-		                        <tr>
-		                            <td id="replyWriter">us****</td>
-		                            <td id="replyContent">모아나 정말 보고싶어요! 저희 아빠가 좋아해여!</td>
-		                            <td id="buttons">
-		                                <button id="updateBtn">수정</button>
-		                                <button id="deleteBtn">삭제</button>
-		                            </td>
-		                            <td id="replyDate">2024-11-21 오후 2:12:00</td>
-		                        </tr>
-		                        <tr>
-		                            <td id="replyWriter">us****</td>
-		                            <td id="replyContent">모아나 정말 보고싶어요! 저희 아빠가 좋아해여!</td>
-		                            <td></td>
-		                            <td id="replyDate">2024-11-21 오후 2:12:00</td>
-		                            
+	                            
 		                        </tr>
 		                    </tbody>
 		                </table>
@@ -499,92 +465,92 @@
 	        return loginUser.substring(0, 3) + '*'.repeat(loginUser.length - 3);
 	    }
 
-    // 댓글 목록 조회
-    function selectReplyList(cpage = 1) {
-        $.ajax({
-            url: "rlist.ev", // 댓글 목록 조회 API URL
-            type: "get",
-            data: { eno: ${requestScope.e.eventNo}, cpage: cpage },
-            success: function(response) {
-                var resultStr = "";
-                // 댓글 목록 렌더링
-                if (response.list && Array.isArray(response.list)) {
-                    response.list.forEach(function(reply) {
-                        resultStr += "<tr data-reply-no='" + reply.replyNo + "'>";
-                        
-                     	// 댓글 작성자 마스킹 처리
-                        var maskedWriter = maskUsername(reply.replyWriter);
-                        resultStr += "<td id='replyWriter'>" + maskedWriter + "</td>";
-                        
-                        resultStr += "<td id='replyContent'>" + reply.replyContent + "</td>";
+	 // 댓글 목록 조회
+	    function selectReplyList(cpage = 1) {
+	        $.ajax({
+	            url: "rlist.ev", // 댓글 목록 조회 API URL
+	            type: "get",
+	            data: { eno: ${requestScope.e.eventNo}, cpage: cpage },
+	            success: function(response) {
+	                var resultStr = "";
+	                // 댓글 목록 렌더링
+	                if (response.list && Array.isArray(response.list)) {
+	                    response.list.forEach(function(reply) {
+	                        resultStr += "<tr data-reply-no='" + reply.replyNo + "'>";
+	                        
+	                     	// 댓글 작성자 마스킹 처리
+	                        var maskedWriter = maskUsername(reply.replyWriter);
+	                        resultStr += "<td id='replyWriter'>" + maskedWriter + "</td>";
+	                        
+	                        resultStr += "<td id='replyContent'>" + reply.replyContent + "</td>";
 
-                        // 댓글 작성자와 로그인 유저가 같으면 수정 및 삭제 버튼 추가
-                        if (reply.replyWriter === loginUser) {
-                        	resultStr += "<td id='buttons'>"
-                                + "<button id='updateBtn' class='edit-reply-btn' data-reply-no='" + reply.replyNo + "' onclick='editReply(" + reply.replyNo + ")'>수정</button>"
-                                + "<button id='deleteBtn' onclick='deleteReply(" + reply.replyNo + ")'>삭제</button>"
-                                + "<button id='savedBtn' style='display:none;' onclick='saveReply(" + reply.replyNo + ")'>저장</button>"
-                                + "<button id='cancelBtn' style='display:none;' onclick='cancelEdit(" + reply.replyNo + ")'>취소</button>"
-                                + "</td>";
-                        } else {
-                            resultStr += "<td></td>";
-                        }
+	                        // 댓글 작성자와 로그인 유저가 같으면 수정 및 삭제 버튼 추가
+	                        if (reply.replyWriter === loginUser) {
+	                        	resultStr += "<td id='buttons'>"
+	                                + "<button id='updateBtn' class='edit-reply-btn' data-reply-no='" + reply.replyNo + "' onclick='editReply(" + reply.replyNo + ")'>수정</button>"
+	                                + "<button id='deleteBtn' onclick='deleteReply(" + reply.replyNo + ")'>삭제</button>"
+	                                + "<button id='savedBtn' style='display:none;' onclick='saveReply(" + reply.replyNo + ")'>저장</button>"
+	                                + "<button id='cancelBtn' style='display:none;' onclick='cancelEdit(" + reply.replyNo + ")'>취소</button>"
+	                                + "</td>";
+	                        } else {
+	                            resultStr += "<td></td>";
+	                        }
 
-                        resultStr += "<td id='replyDate'>" + reply.createDate + "</td>";
-                        resultStr += "</tr>";
-                    });
+	                        resultStr += "<td id='replyDate'>" + reply.createDate + "</td>";
+	                        resultStr += "</tr>";
+	                    });
 
-                    $(".reply>tbody").html(resultStr); // 댓글 내용 업데이트
-                    $("#rcount").text(response.list.length); // 댓글 갯수 표시
-                    handlePagination(response.pi, cpage); // 페이징 처리
-                    
-                 	// 수정 버튼에 클릭 이벤트 리스너 등록
-                    $(".edit-reply-btn").click(function() {
-                        var replyNo = $(this).data("reply-no");
-                        editReply(replyNo); // 클릭된 댓글에 대한 수정 함수 호출
-                    });
-                }
-            },
-            error: function() {
-                console.error("댓글 목록 조회 실패");
-            }
-        });
-    }
+	                    $(".reply>tbody").html(resultStr); // 댓글 내용 업데이트
+	                    $("#rcount").text(response.list.length); // 댓글 갯수 표시
+	                    handlePagination(response.pi, cpage); // 페이징 처리
+	                    
+	                 	// 수정 버튼에 클릭 이벤트 리스너 등록
+	                    $(".edit-reply-btn").click(function() {
+	                        var replyNo = $(this).data("reply-no");
+	                        editReply(replyNo); // 클릭된 댓글에 대한 수정 함수 호출
+	                    });
+	                }
+	            },
+	            error: function() {
+	                console.error("댓글 목록 조회 실패");
+	            }
+	        });
+	    }
 
-    // 댓글 작성 함수
-    function addReply() {
-    	let replyContent = $("#replyInput").val();
-        
+	    // 댓글 작성 함수
+	    function addReply() {
+	    	let replyContent = $("#replyInput").val();
+	        
 
-        if(replyContent.trim().length != 0) { 
-            $.ajax({
-                url: "rinsert.ev", // 댓글 작성 API
-                type: "post",
-                contentType: "application/json",
-                data: JSON.stringify({
-                    replyContent: replyContent,
-                    replyWriter: "${ sessionScope.loginUser.userNo }",
-                    refEno: ${requestScope.e.eventNo}
-                }),
-                success: function(response) {
-                    if(response.success) {
-                    	alert(response.message); // 댓글 작성 완료 표시
-                        selectReplyList(); // 댓글 목록 갱신
-                        $("#replyInput").val(""); // 입력창 비우기
-                    } else {
-                        alert(response.message);
-                    }
-                },
-                error: function() {
-                    alert("댓글 작성 오류");
-                }
-            });
-        } else {
-            alert("댓글을 작성해주세요.");
-        }
-    }
-    
-    
+	        if(replyContent.trim().length != 0) { 
+	            $.ajax({
+	                url: "rinsert.ev", // 댓글 작성 API
+	                type: "post",
+	                contentType: "application/json",
+	                data: JSON.stringify({
+	                    replyContent: replyContent,
+	                    replyWriter: "${ sessionScope.loginUser.userNo }",
+	                    refEno: ${requestScope.e.eventNo}
+	                }),
+	                success: function(response) {
+	                    if(response.success) {
+	                    	alert(response.message); // 댓글 작성 완료 표시
+	                        selectReplyList(); // 댓글 목록 갱신
+	                        $("#replyInput").val(""); // 입력창 비우기
+	                    } else {
+	                        alert(response.message);
+	                    }
+	                },
+	                error: function() {
+	                    alert("댓글 작성 오류");
+	                }
+	            });
+	        } else {
+	            alert("댓글을 작성해주세요.");
+	        }
+	    }
+
+   
  	// 댓글 수정
     function editReply(replyNo) {
         // 해당 댓글에 대한 수정 로직 처리
@@ -596,7 +562,7 @@
         replyRow.find("#updateBtn").hide();  // 수정 버튼 숨기기
         replyRow.find("#deleteBtn").hide();  // 삭제 버튼 숨기기
         replyRow.find("#savedBtn, #cancelBtn").show();  // 저장, 취소 버튼 보이기
-        console.log("여긴 왜 안보여?")
+        //console.log("여긴 왜 안보여?")
     }
  	
  	// 댓글 수정 처리 (저장 버튼 클릭 시)
@@ -688,11 +654,6 @@
         });
     }
 
-    /* 댓글 수정 취소
-    function cancelEdit(replyNo) {
-        selectReplyList(); // 댓글 목록 새로고침
-    } */
-
     // 댓글 삭제
     function deleteReply(replyNo) {
         $.ajax({
@@ -724,7 +685,7 @@
         
         // 이전 페이지 버튼
         if (currentPage > 1) {
-            pageList.append("<li><a href='#' class='page-btn' data-page='" + (currentPage - 1) + "'>◀</a></li>");
+            pageList.append("<li><a href='#' class='page-btn' data-page='" + (currentPage - 1) + "'><<</a></li>");
         }
 
         // 페이지 번호들
@@ -735,7 +696,7 @@
 
         // 다음 페이지 버튼
         if (currentPage < pi.maxPage) {
-            pageList.append("<li><a href='#' class='page-btn' data-page='" + (currentPage + 1) + "'>▶</a></li>");
+            pageList.append("<li><a href='#' class='page-btn' data-page='" + (currentPage + 1) + "'>>></a></li>");
         }
         
         // 마지막 페이지 버튼
@@ -810,6 +771,15 @@
             $("#applyBtn").$("#replyInput").prop("disabled", true); // 버튼 비활성화
         }
     });
+ 	
+	function postFormSubmit(num) {
+		console.log("num:", num);
+		if(num == 1) {
+	        $("#postForm").attr("action", "${pageContext.request.contextPath}/updateForm.ev").submit();
+	    } else {
+	        $("#postForm").attr("action", "${pageContext.request.contextPath}/delete.ev").submit();
+	    }
+	}
  
 </script>
 

@@ -56,6 +56,6 @@ public class Movie {
     private String screenName;
     private int screenNo;
     // 원섭 : 상영관 번호 자체는 screenName으로 떼울 수 있으나, 이러면 조회할 때 결국 문제가 생김
-    // private String screenInfo; // 상영관 정보 (미사용이랬음)
+    private String screenInfo; 
     
 }

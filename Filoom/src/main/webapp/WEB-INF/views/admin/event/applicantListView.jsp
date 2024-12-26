@@ -237,14 +237,16 @@
                 <div id = "admin_title_content" style="box-sizing: border-box;">
                     <div class="menu">
                     	<c:forEach var="item" items="${alist}">
-				           <input type = "hidden" id = "eventNum" value ="${item.eventNo}">
-				        </c:forEach>
+						    <input type="hidden" id="eventNo" value="${eventNo}"> <!-- eventNo 값이 넘어옴 -->
+						    <input type="hidden" id="couponNo" value="${couponNo}"> <!-- couponNo 값이 넘어옴 -->
+						    <input type="hidden" id="userNo" value="${userNo}"> <!-- userNo 값이 넘어옴 -->
+						</c:forEach>
                         <div id="no">번호</div>
                         <div id="title">응모내용</div>
                         <div id="applicants">응모자</div>
                         <div id="date">응모날짜</div>
-                        <div id="drawing">추첨여부</div>
-                        <div id="win">당첨여부</div>
+                        <div id="drawing">당첨여부</div>
+                        
                     </div>
                 </div>
 
@@ -260,28 +262,78 @@
 
                     <table id="applicantList">
                         <tbody>
-                        	<c:forEach var="a" items="${requestScope.alist }">
-	                        	<tr id="list" class="applicant-item">
+                        	<c:forEach var="item" items="${alist }">
+	                        	<tr id="list" class="applicant-item" data-event-no="${item.eventNo}" data-coupon-no="${item.couponNo}" data-user-no="${item.userNo}">
 		                          
-		                           	<td id="applicantNo" class="ano">${a.applicantNo }</td>
-		                           	<td id="eventTitle">${a.eventTitle}</td>
-		                           	<td id="applicant">${a.userNo}</td>
-		                          	<td id="applicantDate">${a.applicationDate }</td>
+		                           	<td id="applicantNo" class="ano">${item.applicantNo }</td>
+		                           	<td id="eventTitle">${item.eventTitle}</td>
+		                           	<td id="applicant">${item.userId}</td>
+		                          	<td id="applicantDate">${item.applicationDate }</td>
 		                            <td id="a">
-		                            	<select name ="drawingStatus" id="drawingStatusSelect" >
-																												
-		                            		<option value = "N">${a.drawingStatus }</option>
-		                            		<option value = "Y">Y</option>
-		                            			
-		                            	</select>
-		                            	
+		                            	<c:if test="${item.drawingStatus == 'Y'}">
+		                            		쿠폰 발급 완료
+		                            	</c:if>
+		                            	<c:if test="${item.drawingStatus == 'N'}">
+		                            		<select name="drawingStatus" id="drawingStatusSelect" 
+										        onchange="updateDrawingStatus(this)">
+										    <option value="N" ${item.drawingStatus == 'N' ? 'selected' : ''}>N</option>
+										    <option value="Y" ${item.drawingStatus == 'Y' ? 'selected' : ''}>Y</option>
+										</select>
+		                            	</c:if>
+
 		                            </td>
-		                            <td id="winStatus">${w.winStatus }</td>
+
 	                        	</tr>
                         	</c:forEach>
                         </tbody>
 
                     </table>
+                    
+                    <script>
+	                    function insertCoupon(userNo, couponNo, eventNo, selectElement) {
+	                    	
+	                        // console.log("Event No: " + eventNo + ", Coupon No: " + couponNo + ", User No: " + userNo);
+	                        
+	                        $.ajax({
+	                            url: "sendCoupon.ev", // 서버의 URL
+	                            type: "POST",
+	                            data: {
+	                            	userNo: userNo,    // userNo를 전달
+	                                couponNo: couponNo,
+	                                eventNo: eventNo
+	                            },
+	                            success: function(response) {
+	                                if (response.success) {
+	                                	console.log(response);
+	                                    alert("쿠폰이 성공적으로 발급되었습니다!");
+	                                    $(selectElement).closest('td').html('발급 완료');
+	                                } else {
+	                                	alert("발급 실패: " + response.message);
+	                                }
+	                            },
+	                            error: function() {
+	                                alert("서버와 통신 중 오류가 발생했습니다.");
+	                            }
+	                        });
+	                    }
+                    
+	                 	// 2. updateDrawingStatus 함수 정의
+	                    function updateDrawingStatus(selectElement) {
+	                    	// 선택된 select box의 부모 tr을 찾고, 그 트리에서 data-* 속성으로 값을 가져옵니다.
+	                        var parentRow = $(selectElement).closest('.applicant-item');
+	                        var eventNo = $(parentRow).data('event-no');
+	                        var couponNo = $(parentRow).data('coupon-no');
+	                        var userNo = $(parentRow).data('user-no')
+	                 		
+	                 		
+	                 		// drawingStatus가 "Y"로 변경되었을 때만 쿠폰 발급 함수 호출
+						    if (selectElement.value === "Y") {
+						        // 응모자 회원 번호와 쿠폰 번호를 넘겨서 insertCoupon 함수 호출
+						        insertCoupon(userNo, couponNo, eventNo, selectElement);
+						    }
+						}
+	                 
+					</script>
 
                     <div class="foot" style="box-sizing: border-box;" >
                         <!-- 페이징바 -->
@@ -358,7 +410,7 @@
         });
     });
     
-
+	/*
     $(document).ready(function() {
         // eventNo 값 가져오기
         var eventNo = $('#eventNum').val();
@@ -390,44 +442,39 @@
                 }
             });
         });
-    });
+    }); */
     
-    $(document).ready(function() {
-        // drawingStatus 값 변경 시 AJAX 호출
-        $('select[name="drawingStatus"]').change(function() {
-            var userNo = $(this).data('userno');  // 사용자 번호
-            var bookNo = $(this).data('bookno');  // 책 번호
-            var couponNo = $(this).data('couponno');  // 쿠폰 번호
-            var couponUse = $(this).data('couponuse');  // 쿠폰 사용 여부
-            var drawingStatus = $(this).val();  // 선택된 상태 값 ('N' 또는 'Y')
+    /*
+    function updateDrawingStatus(selectElement) {
+        // 선택된 응모자 상태 값
+        var newStatus = selectElement.value;
 
-            console.log("userNo:", userNo);
-            console.log("bookNo:", bookNo);
-            console.log("couponNo:", couponNo);
-            console.log("couponUse:", couponUse);
-            console.log("drawingStatus:", drawingStatus);
+        // 응모자의 고유 식별자 (예: 응모자 번호)
+        var applicantNo = selectElement.getAttribute('data-applicant-no');
 
+        // 상태값이 "Y"로 변경되었을 때, 쿠폰 발급을 처리하기 위해 AJAX 요청 보내기
+        if (newStatus === "Y") {
             $.ajax({
-                url: 'updateCouponStatus.co',  // 해당 경로로 요청을 보냄
+                url: 'sendCoupon.ev',  // 서버에서 쿠폰을 발급하는 엔드포인트
                 type: 'POST',
                 data: {
-                    userNo: userNo,
-                    bookNo: bookNo,
-                    couponNo: couponNo,
-                    couponUse: couponUse,
-                    drawingStatus: drawingStatus  // 새로운 drawingStatus 값
+                    applicantNo: applicantNo,
+                    status: newStatus
                 },
                 success: function(response) {
-                    alert("상태가 변경되었습니다.");
+                    // 서버에서 응답을 받은 후 처리
+                    if (response.success) {
+                        alert('쿠폰이 발급되었습니다!');
+                    } else {
+                        alert('쿠폰 발급에 실패하였습니다.');
+                    }
                 },
-                error: function(xhr, status, error) {
-                    console.error("Error:", error);
-                    alert("상태 변경 중 오류가 발생했습니다.");
+                error: function() {
+                    alert('서버 오류가 발생했습니다.');
                 }
             });
-        });
-    });
-    
+        }
+    } */
     </script>
     
 </body>

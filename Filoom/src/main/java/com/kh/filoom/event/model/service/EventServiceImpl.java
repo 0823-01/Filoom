@@ -129,7 +129,6 @@ public class EventServiceImpl implements EventService {
 		return eventDao.insertReply(sqlSession, r);
 	}
 
-
 	/**
 	 * 241217 한혜원
 	 * 댓글 수정용 요청 메소드 
@@ -316,6 +315,7 @@ public class EventServiceImpl implements EventService {
 	}
 	
 	
+
 	@Override
 	public int selectCouponListCount(int eventNo) {
 		return eventDao.selectCouponListCount(sqlSession, eventNo);
@@ -326,36 +326,28 @@ public class EventServiceImpl implements EventService {
 		return eventDao.selectCouponList(sqlSession, params);
 	}
 
+
 	/**
-	 * 241220 한혜원
-	 * 당첨자 정보 추가
+	 * 쿠폰 발송
 	 */
 	@Override
-	public int insertWinners(Map<String, Object> params) {
-		return eventDao.insertWinners(sqlSession, params);
-	}
-	
-	/**
-	 * 241223 한혜원
-	 * 응모자들에게 쿠폰발급
-	 */
-	@Override
-	public int sendCoupon(List<Applicant> alist, int eventNo) {
-		return 0;
+	@Transactional
+	public int insertCouponUser(int userNo, int couponNo, int eventNo) {
+		
+		return eventDao.insertCouponUser(sqlSession, userNo, couponNo, eventNo);
 	}
 
-	
-	/*
+	/**
+	 * 쿠폰 변경 후 상태 변경
+	 */
 	@Override
-	public void deleteEventAttachment(List<Long> deleteFileIds) {
-		// TODO Auto-generated method stub
-		
-	} */
-	
-	
-	public int couponInsertEx(Map<String, Object> params) {
-		return eventDao.couponInsertEx(sqlSession, params);
+	@Transactional
+	public int updateDrawingStatus(int userNo, int eventNo, String drawingStatus) {
+		// 응모자의 drawingStatus를 "Y"로 업데이트
+	    return eventDao.updateDrawingStatus(sqlSession, userNo, eventNo, drawingStatus);
 		
 	}
+	
+	
 
 }

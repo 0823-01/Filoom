@@ -99,12 +99,8 @@ public interface EventService {
 	
 	// 버튼 응모자 목록조회 서비스 
 	List<Applicant> adminSelectApplicantList(Map<String, Object> params);
-
-	// 당첨자 추가
-	int insertWinners(Map<String, Object> params);
-
-	// 쿠폰 발급
-	int sendCoupon(List<Applicant> alist, int eventNo);
+	
+	
 
 	// 쿠폰목록수
 	int selectCouponListCount(int eventNo);
@@ -113,7 +109,11 @@ public interface EventService {
 	ArrayList<Coupon> selectCouponList(Map<String, Object>params);
 
 
-	int couponInsertEx(Map<String, Object> params);
+	// 쿠폰 발급하는거
+	int insertCouponUser(int userNo, int couponNo, int eventNo);
+
+	// 쿠폰 발급 후 상태 변경
+	int updateDrawingStatus(int userNo, int eventNo, String drawingStatus);
 
 
 

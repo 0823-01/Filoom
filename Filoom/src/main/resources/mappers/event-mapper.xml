@@ -45,6 +45,11 @@
 	<result column="APPLICATION_DATE" property="applicationDate" />
 	<result column="DRAWING_STATUS" property="drawingStatus" />
 	<result column="EVENT_NO" property="eventNo" />
+	<result column="BOOK_NO" property="bookNo" />
+	<result column="COUPON_NO" property="couponNo" />
+	<result column="COUPON_USE" property="couponUser" />
+	<result column="EVENT_TITLE" property="eventTitle" />
+	<result column="COUPON_EXP_DATE" property="couponExpDate" />
 </resultMap>
 
 <!-- Winners 테이블로부터 조회된 ResultSet을 winners VO 타입으로 옮겨주는 ResultMap -->
@@ -124,6 +129,8 @@
 	     , TO_CHAR(START_DATE, 'YYYY-MM-DD') "START_DATE"
 	     , TO_CHAR(END_DATE, 'YYYY-MM-DD') "END_DATE"
 	     , EVENT_CONTENT
+	     , EVENT_TYPE
+	     , EVENT_STATUS
 	  FROM EVENT E
 	  JOIN EVENT_ATTACHMENT ON (EVENT_NO = REF_ENO)
 	 WHERE EVENT_NO = #{eventNo}
@@ -134,9 +141,11 @@
 <!-- 241213 한혜원 이벤트 게시글 첨부파일 상세조회 -->
 <select id="selectEventAttachment" resultMap="eventAttachmentResultSet">
 	SELECT EVENT_FILE_NO
+	     , REF_ENO
 	     , ORIGIN_NAME
 	     , CHANGE_NAME
 	     , FILE_PATH
+	     , FILE_LEVEL
 	  FROM EVENT_ATTACHMENT
 	 WHERE REF_ENO = #{eventNo}
 	   AND FILE_LEVEL = 2
@@ -160,6 +169,7 @@
 	  JOIN MEMBER ON (REPLY_WRITER = USER_NO)
 	 WHERE REF_ENO = #{eventNo}
 	   AND R.STATUS = 'Y'
+	 ORDER BY REPLY_NO DESC  
 </select>
 
 <!-- 241222 한혜원 댓글 중복 확인 -->
@@ -175,6 +185,7 @@
 	INSERT INTO REPLY(REPLY_NO, REF_ENO, REPLY_WRITER, REPLY_CONTENT)
 	VALUES(SEQ_ERNO.NEXTVAL, #{refEno}, #{replyWriter}, #{replyContent})
 </insert>
+
 
 <!-- 241217 한혜원 이벤트 게시판 댓글 수정 -->
 <update id="updateReply" parameterType="map">
@@ -297,6 +308,13 @@
 	 WEHRE EVENT_FILE_NO = #{eventFileNo}
 </update>
 
+<!-- 한혜원, 이벤트 게시글 삭제 -->
+<update id="deleteEvent" parameterType="_int">
+	UPDATE EVENT
+	   SET STATUS = 'N'
+	 WHERE EVENT_NO = #{eventNo} 
+</update>
+
 <!-- 응모확인 -->
 <!-- 241219 한혜원, 댓글 개수 확인 -->
 <select id="rlistCount" resultType="_int">
@@ -332,18 +350,28 @@
 <select id="adminSeletApplicantList" resultMap="applicantResultSet">
 	SELECT APPLICANT_NO
 	     , EVENT_TITLE
-	     , USER_ID AS "USER_NO"
+	     , A.USER_NO
+         , USER_ID
 	     , TO_CHAR(APPLICATION_DATE, 'YYYY-MM-DD AM HH:MI:SS') AS "APPLICATION_DATE"
 	     , DRAWING_STATUS
-	     , WIN_STATUS
+	     , C.COUPON_NO
 	     ,  A.REF_ENO AS EVENT_NO
 	  FROM APPLICANT A
 	  JOIN MEMBER M ON (A.USER_NO = M.USER_NO)
 	  LEFT JOIN WINNERS W ON (A.REF_ENO = W.REF_ENO)
 	  JOIN EVENT E ON (A.REF_ENO = E.EVENT_NO)
+      JOIN COUPON C ON (A.REF_ENO = C.REF_ENO)
 	 WHERE A.REF_ENO = #{eventNo}
 	 ORDER BY APPLICANT_NO DESC
 </select>
+
+<!-- 쿠폰 발급 후 상태값 변경 -->
+<update id="updateDrawingStatus" parameterType="map">
+	UPDATE APPLICANT
+	   SET DRAWING_STATUS = #{drawingStatus}
+	 WHERE USER_NO = #{userNo}
+	   AND REF_ENO = #{eventNo}
+</update>
 
 <!-- 241223 한혜원 쿠폰 목록 수 -->
 <select id="selectCouponListCount" resultType="_int">
@@ -362,14 +390,6 @@
 		  FROM COUPON C
 		 WHERE REF_ENO = #{eventNo} 
 </select>
-
-<!-- 당첨자 -->
-<!-- 241220 한혜원, 당첨자 추가 -->
-<insert id="insertWinners" parameterType="winners">
-	INSERT INTO WINNERS(WINNER_NO, REF_ENO, WINNER, WINNER_TYPE, WIN_STATUS, WIN_DATE)
-	VALUES(SEQ_WNO.NEXTVAL, #{refEno}, #{winner}, #{winnerType}, 'Y', SYSDATE)
-</insert>
-
 
 
 </mapper>
