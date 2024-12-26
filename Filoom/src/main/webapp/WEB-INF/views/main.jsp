@@ -10,6 +10,8 @@
 <title>Insert title here</title>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <link rel="stylesheet" href="${ pageContext.request.contextPath }/resources/css/mainstyle.css" />
+<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=2ca4036e4722868bde0211b5c0b8f26e"></script>
+
 </head>
 <body>
 	
@@ -221,12 +223,22 @@
     </div>
 
    
-
-    
+	<br><br>
+	<div style = "width:1400px; height:950px;margin:auto; border:1px solid #E4E0E1;">
+	
+	<div id = "map_title" style="margin:auto; margin-top:60px; text-align:center;" ><h1 style="color:white;">찾아오시는 길</h1></div>
+		<br>
+		<div id="map" style="width:800px;height:600px; margin:auto;"></div><br>
+		<div id = "map_title" style="margin:auto; margin-top:60px; text-align:center;" ><h1 style="color:white;">
+			서울특별시 영등포구 선유동2로 57 이레빌딩(구관) 19F, 20F (T: 1544-0000 / F: 02-2000-0000)
+		</h1></div>
+		<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=516002f043bc29ef122d1d4a95ed7be4"></script>
+    </div>
 
 
 
     <script>
+    
     	
        const contextPath = "${pageContext.request.contextPath}";
     
@@ -448,6 +460,27 @@
             iframe.src = "https://www.youtube.com/embed/" + videoId + "?autoplay=1&mute=1&controls=0&loop=1";
         }
         
+        
+        var mapContainer = document.getElementById('map'), // 지도를 표시할 div 
+	    mapOption = { 
+	        center: new kakao.maps.LatLng(37.533813, 126.896863), // 지도의 중심좌표
+	        level: 3 // 지도의 확대 레벨
+	    };
+		
+		var map = new kakao.maps.Map(mapContainer, mapOption); // 지도를 생성합니다
+		
+		// 마커가 표시될 위치입니다 
+		var markerPosition  = new kakao.maps.LatLng(37.533813, 126.896863); 
+		
+		// 마커를 생성합니다
+		var marker = new kakao.maps.Marker({
+		    position: markerPosition
+		});
+		
+		// 마커가 지도 위에 표시되도록 설정합니다
+		marker.setMap(map);
+       
+		
     </script>
 
 	
