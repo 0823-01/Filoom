@@ -103,6 +103,10 @@ public class MovieDao {
 		// TODO Auto-generated method stub
 		return sqlSession.selectOne("movieMapper.showThumbnail", movieNo);
 	}
+	
+	public ArrayList<Poster> selectImageList(SqlSessionTemplate sqlSession, int movieNo) {
+		return (ArrayList) sqlSession.selectList("movieMapper.selectImageList", movieNo);
+	}
 
 	public int addMovie(SqlSessionTemplate sqlSession, Movie m) {
 		// TODO Auto-generated method stub
@@ -200,6 +204,21 @@ public class MovieDao {
 	public ArrayList<Review> selectReview(SqlSessionTemplate sqlSession, HashMap<String, Integer> map) {
 		// TODO Auto-generated method stub
 		return (ArrayList) sqlSession.selectList("movieMapper.selectReview", map);
+	}
+
+	public double checkAverage(SqlSessionTemplate sqlSession, int movieNo) {
+		// TODO Auto-generated method stub
+		return sqlSession.selectOne("movieMapper.checkAverage", movieNo);
+	}
+
+	public double checkEvalNo(SqlSessionTemplate sqlSession, int movieNo, int k) {
+		// TODO Auto-generated method stub
+		// double로 구하는 이유 : 리뷰 수로 나누면 double이 나와야 함
+		HashMap<String, Integer> form = new HashMap<>();
+		form.put("movieNo", movieNo);
+		form.put("score", k);
+		
+		return sqlSession.selectOne("movieMapper.checkEvalNo", form);
 	}
 
 	

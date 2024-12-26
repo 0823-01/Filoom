@@ -20,6 +20,8 @@ function nicepayStart(){
 
 //[PC 결제창 전용]결제 최종 요청시 실행됩니다. <<'nicepaySubmit()' 이름 수정 불가능>>
 function nicepaySubmit(){
+	// beforeunload 이벤트 제거 
+	$(window).off("beforeunload");
 	document.payForm.submit();
 }
 
@@ -354,14 +356,10 @@ function nicepayClose(){
 <body> 
 	<jsp:include page="../common/header.jsp" />	
 	
+    <button onclick="deleteSeatAndBook()">좌석삭제 메소드</button>
     
     <form id="payForm" name="payForm" method="post" action="/filoom/payResult.pm">
         <div id="outer"> <!-- 바깥테두리-->
-			
-
-
-
-
 
             <!-- 왼쪽 -->
             <div id="leftDiv" >
@@ -515,7 +513,8 @@ function nicepayClose(){
 		</c:forEach>
 
     </form>
-
+	
+	
     
     <script>
    		
@@ -550,33 +549,45 @@ function nicepayClose(){
     		showPlayTime(playTime,runTime);		
     		showTotalPrice(); 					//총금액	
     		showCost();							//최종결재금액
-    		deleteSeatAndBook()
     	});
 		
 		
+		//좌석삭제 요청 ajax 요청 메소드
 		function deleteSeatAndBook(){
 			console.log("deleteSeatAndBook()실행");
-			let bookNo = $("#submitData>input[name=bookNo]").val(bookNo);
-			seatNos = [];
-			$("#submitData>input[name='bookingSeatNos']").each(function(index,item){
-				seatNos.push($(item).val());
-			});
-			//console.log(seatNos);
-			$.ajax({
-				url:"deleteSB.pm",
-				type:"post",
-				data:{playingNo:playingNo,
-					 seatNos:seatNos,
-					 bookNo:bookNo},
-				success:function(){
-					console.log("ajax-deleteSeatAndBook 통신 성공");
-				},
-				error:function(){
-					console.log("ajax-deleteSeatAndBook 통신 실패");
-				}
-			});
+			
+			if(performance.navigation.type !==1){ //새로고침이 아닌경우
+				let seatNos = [];
+				$("#submitData>input[name='bookingSeatNos']").each(function(index,item){
+					seatNos.push($(item).val());
+				});
+				console.log(seatNos);
+				$.ajax({
+					url:"deleteSB.pm",
+					type:"post",
+					contentType: "application/json",
+					data:JSON.stringify(seatNos),
+					success:function(){
+						console.log("ajax-deleteSeatAndBook 통신 성공");
+					},
+					error:function(){
+						console.log("ajax-deleteSeatAndBook 통신 실패");
+					}
+				});
+				
+			}else{ //새로고침
+				
+				console.log("페이지 새로고침");
+			}
+			
+			
 			
 		}
+		
+		// beforeunload 이벤트
+		$(window).on("beforeunload",deleteSeatAndBook);
+		
+		
 		
 		/*
 			    // 화면 벗어남(페이지 종료 또는 탭 이동) 이벤트 처리
@@ -589,8 +600,7 @@ function nicepayClose(){
 			        sendAjaxForSeat(seatId, playingNo);
 			    }
 			
-			    // beforeunload 이벤트
-				$(window).on("beforeunload",handlePageExit);
+			   
 				
 			    // visibilitychange 이벤트
 			    function handleVisibilityChange() {
@@ -855,6 +865,8 @@ function nicepayClose(){
 					if(Amt===0){ //결제할 금액이 0원인경우
 						 /* <form name="payForm" method="post" action="/payResult.pm"> */
 						
+						// beforeunload 이벤트 제거 
+						$(window).off("beforeunload");
 						$("#payForm").submit();
 						
 

@@ -72,9 +72,6 @@ public interface BookService {
 	//상영좌석 번호 구하기+유효성검사
 	ArrayList<BookingSeat> checkAndGetBookingSeatNoList(ArrayList<String> seatNoList, int playingNo,ArrayList<String> bookingSeatNos);
 
-	//좌석 유효시간 늘려주기
-	int updateTimeLimit(ArrayList<String> seatNos);
-
 	//영화예매번호 생성하기
 	int setBookNo(int userNo);
 	

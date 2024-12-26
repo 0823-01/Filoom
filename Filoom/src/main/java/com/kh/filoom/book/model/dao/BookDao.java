@@ -127,12 +127,6 @@ public class BookDao {
 		return (ArrayList)sqlSession.selectList("bookMapper.checkAndGetBookingSeatNoList",map); 							
 	}
 
-	
-	//TIME_LIMIT 늘려주기
-	public int updateTimeLimit(SqlSessionTemplate sqlSession, ArrayList<String> seatNos) {
-		return sqlSession.update("bookMapper.updateTimeLimit",seatNos);
-	}
-
 	//영화예매번호 생성 + 반환
 	public int setAndGetBookNo(SqlSessionTemplate sqlSession, int userNo) {
 		

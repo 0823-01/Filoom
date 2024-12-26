@@ -211,9 +211,24 @@
             <div id ="admin_title">
                 <div id = "admin_title_content">
 
-					<div>예약 관리</div>
-					<div>
+
+					예매내역 관리
+					<div>      				
+						<form action="adminBooking.ad" method="get" id="searchForm">
 						
+							정렬
+							<select name="sorting"  id="sortingSelect">
+								<option value="desc">최신순</option>
+									<option value="asc"  
+										<c:if test="${requestScope.sorting=='asc'}">selected</c:if>
+													   >오래된순</option>
+							</select>
+							예매번호</td>
+							<input type ="text" id ="text_sample"name="bookNo" value="${requestScope.bookNo}">
+							사용자아이디
+							<input type ="text" id ="text_sample" name="userId" value="${requestScope.userId}">
+							<input type="submit" id ="button_sample" value="검색">
+						</form>
 					</div> 
 
                 </div>
@@ -225,45 +240,11 @@
                 <!-- 여기 안이 관리자 컨텐츠 영역이에요~-->
                 <div id ="admin_page">
       				
-      				<form action="adminBooking.ad" method="get">
-	      				<table class="">
-							<tr>
-								<td>정렬</td>
-								<td>
-									<select name="sorting">
-										<option value="desc">최신순</option>
-											<option value="asc"
-												<c:if test="${requestScope.sorting=='asc'}">
-												 selected		
-												</c:if>
-																>오래된순</option>
-									</select>
-								</td>
-								<td></td>
-							</tr>
-							
-							<tr>
-								<td>예매번호</td>
-								<td><input type ="text" id ="text_sample"name="bookNo" value="${requestScope.bookNo}"></td>
-								<td>예매번호를 입력하세요</td>
-							</tr>
-							<tr>
-								<td>사용자아이디</td>
-								<td><input type ="text" id ="text_sample" name="userId" value="${requestScope.userId}"></td>
-								<td>사용자 아이디를 입력하세요.</td>
-							</tr>
-							<tr>
-								<td><input type="submit" id ="button_sample" value="검색"></td>
-								<td></td>
-								<td></td>
-							</tr>
-						
-						</table>
-					</form>
+
 					<br>
 					
 					
-					<table class="table table-hover">
+					<table class="table table-hover" >
 						<thead>
 							<tr>
 								<th>예약번호</th>
@@ -281,7 +262,7 @@
 							</tr>
 						</thead>
 						
-						<tbody>
+						<tbody id="bookingTbody">
 							<c:forEach var="booking" items="${requestScope.bookingList}">
 								<tr>
 									<td>${booking.bookNo}</td>
@@ -291,11 +272,11 @@
 									<td>${booking.costProcess}</td>
 									<td>${booking.bookTotalCost}</td>
 									<td>${booking.bookCost}</td>
-									<td>${booking.bookDate}</td>
-									<td>${booking.playTime}</td>
+									<td class="bookDate">${booking.bookDate}</td>
+									<td class="playTime">${booking.playTime}</td>
 									<td>${booking.modifyDate}</td>
-									<td><button onclick="cancelRequest(${booking.bookNo},${booking.userNo})">결제취소</button></td>
-									<td>${booking.status}</td>
+									<td class="cancel"><button id ="button_sample" onclick="cancelRequest(${booking.bookNo},${booking.userNo})">결제취소</button></td>
+									<td class="status">${booking.status}</td>
 								</tr>		
 							</c:forEach>
 						</tbody>
@@ -370,6 +351,14 @@
 
 
     <script>
+    
+
+    
+	    $(function() {
+	        hideCancelBtn();
+	    });
+    
+    
         document.addEventListener("DOMContentLoaded", function () {
             const navItems = document.querySelectorAll("#nav > ul > li");
         
@@ -385,6 +374,7 @@
         });
 
 
+        //결제 취소 메소드
         function cancelRequest(bookNo,userNo){
     		
     		let cancelConfirm = confirm("예메를 취소 하시겠습니까 ? ");
@@ -413,9 +403,74 @@
     			});
     		}
     	}
+
+        //예매취소or상영시간>상영시간 인경우 버튼차단
+        function hideCancelBtn(){
+        	let now = new Date();
+        	$("#bookingTbody>tr").each(function(){
+        		let playTime = changeDateType($(this).find(".playTime").text());
+        		let status = $(this).find(".status").text();
+        		if(playTime <= now || status == 'N'){
+        			$(this).find(".cancel>button").attr("disabled",true);
+        			$(this).find(".cancel>button").css({"background-color":"gray",
+        												"cursor": "default" });
+        		}
+        	});
+        }
+        
+        //문자열 날짜 변환
+        function changeDateType(stringDate){
+        	let dateType = stringDate.replace(" ", "T").split(".")[0];
+        	return new Date(dateType);
+        }
+        
+   		/*
+        <form action="adminBooking.ad" method="get" id="searchForm">
+			<table class="">
+			<tr>
+				<td>정렬</td>
+				<td>
+					<select name="sorting" id="sortingSelect">
+						<option value="desc">최신순</option>
+							<option value="asc"  
+								<c:if test="${requestScope.sorting=='asc'}">selected</c:if>
+											   >오래된순</option>
+					</select>
+				</td>
+				<td></td>
+			</tr>
+			
+			<tr>
+				<td>예매번호</td>
+				<td><input type ="text" id ="text_sample"name="bookNo" value="${requestScope.bookNo}"></td>
+				<td>예매번호를 입력하세요</td>
+			</tr>
+			<tr>
+				<td>사용자아이디</td>
+				<td><input type ="text" id ="text_sample" name="userId" value="${requestScope.userId}"></td>
+				<td>사용자 아이디를 입력하세요.</td>
+			</tr>
+			<tr>
+				<td><input type="submit" id ="button_sample" value="검색"></td>
+				<td></td>
+				<td></td>
+			</tr>
+		
+		</table>
+	</form>
+	*/
+	
+	//정렬 선택될때 
+	$("#sortingSelect").change(submitSearchForm);
+	
+	function submitSearchForm(){
+		$("#searchForm").submit();
+	}
+	
+	
+	
         
         
-   
     </script>
     
 </body>

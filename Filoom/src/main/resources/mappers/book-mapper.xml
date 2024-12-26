@@ -283,20 +283,6 @@
 		   
 	</select>
 	
-	<update id="updateTimeLimit" parameterType="list" >
-		UPDATE BOOKING_SEAT
-		   SET TIMELIMIT = SYSDATE+INTERVAL '5' MINUTE
-		 WHERE SSEAT_NO IN (
-		 		SELECT SSEAT_NO
-		  		  FROM SCREEN_SEAT
-		  		  WHERE SEAT_NO IN
-		  		  <foreach item="item" collection="list" open="(" separator="," close=")">
-		  		 	#{item} 
-		  		  </foreach>
-		  		   
-		  		  )
-	</update>	
-	
 
 	<!-- 북킹 데이터 생성과 동시에 bookNo 반환 -->	
 	<insert id="setAndGetBookNo" parameterType="booking">

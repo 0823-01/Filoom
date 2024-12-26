@@ -611,8 +611,24 @@
 	</select>
 	
 	<!-- 상세 페이지 로딩 시, 스틸컷 목록도 함께 조회 -->
-	<!-- <select id="selectImageList" parameterType="_int" resultMap="posterResultSet">
-	</select> -->
+	<select id="selectImageList" parameterType="_int" resultMap="posterResultSet">
+		SELECT FILE_CODENAME FROM POSTER
+		WHERE MOVIE_NO = #{movieNo}
+		ORDER BY IMAGE_ID DESC
+	</select>
+	
+	<!-- 좋아요 추가 -->
+	<insert id="likeThis" parameterType="hashmap">
+		INSERT INTO FAVORITE VALUES(#{userNo}, #{movieNo})
+	</insert>
+	
+	<!-- 좋아요 제거 -->
+	<delete id="notLikeThis" parameterType="hashmap">
+		DELETE FROM FAVORITE
+		WHERE USER_NO = #{userNo} AND MOVIE_NO = #{movieNo}
+	</delete>
+	
+	<!-- === 상세 페이지 하단의 리뷰 기능과 관련된 쿼리는 관리자쪽 리뷰 부분에 같이 있음 -->
 
 	<!-- === 영화 추가 페이지 === -->
 	<insert id="addMovie" parameterType="movie">
@@ -777,6 +793,16 @@
 				WHERE MOVIE_NO = #{movieNo} AND IS_DELETED = 'N'
 			) A
 		) WHERE RNUM BETWEEN 10*(#{cpage}-1)+1 AND 10*#{cpage}
+	</select>
+	
+	<!-- 평점 조회 (사용자) -->
+	<select id="checkAverage" parameterType="_int" resultType="double">
+		SELECT ROUND(AVG(SCORE),2) FROM REVIEW
+		WHERE MOVIE_NO = #{movieNo}
+	</select>
+	<select id="checkEvalNo" parameterType="hashmap" resultType="double">
+		SELECT COUNT(*) FROM REVIEW
+		WHERE MOVIE_NO = #{movieNo} AND SCORE = #{score}
 	</select>
 	
 	<!-- 리뷰 작성 (사용자) -->
