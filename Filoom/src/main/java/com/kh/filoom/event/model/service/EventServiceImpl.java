@@ -25,6 +25,7 @@ import com.kh.filoom.event.model.vo.Reply;
 @Service
 public class EventServiceImpl implements EventService {
 
+
 	@Autowired
 	private SqlSessionTemplate sqlSession;
 	
@@ -32,6 +33,17 @@ public class EventServiceImpl implements EventService {
 	@Autowired
 	private EventDao eventDao;
 	
+	
+	
+	/**
+	 * 이벤트 상태값 변경
+	 */
+	@Override
+	@Transactional
+	public void updateEventStatus() {
+		eventDao.updateEventStatus(sqlSession);
+		
+	}
 	
 	/**
 	 * 241218 한혜원
