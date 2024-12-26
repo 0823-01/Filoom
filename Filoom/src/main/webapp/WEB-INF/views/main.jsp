@@ -80,10 +80,16 @@
         
         <div id="content1_real">
             <div id="video">
-                <video id="movie-video" width="1900" controls muted autoplay playsinline>
-                    <source id="video-source" src="images/joker.mp4" type="video/mp4">
-                    Your browser does not support the video tag.
-                </video>
+                  <iframe 
+				    id="movie-video" 
+				    width="1900" 
+				    height="1080" 
+				    src="https://www.youtube.com/embed/4DM8_51bz-c?autoplay=1&mute=1" 
+				    title="YouTube video player" 
+				    frameborder="0" 
+				    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+				    allowfullscreen>
+				</iframe>
             </div>
             <div id="content1_detail">
                 <div id="detail_main">
@@ -211,7 +217,7 @@
        document.addEventListener('DOMContentLoaded', function() {
             // 첫 번째 영화 카드 선택
             setSelectedCard('movie1');
-            changeVideo('images/joker.mp4', '조커');
+            changeVideo('"https://www.youtube.com/watch?v=4DM8_51bz-c"', '조커');
 
             // 각 영화 카드 클릭 이벤트 리스너
             document.getElementById('movie1').addEventListener('click', function() {
@@ -402,6 +408,23 @@
                 }
             });
         });
+        
+        function updateMovieDetail(index) {
+            const movie = moviesData[index];
+
+            // 제목 업데이트
+            var titleElement = document.getElementById('detail_title').querySelector('a');
+            titleElement.textContent = movie.movieTitle;
+
+            // 상세 설명 업데이트
+            var descriptionElement = document.getElementById('detail_sum').querySelector('a');
+            descriptionElement.textContent = movie.description;
+
+            // 동영상 업데이트
+            var iframe = document.getElementById('movie-video');
+            const videoId = movie.trailer.split('v=')[1]; // YouTube Video ID 추출
+            iframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&mute=1`;
+        }
         
     </script>
 
