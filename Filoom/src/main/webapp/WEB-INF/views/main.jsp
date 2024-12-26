@@ -417,13 +417,18 @@
             titleElement.textContent = movie.movieTitle;
 
             // 상세 설명 업데이트
-            var descriptionElement = document.getElementById('detail_sum').querySelector('a');
-            descriptionElement.textContent = movie.description;
+            //var descriptionElement = document.getElementById('detail_sum').querySelector('a');
+            //descriptionElement.textContent = movie.description;
 
             // 동영상 업데이트
+            
+            
             var iframe = document.getElementById('movie-video');
             const videoId = movie.trailer.split('v=')[1]; // YouTube Video ID 추출
-            iframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&mute=1`;
+            
+            console.log("비디오 아이디 : " +videoId);
+            
+            iframe.src = "https://www.youtube.com/embed/" + videoId + "?autoplay=1&mute=1";
         }
         
     </script>

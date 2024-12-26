@@ -1255,12 +1255,13 @@
 			        handlePageExit();
 			    });
 			
-			    // visibilitychange 이벤트
-			    document.addEventListener("visibilitychange", function () {
+			    // visibilitychange 이벤트    
+			    function handlePageVisibilityChange() {
 			        if (document.visibilityState === "hidden") {
 			            handlePageExit();
 			        }
-			    });
+			    }
+			    document.addEventListener("visibilitychange", handlePageVisibilityChange);
 			    
 			   
 			    
@@ -1303,6 +1304,10 @@
 			                seatInput.value = seat.trim();
 			                form.appendChild(seatInput);
 			            });
+			            
+			            //beforeUlnolad, visibilitychaange 이벤트 제거
+			            $(window).off("beforeunload");
+			            document.removeEventListener("visibilitychange", handlePageVisibilityChange);
 
 			            // 동적으로 생성한 form을 body에 추가하고 제출
 			            document.body.appendChild(form);

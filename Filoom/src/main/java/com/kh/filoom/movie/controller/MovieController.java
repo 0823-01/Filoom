@@ -50,6 +50,7 @@ import com.kh.filoom.movie.model.vo.Review;
  * 	v 0.5.4 - 상영 정보 조회, 추가 완료
  *	v 0.5.5 - 리뷰 기능 구현을 위한 사전 작업
  * v 0.6 - 사용자 리뷰 내용 조회 성공
+ * v 0.7 - 평점 표기+그래프, 스틸컷 DB 참조 완료 
  * */
 @Controller
 public class MovieController {
@@ -233,10 +234,13 @@ public class MovieController {
 		model.addAttribute("list", list);
 		
 		// 2) 선택한 영화의 이미지 정보 담기 - 스틸컷으로 띄우기, file_level 무관
-		//ArrayList<Poster> album = msi.selectImageList(movieNo);
+		ArrayList<Poster> album = msi.selectImageList(movieNo);
 		// System.out.println(album); // 확인용
 		
-		// model.addAttribute("album", album);
+		model.addAttribute("album", album);
+		
+		int reviewNo = msi.checkReviewCount(movieNo);
+		model.addAttribute("reviewNo", reviewNo);
 
 		return "movie/movieDetail";
 	}
@@ -247,7 +251,7 @@ public class MovieController {
 		// 1) 페이징 처리
 		int boardLimit = 10;
 		int listCount = msi.checkReviewCount(mno);
-		System.out.println(listCount);
+//		System.out.println(listCount);
 		PageInfo pi = Pagination.getPageInfo(listCount, cpage, pgLimit, boardLimit);
 		
 		// 2) 리뷰 조회
@@ -255,13 +259,51 @@ public class MovieController {
 		map.put("movieNo", mno);
 		map.put("cpage", cpage);
 		ArrayList<Review> list = msi.selectReview(map);
-		System.out.println(list);
+//		System.out.println(list);
 		
 		model.addAttribute("list", list);
 		model.addAttribute("pi", pi);
+		
+		
 		return "movie/reviewlist";
 	}
 	
+
+	@ResponseBody
+	@PostMapping("review_ovr.mo")
+	public HashMap<String, Double> graph(int mno) {
+		HashMap<String, Double> map = new HashMap<String, Double>();
+		// 1) 리뷰 수 체크해서 double로 받기 - 0이면 여기서 끝
+		double listCount = (double)msi.checkReviewCount(mno);
+		map.put("listcount", listCount);
+//		System.out.println(listCount);
+		
+		if(listCount <= 0) {
+			System.out.println("NO REVIEW");
+		} else {
+			// 1) 평균 구하기
+			double average = msi.checkAverage(mno);
+			// System.out.println(average); // 확인용
+			map.put("ave", average);
+			
+			// 2) 그래프 갱신하기
+			double[] critic = new double[5];
+			
+			for(int i = 0; i < 5; i++) {
+				critic[i] = msi.checkEvalNo(mno, i+1); 
+				critic[i] = critic[i] / listCount * 100;
+			}
+			
+			map.put("one", critic[0]);
+			map.put("two", critic[1]);
+			map.put("three", critic[2]);
+			map.put("four", critic[3]);
+			map.put("five", critic[4]);
+		}
+		
+//		System.out.println(map); // 확인용
+		return map;
+	}
 	
 	// 리뷰 작성 페이지
 	@GetMapping("review.mo") //?userNo=XXX&movieNo=XXX
@@ -282,9 +324,15 @@ public class MovieController {
 	}
 	
 	// 삭제
-	@GetMapping("deletereview.mo")
-	public void deleteReview() {
+	@ResponseBody
+	@PostMapping("deletereview.mo")
+	public String deleteReview(int mno, int rid) {
+		HashMap<String, Integer> map = new HashMap<>();
+		map.put("movieNo", mno);
+		map.put("reviewId", rid);
 		
+		int result = msi.deleteReview(map);
+		return (result > 0) ? "success" : "failure";
 	}
 	
 	

@@ -60,6 +60,8 @@
         #description>* {
             display:inline-block;
         }
+        
+/*         #description * { border : 1px solid red;} */
 
         #description *:not(hr) {
             /* border:1px solid rgba(255, 0, 0, 0.4); */
@@ -68,7 +70,7 @@
         #thumbnail {
             /* width:300px; */
             height:500px;
-            margin-right:4px;
+            margin-right:6px;
         }
 
         .filmrate {
@@ -77,6 +79,9 @@
         #movieTitle {
             font-weight:bold;
             font-size:24px;
+        }
+        #specific * {
+/*         	text-align:left; */
         }
 
 
@@ -308,12 +313,12 @@
             	<input type="hidden" id="mno" value="${requestScope.list.movieNo }">
                 <!-- 이미지 넣는 곳 -->
                 <div>
-                	<img src="${pageContext.request.contextPath}/resources/images/posters/${requestScope.list.fileCodename}" alt="${requestScope.list.movieTitle}" class="thumbnail">
+                	<img src="${pageContext.request.contextPath}/resources/images/posters/${requestScope.list.fileCodename}" alt="${requestScope.list.movieTitle}" id="thumbnail">
                     <!-- <img src="resources/images/posters/wicked2.jpg" alt="위키드" id="thumbnail"> -->
                 </div>
 
                 <!-- 제목과 설명을 넣는 곳 -->
-                <div style="flex-grow: 1;">
+                <div id="specific" style="flex-grow: 1;">
                     <table>
                         <tr>
                             <td style="padding-right:5px;"><img src="resources/images/posters/${requestScope.list.filmRate}.svg" class="filmrate"></td>
@@ -324,7 +329,7 @@
                         <!-- [여기에 여러모로 입력] -->
                         <table style="width:100%;">
                             <tr>
-                                <th>감독</th>
+                                <th width=150>감독</th>
                                 <td>${ requestScope.list.director }</td>
                             </tr>
                             <tr>
@@ -361,12 +366,19 @@
                 <!-- 평점은 소수 셋째 자리에서 반올림 (= 소수 둘째 자리까지 표기) -->
 
                 <!-- display가 inline이 아닌데도 display:inline이라면서 width가 무시되는 현상 있음 -->
-                <a href="#reviewList" id="evalTotal">평점 4.55</a>
+                <a href="#reviewList" id="evalTotal">평점 로딩 중</a>
                 <!-- script를 통해 버튼이 왼쪽부터 평점/5 만큼만 밝은 색으로 나오게 할 계획  -->
                 <c:if test="${requestScope.list.premiere eq 'Y' }">
                 	<a href="book.do" id="toBook">예매하기</a>
                 </c:if>
-                <a href="" id="like">♡ 1234</a>
+                <c:if test="${not empty sessionScope.loginUser}">
+                		<a href="#" id="like">♡ 1234</a>
+               	</c:if>
+               	<otherwise>
+                		<a href="javascript:alert('영화를 찜해두려면 로그인해야 합니다.');" id="like">♡ 1234</a>
+               	</otherwise>
+               	
+<!--                 <a href="" id="like">♡ 1234</a> -->
                 <!-- 로그인 후 클릭시 ♥ 1235 으로 바뀌도록. 비로그인시 로그인하라고 얼럿함 -->
                 <!-- 좋아요 켜면 FAVORITE 테이블에 넣는 거니까 확인하고 넣을 것 -->
             </div>
@@ -375,15 +387,15 @@
             <!-- 순서대로 IMAX, 4DX, screenX이며, 필요한 것만 우측부터 배치 -->
             <div class="screenType" style="float:right; margin-right:10px;">
                 <!-- float로 별개로 배치 -->
-                 <!-- CGV가 이 로고들을 넣는데, 클릭 시 사이트 내 설명 페이지로 이동 -->
+                 <!-- 클릭 시 각각의 소개 영상(외부 링크)로 이동 -->
                 <c:if test="${fn:contains(requestScope.list.screenType,'IMAX')}">
-                	<a href="#" id="imax">IMAX</a>
+                	<a href="https://www.youtube.com/watch?v=n5HbQ7vCvDY" id="imax">IMAX</a>
                 </c:if>
                 <c:if test="${fn:contains(requestScope.list.screenType,'4DX')}">
-	                <a href="#" id="4dx">4DX</a>
+	                <a href="https://www.youtube.com/watch?v=-Wm2y5028ds" id="4dx">4DX</a>
                 </c:if>
                 <c:if test="${fn:contains(requestScope.list.screenType,'SCREENX')}">
-	                <a href="#" id="screenx">SCREENX</a>
+	                <a href="https://www.youtube.com/watch?v=lkqm7quc-ME" id="screenx">SCREENX</a>
                 </c:if>
             </div>
 
@@ -392,7 +404,7 @@
 
             <br><br><hr style="display:none;">
             <div id="steelcut" align="left">
-                <p class="category"><b>스틸컷</b> <b>01</b> / 35건</p>
+                <p class="category"><b>스틸컷</b> <!-- <b>01</b> / 35건--></p>
                 <hr><br>
                 <!-- <div align="center">
                     // 왼쪽 끝에 '<' 이미지
@@ -404,10 +416,9 @@
                 <div id="container">
                     <div class="swiper">
                         <div class="swiper-wrapper" align="center">
-                        	<%-- <c:forEach var="pic" items="${album}"> --%>
-                        	<!-- <div class="swiper-slide"><img src="resources/images/posters/${pic.fileCodename}"></div> -->
-                            <div class="swiper-slide"><img src="resources/images/posters/wicked1.jpg"></div>
-                            <div class="swiper-slide"><img src="resources/images/posters/wicked2.jpg"></div>
+                        	<c:forEach var="pic" items="${album}">
+                        		<div class="swiper-slide"><img src="resources/images/posters/${pic.fileCodename}"></div>                            
+                            </c:forEach>
                         </div>
 
                         <div class="swiper-button-prev"></div>
@@ -454,12 +465,12 @@
                     <div class="evalSummary">
                         <!-- <b style="font-size:20px;">4.55</b><br>
                         ★★★★★ -->
-                        <div style="font-size:30px;">
-                            4.55
+                        <div id="moviescore" style="font-size:30px;">
+                            3.97
                         </div>
                         <!-- 아래 별 부분은 별 이미지 x5를 평점에 맞게 채우는 걸로 대체 예정 -->
                         <div>★★★★★</div>
-                        <div>리뷰 180개</div>
+                        <div id="listcount">리뷰 ${requestScope.reviewNo}개</div>
                     </div>
                     <div class="statistic">
                         <table>
@@ -468,7 +479,7 @@
 	                                <td>${6-s}</td>
 	                                <td>
 	                                    <div class="graph-back">
-	                                        <div class="graph" style="width:30%;"></div>
+	                                        <div class="graph" value="${6-s}" style="width:0%;"></div>
 	                                    </div>
 	                                </td>
 	                            </tr>
@@ -483,10 +494,6 @@
             <div id="review-pool">
                 
                 <div id="reviewList">
-                <!-- #review에 의도적으로 가로마진 45px를 줬는데.
-                이로 인해 일부 예시가 2줄을 아슬아슬하게 넘어가는 화면크기 67%에
-                한하여 해당 div의 테이블이 어그러지는 현상이 있음
-                별일 없으면 실전에서 가로마진 뺄 예정 -->
                 
                 <!-- 그리고 여기도 AJAX로 넣어야 함 -->
 
@@ -517,7 +524,6 @@
 
                 <!-- if user is logged in -->
                 <c:if test="${not empty sessionScope.loginUser}">
-                    <!-- <button style="float:right;">작성</button> -->
                     <a href="" id="newReview">작성</a>
                     <!-- link to 'give_a_star.html' -->
                 </c:if>
@@ -525,8 +531,10 @@
                 
                 <script>
                 const mno = $("#mno").val();
+                let count = $("#listcount");
                 $(function() {
                 	selectReviewList(mno,1);
+                	getAverage(mno);
                 });
                 
                 function refreshPagingBar(cpage) {
@@ -577,7 +585,6 @@
                 		type:'get',
                 		data:{
                 			'mno' : mno,
-                			'userlv' : 1,
                 			'cpage' : cpage
                 		},
                 		
@@ -587,12 +594,60 @@
                 			
                 			// 페이징바 갱신
                 			refreshPagingBar(cpage);
+                			
+                			// 평점 갱신
+                			getAverage(mno);
+
                 		},
         	    		error: function() {
         	    			alert('DAMN!');
         	    		}	
         	    	});
                 }
+                
+                function getAverage(mno) {
+                	$.ajax({
+                		url:'review_ovr.mo?mno='+mno,
+                		type:'post',
+                		data:{
+                			'mno' : mno,
+                		},
+                		
+                		success: function(result) {
+                			// 리뷰 수 갱신
+                			let rvno = result.listcount;
+                			$("#listcount").text("리뷰 "+result.listcount+"개");
+                			
+                			if(rvno <= 0) {
+                				$("#evalTotal").text("평점 없음");
+                				$("#moviescore").html("N/A");
+                			} else {
+                				// 평점 갱신
+	                			// 혹시 몰라서 .empty() 넣었는데 사실 빼도 되서 비활성화함
+	                			// $("#evalTotal").empty();
+	                			$("#evalTotal").text("평점 " + result.ave);
+	                			// $("#moviescore").empty();
+	                			$("#moviescore").html(result.ave);
+								
+	    						//그래프 갱신
+	    						$(".graph[value=1]").css("width", result.one+"%");
+	    						$(".graph[value=2]").css("width", result.two+"%");
+	    						$(".graph[value=3]").css("width", result.three+"%");
+	    						$(".graph[value=4]").css("width", result.four+"%");
+	    						$(".graph[value=5]").css("width", result.five+"%");
+                			}
+                			
+                		},
+        	    		error: function() {
+        	    			alert('DAMN!');
+        	    		}
+                	});
+                }
+                
+                function changeTaste(num) {
+                	
+                }
+
                 </script>
 
                 <!-- Paging Bar -->
