@@ -3,6 +3,8 @@ package com.kh.filoom.common.model.service;
 import java.util.ArrayList;
 
 import com.kh.filoom.common.model.vo.Chart;
+import com.kh.filoom.movie.model.vo.Movie;
+import com.kh.filoom.movie.model.vo.Poster;
 
 public interface AdminService {
 
@@ -20,4 +22,11 @@ public interface AdminService {
 	
 	Chart adminTodayInput();
 	
+	ArrayList<Movie> selectMovieMainMovieList();
+	
+	ArrayList<Movie> seletMovieReview();
+	
+	ArrayList<Movie> selectMovieMainList();
+	
+	ArrayList<Poster> selectMovieReviewPoster();
 }

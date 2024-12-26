@@ -8,6 +8,7 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <link rel="stylesheet" href="${ pageContext.request.contextPath }/resources/css/mainstyle.css" />
 </head>
 <body>
@@ -182,103 +183,7 @@
             </div>
         
             <div id="content2_movies">
-                <div id="content2_card">
-                    
-                    <div id = "content2_img">
-                        <img src="movie2.jpg" alt="영화 2">
-                    </div>
-                    <div class="rating">★★★★☆</div>
-                    
-                </div>
-
-                <div id="content2_card">
-                    
-                    <div id = "content2_img">
-                        <img src="movie2.jpg" alt="영화 2">
-                    </div>
-                    <div class="rating">★★★★☆</div>
-                    
-                </div>
-                <div id="content2_card">
-                    
-                    <div id = "content2_img">
-                        <img src="movie2.jpg" alt="영화 2">
-                    </div>
-                    <div class="rating">★★★★☆</div>
-                    
-                </div>
-                <div id="content2_card">
-                    
-                    <div id = "content2_img">
-                        <img src="movie2.jpg" alt="영화 2">
-                    </div>
-                    <div class="rating">★★★★☆</div>
-                    
-                </div>
-                <div id="content2_card">
-                    
-                    <div id = "content2_img">
-                        <img src="movie2.jpg" alt="영화 2">
-                    </div>
-                    <div class="rating">★★★★☆</div>
-                    
-                </div>
-                <div id="content2_card">
-                    
-                    <div id = "content2_img">
-                        <img src="movie2.jpg" alt="영화 2">
-                    </div>
-                    <div class="rating">★★★★☆</div>
-                    
-                </div>
-                <div id="content2_card">
-                    
-                    <div id = "content2_img">
-                        <img src="movie2.jpg" alt="영화 2">
-                    </div>
-                    <div class="rating">★★★★☆</div>
-                    
-                </div>
-                <div id="content2_card">
-                    
-                    <div id = "content2_img">
-                        <img src="movie2.jpg" alt="영화 2">
-                    </div>
-                    <div class="rating">★★★★☆</div>
-                    
-                </div>
-                <div id="content2_card">
-                    
-                    <div id = "content2_img">
-                        <img src="movie2.jpg" alt="영화 2">
-                    </div>
-                    <div class="rating">★★★★☆</div>
-                    
-                </div>
-                <div id="content2_card">
-                    
-                    <div id = "content2_img">
-                        <img src="movie2.jpg" alt="영화 2">
-                    </div>
-                    <div class="rating">★★★★☆</div>
-                    
-                </div>
-                <div id="content2_card">
-                    
-                    <div id = "content2_img">
-                        <img src="movie2.jpg" alt="영화 2">
-                    </div>
-                    <div class="rating">★★★★☆</div>
-                    
-                </div>
-                <div id="content2_card">
-                    
-                    <div id = "content2_img">
-                        <img src="movie2.jpg" alt="영화 2">
-                    </div>
-                    <div class="rating">★★★★☆</div>
-                    
-                </div>
+                
 
                 
 
@@ -349,7 +254,81 @@
         function requireLoginAlert() {
 		    alert("로그인이 필요한 기능입니다!");
 		}
+        
+        
+        $(document).ready(function () {
+            const moviesData = []; // 영화 데이터를 저장할 배열
+            let currentIndex = 0; // 현재 표시된 영화의 마지막 인덱스
+            const itemsPerPage = 12; // 처음 표시할 영화 수
+            const loadMoreCount = 3; // 더보기 클릭 시 추가로 표시할 영화 수
+
+            // 초기 데이터 로드
+            callMainEndpoint();
+
+            // AJAX 요청 함수
+            function callMainEndpoint() {
+                $.ajax({
+                    url: "main.do", // 요청 URL
+                    type: "POST",  // HTTP 메서드
+                    dataType: "json", // 서버에서 반환하는 데이터 유형 (JSON)
+                    success: function (response) {
+                        console.log("Response from main.do:", response);
+                        moviesData.push(...response.list3); // 영화 데이터를 배열에 추가
+                        renderMovies(); // 초기 렌더링
+                    },
+                    error: function (xhr, status, error) {
+                        console.error("AJAX Error:", status, error);
+                        alert("데이터를 가져오는 데 실패했습니다.");
+                    }
+                });
+            }
+
+            // 영화 데이터를 동적으로 렌더링
+            function renderMovies() {
+    			const container = $("#content2_movies");
+			    const maxIndex = Math.min(currentIndex + itemsPerPage, moviesData.length);
+			
+			    for (let i = currentIndex; i < maxIndex; i++) {
+			        const movie = moviesData[i];
+			        if (!movie) continue; // 유효하지 않은 데이터 건너뛰기
+				
+			        console.log(movie.moiveTitle);
+			        
+			        // 영화 카드 HTML 문자열 생성
+			       const movieCard = '<div id="content2_card">' +
+					    '<div id="content2_img">' +
+					    '<img src="${pageContext.request.contextPath}/resources/images/posters/' + movie.fileCodename + '" alt="' + movie.movieTitle + '"' +
+				        ' onerror="this.onerror=null; this.src=\'${pageContext.request.contextPath}/resources/images/default.jpg\';">' +
+					    '</div>' +
+					    '<div class="movie-title">' + movie.movieTitle + '</div>' +
+					'</div>';
+			
+			        container.append(movieCard); // 영화 카드를 컨테이너에 추가
+			    }
+			
+			    currentIndex = maxIndex;
+			
+			    
+			    if (currentIndex >= moviesData.length) {
+			        $("#content2_booking button").hide();
+			    }
+			}
+
+            // "더보기" 버튼 클릭 이벤트
+            $("#content2_booking button").click(function () {
+                const prevIndex = currentIndex;
+                const newMaxIndex = Math.min(currentIndex + loadMoreCount, moviesData.length); // 최대 인덱스 계산
+
+                if (prevIndex === newMaxIndex) {
+                    $(this).hide(); // 더 이상 데이터가 없으면 버튼 숨기기
+                } else {
+                    renderMovies(); // 추가 영화 렌더링
+                }
+            });
+        });
+        
     </script>
+
 	
 	
 	<jsp:include page="common/footer.jsp" />

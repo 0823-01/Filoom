@@ -12,7 +12,7 @@
     <link rel = "stylesheet" href="resources/css/aaa.css"/>
     <link rel = "stylesheet" href="resources/css/cinema_list.css"/>
     <link rel = "stylesheet" href="resources/css/caa.css"/>
-       <script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/panzoom/panzoom.umd.js"></script>
+     
     <style>
 
         #detail_1, #detail_2, #detail_3,
@@ -184,11 +184,11 @@
         <!-- 메인 이미지 출력 -->
         <div  id="thumbnail_img">
             <c:forEach var="movie" items="${requestScope.firstMovie}">
-            	<div class="image-container">
-	                <c:if test="${movie.fileLevel == 1}">
-	                    <img class="f-panzoom__content" src="${pageContext.request.contextPath}/resources/images/posters/${movie.fileCodename}" alt="메인 이미지" >
+            	
+	            <c:if test="${movie.fileLevel == 1}">
+	                    <img  src="${pageContext.request.contextPath}/resources/images/posters/${movie.fileCodename}" alt="메인 이미지" >
                 </c:if>
-                </div>
+   
 		            </c:forEach>
 		        </div>
 		
