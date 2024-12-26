@@ -163,10 +163,21 @@
          	</ul>
 
 
-
-            <a class="logo" href="${ pageContext.request.contextPath }/">Filoom</a>
-
-
+			<c:choose>
+				<c:when test="${ empty sessionScope.loginUser }">
+	                <!-- 로그인 전 -->
+	                <ul>
+		                <a class="logo"  href="${ pageContext.request.contextPath }">Filoom</a>
+	                </ul>
+	            </c:when>
+	            <c:otherwise>    
+	                <!-- 로그인 후 -->
+	                <ul>
+	                   	<a class="logo" style="margin-left:30px;" href="${ pageContext.request.contextPath }">Filoom</a>
+	                   </ul>
+	            </c:otherwise>
+        	</c:choose>
+        	
 			<c:choose>
 				<c:when test="${ empty sessionScope.loginUser }">
 	                <!-- 로그인 전 -->

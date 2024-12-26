@@ -14,10 +14,11 @@
 <body>
 	
 	<c:choose>
-	    <c:when test="${!empty sessionScope.loginUser && sessionScope.loginUser == 'admin'}">
+	    <c:when test="${!empty sessionScope.loginUser && sessionScope.loginUser.userId == 'admin'}">
 	        <!-- 로그인한 사용자가 admin일 경우 -->
-	        <a href="/filoom/ad.li" style="font-size:100px; color:white; background-color: #000000">관리자 메인페이지</a>
-	        <pre>관리자 페이지는 이곳으로 통해 들어갈 수 있게 해주세요 ~~</pre>
+			<div id="manager" style="display: flex; justify-content: center; align-items: center; height: 100px; background-color: #000;">
+			    <a href="/filoom/ad.li" style="text-decoration: none; font-size: 30px; color: white;">관리자 메인페이지</a>
+			</div>
 	    </c:when>
 	    <c:otherwise>
 	        <!-- 로그인한 사용자가 admin이 아닐 경우 아무것도 표시되지 않음 -->
@@ -38,7 +39,22 @@
      
 
 
-                <a class="logo" href="${ pageContext.request.contextPath }">Filoom</a>
+    				<c:choose>
+						<c:when test="${ empty sessionScope.loginUser }">
+			                <!-- 로그인 전 -->
+			                <ul>
+				                <a class="logo"  href="${ pageContext.request.contextPath }">Filoom</a>
+			                </ul>
+			            </c:when>
+			            <c:otherwise>    
+			                <!-- 로그인 후 -->
+			                <ul>
+		                    	<a class="logo" style="margin-left:1px;" href="${ pageContext.request.contextPath }">Filoom</a>
+		                    </ul>
+			            </c:otherwise>
+	           		</c:choose>
+    
+    
     
 	                <c:choose>
 						<c:when test="${ empty sessionScope.loginUser }">
@@ -339,7 +355,7 @@
                         '<div class="movie-card" id="movie' + (index + 1) + '" onclick="updateMovieDetail(' + index + ')">' +
                             '<img src="' + contextPath + '/resources/images/posters/' + movie.fileCodename + '" alt="' + movie.movieTitle + '"' +
                             ' onerror="this.onerror=null; this.src=\'' + contextPath + '/resources/images/default.jpg\';">' +
-                            '<p>' + movie.movieTitle + '</p>' +
+                            '<p style = "width">' + movie.movieTitle + '</p>' +
                         '</div>';
                     anotherMovieDiv.innerHTML += movieCard; // 새 카드 추가
                 });
@@ -428,7 +444,7 @@
             
             console.log("비디오 아이디 : " +videoId);
             
-            iframe.src = "https://www.youtube.com/embed/" + videoId + "?autoplay=1&mute=1";
+            iframe.src = "https://www.youtube.com/embed/" + videoId + "?autoplay=1&mute=1&controls=0&loop=1";
         }
         
     </script>
