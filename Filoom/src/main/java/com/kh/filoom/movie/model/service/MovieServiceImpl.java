@@ -124,8 +124,28 @@ public class MovieServiceImpl implements MovieService {
 		return mDao.selectImageList(sqlSession, movieNo);
 	}
 	  
+	// └ 좋아요 관련
+	@Override
+	public int checkFavCount(int movieNo) {
+		return mDao.checkFavCount(sqlSession, movieNo);
+	}
 	
-	// ======
+	public int checkTaste(HashMap<String, Integer> map) {
+		// TODO Auto-generated method stub
+		return mDao.checkTaste(sqlSession, map);
+	}
+
+	@Override
+	public int likeThis(HashMap<String, Integer> map) {
+		// TODO Auto-generated method stub
+		return mDao.likeThis(sqlSession, map);
+	}
+
+	@Override
+	public int notLikeThis(HashMap<String, Integer> map) {
+		// TODO Auto-generated method stub
+		return mDao.notLikeThis(sqlSession, map);
+	}
 	
 	// === 관리자 메뉴 ===
 	
@@ -268,9 +288,10 @@ public class MovieServiceImpl implements MovieService {
 	}
 
 	@Override
-	public ArrayList<Review> adminSelectReview(HashMap<String, Integer> map) {
+	// 영화 제목 & 번호 체크 - 관리자가 볼 용도
+	public Movie checkMovieTitle(int movieNo) {
 		// TODO Auto-generated method stub
-		return null;
+		return mDao.checkMovieTitle(sqlSession, movieNo);
 	}
 
 	@Override
@@ -278,6 +299,10 @@ public class MovieServiceImpl implements MovieService {
 		// TODO Auto-generated method stub
 		return 0;
 	}
+
+	
+
+	
 
 	
 	

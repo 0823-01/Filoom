@@ -18,6 +18,7 @@
                     <div id="reviewerName" style="float:left;">${rev.userId}</div>
                     <div id="writtenDate" style="float:right;">${rev.reviewDate}</div><br>
 					<label style='display:none;'>${rev.isWatched}</label>
+					<label style='display:none;'>${rev.reviewId}</label>
                     <table>
                         <tr>
                             <td width="50">제목</td>
@@ -26,16 +27,14 @@
                         <tr>
                             <td>평점</td>
                             <td>
-                            	<c:set var="empty-star" value="${5 - rev.score}" />
+                            	<c:set var="emptyStar" value="${5 - rev.score}" />
                             	<c:forEach var="s" begin="1" end="${rev.score}">
                             		★
                             	</c:forEach>
                             	
-                            	<c:if test="${empty-star} > 0">
-	                            	<c:forEach var="s" begin="1" end="5-${empty-star}">
-	                            		☆
-	                            	</c:forEach>
-                            	</c:if>
+                            	<c:forEach var="s" begin="1" end="${emptyStar}">
+                            		☆
+                            	</c:forEach>
                             </td>
                         </tr>
                         <tr>
