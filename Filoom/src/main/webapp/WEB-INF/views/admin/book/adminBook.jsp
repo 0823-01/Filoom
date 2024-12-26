@@ -193,6 +193,144 @@
 		    cursor: default;
 		}
 		
+		/*------------*/
+    
+	    #admin_title_content {
+	    display: flex;
+	    flex-direction: column;
+	    justify-content: center; /* 수직 중앙 정렬 */
+	    align-items: center; /* 수평 중앙 정렬 */
+	    
+	    margin: 20px auto;
+	    padding: 20px;
+	    border: 1px solid #ddd;
+	    border-radius: 8px;
+	    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+	    
+		}
+		
+		#admin_title_content form {
+		    display: flex;
+		    flex-wrap: wrap;
+		    justify-content: center; 
+		    gap: 15px; 
+		    align-items: center;
+		}
+	    
+	    #admin_title_content select,
+	    #admin_title_content input[type="text"],
+	    #admin_title_content input[type="submit"] {
+	        padding: 8px 12px;
+	        font-size: 14px;
+	        border: 1px solid #ccc;
+	        border-radius: 4px;
+	        outline: none;
+	    }
+	
+	    #admin_title_content select:focus,
+	    #admin_title_content input[type="text"]:focus {
+	        border-color: #007bff;
+	        box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+	    }
+	
+	  
+	
+	    #admin_title_content input[type="submit"]:hover {
+	        background-color: #0056b3;
+	    }
+	
+	    #admin_title_content label {
+	        font-weight: bold;
+	        font-size: 14px;
+	        margin-right: 5px;
+	    }
+	
+	    #admin_title_content .form-item {
+	        display: flex;
+	        align-items: center;
+	        gap: 5px;
+	    }
+	    
+	    .table-container {
+		    display: flex;
+		    flex-direction: column; /* 위아래로 정렬 */
+		    align-items: center; /* 수평 중앙 정렬 */
+		    justify-content: center; /* 수직 중앙 정렬 */
+		    width: 100%;
+		    margin: 20px auto;
+		    padding: 20px;
+		    box-sizing: border-box;
+		}
+		
+		/* 테이블 스타일 */
+		.table {
+		    width: 90%; /* 테이블의 너비 조정 */
+		    border-collapse: collapse;
+		    margin: 0 auto; /* 테이블을 가운데 정렬 */
+		    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+		}
+		
+		.table th, .table td {
+		    padding: 12px;
+		    text-align: center; /* 텍스트 중앙 정렬 */
+		    border: 1px solid #ddd; /* 테두리 추가 */
+		}
+		
+		.table th {
+		    background-color: #f1f1f1; /* 헤더 배경색 */
+		    font-weight: bold;
+		}
+		
+		/* 페이징 영역 스타일 */
+		.pagingArea {
+		    margin-top: 20px;
+		    display: flex;
+		    justify-content: center; /* 수평 중앙 정렬 */
+		    align-items: center; /* 수직 중앙 정렬 */
+		    gap: 10px;
+		}
+		
+		.pagination {
+		    display: flex;
+		    list-style: none;
+		    padding: 0;
+		    margin: 0;
+		}
+		
+		.pagination li {
+		    margin: 0 5px;
+		}
+		
+		.pagination a {
+		    display: block;
+		    padding: 8px 12px;
+		    text-decoration: none;
+		    color: #007bff;
+		    border: 1px solid #ddd;
+		    border-radius: 4px;
+		    transition: background-color 0.3s ease, color 0.3s ease;
+		}
+		
+		.pagination a:hover {
+		    background-color: #0056b3;
+		    color: white;
+		}
+		
+		.pagination .active {
+		    background-color: #007bff;
+		    color: white;
+		    pointer-events: none;
+		    border-color: #007bff;
+		}
+		
+		.pagination .disabled a {
+		    color: #ccc;
+		    pointer-events: none;
+		    border-color: #ddd;
+		}
+			    
+		
+				
 				
 			
 	</style>
@@ -212,10 +350,10 @@
                 <div id = "admin_title_content">
 
 
-					예매내역 관리
 					<div>      				
 						<form action="adminBooking.ad" method="get" id="searchForm">
 						
+							예매내역 관리
 							정렬
 							<select name="sorting"  id="sortingSelect">
 								<option value="desc">최신순</option>
@@ -225,8 +363,10 @@
 							</select>
 							예매번호</td>
 							<input type ="text" id ="text_sample"name="bookNo" value="${requestScope.bookNo}">
-							사용자아이디
+							&nbsp;&nbsp;&nbsp;&nbsp;사용자아이디
+							&nbsp;
 							<input type ="text" id ="text_sample" name="userId" value="${requestScope.userId}">
+							&nbsp;
 							<input type="submit" id ="button_sample" value="검색">
 						</form>
 					</div> 

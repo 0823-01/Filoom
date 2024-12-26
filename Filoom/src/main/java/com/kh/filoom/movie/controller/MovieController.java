@@ -30,9 +30,9 @@ import com.kh.filoom.movie.model.vo.Review;
 
 /**
  * @author 정원섭
- * === MovieController v 0.5.5 ===
+ * === MovieController v 0.8.1 ===
  * 작업 착수일 : 2024-12-13
- * 최종 수정일 : 2024-12-25
+ * 최종 수정일 : 2024-12-26
  */
 
 /* 작업 내역
@@ -49,8 +49,12 @@ import com.kh.filoom.movie.model.vo.Review;
  * 	v 0.5.3 - 관리자페이지 좌측 navigator가 별도 헤더로 바뀜
  * 	v 0.5.4 - 상영 정보 조회, 추가 완료
  *	v 0.5.5 - 리뷰 기능 구현을 위한 사전 작업
+ * == ↓ at 12/26 ==
  * v 0.6 - 사용자 리뷰 내용 조회 성공
  * v 0.7 - 평점 표기+그래프, 스틸컷 DB 참조 완료 
+ * v 0.8 - 좋아요 기능 및 관리자 리뷰 삭제 버튼 구현 성공
+ * 	v 0.8.1 - 좋아요 버튼이 좋아요 수를 반영함. (실시간은 안 되고 새로고침해야 반영됨)
+ * 
  * */
 @Controller
 public class MovieController {
@@ -230,7 +234,6 @@ public class MovieController {
 		// 1) 선택한 영화 정보 담기
 		Movie list = msi.showDetail(movieNo);
 		// System.out.println(list); // 확인용
-		
 		model.addAttribute("list", list);
 		
 		// 2) 선택한 영화의 이미지 정보 담기 - 스틸컷으로 띄우기, file_level 무관
@@ -239,10 +242,49 @@ public class MovieController {
 		
 		model.addAttribute("album", album);
 		
+		// 3) 리뷰 카운트
 		int reviewNo = msi.checkReviewCount(movieNo);
 		model.addAttribute("reviewNo", reviewNo);
+		
+		// 4) 좋아요 카운트
+		int favCount = msi.checkFavCount(movieNo);
+		model.addAttribute("favCount", favCount);
 
 		return "movie/movieDetail";
+	}
+	
+	@ResponseBody
+	@PostMapping("updateFav.mo")
+	public int updateFav(int movieNo) {
+		return msi.checkFavCount(movieNo);
+	}
+	
+	@ResponseBody
+	@PostMapping("favcheck.mo")
+	public int checkTaste(int userNo, int movieNo) {
+		HashMap<String, Integer> map = new HashMap<>();
+		map.put("userNo", userNo);
+		map.put("movieNo", movieNo);
+		
+		return msi.checkTaste(map);
+	}
+	
+	@ResponseBody
+	@PostMapping("likethis.mo")
+	public String likeThis(int userNo, int movieNo) {
+		HashMap<String, Integer> map = new HashMap<>();
+		int result = 0;
+		
+		map.put("userNo", userNo);
+		map.put("movieNo", movieNo);
+		int status = msi.checkTaste(map);
+		
+		if(status > 0) {
+			result = msi.notLikeThis(map);
+		} else {
+			result = msi.likeThis(map);
+		}
+		return (result > 0) ? "success" : "failure";
 	}
 	
 	// [사용자] 리뷰 목록 조회 (+ 페이징 처리) (Ajax)
@@ -622,24 +664,35 @@ public class MovieController {
 	
 	// (관리자) 리뷰 목록 확인 (+ 페이징 처리)
 	@GetMapping("admin.managereview.mo")
-	public String reviewPatrol(int movieNo) {
+	public String reviewPatrol(int movieNo, int cpage, Model model) {
+		// 0) 영화 제목 조회 - 상단에 띄울 의도
+		Movie m = msi.checkMovieTitle(movieNo);
+		model.addAttribute("information", m);
+		
 		// 1) 페이징 처리
 		int boardLimit = 10;
 		int listCount = msi.checkReviewCount(movieNo);
-		PageInfo pi = Pagination.getPageInfo(listCount, movieNo, pgLimit, boardLimit);
+		PageInfo pi = Pagination.getPageInfo(listCount, cpage, pgLimit, boardLimit);
 		
 		// 2) 리뷰 조회
+		HashMap<String, Integer> map = new HashMap<>();
+		map.put("movieNo", movieNo);
+		map.put("cpage", cpage);
+		ArrayList<Review> list = msi.selectReview(map);
+//		System.out.println(list);
+		
+		model.addAttribute("list", list);
+		model.addAttribute("pi", pi);
 		
 		return "admin/movie/manageReview";
 	}
 	
 	// 관리자가 리뷰 삭제 (목록에서 해당 리뷰 상단의 '-' 버튼을 눌렀을 때)
-	public void adminDeleteReview() {
-		/* 사용할 쿼리
-		 * UPDATE REVIEW
-			SET IS_DELETED = 'Y'
-			WHERE REVIEW_ID = #{reviewId}
-		 */
-	}
+//	@ResponseBody
+//	@PostMapping("admin.f_delrv.mo")
+//	public String adminDeleteReview(int rid) {
+//		int result = msi.deleteReview(rid);
+//		return (result > 0) ? "success" : "failure";
+//	}
 	
 }

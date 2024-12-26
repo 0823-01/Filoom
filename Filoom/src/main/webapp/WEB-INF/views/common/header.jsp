@@ -163,10 +163,21 @@
          	</ul>
 
 
-
-            <a class="logo" href="${ pageContext.request.contextPath }/">Filoom</a>
-
-
+			<c:choose>
+				<c:when test="${ empty sessionScope.loginUser }">
+	                <!-- 로그인 전 -->
+	                <ul>
+		                <a class="logo"  href="${ pageContext.request.contextPath }">Filoom</a>
+	                </ul>
+	            </c:when>
+	            <c:otherwise>    
+	                <!-- 로그인 후 -->
+	                <ul>
+	                   	<a class="logo" style="margin-left:30px;" href="${ pageContext.request.contextPath }">Filoom</a>
+	                   </ul>
+	            </c:otherwise>
+        	</c:choose>
+        	
 			<c:choose>
 				<c:when test="${ empty sessionScope.loginUser }">
 	                <!-- 로그인 전 -->
@@ -178,7 +189,7 @@
 	            <c:otherwise>    
 	                <!-- 로그인 후 -->
 	                <ul>
-                    	<li><a href="${ pageContext.request.contextPath }/myPage.me">마이페이지</a></li> &nbsp;&nbsp;&nbsp;&nbsp;
+                    	<li><a href="${ pageContext.request.contextPath }/profile.me">마이페이지</a></li> &nbsp;&nbsp;&nbsp;&nbsp;
                     	<li><a href="${ pageContext.request.contextPath }/logout.me">로그아웃</a></li>
                     </ul>
 	            </c:otherwise>

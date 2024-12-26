@@ -229,6 +229,23 @@
 		background-color: #fff; /* 배경을 흰색으로 변경 */
         color: #000; /* 글씨 색을 검정색으로 변경 */
 	}
+	
+	.no-favorite {
+		padding: 10px 0 100px 0;
+		text-align: center;
+		font-size: 20px;
+		/* font-weight: bold; */
+    	color: #aaa;
+	}
+	
+	.favorite-list.no-items {
+	    display: flex; /* flex로 변경 */
+	    justify-content: center; /* 가로 중앙 정렬 */
+	    align-items: center; /* 세로 중앙 정렬 */
+	    text-align: center;
+	    grid-template-columns: none; /* grid 설정 무효화 */
+	}
+	
 </style>
 </head>
 <body>
@@ -237,7 +254,7 @@
 
     <div class="mypage-container">
         <div class="mypage-sidebar">
-            <h2><a href="myPage.me">마이 페이지</a></h2>
+            <h2><a href="#">마이 페이지</a></h2>
             <ul class="menu-list">
                 <li><a href="profile.me">내 정보</a></li>
                 <li><a href="coupon.me">쿠폰 조회</a></li>
@@ -257,8 +274,8 @@
 
                 <div class="year-search">
                     <select name="sort" id="year-select">
-                        <option value="asc">개봉일 오름차순</option>
-                        <option value="desc">개봉일 내림차순</option>
+                        <option value="asc" ${param.sort == 'asc' ? 'selected' : ''}>개봉일 오름차순</option>
+                        <option value="desc" ${param.sort == 'desc' ? 'selected' : ''}>개봉일 내림차순</option>
                     </select>
                     <button type="button" id="year-btn">검색</button>
                 </div>
@@ -266,7 +283,7 @@
 
             <div class="favorite-body">
 
-                <div class="favorite-list">
+                <div class="favorite-list ${empty favoriteList ? 'no-items' : ''}">
                 
                 	<c:choose>
 	                	<c:when test="${empty favoriteList}">
@@ -280,14 +297,14 @@
 	
 			                    <div class="favorite-item" id="favorite-item" style="display: ${status.index < 15 ? 'block' : 'none'};">
 			                        <div class="box-image">
-			                            <a href="#"><img src="${ pageContext.request.contextPath }/resources/images/posters/${ favorite.fileCodename }" class="poster"></a>
+			                            <a href="detail.mo?movieNo=${favorite.movieNo}"><img src="${ pageContext.request.contextPath }/resources/images/posters/${ favorite.fileCodename }" class="poster"></a>
 			                        </div>
 			                        <div class="box-content">
 			                            <div>
-			                                <a href="#" class="movie-title">${ favorite.movieTitle }</a>
+			                                <a href="detail.mo?movieNo=${favorite.movieNo}" class="movie-title">${ favorite.movieTitle }</a>
 			                                <p class="release-date">${ favorite.openDate } 개봉</p>
 			                                <div class="reserve-delete">
-			                                    <button  id="detailViewButton" class="reserve-btn" onClick="location.href='detail.mo?movieno=${favorite.movieNo}'">예매하기</button>
+			                                    <button  id="detailViewButton" class="reserve-btn" onClick="location.href='detail.mo?movieNo=${favorite.movieNo}'">예매하기</button>
 			                                    <button class="delete-btn" data-movie-no="${favorite.movieNo}">삭제</button>
 			                                    <input type="hidden" id="userNo" value="${loginUser.userNo}">
 			                                </div>
@@ -377,27 +394,15 @@
 	        }
 	    });
 	    
-	    $(document).on("click", "#year-btn", function () {
-	        const sortOption = $("#year-select").val();
+	    $(document).ready(function () {
+	        $('#year-btn').on('click', function () {
+	            const sort = $('#year-select').val();
 
-	        $.ajax({
-	            url: "favoriteSort.me",
-	            type: "GET",
-	            data: { sort: sortOption },
-	            success: function (response) {
-	                $(".favorite-list").html(response); // 서버에서 받은 HTML을 favorite-body에 삽입
-	            },
-	            error: function () {
-	                alert("정렬 중 오류가 발생했습니다.");
-	            }
+	            var contextPath = '${pageContext.request.contextPath}';
+	            
+	            location.href = contextPath + "/favorite.me?sort=" + sort;
 	        });
 	    });
-	    
-	    $("input[name='movieDetailNo']").val(mainMovie.movieNo);
-        const movieNo = mainMovie.movieNo;
-        if (movieNo) {
-        	$("#detailViewButton").attr("onClick", "location.href='detail.mo?movieno=" + movieNo + "'");
-        }
 
 
 	</script>

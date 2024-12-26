@@ -348,6 +348,9 @@
 		let fifty='${ch1.fifty}';
 		let sixty='${ch1.sixty}';
 		
+		console.log("teenager : " + teenager);
+		console.log("twenty : " + twenty);
+		
 		let action = '${ch6.action}';
 		let horror = '${ch6.horror}';
 		let romance = '${ch6.romance}';
@@ -490,11 +493,11 @@
                 '60대 이상'
             ],
             datasets: [{
-                label: 'My First Dataset',
+                label: '연령대',
                 data: [
                 	teenager, 
                 	twenty, 
-                	twenty,
+                	thirty,
                 	fourty,
                 	fifty,
                 	sixty
