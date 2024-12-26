@@ -255,7 +255,7 @@
 
     <div class="mypage-container">
         <div class="mypage-sidebar">
-            <h2><a href="myPage.me">마이 페이지</a></h2>
+            <h2><a href="#">마이 페이지</a></h2>
             <ul class="menu-list">
                 <li><a href="profile.me">내 정보</a></li>
                 <li><a href="coupon.me">쿠폰 조회</a></li>
@@ -307,12 +307,12 @@
 			                    <div class="history-item" id="history-item" style="display: ${status.index < 10 ? 'block' : 'none'};">
 			                        <div class="box-info">
 			                            <div class="box-image">
-			                                <a href="#"><img src="${ pageContext.request.contextPath }/resources/images/posters/${ history.fileCodename }" class="poster"></a>
+			                                <a href="detail.mo?movieNo=${history.movieNo}"><img src="${ pageContext.request.contextPath }/resources/images/posters/${ history.fileCodename }" class="poster"></a>
 			                            </div>
 			                            <div class="history-info">
 			                                <div class="title-delete">
 			                                    <div>
-			                                        <a href="#" class="movie-title">${ history.movieTitle }</a>
+			                                        <a href="detail.mo?movieNo=${history.movieNo}" class="movie-title">${ history.movieTitle }</a>
 			                                    </div>
 			                                    <div><button class="history-delete-btn" data-book-no="${history.bookNo}">기록에서 삭제</button></div>
 			                                    <input type="hidden" id="userNo" value="${loginUser.userNo}">
@@ -320,7 +320,7 @@
 			                                <div class="history-content">
 			                                    <p>${ history.playtime }</p>
 			                                    <p>${ history.screenName }관 / ${ history.totalTickets }명</p>
-			                                    <a class="review-plz" id="detailViewButton" onClick="location.href='detail.mo?movieno=${history.movieNo}'">이 영화를 평가해주세요</a>
+			                                    <a class="review-plz" id="detailViewButton" onClick="location.href='detail.mo?movieNo=${history.movieNo}'">이 영화를 평가해주세요</a>
 			                                </div>
 			                            </div>
 			                        </div>

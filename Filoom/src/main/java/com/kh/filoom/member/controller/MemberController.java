@@ -28,6 +28,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.kh.filoom.common.model.vo.PageInfo;
 import com.kh.filoom.common.template.Pagination;
 import com.kh.filoom.member.model.service.MemberService;
+import com.kh.filoom.member.model.vo.Coupon;
 import com.kh.filoom.member.model.vo.Favorite;
 import com.kh.filoom.member.model.vo.History;
 import com.kh.filoom.member.model.vo.Member;
@@ -358,16 +359,16 @@ public class MemberController {
 		return result;
 	}
 	
-	/**
-	 * 2024.12.15 김다훈
-	 * 마이페이지 접속 요청
-	 * @return
-	 */
-	@GetMapping("myPage.me")
-	public String myPage() {
-		
-		return "member/myPage";
-	}
+//	/**
+//	 * 2024.12.15 김다훈
+//	 * 마이페이지 접속 요청
+//	 * @return
+//	 */
+//	@GetMapping("myPage.me")
+//	public String myPage() {
+//		
+//		return "member/myPage";
+//	}
 
 	/**
 	 * 2024.12.13 김다훈
@@ -380,16 +381,16 @@ public class MemberController {
 		return "member/profile";
 	}
 	
-	/**
-	 * 2024.12.13 김다훈
-	 * 마이페이지(내 쿠폰 조회) 접속 요청
-	 * @return
-	 */
-	@GetMapping("coupon.me")
-	public String coupon() {
-		
-		return "member/coupon";
-	}
+//	/**
+//	 * 2024.12.13 김다훈
+//	 * 마이페이지(내 쿠폰 조회) 접속 요청
+//	 * @return
+//	 */
+//	@GetMapping("coupon.me")
+//	public String coupon() {
+//		
+//		return "member/coupon";
+//	}
 	
 //	/**
 //	 * 2024.12.13 김다훈
@@ -863,25 +864,29 @@ public class MemberController {
 	
 	/**
      * 2024.12.23 김다훈
+     * 12.26 정렬기능 추가
      * 좋아요(보고싶은 영화) 목록 조회 메소드
      * @param session
      * @param model
      * @return
      */
-    @GetMapping("favorite.me")
-    public String favoriteList(HttpSession session, Model model) {
-        
-        // 로그인된 사용자 정보를 가져오기
-        Member loginUser = (Member) session.getAttribute("loginUser");
+	@GetMapping("favorite.me")
+	public String favoriteList(@RequestParam(value = "sort", defaultValue = "asc") String sort,
+	        				   HttpSession session, 
+	        				   Model model) {
+	    
+	    // 로그인된 사용자 정보를 가져오기
+	    Member loginUser = (Member) session.getAttribute("loginUser");
 
-        // 좋아요 영화 목록 조회
-        List<Favorite> favoriteList = memberService.favoriteList(loginUser.getUserNo());
+	    // 좋아요 영화 목록 조회
+	    List<Favorite> favoriteList = memberService.favoriteList(loginUser.getUserNo(), sort);
 
-        // 모델에 데이터 추가
-        model.addAttribute("favoriteList", favoriteList);
+	    // 모델에 데이터 추가
+	    model.addAttribute("favoriteList", favoriteList);
+	    model.addAttribute("sort", sort); // 현재 정렬 옵션 유지
 
-        return "member/favorite"; // 좋아요 목록 JSP로 이동
-    }
+	    return "member/favorite"; // 좋아요 목록 JSP로 이동
+	}
 	
     /**
      * 2024.12.23 김다훈
@@ -938,24 +943,20 @@ public class MemberController {
         }
     }
     
-    @ResponseBody
-    @GetMapping(value = "favoriteSort.me", produces = "text/html; charset=UTF-8")
-    public String sortFavoriteMovies(@RequestParam("sort") String sort, HttpSession session, Model model) {
-        
+    @GetMapping("coupon.me")
+    public String coupon(HttpSession session, Model model) {
         // 로그인된 사용자 정보 가져오기
         Member loginUser = (Member) session.getAttribute("loginUser");
         int userNo = loginUser.getUserNo();
-        
-        // 서비스 호출
-        List<Favorite> favoriteList = memberService.sortFavoriteMovies(userNo, sort);
 
-        // 데이터를 JSP로 렌더링
-        model.addAttribute("favoriteList", favoriteList);
+        // 쿠폰 목록 조회
+        List<Coupon> couponList = memberService.couponList(userNo);
 
-        return "member/favorite";
+        // 모델에 쿠폰 리스트 추가
+        model.addAttribute("couponList", couponList);
+
+        return "member/coupon"; // JSP 파일로 포워딩
     }
-    
-    
     
     
     
