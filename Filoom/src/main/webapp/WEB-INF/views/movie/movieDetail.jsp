@@ -249,7 +249,7 @@
         
         /* 상세 리뷰 */
 
-        #reviewList {
+        #review-pool {
             padding: 0px 45px;
         }
         #review {
@@ -305,6 +305,7 @@
             
             <!--  예시 : <위키드> -->
             <div id="description" align="left">
+            	<input type="hidden" id="mno" value="${requestScope.list.movieNo }">
                 <!-- 이미지 넣는 곳 -->
                 <div>
                 	<img src="${pageContext.request.contextPath}/resources/images/posters/${requestScope.list.fileCodename}" alt="${requestScope.list.movieTitle}" class="thumbnail">
@@ -479,8 +480,9 @@
             </div>
 
             <br><br>
-            <div id="reviewList">
+            <div id="review-pool">
                 
+                <div id="reviewList">
                 <!-- #review에 의도적으로 가로마진 45px를 줬는데.
                 이로 인해 일부 예시가 2줄을 아슬아슬하게 넘어가는 화면크기 67%에
                 한하여 해당 div의 테이블이 어그러지는 현상이 있음
@@ -488,41 +490,10 @@
                 
                 <!-- 그리고 여기도 AJAX로 넣어야 함 -->
 
-				<%-- SAMPLE
-					 <div id="review">
-					 	※ MEMBER 테이블에 닉네임 컬럼이 없는 관계로, 리뷰어 표기는 ID 앞 4글자 + '****'로 통일
-					 	쿼리로 긁어올 때 SUBSTR(MEM.USER_ID,1,4) || '****' 로 적으면 됨
-	                    <div id="reviewerName" style="float:left;">aaro****</div>
-	                    <div id="writtenDate" style="float:right;">${writtenDate}</div><br>
-	
-	                    <table>
-	                        <tr>
-	                            <td width="50">제목</td>
-	                            <td><b>${reviewTitle}</b></td>
-	                        </tr>
-	                        <tr>
-	                            <td>평점</td>
-	                            <td>
-	                            	<c:forEach var="s" begin="1" end="${score}">
-	                            		★
-	                            	</c:forEach>
-	                            	<c:forEach var="s" begin="1" end="5-${score}">
-	                            		☆
-	                            	</c:forEach>
-	                            </td>
-	                        </tr>
-	                        <tr>
-	                            <td>내용</td>
-	                            <td>${reviewContent}</td>
-	                        </tr>
-	                    </table>
-	                </div>
-				
-				 --%>
-
                 <!-- SAMPLE (table) -->
-                <div id="review">
-                	<!-- full id = 'tenletterstunman' -->
+                <!-- <div id="review">
+                	닉네임 개념이 없는 관계로 아이디로 받아야 함
+                	full id = 'tenletterstunman'
                     <div id="reviewerName" style="float:left;">tenl****</div>
                     <div id="writtenDate" style="float:right;">2024-11-29</div><br>
 
@@ -540,91 +511,8 @@
                             <td>동명의 소설을 N번, 동명의 뮤지컬을 1N번 본 사람으로써, 원작 팬으로써의 엄격한 잣대를 가지고 영화를 보러 갔다. 조금이라도 맘에 안 들면 바로 1점 때릴 생각으로.  그런데 이 영화는, 맘에 안 드는 구석을 전혀 찾을 수 없었다...</td>
                         </tr>
                     </table>
-                </div>
+                </div> -->
 
-                <div id="review">
-                	<!-- full id = 'bigcrab' -->
-                    <div id="reviewerName" style="float:left;">bigc****</div>
-                    <div id="writtenDate" style="float:right;">2024-11-29</div><br>
-                    
-                    <table>
-                        <tr>
-                            <td width="50">제목</td>
-                            <td>명작임에도 별점을 반 밖에 줄 수 없는 이유</td>
-                        </tr>
-                        <tr>
-                            <td>평점</td>
-                            <td>★★★☆☆</td>
-                        </tr>
-                        <tr>
-                            <td>내용</td>
-                            <td>영화가 너무 늘어진다고 생각했다. 클라이막스는 아직 멀었다고 생각할 때쯤 파트2로 이어진다면서 엔딩 크레딧이 올라오더라. 절반만 보여줬으니까 나도 점수 반절만 주련다</td>
-                        </tr>
-                    </table>
-                </div>
-
-                <div id="review">
-                	<!-- full id = 'yoddle_on_funeral' -->
-                    <div id="reviewerName" style="float:left;">yodd****</div>
-                    <div id="writtenDate" style="float:right;">2024-11-29</div><br>
-
-                    <table>
-                        <tr>
-                            <td width="50">제목</td>
-                            <td>이 영화가 재미없을 정도로 낭만이 없는 당신은 불쌍해요</td>
-                        </tr>
-                        <tr>
-                            <td>평점</td>
-                            <td>★★★★★</td>
-                        </tr>
-                        <tr>
-                            <td>내용</td>
-                            <td>현실 속에서 잊고 살았던 낭만을 이 영화로 채울 수 있었다. 어린 시절 마법과 환상으로 가득한 세계를 꿈꿔보지 않은 사람은 적어도 이 리뷰를 보고 있는 사람 중엔 없을 거라고 장담하지만, 설마 있어도 이 영화가 그 대체제가 될 수 있을 것 같다.</td>
-                        </tr>
-                    </table>
-                    
-                </div>
-
-                <div id="review">
-	                <!-- full id = 'banryeseeker' -->
-                    <div id="reviewerName" style="float:left;">banr****</div>
-                    <div id="writtenDate" style="float:right;">2024-11-29</div><br>
-
-                    <table>
-                        <tr>
-                            <td width="50">제목</td>
-                            <td>알고 보는 거지만, 아쉬움이 남는다.</td>
-                        </tr>
-                        <tr>
-                            <td>평점</td>
-                            <td>★★★★☆</td>
-                        </tr>
-                        <tr>
-                            <td>내용</td>
-                            <td>영화 보러 갔다가 뮤지컬의 넘버만 듣고 온 것 같다. 워낙 유명한 곡들이라 후회는 없지만 거기까지 가는 과정이 너무 늘어짐.</td>
-                        </tr>
-                    </table>
-                </div>
-
-                <div id="review">
-	                <!-- full id = 'youngheecat' -->
-                    <div id="reviewerName" style="float:left;">youn****</div>
-                    <div id="writtenDate" style="float:right;">2024-11-29</div><br>
-
-                    <table>
-                        <tr>
-                            <td width="50">제목</td>
-                            <td>토네이도와도 같은 영화</td>
-                        </tr>
-                        <tr>
-                            <td>평점</td>
-                            <td>★★★★★</td>
-                        </tr>
-                        <tr>
-                            <td>내용</td>
-                            <td>모티브가 된 오즈의 마법사는 캔자스시티의 토네이도가 도로시를 오즈로 휩쓸어가는 것으로 시작한다. 이 영화는 한 마디로 바로 그 토네이도와도 같다. 160분 내내 관객을 황홀하게 만드는 토네이도. 그래서 파트2는 언제 나옴?</td>
-                        </tr>
-                    </table>
                 </div>
 
                 <!-- if user is logged in -->
@@ -636,10 +524,10 @@
                 <br><br>
                 
                 <script>
+                const mno = $("#mno").val();
                 $(function() {
-                	//selectReviewList(1,1);
-                	//refreshPagingBar(1);
-                })
+                	selectReviewList(mno,1);
+                });
                 
                 function refreshPagingBar(cpage) {
             		$(".pagingbar").empty();
@@ -647,14 +535,10 @@
             		let pgbar = '';
 
             		// EL 태그를 function 안에 쓸 수 없어서 다른 방법을 연구하는 중
-            		// 여기만 해결하면 진짜 끝남
-         
             		let start = $("#first").val();
             		let end = $("#last").val();
             		let max = $("#MX").val();
             		
-            		console.log("start = " + start + ", end = " + end + ", max = " + max);
-            				
         			// '<<', '<' 처리
             		if(cpage > 1) {
             			// add &lt;&lt;
@@ -689,8 +573,8 @@
                 
                 function selectReviewList(mno, cpage) {
                 	$.ajax({
-                		url:'',
-                		type:'',
+                		url:'reviewlist.mo?mno='+mno +'&cpage='+cpage,
+                		type:'get',
                 		data:{
                 			'mno' : mno,
                 			'userlv' : 1,
@@ -698,13 +582,16 @@
                 		},
                 		
                 		success: function(result) {
-                			// ???
-                			// refreshPagingBar(cpage);
-                		}
-                		error: function() {
-                			alert("An error has occurred.");
-                		}
-                	})
+                			$("#reviewList").empty();
+                			$("#reviewList").append(result);
+                			
+                			// 페이징바 갱신
+                			refreshPagingBar(cpage);
+                		},
+        	    		error: function() {
+        	    			alert('DAMN!');
+        	    		}	
+        	    	});
                 }
                 </script>
 
