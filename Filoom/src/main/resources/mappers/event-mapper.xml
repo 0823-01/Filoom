@@ -234,8 +234,8 @@
 
 <!-- 241222 한혜원, 쿠폰 등록 -->
 <insert id="insertCoupon" parameterType="coupon">
-	INSERT INTO COUPON(COUPON_NO, REF_ENO, COUPON_NAME, COUPON_LEVEL, COUPON_EXP_DATE, COUPON_STATUS)
-	VALUES(SEQ_CNO.NEXTVAL, SEQ_ENO.CURRVAL, #{couponName}, #{couponLevel}, #{couponExpDate}, NULL)
+	INSERT INTO COUPON(COUPON_NO, REF_ENO, COUPON_NAME, COUPON_LEVEL, COUPON_EXP_DATE)
+	VALUES(SEQ_CNO.NEXTVAL, SEQ_ENO.CURRVAL, #{couponName}, #{couponLevel}, #{couponExpDate})
 </insert>
 
 <!-- 241218 한혜원, 이벤트 게시글 총 갯수 -->
