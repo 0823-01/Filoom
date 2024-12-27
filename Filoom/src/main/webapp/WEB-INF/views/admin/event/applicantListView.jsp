@@ -43,15 +43,15 @@
         }
 
         #applicants {
-            margin-left: 480px;
+            margin-left: 440px;
         }
 
         #date {
-            margin-left: 195px;
+            margin-left: 160px;
         }
 
         #drawing {
-            margin-left: 126px;
+            margin-left: 180px;
         }
 
 
@@ -101,6 +101,11 @@
 
         #drawingStatus {
             width : 10%;
+        }
+        
+        #drawingStatusSelect {
+        	width : 100px;
+        	height : 30px;
         }
 
         /*페이징영역*/
@@ -363,10 +368,9 @@
            				<!--버튼--> 
 	                    <div class="btn">
 	                    	<button id="back" onclick="history.back();">이전으로</button>
-							
-	                        <a href="clist.ev?eventNo=${e.eventNo}&cpage=1">
-	                        	<button id="couponList">쿠폰발급하기</button>
-                        	</a>
+
+	                        	<button id="couponList">당첨자추첨</button>
+
 	                        <!--추첨이 완료된 경우, 버튼 조작 불가-->
 	                        
 	                    </div>
@@ -394,71 +398,63 @@
         });
     });
     
-	/*
-    $(document).ready(function() {
-        // eventNo 값 가져오기
-        var eventNo = $('#eventNum').val();
-        console.log("eventNo는 " + eventNo);  // 확인하기 위해 로그 출력
+ 	// 당첨자 추첨 
+    document.getElementById("couponList").addEventListener("click", function() {
+        // 화면에 출력된 목록에서 데이터 추출 (클래스명에 따라 대상 선택)
+        const applicants = document.querySelectorAll(".applicant-item"); // 응모자 데이터 탐색 (tr 태그)
 
-        // 사용자 번호 가져오기
-        var userNo = $("#applicant").text();  // 텍스트 값 가져오기
-		console.log("userNo는 : " + userNo);
-
-        // drawingStatus 선택 값이 변경될 때마다 AJAX 호출
-        $('select[name="drawingStatus"]').change(function() {
-            var selectedStatus = $(this).val();  // 선택된 값 가져오기
-            console.log('selectedStatus:', selectedStatus);  // 선택된 값이 출력되는지 확인
-
-            $.ajax({
-                url: 'insertCoupon.co',  
-                type: 'POST',  
-                data: {
-                    userNo: userNo,  // 사용자 번호
-                    eventNo: eventNo  // 이벤트 번호
-                },
-                success: function(response) {
-                    console.log('응답:', response);  // 성공적으로 응답을 받았을 때 처리할 코드
-                    alert('상태가 변경되었습니다.');
-                },
-                error: function(xhr, status, error) {
-                    console.error('에러 발생:', error);  // 오류 발생 시 처리할 코드
-                    alert('상태 변경 중 오류가 발생했습니다.');
-                }
-            });
+        // 댓글 작성자명 추출
+        const names = Array.from(applicants).map(item => {
+            return item.querySelector("#applicant").textContent.trim(); // 응모자 이름 가져오기
         });
-    }); */
-    
-    /*
-    function updateDrawingStatus(selectElement) {
-        // 선택된 응모자 상태 값
-        var newStatus = selectElement.value;
-
-        // 응모자의 고유 식별자 (예: 응모자 번호)
-        var applicantNo = selectElement.getAttribute('data-applicant-no');
-
-        // 상태값이 "Y"로 변경되었을 때, 쿠폰 발급을 처리하기 위해 AJAX 요청 보내기
-        if (newStatus === "Y") {
-            $.ajax({
-                url: 'sendCoupon.ev',  // 서버에서 쿠폰을 발급하는 엔드포인트
-                type: 'POST',
-                data: {
-                    applicantNo: applicantNo,
-                    status: newStatus
-                },
-                success: function(response) {
-                    // 서버에서 응답을 받은 후 처리
-                    if (response.success) {
-                        alert('쿠폰이 발급되었습니다!');
-                    } else {
-                        alert('쿠폰 발급에 실패하였습니다.');
-                    }
-                },
-                error: function() {
-                    alert('서버 오류가 발생했습니다.');
-                }
-            });
+        
+        if (names.length === 0) {
+            alert("추첨 가능한 응모자가 없습니다.");
+            return;
         }
-    } */
+
+        const winnerCount = 10; // 당첨자 수
+        const winners = []; // 당첨자 목록
+
+        // 중복되지 않게 당첨자 10명 뽑기
+        while (winners.length < winnerCount && names.length > 0) {
+            const randomIndex = Math.floor(Math.random() * names.length);
+            const winner = names[randomIndex];
+            winners.push(winner);
+            names.splice(randomIndex, 1); // 뽑은 사람을 배열에서 제거
+        }
+
+     	// 당첨자 출력
+        if (winners.length > 0) {
+            alert("🎉 당첨자: " + winners.join(", "));
+            
+         	// 서버로 데이터 전송
+            const eventNo = document.getElementById("eventNo").value; // 이벤트 번호
+            const winnerType = document.getElementById("winnerType").value; // 당첨자 타입(1: 댓글 작성자, 2: 버튼 응모자)
+
+            fetch("insertWin.ev", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    eventNo: eventNo,
+                    winners: winners,
+                    winnerType: winnerType, // 댓글 작성자 또는 버튼 응모자
+                }),
+            })
+                .then((response) => {
+                    if (response.ok) {
+                        alert("당첨자가 성공적으로 저장되었습니다!");
+                    } else {
+                        alert("당첨자 저장에 실패했습니다.");
+                    }
+                })
+                .catch((error) => console.error("에러 발생:", error));
+        } else {
+            alert("당첨 가능한 인원이 없습니다.");
+        }
+    }); 
     </script>
     
 </body>

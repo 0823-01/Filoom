@@ -487,10 +487,7 @@ body{
 					                    <input type="file" id="file${status.index + 1}" name="newUpfiles" data-index="${status.index + 1}" onchange="loadImg(this);" multiple>
 					                   
 					                </c:when>
-					                <c:otherwise>
-					                    <label for="file${i + 1}"></label>
-					                    <img id="emptyImage${i + 1}" src="#" alt="Empty Preview ${i + 1}" data-target="file${i + 1}">
-					                </c:otherwise>
+					                
 					            </c:choose>
 					        </c:forEach>
 					    </div>

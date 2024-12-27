@@ -353,7 +353,7 @@
                             <button id="backList" style="width : 100px; margin-right : 5px;" onclick="history.back()">목록</button>
                             
                             <c:if test="${sessionScope.loginUser.userNo eq 1 }">
-	                            <button id="update" style="width : 130px; margin-right : 5px;" onclick="postFormSubmit(1);">수정</button>
+	                            <!-- <button id="update" style="width : 130px; margin-right : 5px;" onclick="postFormSubmit(1);">수정</button>-->
 	                            <button id="delete" style="width : 130px;" onclick="postFormSubmit(2);">삭제</button>
                             </c:if>
                         </div>

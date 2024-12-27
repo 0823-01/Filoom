@@ -355,7 +355,7 @@
                     <button onclick="history.back()">목록으로</button>
 
                     <c:if test="${sessionScope.loginUser.userNo eq 1 }">
-	                    <button id="updateBtn" onclick="postFormSubmit(1);">수정</button>
+	                    <!-- <button id="updateBtn" onclick="postFormSubmit(1);">수정</button>-->
 	                    <button id="deleteBtn" onclick="postFormSubmit(2);">삭제</button>
                     </c:if>
                 </div>
@@ -492,6 +492,9 @@
 	                                + "<button id='savedBtn' style='display:none;' onclick='saveReply(" + reply.replyNo + ")'>저장</button>"
 	                                + "<button id='cancelBtn' style='display:none;' onclick='cancelEdit(" + reply.replyNo + ")'>취소</button>"
 	                                + "</td>";
+	                        } else if(loginUser === 'admin'){
+	                        	resultStr += "<td id='buttons'>"
+	                                + "<button id='deleteBtn' onclick='deleteReply(" + reply.replyNo + ")'>삭제</button>";
 	                        } else {
 	                            resultStr += "<td></td>";
 	                        }

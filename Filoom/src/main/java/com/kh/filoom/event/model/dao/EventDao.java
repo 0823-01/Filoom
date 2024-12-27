@@ -399,7 +399,7 @@ public class EventDao {
 	    
 	    RowBounds rowBounds = new RowBounds(offset, limit);
 		
-		return (List)sqlSession.selectList("eventMapper.adminSeletApplicantList", params, rowBounds);
+		return (List)sqlSession.selectList("eventMapper.adminSelectApplicantList", params, rowBounds);
 	}
 	
 	/**
