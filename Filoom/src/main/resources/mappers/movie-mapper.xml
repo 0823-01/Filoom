@@ -428,7 +428,7 @@
 	</select>
 	
 	<!-- 평점순 정렬 (review와 조인 필요) -->
-	<!-- <select id="listbyCritics" parameterType="int" resultMap="movieResultSet">
+	<select id="listbyCritics" parameterType="int" resultMap="movieResultSet">
 		SELECT * FROM (
 			SELECT ROWNUM RNUM, A.* FROM (
 				SELECT M.MOVIE_NO,
@@ -437,14 +437,16 @@
 		                ELSE MOVIE_TITLE
 		            END AS MOVIE_TITLE,
 		            PREMIERE, TO_CHAR(OPEN_DATE,'YYYY.MM.DD') AS "OPEN_DATE",
-					FILM_RATE, P.FILE_CODENAME
-				FROM MOVIE M JOIN REVIEW R USING (MOVIE_NO)
-					JOIN POSTER P USING (MOVIE_NO)
+					FILM_RATE, P.FILE_CODENAME,
+                    NVL(AVG(R.SCORE), 0) AS SCORE
+                FROM MOVIE M JOIN POSTER P ON M.MOVIE_NO = P.MOVIE_NO
+                    LEFT JOIN REVIEW R ON M.MOVIE_NO = R.MOVIE_NO
 				WHERE M.STATUS = 'Y' AND PREMIERE = 'Y' AND P.FILE_LEVEL = 1
-				ORDER BY (SELECT AVG(SCORE) FROM REVIEW WHERE MOVIE_NO = M.MOVIE_NO)
+                GROUP BY M.MOVIE_NO, M.MOVIE_TITLE, M.PREMIERE, M.OPEN_DATE, M.FILM_RATE, P.FILE_CODENAME
+				ORDER BY SCORE DESC
 			) A
 		) WHERE RNUM BETWEEN 16*(#{cpage}-1)+1 AND 16*#{cpage}
-	</select> -->
+	</select>
 	
 	<!-- 가나다순 정렬 (전체) -->
 	<select id="listbyName" parameterType="int" resultMap="movieResultSet">
@@ -579,7 +581,7 @@
 	    ORDER BY MOVIE_NO DESC
 	</select>
 
-	<!-- 개봉 예정작 - 제목으로 영화 검색
+	<!-- 개봉 예정작 - 제목으로 영화 검색 -->
 	<select id="searchFromPreOpen" parameterType="string" resultMap="movieResultSet">
 		SELECT MOVIE_NO,
 			    CASE WHEN (LENGTH(MOVIE_TITLE) > 9)
@@ -593,7 +595,6 @@
 	    	AND MOVIE_TITLE LIKE '%' || #{keyword} || '%'
 	    ORDER BY MOVIE_NO DESC
 	</select>
-	-->
 	
 	<!-- === 영화 상세 페이지 (사용자) === -->
 	
@@ -615,6 +616,19 @@
 		SELECT FILE_CODENAME FROM POSTER
 		WHERE MOVIE_NO = #{movieNo}
 		ORDER BY IMAGE_ID DESC
+	</select>
+	
+	<!-- 상세 페이지 조회시 좋아요 수 조회 용도
+		투입값 : int movieNo, 결과값 : COUNT(*) -->
+	<select id="checkFavCount" parameterType="int" resultType="int">
+		SELECT COUNT(*) FROM FAVORITE
+		WHERE MOVIE_NO = #{movieNo}
+	</select>
+	
+	<!-- 로그인한 유저가 좋아요를 눌렀는지 체크 -->
+	<select id="checkTaste" parameterType="hashmap" resultType="int">
+		SELECT COUNT(*) FROM FAVORITE
+		WHERE MOVIE_NO = #{movieNo} AND USER_NO = #{userNo}
 	</select>
 	
 	<!-- 좋아요 추가 -->
@@ -688,7 +702,7 @@
 		UPDATE POSTER
 		SET FILE_NAME = #{fileName}, FILE_CODENAME = #{fileCodename},
 		    IMAGE_PATH = #{imagePath}
-		WHERE MOVIE_NO = #{movieNo}
+		WHERE MOVIE_NO = #{movieNo} AND FILE_LEVEL = 1
 	</update>
 	
 	<!-- === 영화 삭제 페이지 === -->
@@ -703,7 +717,6 @@
 		WHERE MOVIE_NO = #{movieNo}
 	</delete>
 	<!-- 일단 포스터 변경/삭제 모두 DB에서도 삭제하기로 하였음 -->
-	
 	
 	
 	<!-- === 관리자 전용 영화 쿼리 페이지 === -->
@@ -798,26 +811,62 @@
 	<!-- 평점 조회 (사용자) -->
 	<select id="checkAverage" parameterType="_int" resultType="double">
 		SELECT ROUND(AVG(SCORE),2) FROM REVIEW
-		WHERE MOVIE_NO = #{movieNo}
+		WHERE MOVIE_NO = #{movieNo} AND IS_DELETED = 'N'
 	</select>
 	<select id="checkEvalNo" parameterType="hashmap" resultType="double">
 		SELECT COUNT(*) FROM REVIEW
-		WHERE MOVIE_NO = #{movieNo} AND SCORE = #{score}
+		WHERE MOVIE_NO = #{movieNo} AND SCORE = #{score} AND IS_DELETED = 'N'
+	</select>
+	
+	<!-- 상단 미관 용도로 제목 조회 (관리자) -->
+	<select id="checkMovieTitle" parameterType="_int" resultMap="movieResultSet">
+		SELECT MOVIE_TITLE,MOVIE_NO FROM MOVIE
+		WHERE MOVIE_NO = #{movieNo}
+	</select>
+	
+	<!-- [사용자] 로그인된 유저가 조회 중인 영화에 리뷰를 남겼는지 확인 -->
+	<select id="checkUserReview" parameterType="_int" resultType="_int">
+		SELECT COUNT(*) FROM REVIEW
+		WHERE MOVIE_NO = #{movieNo} AND USER_NO = #{userNo}
 	</select>
 	
 	<!-- 리뷰 작성 (사용자) -->
+	<insert id="writeReview" parameterType="review">
+		INSERT INTO REVIEW(
+    		REVIEW_ID, USER_NO, MOVIE_NO, REVIEW_TITLE,
+    		REVIEW_DATE, SCORE, IS_WATCHED, REVIEW_CONTENT
+		) VALUES(
+    		SEQ_REV.NEXTVAL, #{userNo}, #{movieNo}, #{reviewTitle},
+    		SYSDATE, #{score}, #{isWatched}, #{reviewContent} )
+	</insert>
+	
+	<!-- 사용자가 적은 리뷰 확인 -->
+	<select id="checkRid" parameterType="_int" resultType="_int">
+		SELECT REVIEW_ID FROM REVIEW
+		WHERE MOVIE_NO = #{movieNo} AND USER_NO = #{userNo}
+	</select>
 	
 	<!-- 리뷰 수정 (사용자) -->
+	<update id="updateReview" parameterType="hashmap">
+		UPDATE REVIEW
+		SET SCORE = #{score},
+			REVIEW_CONTENT = #{reviewContent}
+		WHERE REVIEW_ID = #{reviewId} AND MOVIE_NO = #{movieNo} AND USER_NO = #{userNo}
+	</update>
 	
 	<!-- 리뷰 삭제 (사용자) -->
+	<update id="deleteReview" parameterType="hashmap">
+		UPDATE REVIEW
+		SET IS_DELETED = 'Y'
+		WHERE REVIEW_ID = #{reviewId} AND MOVIE_NO = #{movieNo} AND USER_NO = #{userNo}
+	</update>
 	
-	<!-- 리뷰 강제 삭제 (관리자) -->
+	<!-- 리뷰 삭제 (관리자) -->
+	<update id="adminDeleteReview" parameterType="int">
+		UPDATE REVIEW
+		SET IS_DELETED = 'Y'
+		WHERE REVIEW_ID = #{reviewId}
+	</update>
 	
-	<!-- 상세 페이지 조회시 좋아요 수 조회 용도
-		투입값 : int movieNo, 결과값 : COUNT(*) -->
-	<!-- <select id="selectFavCount" parameterType="int" resultType="int">
-		SELECT COUNT(*) FROM FAVORITE
-		WHERE MOVIE_NO = #{movieNo}
-	</select> --> 
 
 </mapper>

@@ -244,10 +244,22 @@
 		padding: 10px;
 		width: 200px;
 		font-size: 16px;
+	    height: 20px;
+	    border: none;
+	    border-radius: 5px;
+	    box-shadow: 3px 3px 3px rgb(0, 0, 0, 0.2);
+	    outline: none;
 	}
 	
 	.search-btn {
 		padding: 10px 15px;
+	    border: none;
+	    border-radius: 5px;
+	    color: #D2CECF;
+	    font-weight: bolder;
+	    box-shadow: 3px 3px 3px rgb(0, 0, 0, 0.2);
+	    background-color: #493628;
+	    cursor: pointer;
 	}
 	
 	.filter-status {
@@ -264,23 +276,26 @@
 	.modal {
 	    display: none; /* 기본적으로 숨김 */
 	    position: fixed;
-	    z-index: 9999;
+	    z-index: 1000;
 	    left: 0;
 	    top: 0;
 	    width: 100%;
 	    height: 100%;
-	    background-color: rgba(0, 0, 0, 0.6); /* 반투명 배경 */
+	    background-color: rgba(0, 0, 0, 0.6);
 	}
 	
-	/* 모달 콘텐츠 */
 	.modal-content {
-	    position: relative;
+	    position: absolute; /* 부모 요소 기준 중앙 정렬 */
+	    top: 50%; 
+	    left: 50%;
+	    transform: translate(-50%, -50%); /* 정확한 중앙 정렬 */
 	    background-color: #fff;
-	    margin: 15% auto; /* 가운데 정렬 */
+	    color: #000;
 	    padding: 40px;
-	    border-radius: 8px;
-	    width: 30%;
-	    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+	    border-radius: 10px;
+	    width: 30%; /* 원하는 너비로 설정 */
+	    max-width: 600px; /* 최대 너비 설정 */
+	    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
 	}
 	
 	.modal-content h2 {
@@ -416,9 +431,7 @@
 					            <p><strong>활성화 여부:</strong> <span id="modal-status"></span></p>
 					            <p><strong>회원가입일:</strong> <span id="modal-enrollDate"></span></p>
 					        </div>
-					        <div class="modal-actions">
-						        
-					        </div>
+					        <div class="modal-actions"></div>
 					    </div>
 					</div>
 
@@ -427,6 +440,10 @@
 					        <input type="text" class="search-box" name="keyword" placeholder="아이디로 검색"
 					               value="${keyword != null ? keyword : ''}">
 					        <button type="submit" class="search-btn">검색</button>
+					        <!--  
+                    <input type ="text" id ="text_sample">
+                    <input type="button" id ="button_sample" value="샘플">
+               		-->
 					    </form>
 					</div>
 
@@ -514,7 +531,7 @@
 	
 	            $(".modal-actions").html(actionButtons);
 	
-	            $("#memberModal").fadeIn();
+	            $("#memberModal").fadeIn(100);
 	
 	            // 버튼 클릭 이벤트
 	            $(".activate-btn").on("click", function () {
@@ -527,12 +544,12 @@
 	        });
 	
 	        $(".close-btn").on("click", function () {
-	            $("#memberModal").fadeOut();
+	            $("#memberModal").fadeOut(200);
 	        });
 	
 	        $(window).on("click", function (event) {
 	            if ($(event.target).is("#memberModal")) {
-	                $("#memberModal").fadeOut();
+	                $("#memberModal").fadeOut(200);
 	            }
 	        });
 	

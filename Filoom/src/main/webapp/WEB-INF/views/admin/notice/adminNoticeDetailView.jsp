@@ -10,10 +10,10 @@
 <link rel="stylesheet" href="resources/css/admin.css" />
     <style>
         #title {
-            font-size: 30px;
+            font-size: 25px;
             font-weight: bold;
             color : #493628;
-            padding : 20px; 
+            padding : 27px 20px; 
         }
 
         .title_date_count {
@@ -40,6 +40,7 @@
             justify-content: left;
             gap : 10px;
             margin-left: 5px;
+            
         }
 
         #ntitle, #ndate, #ncount, #ncontent {

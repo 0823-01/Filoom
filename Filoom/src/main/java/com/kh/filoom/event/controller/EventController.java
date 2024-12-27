@@ -2,6 +2,9 @@ package com.kh.filoom.event.controller;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -32,7 +35,6 @@ import com.google.gson.Gson;
 import com.kh.filoom.common.model.vo.PageInfo;
 import com.kh.filoom.common.template.Pagination;
 import com.kh.filoom.coupon.model.vo.Coupon;
-import com.kh.filoom.coupon.model.vo.CouponUser;
 import com.kh.filoom.event.model.service.EventService;
 import com.kh.filoom.event.model.vo.Applicant;
 import com.kh.filoom.event.model.vo.Event;
@@ -490,7 +492,7 @@ public class EventController {
 	 * @param model
 	 * @return
 	 */
-	@PostMapping("updateForm.ev")
+	@GetMapping("updateForm.ev")
 	public String updateForm(int eno, Model mv) {
 		// System.out.println(eno);
 		
@@ -498,14 +500,15 @@ public class EventController {
 		ArrayList<EventAttachment> list = eventService.selectEventAttachment(eno);
 		
 		// 조회된 이벤트 정보와 첨부파일 목록 모델에 추가하여 수정페이지로 전달 
-		System.out.println("List: " + (list != null ? list : "null") + " | Size: " + (list != null ? list.size() : "0"));
+		// System.out.println("List: " + (list != null ? list : "null") + " | Size: " + (list != null ? list.size() : "0"));
 		mv.addAttribute("e", e);
 		mv.addAttribute("list", list);
 		
-		 System.out.println(e);
-		 System.out.println(list);
-		 // System.out.println(e.getEventStatus());
-		 System.out.println(mv);
+	    // System.out.println(e);
+		// System.out.println(list);
+		// System.out.println(e.getEventStatus());
+		// System.out.println(mv);
+		 
 		 
 		// 수정 페이지로 이동
 		//mv.setViewName("admin/event/eventUpdateForm");
@@ -517,73 +520,58 @@ public class EventController {
 	/**
 	 * 241224 한혜원
 	 * 게시글 수정
-	 * @param e
-	 * @param newUpFiles
-	 * @param deletedFileNos
-	 * @param session
-	 * @param mv
-	 * @return
 	 */
-	@PostMapping("updateEvent.ev")
+	@PostMapping("update.ev")
 	public ModelAndView updateEvent(Event e,
-							  @RequestParam(value="newUpFiles", required=false) MultipartFile[] newUpFiles,
-							  @RequestParam(value="deletedFileNos", required=false) Integer[] deletedFileNos,
-	                          HttpSession session, ModelAndView mv) {
-	    
-	    // 새로 넘어온 첨부파일이 있을 경우, 첨부파일 목록을 처리 
-	    List<EventAttachment> list = new ArrayList<>();
-	    int fileLevel = 1; // 대표이미지 1, 일반 2 
-	    
-	    for(MultipartFile newUpFile : newUpFiles) {
-	    	if(!newUpFile.isEmpty()) {
-	    		String changeName = saveFile(newUpFile, session); // 파일 저장 및 이름 변경
-	    		
-	    		EventAttachment eventAttachment = new EventAttachment();
-	    		eventAttachment.setOriginName(newUpFile.getOriginalFilename());
-	    		eventAttachment.setChangeName("/resources/eventUploadFiles/" + changeName);
-	    		eventAttachment.setFilePath(changeName);
-	    		eventAttachment.setFileLevel(fileLevel);
-	    		
-	    		// 첫번재 파일은 대표이미지로 설정, 이후는 일반 파일로 설정 
-	    		if(fileLevel == 1) {
-	    			fileLevel = 2;
-	    			
-	    		}
-	    		
-	    		list.add(eventAttachment); // 첨부파일 리스트에 추가 
-	    	}
-	    	
-	    }
-	    	
-	    	// 1. 게시글 수정 서비스 호출 
-	    	int eventResult = eventService.updateEvent(e);
-	    	
-	    	if(eventResult>0) {
-	    		// 2. 새로 첨부된 파일들 추가 저장 
-	    		for(EventAttachment eventAttachment : list) {
-	    			eventAttachment.setRefEno(e.getEventNo()); // 게시글 번호 참조 
-	    			eventService.insertEventAttachment(eventAttachment);
-	    		}
-	    		
-	    		// 3. 삭제된 파일의 상태값을 "N" 으로 변경 
-	    		if(deletedFileNos != null && deletedFileNos.length>0) {
-	    			eventService.updateEventAttachment(Arrays.asList(deletedFileNos), "N");
-	    		}
-	    		
-	    		// 성공 메세지 
-	    		session.setAttribute("alertMsg", "이벤트 게시글 수정 성공!");
-	    		mv.setViewName("redirect:/detail.ev");
-	    	} else {
-	    		// 실패 시 에러 페이지로 이동 
-	    		mv.addObject("errorMsg", "이벤트 게시글 수정 실패").setViewName("common/errorPage");
-	    	}
-	    	
-	    	// System.out.println(e);
-	    	// System.out.println(list);
-	    	return mv;
-	    }
-	    
+	                                @RequestParam(value = "currentImage1", required = false) MultipartFile[] currentImage1,
+	                                @RequestParam(value = "currentImage2", required = false) MultipartFile[] currentImage2,
+	                                @RequestParam(value = "currentImage3", required = false) MultipartFile[] currentImage3,
+	                                @RequestParam(value = "currentImage4", required = false) MultipartFile[] currentImage4,
+	                                @RequestParam(value = "newUpFiles", required = false) MultipartFile[] newUpFiles,
+	                                HttpSession session, ModelAndView mv) {
 
+		
+		System.out.println(currentImage1);
+		System.out.println("2" + currentImage2);
+		System.out.println("3" + currentImage3);
+		System.out.println("4" + currentImage4);
+		
+		  // currentImage1 (MultipartFile 배열)을 순회하여 출력
+	    if (currentImage1 != null) {
+	        for (MultipartFile file : currentImage1) {
+	            // 파일의 이름, 콘텐츠 타입, 크기 출력
+	            System.out.println("File name: " + file.getOriginalFilename());
+	            System.out.println("File content type: " + file.getContentType());
+	            System.out.println("File size: " + file.getSize());
+	        }
+	    }
+	    
+	    // 수정된 Event 정보 출력
+	    System.out.println("e: " + e);
+	    
+	    // currentImage1 배열 (MultipartFile[])에 대해 출력
+	    if (currentImage1 != null) {
+	        System.out.println("files: ");
+	        for (MultipartFile file : currentImage1) {
+	            System.out.println(file.getOriginalFilename());
+	        }
+	    }
+	    
+	    return mv;
+	}
+
+	// 파일 저장 메서드 예시
+	private String storeFile(MultipartFile file) {
+	    // 파일 저장 처리 (예시)
+	    String fileName = file.getOriginalFilename();
+	    Path path = Paths.get("upload-dir", fileName); // 저장할 경로와 파일명 설정
+	    try {
+	        Files.write(path, file.getBytes());
+	    } catch (IOException e) {
+	        e.printStackTrace();
+	    }
+	    return fileName; // 저장된 파일명 리턴
+	}
 	
 	/**
 	 * 게시글 삭제
@@ -855,6 +843,26 @@ public class EventController {
 	    
 
 	    return changeName; // 변경된 파일명 반환
+	}
+	
+	// 첨부파일 처리 Helper 메서드
+	public List<EventAttachment> processNewFiles(MultipartFile[] newUpFiles, HttpSession session) {
+	    List<EventAttachment> attachments = new ArrayList<>();
+	    int fileLevel = 1; // 대표이미지: 1, 일반 파일: 2
+
+	    for (MultipartFile newUpFile : newUpFiles) {
+	        if (!newUpFile.isEmpty()) {
+	            String changeName = saveFile(newUpFile, session); // 파일 저장 및 이름 변경
+	            EventAttachment attachment = new EventAttachment();
+	            attachment.setOriginName(newUpFile.getOriginalFilename());
+	            attachment.setChangeName("/resources/eventUploadFiles/" + changeName);
+	            attachment.setFilePath(changeName);
+	            attachment.setFileLevel(fileLevel); // 대표이미지(1) 이후는 일반파일(2)
+	            fileLevel = 2; // 이후로는 모두 일반 파일로 설정
+	            attachments.add(attachment);
+	        }
+	    }
+	    return attachments;
 	}
 
 	

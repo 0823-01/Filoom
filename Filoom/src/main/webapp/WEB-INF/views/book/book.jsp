@@ -197,7 +197,7 @@
 		                    <div id="selectMovie_title">
 		                        <a>${requestScope.firstMovie[0].movieTitle}</a>
 		                        <div style="float:right;">
-		                        	<button id="detailViewButton" onClick="location.href='detail.mo?movieno=${requestScope.firstMovie[0].movieNo}'">
+		                        	<button id="detailViewButton" onClick="location.href='detail.mo?movieNo=${requestScope.firstMovie[0].movieNo}'">
 		                        		상세보기
 		                        	</button>
 		                        </div>
@@ -466,7 +466,7 @@
 					                    subImgContainer.appendChild(imgDiv);
 					                });
 					            } else {
-					                document.getElementById("selectMovie_subImg").innerHTML = "<p>서브 이미지가 없습니다.</p>";
+					                document.getElementById("selectMovie_subImg").innerHTML = "";
 
 					            }
 					        },

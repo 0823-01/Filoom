@@ -277,6 +277,7 @@ public class EventServiceImpl implements EventService {
 	 * 게시글 첨부파일 수정
 	 */
 	@Override
+	@Transactional
 	public int updateEventAttachment(List<Integer> fileNos, String status) {
 		return eventDao.updateEventAttachment(sqlSession, fileNos, status);
 	}

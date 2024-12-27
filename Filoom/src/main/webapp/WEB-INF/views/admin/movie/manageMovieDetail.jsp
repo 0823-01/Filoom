@@ -218,8 +218,8 @@
                              → 해당 페이지를 하나 더 제작해야 함
                              (불필요하거나 시간 부족할 경우 삭제) -->
                             <div id="manageBar" align="right" style="width:100%;">
-                                <button id="button_sample">이미지 관리</button>
-                                <button id="button_sample" onclick="location.href='admin.managereview.mo?movieNo=${requestScope.target.movieNo}';">리뷰 관리</button>
+                                <!-- <button id="button_sample">이미지 관리</button> -->
+                                <button id="button_sample" onclick="location.href='admin.managereview.mo?movieNo=${requestScope.target.movieNo}&cpage=1';">리뷰 관리</button>
                                 <button id="button_sample" onclick="location.href='modifymovie.mo?movieNo=${requestScope.target.movieNo}';">수정</button>
                                 <button id="button_sample" class="unready" style="background-color:red;">삭제</button>
                             </div>

@@ -32,6 +32,14 @@
 			<mapping path="/favorite.me" />
 			<mapping path="/review.me" />
 			<mapping path="/withdrawal.me" />
+			
+			<mapping path="/ad.li"/>
+			<mapping path="/memberList_ad.me"/>
+			<mapping path="/movielist_ad.mo"/>
+			<mapping path="/adminBooking.ad"/>
+			<mapping path="/alist.ev"/>
+			
+			
 			<beans:bean class="com.kh.filoom.common.interceptor.LoginInterceptor" 
 						id="loginInterceptor" />
 		</interceptor>

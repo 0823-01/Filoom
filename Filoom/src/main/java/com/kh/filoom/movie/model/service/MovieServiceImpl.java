@@ -124,8 +124,28 @@ public class MovieServiceImpl implements MovieService {
 		return mDao.selectImageList(sqlSession, movieNo);
 	}
 	  
+	// └ 좋아요 관련
+	@Override
+	public int checkFavCount(int movieNo) {
+		return mDao.checkFavCount(sqlSession, movieNo);
+	}
 	
-	// ======
+	public int checkTaste(HashMap<String, Integer> map) {
+		// TODO Auto-generated method stub
+		return mDao.checkTaste(sqlSession, map);
+	}
+
+	@Override
+	public int likeThis(HashMap<String, Integer> map) {
+		// TODO Auto-generated method stub
+		return mDao.likeThis(sqlSession, map);
+	}
+
+	@Override
+	public int notLikeThis(HashMap<String, Integer> map) {
+		// TODO Auto-generated method stub
+		return mDao.notLikeThis(sqlSession, map);
+	}
 	
 	// === 관리자 메뉴 ===
 	
@@ -248,38 +268,49 @@ public class MovieServiceImpl implements MovieService {
 	public double checkEvalNo(int movieNo, int k) {
 		return mDao.checkEvalNo(sqlSession, movieNo, k);
 	}
+	
+	// 사용자가 남긴 리뷰가 있는지 체크
+	@Override
+	public int checkUserReview(int userNo) {
+		// TODO Auto-generated method stub
+		return mDao.checkUserReview(sqlSession, userNo);
+	}
 
 	@Override
 	public int writeReview(Review r) {
 		// TODO Auto-generated method stub
-		return 0;
+		return mDao.writeReview(sqlSession, r);
 	}
 
 	@Override
 	public int updateReview(Review r) {
 		// TODO Auto-generated method stub
-		return 0;
+		return mDao.updateReview(sqlSession, r);
+	}
+	
+	@Override
+	public int checkRid(int userNo, int movieNo) {
+		// TODO Auto-generated method stub
+		return mDao.checkRid(sqlSession, userNo, movieNo);
 	}
 
 	@Override
 	public int deleteReview(HashMap<String, Integer> map) {
 		// TODO Auto-generated method stub
-		return 0;
+		return mDao.deleteReview(sqlSession, map);
 	}
 
 	@Override
-	public ArrayList<Review> adminSelectReview(HashMap<String, Integer> map) {
+	// 영화 제목 & 번호 체크 - 관리자가 볼 용도
+	public Movie checkMovieTitle(int movieNo) {
 		// TODO Auto-generated method stub
-		return null;
+		return mDao.checkMovieTitle(sqlSession, movieNo);
 	}
 
 	@Override
 	public int adminDeleteReview(int reviewId) {
 		// TODO Auto-generated method stub
-		return 0;
+		return mDao.adminDeleteReview(sqlSession, reviewId);
 	}
-
-	
-	
 	
 }

@@ -3,6 +3,7 @@ package com.kh.filoom.movie.model.dao;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import org.apache.ibatis.session.SqlSession;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -93,6 +94,7 @@ public class MovieDao {
 	}
 
 
+	// === [사용자] 상세 페이지 ===
 	public Movie showDetail(SqlSessionTemplate sqlSession, int movieNo) {
 		// TODO Auto-generated method stub
 		return sqlSession.selectOne("movieMapper.showDetail", movieNo);
@@ -107,7 +109,31 @@ public class MovieDao {
 	public ArrayList<Poster> selectImageList(SqlSessionTemplate sqlSession, int movieNo) {
 		return (ArrayList) sqlSession.selectList("movieMapper.selectImageList", movieNo);
 	}
+	
+	// └ 좋아요 관련
+	public int checkFavCount(SqlSessionTemplate sqlSession, int movieNo) {
+		// TODO Auto-generated method stub
+		return sqlSession.selectOne("movieMapper.checkFavCount", movieNo);
+	}
+	
+	public int checkTaste(SqlSessionTemplate sqlSession, HashMap<String, Integer> map) {
+		// TODO Auto-generated method stub
+		return sqlSession.selectOne("movieMapper.checkTaste", map);
+	}
 
+	public int likeThis(SqlSessionTemplate sqlSession, HashMap<String, Integer> map) {
+		// TODO Auto-generated method stub
+		return sqlSession.insert("movieMapper.likeThis", map);
+	}
+
+	public int notLikeThis(SqlSessionTemplate sqlSession, HashMap<String, Integer> map) {
+		// TODO Auto-generated method stub
+		return sqlSession.delete("movieMapper.notLikeThis", map);
+	}
+
+	// ※ 리뷰 관련 기능은 하단 관리자 쪽 리뷰 관리와 같이 있음
+	
+	// === [관리자] 영화 관리 기능 ===
 	public int addMovie(SqlSessionTemplate sqlSession, Movie m) {
 		// TODO Auto-generated method stub
 		/* int influence = */sqlSession.insert("movieMapper.addMovie", m);
@@ -201,6 +227,7 @@ public class MovieDao {
 		return sqlSession.selectOne("movieMapper.checkReviewCount", movieNo);
 	}
 
+	// 리뷰 조회 (사용자, 관리자 쿼리 동일)
 	public ArrayList<Review> selectReview(SqlSessionTemplate sqlSession, HashMap<String, Integer> map) {
 		// TODO Auto-generated method stub
 		return (ArrayList) sqlSession.selectList("movieMapper.selectReview", map);
@@ -219,6 +246,41 @@ public class MovieDao {
 		form.put("score", k);
 		
 		return sqlSession.selectOne("movieMapper.checkEvalNo", form);
+	}
+
+	public Movie checkMovieTitle(SqlSession sqlSession, int movieNo) {
+		return sqlSession.selectOne("movieMapper.checkMovieTitle", movieNo);
+	}
+
+	public int checkUserReview(SqlSessionTemplate sqlSession, int userNo) {
+		// TODO Auto-generated method stub
+		return sqlSession.selectOne("movieMapper.checkUserReview", userNo);
+	}
+
+	public int writeReview(SqlSessionTemplate sqlSession, Review r) {
+		// TODO Auto-generated method stub
+		return sqlSession.insert("movieMapper.writeReview", r);
+	}
+	
+	public int checkRid(SqlSessionTemplate sqlSession, int userNo, int movieNo) {
+		HashMap<String, Integer> form = new HashMap<>();
+		form.put("userNo", userNo);
+		form.put("movieNo", movieNo);
+		return sqlSession.selectOne("movieMapper.checkRid", form);
+	}
+	
+	public int updateReview(SqlSessionTemplate sqlSession, Review r) {
+		return sqlSession.update("movieMapper.updateReview", r);
+	}
+
+	public int adminDeleteReview(SqlSessionTemplate sqlSession, int reviewId) {
+		// TODO Auto-generated method stub
+		return sqlSession.update("movieMapper.adminDeleteReview", reviewId);
+	}
+
+	public int deleteReview(SqlSessionTemplate sqlSession, HashMap<String, Integer> map) {
+		// TODO Auto-generated method stub
+		return sqlSession.update("movieMapper.deleteReview", map);
 	}
 
 	

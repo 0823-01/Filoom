@@ -10,14 +10,17 @@
 <title>Insert title here</title>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <link rel="stylesheet" href="${ pageContext.request.contextPath }/resources/css/mainstyle.css" />
+<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=2ca4036e4722868bde0211b5c0b8f26e"></script>
+
 </head>
 <body>
 	
 	<c:choose>
 	    <c:when test="${!empty sessionScope.loginUser && sessionScope.loginUser.userId == 'admin'}">
 	        <!-- 로그인한 사용자가 admin일 경우 -->
-	        <a href="/filoom/ad.li" style="font-size:100px; color:white; background-color: #000000">관리자 메인페이지</a>
-	        <pre>관리자 페이지는 이곳으로 통해 들어갈 수 있게 해주세요 ~~</pre>
+			<div id="manager" style="display: flex; justify-content: center; align-items: center; height: 100px; background-color: #000;">
+			    <a href="/filoom/ad.li" style="text-decoration: none; font-size: 30px; color: white;">관리자 메인페이지</a>
+			</div>
 	    </c:when>
 	    <c:otherwise>
 	        <!-- 로그인한 사용자가 admin이 아닐 경우 아무것도 표시되지 않음 -->
@@ -38,7 +41,22 @@
      
 
 
-                <a class="logo" href="${ pageContext.request.contextPath }">Filoom</a>
+    				<c:choose>
+						<c:when test="${ empty sessionScope.loginUser }">
+			                <!-- 로그인 전 -->
+			                <ul>
+				                <a class="logo"  href="${ pageContext.request.contextPath }">Filoom</a>
+			                </ul>
+			            </c:when>
+			            <c:otherwise>    
+			                <!-- 로그인 후 -->
+			                <ul>
+		                    	<a class="logo" style="margin-left:1px;" href="${ pageContext.request.contextPath }">Filoom</a>
+		                    </ul>
+			            </c:otherwise>
+	           		</c:choose>
+    
+    
     
 	                <c:choose>
 						<c:when test="${ empty sessionScope.loginUser }">
@@ -126,16 +144,21 @@
             <div id = "content3_real">
 
                 <div id = "content3_thumbnail">
-                    <img src="movie2.jpg" alt="영화 2">
+                    <img src="resources/images/posters/wicked1.jpg" alt="위키드">
                 </div>
                 <div id = "content3_detail">
-                    <div id = "cotent3_summary">
-
+                    <div id = "content3_summary" style="height:50%; color:white;">
+						<h1>위키드</h1><br>
+						<h3>작성자 : tenl****</h3>
+						<h3>★★★★★</h3>
+						<br><br>
+						<p>동명의 소설을 N번, 동명의 뮤지컬을 1N번 본 사람으로써, 원작 팬으로써의 엄격한 잣대를 가지고 영화를 보러 갔다. 조금이라도 맘에 안 들면 바로 1점 때릴 생각으로.  그런데 이 영화는, 맘에 안 드는 구석을 전혀 찾을 수 없었다...</p>
+						
                     </div>
                     <div id = "content3_subimg">
-                        <img src="movie2.jpg" alt="영화 2">
-                        <img src="movie2.jpg" alt="영화 2">
-                        <img src="movie2.jpg" alt="영화 2">
+                        <img src="resources/images/posters/wicked3.jpg" alt="영화 2">
+                        <img src="resources/images/posters/wicked4.jpg" alt="영화 2">
+                        <img src="resources/images/posters/wicked5.jpg" alt="영화 2">
                     </div>
                 </div>
 
@@ -205,12 +228,22 @@
     </div>
 
    
-
-    
+	<br><br>
+	<div style = "width:1400px; height:950px;margin:auto; border:1px solid #E4E0E1;">
+	
+	<div id = "map_title" style="margin:auto; margin-top:60px; text-align:center;" ><h1 style="color:white;">찾아오시는 길</h1></div>
+		<br>
+		<div id="map" style="width:800px;height:600px; margin:auto;"></div><br>
+		<div id = "map_title" style="margin:auto; margin-top:60px; text-align:center;" ><h1 style="color:white;">
+			서울특별시 영등포구 선유동2로 57 이레빌딩(구관) 19F, 20F (T: 1544-0000 / F: 02-2000-0000)
+		</h1></div>
+		<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=516002f043bc29ef122d1d4a95ed7be4"></script>
+    </div>
 
 
 
     <script>
+    
     	
        const contextPath = "${pageContext.request.contextPath}";
     
@@ -338,8 +371,9 @@
                     var movieCard =
                         '<div class="movie-card" id="movie' + (index + 1) + '" onclick="updateMovieDetail(' + index + ')">' +
                             '<img src="' + contextPath + '/resources/images/posters/' + movie.fileCodename + '" alt="' + movie.movieTitle + '"' +
-                            ' onerror="this.onerror=null; this.src=\'' + contextPath + '/resources/images/default.jpg\';">' +
-                            '<p>' + movie.movieTitle + '</p>' +
+                            ' onerror="this.onerror=null; this.src=\'' + contextPath + '/resources/images/default.jpg\';">' 
+                            +
+                            //'<p style = "width">' + movie.movieTitle + '</p>' +
                         '</div>';
                     anotherMovieDiv.innerHTML += movieCard; // 새 카드 추가
                 });
@@ -428,24 +462,35 @@
             
             console.log("비디오 아이디 : " +videoId);
             
-            iframe.src = "https://www.youtube.com/embed/" + videoId + "?autoplay=1&mute=1";
+            iframe.src = "https://www.youtube.com/embed/" + videoId + "?autoplay=1&mute=1&controls=0&loop=1";
         }
         
+        
+        var mapContainer = document.getElementById('map'), // 지도를 표시할 div 
+	    mapOption = { 
+	        center: new kakao.maps.LatLng(37.533813, 126.896863), // 지도의 중심좌표
+	        level: 3 // 지도의 확대 레벨
+	    };
+		
+		var map = new kakao.maps.Map(mapContainer, mapOption); // 지도를 생성합니다
+		
+		// 마커가 표시될 위치입니다 
+		var markerPosition  = new kakao.maps.LatLng(37.533813, 126.896863); 
+		
+		// 마커를 생성합니다
+		var marker = new kakao.maps.Marker({
+		    position: markerPosition
+		});
+		
+		// 마커가 지도 위에 표시되도록 설정합니다
+		marker.setMap(map);
+       
+		
     </script>
 
 	
 	
 	<jsp:include page="common/footer.jsp" />
-	<div style="border: 3px solid black; height: 500px">
-
-		<br><br>
-		<a href="/filoom/movies.mo"><s>영화 탭 홈으로</s></a> 헤더로 이어놨음<br>
-		<a href="/filoom/movielist_ad.mo">관리자 영화 관리 페이지 바로가기</a>
-		<br>
-		
-	</div>
-	
-	<a href="${ pageContext.request.contextPath }/ad.li">관리자</a>
 	
 	<!--Start of Tawk.to Script-->
 	<script type="text/javascript">

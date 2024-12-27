@@ -17,9 +17,9 @@ public interface MovieService {
 	// 작품 수 체크 - 미개봉
 	int checkNotOpenVideoCount();
 	
-	// 영화 목록 조회 관련 메소드들
+	// === 영화 목록 조회 관련 메소드들 ===
 	/*
-	 * === 현재 페이징처리와 listbyCritics() 빼고 전부 완료 ===
+	 * === 현재 listbyCritics() 빼고 전부 완료 ===
 	 * - listbyCritics()도 쿼리와 함수까지 전부 만들어 놓긴 했으나, 
 	 * 	REVIEW 테이블과의 JOIN이 필요한 관계로 REVIEW 더미데이터 넣은 후 추가예정
 	 * 
@@ -60,11 +60,18 @@ public interface MovieService {
 	// 영화 검색 - status = 0은 전체, 1은 개봉작만, 2는 미개봉작만 
 	ArrayList<Movie> searchMovie(HashMap<String, Object> map);
 	
+	// =======================
 	
 	// === 영화 상세 페이지 ===
 	Movie showDetail(int movieNo); // 상세 정보 조회
 	Poster showThumbnail(int movieNo); // 영화 포스터 호호
 	ArrayList<Poster> selectImageList(int movieNo); // 스틸컷 목록 조회
+
+	// └ 좋아요 관련
+	int checkFavCount(int moiveNo); // 좋아요 수 체크
+	int checkTaste(HashMap<String, Integer> map); // 해당 회원이 좋아요를 눌렀는지 확인
+	int likeThis(HashMap<String, Integer> map); // 좋아요
+	int notLikeThis(HashMap<String, Integer> map); // 안 좋아요
 	
 	// === 사용자 리뷰 관련 기능 ===
 	// 리뷰 목록 조회
@@ -73,7 +80,9 @@ public interface MovieService {
 	double checkAverage(int movieNo);
 	double checkEvalNo(int movieNo, int k);
 	
+	int checkUserReview(int userNo);
 	int writeReview(Review r);
+	int checkRid(int userNo, int movieNo);
 	int updateReview(Review r);
 	int deleteReview(HashMap<String, Integer> map);
 	
@@ -113,6 +122,7 @@ public interface MovieService {
 	
 	
 	// === 관리자 리뷰 관련 기능 ===
-	ArrayList<Review> adminSelectReview(HashMap<String, Integer> map);
+	Movie checkMovieTitle(int movieNo);
+	//ArrayList<Review> adminSelectReview(HashMap<String, Integer> map);
 	int adminDeleteReview(int reviewId);
 }

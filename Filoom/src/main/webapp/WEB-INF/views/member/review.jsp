@@ -98,7 +98,7 @@
 
     <div class="mypage-container">
         <div class="mypage-sidebar">
-            <h2><a href="myPage.me">마이 페이지</a></h2>
+            <h2><a href="#">마이 페이지</a></h2>
             <ul class="menu-list">
                 <li><a href="profile.me">내 정보</a></li>
                 <li><a href="coupon.me">쿠폰 조회</a></li>
