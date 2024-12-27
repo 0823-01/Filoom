@@ -43,7 +43,7 @@
         }
 
         #writer {
-            margin-left: 450px;
+            margin-left: 700px;
         }
 
         #date {
@@ -99,7 +99,7 @@
             width : 20%;
         }
 
-        #winStatus {
+        #a {
             width : 10%;
         }
 
@@ -224,7 +224,7 @@
                         <div id="content">댓글내용</div>
                         <div id="writer">작성자</div>
                         <div id="date">날짜</div>
-                        <div id="win">당첨여부</div>
+                        
                     </div>
                 </div>
 
@@ -248,7 +248,8 @@
 				                            <td id="replyContent">${r.replyContent }</td>
 				                            <td id="replyWriter">${r.replyWriter }</td>
 				                            <td id="replyDate">${r.createDate }</td>
-				                            <td id="winStatus">${r.winStatus }</td>
+				                            
+				                            
 			                        	</tr>
 	                       			</c:forEach>
                        			</c:when>

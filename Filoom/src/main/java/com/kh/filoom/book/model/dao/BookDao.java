@@ -127,15 +127,6 @@ public class BookDao {
 		return (ArrayList)sqlSession.selectList("bookMapper.checkAndGetBookingSeatNoList",map); 							
 	}
 
-	//영화예매번호 생성 + 반환
-	public int setAndGetBookNo(SqlSessionTemplate sqlSession, int userNo) {
-		
-		Booking booking = new Booking(); 
-		booking.setUserNo(userNo);
-		sqlSession.insert("bookMapper.setAndGetBookNo",booking);
-		return	booking.getBookNo(); 
-	}
-
 
 	//회원정보조회
 	public Member selectMember(SqlSessionTemplate sqlSession, int userNo) {
@@ -206,10 +197,8 @@ public class BookDao {
 		return sqlSession.update("couponMapper.updateCouponUserDone",map);
 	}
 
-	//영화 예매 처리(업데이트)
-	public int updateBookingDone(SqlSessionTemplate sqlSession, Booking booking) {
-		return sqlSession.update("bookMapper.updateBookingDone",booking);
-	}
+	
+	
 
 	public int deleteBookingSeats(SqlSessionTemplate sqlSession, ArrayList<String> bookingSeatNos) {
 		
@@ -227,9 +216,7 @@ public class BookDao {
 		return (ArrayList)sqlSession.selectList("couponMapper.selectListCouponUserList",bookNo);
 	}
 
-	public Booking selectBooking(SqlSessionTemplate sqlSession, int bookNo) {
-		return sqlSession.selectOne("bookMapper.selectBooking",bookNo);
-	}
+	
 
 	public int cancelUpdateBooking(SqlSessionTemplate sqlSession, int bookNo, int userNo) {
 		Map<String,Integer> map = new HashMap();
@@ -291,6 +278,24 @@ public class BookDao {
 		System.out.println(bookNo);
 		
 		return (ArrayList)sqlSession.selectList("bookMapper.selectBookingListAdmin",map);
+	}
+
+	
+	
+	//영화 예매 처리
+		public int insertSelectBooking(SqlSessionTemplate sqlSession, Booking booking) {
+			return sqlSession.insert("bookMapper.insertSelectBooking",booking);
+		}
+		
+		
+	//예매번호로 예매내역조회
+	public Booking selectBooking(SqlSessionTemplate sqlSession, int bookNo) {
+		return (Booking)sqlSession.selectOne("bookMapper.selectBooking",bookNo);
+	}
+
+	public ArrayList<BookingSeat> selectBookingSeatList(SqlSessionTemplate sqlSession,
+			ArrayList<String> bookingSeatNos) {
+		return (ArrayList)sqlSession.selectList("bookMapper.selectBookingSeatList",bookingSeatNos);
 	}
 
 

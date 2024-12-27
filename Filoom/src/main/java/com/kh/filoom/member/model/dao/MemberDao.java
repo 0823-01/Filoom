@@ -10,10 +10,12 @@ import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
 
 import com.kh.filoom.common.model.vo.PageInfo;
+import com.kh.filoom.member.model.vo.Coupon;
 import com.kh.filoom.member.model.vo.Favorite;
 import com.kh.filoom.member.model.vo.History;
 import com.kh.filoom.member.model.vo.Member;
 import com.kh.filoom.member.model.vo.Reserve;
+import com.kh.filoom.member.model.vo.Review;
 
 @Repository
 public class MemberDao {
@@ -107,9 +109,12 @@ public class MemberDao {
 		return sqlSession.update("memberMapper.updateUserPwd", paramMap);
 	}
 
-	public List<Favorite> favoriteList(SqlSessionTemplate sqlSession, int userNo) {
+	public List<Favorite> favoriteList(SqlSessionTemplate sqlSession, int userNo, String sort) {
+	    Map<String, Object> params = new HashMap<>();
+	    params.put("userNo", userNo);
+	    params.put("sort", sort);
 
-		return sqlSession.selectList("memberMapper.favoriteList", userNo);
+	    return sqlSession.selectList("memberMapper.favoriteList", params);
 	}
 
 	public int deleteFavorite(SqlSessionTemplate sqlSession, Map<String, Object> paramMap) {
@@ -127,19 +132,20 @@ public class MemberDao {
 		return sqlSession.delete("memberMapper.deleteHistory", paramMap);
 	}
 
-	public List<Favorite> sortFavoriteMovies(SqlSessionTemplate sqlSession, Map<String, Object> paramMap) {
-
-		return sqlSession.selectList("memberMapper.sortFavoriteMovies", paramMap);
-	}
-
 	public int checkEmail(SqlSessionTemplate sqlSession, String email) {
 
 		return sqlSession.selectOne("memberMapper.checkEmail", email);
 	}
 	
+	public List<Coupon> couponList(SqlSessionTemplate sqlSession, int userNo) {
+
+		return sqlSession.selectList("memberMapper.couponList", userNo);
+	}
 	
-	
-	
+	public List<Review> reviewList(SqlSessionTemplate sqlSession, int userNo) {
+
+		return sqlSession.selectList("memberMapper.reviewList", userNo);
+	}
 	
 	
 	
@@ -195,6 +201,10 @@ public class MemberDao {
 	    params.put("status", status);
 	    return sqlSession.update("memberMapper.updateMemberStatus", params);
 	}
+
+	
+
+	
 
 
 

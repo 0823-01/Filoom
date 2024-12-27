@@ -8,6 +8,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>리뷰 관리:: Filoom</title>
     <link rel="stylesheet" href="resources/css/admin.css" />
+    
+	<!-- jQuery 연동 구문 -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 
     <style>
         #admin_title_content {
@@ -42,7 +45,9 @@
         	filter: invert(100%) sepia(1%) saturate(0%) hue-rotate(151deg) brightness(105%) contrast(102%);
         }
 
-
+		#deleteButton:hover {
+			cursor:pointer;		
+		}
 
         /* 페이징바 */
         .pagingbar {
@@ -93,6 +98,7 @@
                     	<b>${10 * (requestScope.pi.currentPage - 1) + 1} - ${10 * requestScope.pi.currentPage < requestScope.pi.listCount ? 10 * requestScope.pi.currentPage : requestScope.pi.listCount}</b> 번째 리뷰 / 총 <b>${requestScope.pi.listCount}</b> 개</p>
                     <!-- startNum ~ endNum, 총 reviewCount 개 -->
 
+					<input type="hidden" id="mno" value="${requestScope.information.movieNo}">
                     <div id="reviewList">
                     	<c:choose>
 	                    	<c:when test="${empty requestScope.list }">
@@ -108,7 +114,7 @@
 			                            	<!-- MEMBER 테이블에 닉네임 개념이 따로 없어 아이디만을 사용함 -->
 			                            	<div id="reviewerName">${p.userId}</div>
 			                                <div id="writtenDate">${p.reviewDate}</div>
-			                                <button id="deleteButton" style="background-color: red; color:white;" onclick="forceDeleteReview(${p.reviewId})">
+			                                <button id="deleteButton" style="background-color: red; color:white;" onclick="forceDeleteReview(${p.reviewId});">
 			                                    <img src="resources/images/icons/dash-lg.svg" id="minus">
 			                                </button>
 			                            </div>
@@ -191,6 +197,7 @@
     });
     
     function forceDeleteReview(rid) {
+    	let mno=$("#mno").val();
     	$.ajax({
     		url:'admin.f_delrv.mo?rid='+rid,
     		type:"post",
@@ -199,6 +206,7 @@
     		success:function(result) {
     			if(result == "success") {
     				alert("리뷰가 삭제되었습니다.");
+    				location.href="admin.managereview.mo?mno="+mno;
     			} else {
     				alert("리뷰가 삭제되지 않았습니다.");
     			}

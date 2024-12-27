@@ -179,10 +179,10 @@ body{
 
 /*내거 영역*/
     #title {
-        font-size: 30px;
+        font-size: 25px;
         font-weight: bold;
         color : #493628;
-        padding : 20px; 
+        padding : 27px 20px;
         margin-bottom: 10px;
     }
 

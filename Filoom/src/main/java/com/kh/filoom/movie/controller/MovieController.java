@@ -30,9 +30,9 @@ import com.kh.filoom.movie.model.vo.Review;
 
 /**
  * @author 정원섭
- * === MovieController v 0.8.1 ===
+ * === MovieController v 0.9.2 ===
  * 작업 착수일 : 2024-12-13
- * 최종 수정일 : 2024-12-26
+ * 최종 수정일 : 2024-12-27
  */
 
 /* 작업 내역
@@ -54,7 +54,9 @@ import com.kh.filoom.movie.model.vo.Review;
  * v 0.7 - 평점 표기+그래프, 스틸컷 DB 참조 완료 
  * v 0.8 - 좋아요 기능 및 관리자 리뷰 삭제 버튼 구현 성공
  * 	v 0.8.1 - 좋아요 버튼이 좋아요 수를 반영함. (실시간은 안 되고 새로고침해야 반영됨)
- * 
+ * v 0.9 - 리뷰 작성 / 삭제 (사용자, 관리자 공통) 완료
+ * 	└ v 0.9.1 - 메인 하드 코딩 부분 완료
+ *  └ v 0.9.2 - 구현 중이던 리뷰 수정 부분 삭제 (사유 : 구현 실패)
  * */
 @Controller
 public class MovieController {
@@ -160,7 +162,7 @@ public class MovieController {
 		return "movie/list_using_taglib";
 	}
 	
-	/*
+	
 	
 	// 평점순 정렬 (상영작만)
 	@GetMapping("criticchoice.mo")
@@ -174,7 +176,7 @@ public class MovieController {
 		model.addAttribute("pi", pi);
 		return "movie/list_using_taglib";
 	}
-	*/
+	
 	
 	
 	// 상영 예정작만 보기 - 페이지 띄우기
@@ -347,29 +349,43 @@ public class MovieController {
 		return map;
 	}
 	
-	// 리뷰 작성 페이지
-	@GetMapping("review.mo") //?userNo=XXX&movieNo=XXX
-	public void reviewForm() {
-		// return "movie/reviewForm";
+	// 로그인된 유저가 리뷰를 작성했는지 체크
+	@ResponseBody
+	@PostMapping("checkreview.mo")
+	public int checkUserReview(int userNo) {
+		return msi.checkUserReview(userNo);
 	}
 	
-	// 작성
-	@GetMapping("newreview.mo")
-	public void writeReview() {
-		
+	// 리뷰 작성, 수정 페이지 : 상세 페이지 내 모달창으로 대체함
+	
+	// 리뷰 작성
+	@ResponseBody
+	@PostMapping("newreview.mo")
+	public String writeReview(Review r) {
+		System.out.println(r);
+		int result = msi.writeReview(r);
+		return (result > 0) ? "success" : "failure";
 	}
 	
-	// 수정
-	@GetMapping("modifyreview.mo")
-	public void updateReview() {
-		
-	}
+	// 수정 - Ctrl-Serv-DAO-Mapper는 구현되어 있으나 모달창이 연결되지 않는 문제가 있어 기능 삭제함
+//	@ResponseBody
+//	@GetMapping("modifyreview.mo")
+//	public String updateReview(Review r) {
+//		int reviewId = msi.checkRid(r.getUserNo(), r.getMovieNo());
+//		System.out.println(reviewId);
+//		r.setReviewId(reviewId);
+//		
+//		System.out.println(r);
+//		int result = msi.updateReview(r);
+//		return (result > 0) ? "success" : "failure";
+//	}
 	
 	// 삭제
 	@ResponseBody
 	@PostMapping("deletereview.mo")
-	public String deleteReview(int mno, int rid) {
+	public String deleteReview(int uid, int mno, int rid) {
 		HashMap<String, Integer> map = new HashMap<>();
+		map.put("userNo", uid);
 		map.put("movieNo", mno);
 		map.put("reviewId", rid);
 		
@@ -520,6 +536,7 @@ public class MovieController {
 		
 		// 굳이 이것부터 하는 이유 : 수정은 이미지를 새로 첨부할 필요가 없으므로
 		int result = msi.updateMovie(m);
+		
 		if(result > 0) {
 			// img == null이면 변경 로직 안 거치고 끝
 			if(img != null) {
@@ -688,11 +705,11 @@ public class MovieController {
 	}
 	
 	// 관리자가 리뷰 삭제 (목록에서 해당 리뷰 상단의 '-' 버튼을 눌렀을 때)
-//	@ResponseBody
-//	@PostMapping("admin.f_delrv.mo")
-//	public String adminDeleteReview(int rid) {
-//		int result = msi.deleteReview(rid);
-//		return (result > 0) ? "success" : "failure";
-//	}
+	@ResponseBody
+	@PostMapping("admin.f_delrv.mo")
+	public String adminDeleteReview(int rid) {
+		int result = msi.adminDeleteReview(rid);
+		return (result > 0) ? "success" : "failure";
+	}
 	
 }

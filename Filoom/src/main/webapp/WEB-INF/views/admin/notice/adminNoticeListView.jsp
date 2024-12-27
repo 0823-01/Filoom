@@ -11,27 +11,26 @@
     <style>
         /*메뉴 부분*/
         #titleContent {
-            height : 65px;
-            font-size: 30px;
+            font-size: 20px;
             font-weight: bold;
             color : #493628;
+            padding : 27px 20px;
         }
 
         .menu {
             box-sizing: border-box;
-            padding: 5px;
-            margin: 5px;
+            padding : 27px 20px;
             width : 100%;
             display: flex;
             justify-content: left;
             gap : 25px;
+            margin-bottom : 10px;
         }
 
         #noticeNo, #noticeTitle, #noticeDate, #noticeStatus {
-            font-size: 30px;
+            font-size: 20px;
             font-weight: bold;
             color : #493628;
-            padding: 10px 0;
         }
 
         #noticeNo {
@@ -39,15 +38,15 @@
         }
 
         #noticeTitle {
-            margin-left: 20px;
+            margin-left: 25px;
         }
 
         #noticeDate {
-            margin-left: 875px;
+            margin-left: 915px;
         }
 
         #noticeStatus {
-            margin-left: 85px;
+            margin-left: 140px;
         }
 
         /*목록영역*/
@@ -125,7 +124,7 @@
 		    margin : 0 10px; /*리스트 항목 간의 간격*/
 		    cursor: pointer;
 		    transition: color 0.3s ease; /*색상 전환 효과*/
-		    font-size: 25px;
+		    font-size: 20px;
 		    font-weight: bold;
 		    color : #F3F3F3;
 		}
@@ -134,7 +133,7 @@
 		    margin : 0 10px; /*리스트 항목 간의 간격*/
 		    cursor: pointer;
 		    transition: color 0.3s ease; /*색상 전환 효과*/
-		    font-size: 25px;
+		    font-size: 20px;
 		    font-weight: bold;
 		    color : #493628;
 		    text-decoration : none;
@@ -210,7 +209,7 @@
                         <div id="noticeNo">번호</div>
                         <div id="noticeTitle">제목</div>
                         <div id="noticeDate">작성일</div>
-                        <div id="noticeStatus">삭제여부</div>
+                        <div id="noticeStatus">상태값</div>
                     </div>
                 </div>
 

@@ -354,16 +354,16 @@
 	
 	    		success: function(result) {
 	    			if (result == "success") {
-	    				alert('added successfully');
+	    				alert('영화가 추가되었습니다.');
 	    				
 						location.href = 'movielist_ad.mo';
 	    				// return redirect는 여기가 아니라 Controller에서 쓰는 거임
 	    			} else if (result == "half_failure") {
-	    				alert('movie was not added because poster was not uploaded');
+	    				alert('포스터 추가 과정의 오류로 인해 영화 추가에 실패했습니다.');
 	    			}
 	    				else {
 	    				// if result = "failure"
-	    				alert('movie was not added');
+	    				alert('영화가 추가되지 않았습니다.');
 	    			}
 	    		},
 	    		error: function(result) {

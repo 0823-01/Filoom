@@ -80,7 +80,9 @@ public interface MovieService {
 	double checkAverage(int movieNo);
 	double checkEvalNo(int movieNo, int k);
 	
+	int checkUserReview(int userNo);
 	int writeReview(Review r);
+	int checkRid(int userNo, int movieNo);
 	int updateReview(Review r);
 	int deleteReview(HashMap<String, Integer> map);
 	

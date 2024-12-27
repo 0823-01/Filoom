@@ -12,10 +12,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.kh.filoom.common.model.vo.PageInfo;
 import com.kh.filoom.member.model.dao.MemberDao;
+import com.kh.filoom.member.model.vo.Coupon;
 import com.kh.filoom.member.model.vo.Favorite;
 import com.kh.filoom.member.model.vo.History;
 import com.kh.filoom.member.model.vo.Member;
 import com.kh.filoom.member.model.vo.Reserve;
+import com.kh.filoom.member.model.vo.Review;
 
 @Service
 public class MemberServiceImpl implements MemberService{
@@ -134,9 +136,9 @@ public class MemberServiceImpl implements MemberService{
 	}
 
 	@Override
-	public List<Favorite> favoriteList(int userNo) {
-
-		return memberDao.favoriteList(sqlSession, userNo);
+	public List<Favorite> favoriteList(int userNo, String sort) {
+		
+	    return memberDao.favoriteList(sqlSession, userNo, sort);
 	}
 
 	@Override
@@ -160,18 +162,23 @@ public class MemberServiceImpl implements MemberService{
 	}
 
 	@Override
-	public List<Favorite> sortFavoriteMovies(int userNo, String sort) {
-		Map<String, Object> paramMap = new HashMap<>();
-	    paramMap.put("userNo", userNo);
-	    paramMap.put("sort", sort);
-	    return memberDao.sortFavoriteMovies(sqlSession, paramMap);
-	}
-
-	@Override
 	public boolean checkEmail(String email) {
 
 		return memberDao.checkEmail(sqlSession, email) > 0;
 	}
+	
+	@Override
+	public List<Coupon> couponList(int userNo) {
+		
+		return memberDao.couponList(sqlSession, userNo);
+	}
+	
+	@Override
+	public List<Review> reviewList(int userNo) {
+
+		return memberDao.reviewList(sqlSession, userNo);
+	}
+	
 
 	
 	
@@ -212,6 +219,10 @@ public class MemberServiceImpl implements MemberService{
 	public int updateMemberStatus(int userNo, String status) {
 	    return memberDao.updateMemberStatus(sqlSession, userNo, status);
 	}
+
+	
+
+	
 
 
 	

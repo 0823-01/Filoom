@@ -7,7 +7,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>꿈을 돌리는 영사기, Filoom</title>
+    <title>꿈을 담는 공간, Filoom</title>
 
     <!-- 'Poppins' 폰트 추가용 -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -106,6 +106,7 @@
 
         a:hover {
             filter:invert(100%);
+            cursor:pointer;
         }
 
         /* .screenType>* {
@@ -115,13 +116,6 @@
             float:right;
             margin-right:10px;
         } */
-
-        /* 원전이 되는 CGV에서 개발자도구로 screenType 이미지를 긁어온 경우
-            background position은 다음과 같음
-            IMAX : 0
-            4DX : 0 -112px
-            SCREENX : 0 -940px
-        */
 
         /* === 스틸컷 - float 무시 */
         #steelcut {
@@ -295,6 +289,69 @@
             font-weight: normal;
         }
         
+        /* === 리뷰 모달창 === */
+	        /* 모달 스타일 */
+	    .modal {
+	        display: none; /* 기본적으로 숨김 */
+	        position: fixed;
+	        z-index: 1000;
+	        left:50%;
+	        top: 50%;
+	        width: 100%;
+	        height: 100%;
+	        transform: translate(-50%, -50%);
+	        background-color: rgba(0, 0, 0, 0.6);
+	        max-width: 800px;
+	    }
+	
+	    /* 모달 내용 */
+	    .modal-content {
+	        background-color: #fff;
+	        color: #000;
+	        margin: 15% auto;
+	        padding: 20px;
+	        border-radius: 10px;
+	        width: 60%;
+	        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+	        position: relative;
+	    }
+	
+	    /* 닫기 버튼 */
+	    .close-btn {
+	        color: #aaa;
+	        float: right;
+	        font-size: 28px;
+	        font-weight: bold;
+	        cursor: pointer;
+	    }
+	
+	    .close-btn:hover {
+	        color: #000;
+	    }
+        
+        
+        
+        input[type='radio'] { display:none; }
+        #star {
+            width:80px;
+            transition: filter 0.2s ease;
+        }
+
+        /* filter code generated on https://codepen.io/sosuke/pen/Pjoqqp */
+        #star:hover, #star.filled {
+            filter: invert(95%) sepia(62%) saturate(1957%) hue-rotate(357deg) brightness(101%) contrast(102%);           
+        }
+        input[name=evaluation]:checked+label {
+            filter: invert(95%) sepia(62%) saturate(1957%) hue-rotate(357deg) brightness(101%) contrast(102%);
+        }
+        
+        td>input {
+        	width:100%;
+        	box-sizing:border-box;
+        }
+        input::placeholder, textarea::placeholder {
+        	font-style:italic;
+        }
     </style>
 </head>
 <body>
@@ -380,10 +437,7 @@
                 		<a href="javascript:alert('영화를 찜하려면 로그인해야 합니다.');" id="like">♡ ${requestScope.favCount}</a>
                		</c:otherwise>
                	</c:choose>
-               	
-<!--                 <a href="" id="like">♡ 1234</a> -->
-                <!-- 로그인 후 클릭시 ♥ 1235 으로 바뀌도록. 비로그인시 로그인하라고 얼럿함 -->
-                <!-- 좋아요 켜면 FAVORITE 테이블에 넣는 거니까 확인하고 넣을 것 -->
+
             </div>
 
 
@@ -526,21 +580,133 @@
                 </div>
 
                 <!-- if user is logged in -->
-                <c:if test="${not empty sessionScope.loginUser}">
-                    <a href="" id="newReview">작성</a>
-                    <!-- link to 'give_a_star.html' -->
+                <c:if test="${not empty sessionScope.loginUser && requestScope.list.premiere eq 'Y'}">
+                	<input type="hidden" id="isReviewed">
+                    <a class="open-modal-btn" data-target="reviewModal" id="newReview">작성</a>
+                    
+                    <!-- 'give_a_star.html' -->
+                    <div id="reviewModal" class="modal">
+                        <div class="modal-content" style="background-color:#6f6464;">
+                            <span class="close-btn" style="color:white;">&times;</span><br>
+
+					        <!-- 실제 MEMBER 테이블은 닉네임이 없어 이름으로만 부를 예정 -->
+					        <h2>${sessionScope.loginUser.userName} 님, 영화는 재미있었나요?</h1>
+						        <p style="font-size:16px;">
+						            영화가 어땠는지 감상평을 남겨주세요!<br>
+						            우수 리뷰로 선정되면 영화관람권을 선물로 드립니다.
+						        </p>
+						
+						        <div>
+						            <!-- 빈 별의 색상 : #141414 (20,20,20) -->
+						            <c:forEach var="s" begin="1" end="5">
+						            	<input type="radio" name="score" id="${s}" value="${s}">
+						            	<label for="${s}"><img id="star" src="resources/images/icons/star_vectoricon.png"></label>
+					            	</c:forEach>
+						        </div>
+						        <br><br>
+						        
+						        <table>
+						        	<tr>
+						        		<td><input id="reviewTitle" placeholder="제목을 입력해주세요.">
+						            <tr>
+						                <td>
+						                    <textarea style="width:360px; resize:none;"
+						                    id="reviewContent" placeholder="규정에 어긋나는 감상평은 경고 없이 삭제되며, 반복 적발시 향후 리뷰 작성 및 VIP 승급이 제한될 수 있습니다."></textarea>
+						                </td>
+						            </tr>
+						        </table>
+						        
+						        <br>
+						        <a href="javascript:submitReview();" id="submit" style="color:white;">작성</button>
+						
+						        <br><br>
+                            
+                        </div>
+                    </div>
                 </c:if>
                 <br><br>
+                
+<!--                 <div id="editModal" class="modal"> -->
+<!--                 	<div class="modal-content" style="background-color:#6f6464;"> -->
+<!-- 						<span class="close-btn" style="color:white;">&times;</span><br> -->
+
+<!-- 						실제 MEMBER 테이블은 닉네임이 없어 이름으로만 부를 예정 -->
+<%-- 					    <h2>${sessionScope.loginUser.userName} 님, 리뷰를 수정하시겠어요?</h1> --%>
+<!-- 				        <p style="font-size:16px;"> -->
+<!-- 							영화가 어땠는지 감상평을 남겨주세요!<br> -->
+<!-- 						    수정된 리뷰로는 영화관람권을 받을 수 없어요! 이 점 유의해주세요. -->
+<!-- 						</p> -->
+						
+<!-- 				        <div> -->
+<!-- 				        	<input type="hidden" id="rid"> -->
+<!-- 				        	빈 별의 색상 : #141414 (20,20,20) -->
+<%-- 				            <c:forEach var="s" begin="1" end="5"> --%>
+<%-- 				            	<input type="radio" name="editScore" id="${s}" value="${s}"> --%>
+<%-- 				            	<label for="${s}"><img id="star" src="resources/images/icons/star_vectoricon.png"></label> --%>
+<%-- 			            	</c:forEach> --%>
+<!-- 				        </div> -->
+<!-- 				        <br><br> -->
+				        
+<!-- 				        <table> -->
+<!-- 				        	<tr> -->
+<!-- 				        		<td><input id="editReviewTitle" placeholder="제목을 입력해주세요."> -->
+<!-- 				            <tr> -->
+<!-- 				                <td> -->
+<!-- 				                    <textarea style="width:360px; resize:none;" -->
+<!-- 				                    id="editReviewContent" placeholder="규정에 어긋나는 감상평은 경고 없이 삭제되며, 반복 적발시 향후 리뷰 작성 및 VIP 승급이 제한될 수 있습니다."></textarea> -->
+<!-- 				                </td> -->
+<!-- 				            </tr> -->
+<!-- 				        </table> -->
+				        
+<!-- 				        <br> -->
+<!-- 				        <a href="javascript:updateReview(rid);" id="submit" style="color:white;">수정</button> -->
+				
+<!-- 				        <br><br> -->
+                            
+<!--                         </div> -->
+<!--                     </div> -->
                 
                 <script>
                 const mno = $("#mno").val();
                 let uid = $("#uid").val();
                 let count = $("#listcount");
                 $(function() {
-                	if(uid > 0)
+                	
+                	if(uid > 0) {
                 		favCheck(uid);
+                		checkUserReview(uid);
+                	}
                 	selectReviewList(mno,1);
                 	getAverage(mno);
+                	
+                	// 모달 열기
+    	            $(".open-modal-btn").click(function () {
+    	                const targetModal = "#" + $(this).data("target");
+    	                $(targetModal).fadeIn(200); // 모달을 서서히 나타냄
+    	            });
+                	
+    	           
+
+    	            // 모달 닫기
+    	            $(".close-btn").click(function () {
+    	                $(this).closest(".modal").fadeOut(100); // 모달을 서서히 사라지게 함
+    	            });
+
+    	            // 모달 외부 클릭 시 닫기
+    	            $(window).click(function (event) {
+    	                if ($(event.target).hasClass("modal")) {
+    	                    $(event.target).fadeOut(100);
+    	                }
+    	            });
+    	            
+    	            $("input[name=score]+label").click(function() {
+    	                // removeColor
+    	                $(this).parent().children('label').children().removeClass('filled');
+    	                
+    	                // addColor
+    	                $(this).children().addClass('filled'); // to this
+    	                $(this).addClass('filled').prevAll('label').children('#star').addClass('filled'); // to prev
+    	            });
                 });
                 
                 function refreshPagingBar(cpage) {
@@ -697,6 +863,114 @@
                 			}
                 		});	
                 	}
+                }
+                
+                function checkUserReview(uid) {
+                	$.ajax({
+                		url:"checkreview.mo?uid="+uid,
+                		type:"post",
+                		data: {"userNo" : uid},
+                		
+                		success:function(result) {
+                			$("#isReviewed").val(result);
+                			console.log($("#isReviewed").val());
+                			// 있으면 1 없으면 0
+                			
+//                 			if(result == 1) {
+//                 				// change button into "수정"
+//                 			}
+                		},
+                		error: function(result) {
+                			alert("오류가 발생했습니다.");
+                			$("#newReview").hide(); // 로그인 상태에서 hide
+                		}
+                	});
+                }
+                
+                function submitReview() {
+                	let score = $('input[name=score]:checked').val();
+                	let reviewTitle = $("#reviewTitle").val();
+                	let reviewContent = $("#reviewContent").val();
+                	// let isWatched = 'Y'; // 기본값, 설정 가능하면 따로 적용
+                	
+                	$.ajax({
+            			url:"newreview.mo?userNo="+uid+"&movieNo="+mno,
+            			type:"post",
+            			data:{
+							"userNo" : uid,
+            				"movieNo" : mno,
+							"reviewTitle" : reviewTitle,
+							"score" : score,
+							"isWatched" : 'Y',
+							"reviewContent" : reviewContent
+            			},
+            			
+            			success:function(result) {
+            				if(result == "success") {
+            					alert("리뷰가 작성되었습니다.");
+            					selectReviewList(mno, 1);
+            					$(".close-btn").click();
+            				} else {
+            					alert("리뷰 작성에 실패하였습니다.");
+            				}
+            			},
+            			error:function() {
+            				alert("오류가 발생했습니다.");
+            			}
+            		});	
+                }
+                
+//                 function updateReview(rid) {
+//                 	let score = $('input[name=score]:checked').val();
+//                 	let reviewTitle = $("#reviewTitle").val();
+//                 	let reviewContent = $("#reviewContent").val();
+//                 	// let isWatched = 'Y'; // 기본값, 설정 가능하면 따로 적용
+                	
+//                 	$.ajax({
+//             			url:"updatereview.mo?userNo="+uid+"&movieNo="+mno,
+//             			type:"post",
+//             			data:{
+// 							"userNo" : uid,
+//             				"movieNo" : mno,
+// 							"reviewTitle" : editReviewTitle,
+// 							"score" : editScore,
+// 							"reviewContent" : editReviewContent
+//             			},
+            			
+//             			success:function(result) {
+//             				if(result == "success") {
+//             					alert("리뷰가 수정되었습니다.");
+//             					selectReviewList(mno, 1);
+//             					$(".close-btn").click();
+//             				} else {
+//             					alert("리뷰가 수정되지 않았습니다.");
+//             				}
+//             			},
+//             			error:function() {
+//             				alert("오류가 발생했습니다.");
+//             			}
+//             		});	
+//                 }
+                
+                function deleteReview(rid) {
+                	$.ajax({
+                		url:'deletereview.mo?rid='+rid,
+                		type:"post",
+                		data:{"rid" : rid, "mno" : mno, "uid" : uid},
+                		// 셋을 받는 이유 : 그래야 남이 함부로 못 지울 거 아냐
+                		
+                		success:function(result) {
+                			if(result == "success") {
+                				alert("리뷰가 삭제되었습니다.");
+                				location.href="detail.mo?movieNo="+mno;
+                			} else {
+                				alert("리뷰가 삭제되지 않았습니다.");
+                			}
+                		},
+                		error:function() {
+                			alert("An error has occurred.");
+                		}
+                	});
                 }
 
                 </script>

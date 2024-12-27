@@ -268,23 +268,36 @@ public class MovieServiceImpl implements MovieService {
 	public double checkEvalNo(int movieNo, int k) {
 		return mDao.checkEvalNo(sqlSession, movieNo, k);
 	}
+	
+	// 사용자가 남긴 리뷰가 있는지 체크
+	@Override
+	public int checkUserReview(int userNo) {
+		// TODO Auto-generated method stub
+		return mDao.checkUserReview(sqlSession, userNo);
+	}
 
 	@Override
 	public int writeReview(Review r) {
 		// TODO Auto-generated method stub
-		return 0;
+		return mDao.writeReview(sqlSession, r);
 	}
 
 	@Override
 	public int updateReview(Review r) {
 		// TODO Auto-generated method stub
-		return 0;
+		return mDao.updateReview(sqlSession, r);
+	}
+	
+	@Override
+	public int checkRid(int userNo, int movieNo) {
+		// TODO Auto-generated method stub
+		return mDao.checkRid(sqlSession, userNo, movieNo);
 	}
 
 	@Override
 	public int deleteReview(HashMap<String, Integer> map) {
 		// TODO Auto-generated method stub
-		return 0;
+		return mDao.deleteReview(sqlSession, map);
 	}
 
 	@Override
@@ -297,14 +310,7 @@ public class MovieServiceImpl implements MovieService {
 	@Override
 	public int adminDeleteReview(int reviewId) {
 		// TODO Auto-generated method stub
-		return 0;
+		return mDao.adminDeleteReview(sqlSession, reviewId);
 	}
-
-	
-
-	
-
-	
-	
 	
 }

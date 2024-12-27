@@ -42,7 +42,7 @@
     }
 
     #createDate {
-        margin-left: 1050px;
+        margin-left: 800px;
     }
 
     #count {

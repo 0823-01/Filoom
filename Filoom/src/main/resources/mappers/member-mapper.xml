@@ -34,11 +34,9 @@
 	
 	<resultMap id="cancelResultSet" type="reserve">
 	    <result column="MOVIE_TITLE" property="movieTitle" />
-	    <result column="SCREEN_NAME" property="screenName" />
 	    <result column="PLAYTIME" property="playtime" />
 	    <result column="MODIFY_DATE" property="modifyDate" />
 	    <result column="BOOK_COST" property="bookCost" />
-	    <result column="SEATNO" property="seatNo" />
 	</resultMap>
 	
 	<resultMap id="useCouponResultSet" type="reserve">
@@ -61,6 +59,25 @@
 		<result column="MOVIE_NO" property="movieNo" />
 	    <result column="MOVIE_TITLE" property="movieTitle" />
 	    <result column="OPEN_DATE" property="openDate" />
+	    <result column="FILE_CODENAME" property="fileCodename" />
+	    <result column="IMAGE_PATH" property="imagePath" />
+	</resultMap>
+	
+	<resultMap id="couponResultSet" type="myCoupon">
+		<result column="COUPON_NO" property="couponNo" />
+	    <result column="COUPON_NAME" property="couponName" />
+	    <result column="COUPON_EXP_DATE" property="couponExpDate" />
+	</resultMap>
+	
+	<resultMap id="reviewResultSet" type="myReview">
+		<result column="REVIEW_ID" property="reviewId" />
+	    <result column="USER_NO" property="userNo" />
+	    <result column="MOVIE_NO" property="movieNo" />
+	    <result column="REVIEW_TITLE" property="reviewTitle" />
+	    <result column="REVIEW_CONTENT" property="reviewContent" />
+	    <result column="REVIEW_DATE" property="reviewDate" />
+	    <result column="SCORE" property="score" />
+	    <result column="MOVIE_TITLE" property="movieTitle" />
 	    <result column="FILE_CODENAME" property="fileCodename" />
 	    <result column="IMAGE_PATH" property="imagePath" />
 	</resultMap>
@@ -186,22 +203,16 @@
 	
 	<select id="cancelList" parameterType="int" resultMap="cancelResultSet">
 		SELECT m.MOVIE_TITLE AS MOVIE_TITLE,
-		       s.SCREEN_NAME AS SCREEN_NAME,
 		       p.PLAYTIME AS PLAYTIME,
 		       b.MODIFY_DATE AS MODIFY_DATE,
-		       b.BOOK_COST AS BOOK_COST,
-		       LISTAGG(ss.SEAT_NO, ',') WITHIN GROUP (ORDER BY ss.SEAT_NO) AS SEATNO
+		       b.BOOK_COST AS BOOK_COST
 		  FROM BOOKING b
-		  JOIN BOOKING_SEAT bs ON b.BOOK_NO = bs.BOOK_NO
-		  JOIN PLAYING p ON bs.PLAYING_NO = p.PLAYING_NO
+		  JOIN PLAYING p ON b.BOOK_NO = p.PLAYING_NO
 		  JOIN MOVIE m ON p.MOVIE_NO = m.MOVIE_NO
-		  JOIN SCREEN s ON p.SCREEN_NO = s.SCREEN_NO
-		  JOIN SCREEN_SEAT ss ON bs.SSEAT_NO = ss.SSEAT_NO
 		 WHERE b.STATUS = 'N'
 		   AND b.USER_NO = #{userNo}
 		   AND p.PLAYTIME >= SYSDATE - 7
-		 GROUP BY m.MOVIE_TITLE, s.SCREEN_NAME, p.PLAYTIME, b.MODIFY_DATE, b.BOOK_COST
-		 ORDER BY p.PLAYTIME ASC
+		 ORDER BY b.MODIFY_DATE ASC
 	</select>
 	
 	<select id="useCouponList" parameterType="int" resultMap="useCouponResultSet">
@@ -293,19 +304,22 @@
 	     WHERE USER_ID = #{userId}
 	</update>
 	
-	<select id="favoriteList" parameterType="int" resultMap="favoriteResultSet">
-		SELECT m.MOVIE_NO AS MOVIE_NO,
-		       m.MOVIE_TITLE AS MOVIE_TITLE,
-		       TO_CHAR(m.OPEN_DATE, 'YYYY.MM.DD') AS OPEN_DATE,
-		       m.PREMIERE AS PREMIERE,
-		       p.FILE_CODENAME AS FILE_CODENAME,
-		       p.IMAGE_PATH AS IMAGE_PATH
-		  FROM FAVORITE f
-		  JOIN MOVIE m ON f.MOVIE_NO = m.MOVIE_NO
-		  LEFT JOIN POSTER p ON m.MOVIE_NO = p.MOVIE_NO
-		 WHERE f.USER_NO = #{userNo}
-		   AND p.FILE_LEVEL = '1'
-		 ORDER BY m.OPEN_DATE ASC
+	<select id="favoriteList" parameterType="map" resultMap="favoriteResultSet">
+	    SELECT m.MOVIE_NO AS MOVIE_NO,
+	           m.MOVIE_TITLE AS MOVIE_TITLE,
+	           TO_CHAR(m.OPEN_DATE, 'YYYY.MM.DD') AS OPEN_DATE,
+	           m.PREMIERE AS PREMIERE,
+	           p.FILE_CODENAME AS FILE_CODENAME,
+	           p.IMAGE_PATH AS IMAGE_PATH
+	      FROM FAVORITE f
+	      JOIN MOVIE m ON f.MOVIE_NO = m.MOVIE_NO
+	      LEFT JOIN POSTER p ON m.MOVIE_NO = p.MOVIE_NO
+	     WHERE f.USER_NO = #{userNo}
+	       AND p.FILE_LEVEL = '1'
+	     ORDER BY m.OPEN_DATE
+	       <if test="sort == 'desc'">
+	           DESC
+	       </if>
 	</select>
 	
 	<delete id="deleteFavorite" parameterType="map">
@@ -325,27 +339,51 @@
 	       AND BOOK_NO = #{bookNo}
 	</delete>
 	
-	<select id="sortFavoriteMovies" parameterType="map" resultMap="favoriteResultSet">
-	    SELECT m.MOVIE_NO AS movieNo,
-	           m.MOVIE_TITLE AS movieTitle,
-	           TO_CHAR(m.OPEN_DATE, 'YYYY.MM.DD') AS openDate,
-	           p.FILE_CODENAME AS fileCodename,
-	           p.IMAGE_PATH AS imagePath
-	      FROM FAVORITE f
-	      JOIN MOVIE m ON f.MOVIE_NO = m.MOVIE_NO
-	      LEFT JOIN POSTER p ON m.MOVIE_NO = p.MOVIE_NO
-	     WHERE f.USER_NO = #{userNo}
-	       AND p.FILE_LEVEL = '1'
-	     ORDER BY m.OPEN_DATE
-	     <choose>
-	         <when test="sort == 'asc'">
-	             ASC
-	         </when>
-	         <when test="sort == 'desc'">
-	             DESC
-	         </when>
-	     </choose>
+	<select id="couponList" parameterType="int" resultMap="couponResultSet">
+		SELECT CU.COUPON_NO AS COUPON_NO,
+		       C.COUPON_NAME AS COUPON_NAME,
+		       TO_CHAR(C.COUPON_EXP_DATE, 'YY/MM/DD HH24:MI:SS') AS COUPON_EXP_DATE
+		  FROM COUPON_USER CU
+		  JOIN COUPON C ON CU.COUPON_NO = C.COUPON_NO
+		 WHERE CU.USER_NO = #{userNo}
+		   AND CU.COUPON_USE = 'X'
+		   AND C.COUPON_STATUS = 'Y'
+		 ORDER BY C.COUPON_EXP_DATE ASC
 	</select>
+	
+	<select id="reviewList" parameterType="int" resultMap="reviewResultSet">
+		SELECT R.REVIEW_ID AS REVIEW_ID,
+		       R.USER_NO AS USER_NO,
+		       R.MOVIE_NO AS MOVIE_NO,
+		       R.REVIEW_TITLE AS REVIEW_TITLE,
+		       R.REVIEW_CONTENT AS REVIEW_CONTENT,
+		       R.REVIEW_DATE AS REVIEW_DATE,
+		       R.SCORE AS SCORE,
+		       M.MOVIE_TITLE AS MOVIE_TITLE,
+		       P.FILE_CODENAME AS FILE_CODENAME,
+		       P.IMAGE_PATH AS IMAGE_PATH
+		  FROM REVIEW R
+		  JOIN MOVIE M ON R.MOVIE_NO = M.MOVIE_NO
+		  LEFT JOIN POSTER P ON M.MOVIE_NO = P.MOVIE_NO
+		 WHERE R.IS_DELETED = 'N'
+		   AND R.USER_NO = #{userNo}
+		   AND P.FILE_LEVEL = '1'
+		 ORDER BY R.REVIEW_DATE DESC
+	</select>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	
 	

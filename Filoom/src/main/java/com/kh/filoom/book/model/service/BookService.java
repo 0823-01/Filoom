@@ -64,6 +64,10 @@ public interface BookService {
 
 	ArrayList<Movie> selectSearchFirstMovieKid(HashMap<String, Object> map);
 	
+	
+	
+	
+	
 	//결제============================================================
 
 	//좌석등록하기
@@ -71,9 +75,6 @@ public interface BookService {
 
 	//상영좌석 번호 구하기+유효성검사
 	ArrayList<BookingSeat> checkAndGetBookingSeatNoList(ArrayList<String> seatNoList, int playingNo,ArrayList<String> bookingSeatNos);
-
-	//영화예매번호 생성하기
-	int setBookNo(int userNo);
 	
 	//사용 가능한 쿠폰 조회하기
 	ArrayList<CouponUser> selectListCouponUser(int userNo);
@@ -87,19 +88,8 @@ public interface BookService {
 	//결제전 쿠폰 유효성 검사
 	int selectCheckCoupon(List<Integer> couponNos, int userNo);
 
-	
-	
 	//유효성 테스트 통과x, bookNo 지우기
 	int deleteBookNo(int bookNo, int userNo);
-
-	
-
-
-
-	
-	
-	//결제성공시 영화 예매 처리
-	int updateBookingDone(Booking booking);
 
 	//결제성공시 예매된 좌석 처리
 	int updateBookingSeatDone(ArrayList<BookingSeat> bookingSeatNoList, int bookNo);
@@ -116,16 +106,20 @@ public interface BookService {
 	//쿠폰사용시 사용한 쿠폰정보 조회
 	ArrayList<CouponUser> selectListCouponUserList(int bookNo);
 
-	//예약정보 조회
-	Booking selectBooking(int bookNo);
-	
 	//결제 취소 요청
 	int cancelUpdateBooking(int bookNo, int userNo);
 
 	//결제 취소 유효성 검사
 	int checkCancelBooking(int bookNo, int userNo);
 
+
+	//결제성공시 영화 예매 처리/예매번호 조회
+	int insertSelectBooking(Booking booking);
 	
+	//
+	Booking selectBooking(int bookNo);
+
+	ArrayList<BookingSeat> selectBookingSeatList(ArrayList<String> bookingSeatNos);
 	
 	////////////////////////////////////////////////
 	//관리자 페이지 - 예매관리
@@ -137,4 +131,7 @@ public interface BookService {
 	ArrayList<Booking> selectBookingListAdmin(PageInfo pi, String sorting,String bookNo, String userId);
 	
 
+	
+	
+	
 }

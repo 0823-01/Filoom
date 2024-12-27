@@ -283,16 +283,6 @@
 	</select>
 	
 
-	<!-- 북킹 데이터 생성과 동시에 bookNo 반환 -->	
-	<insert id="setAndGetBookNo" parameterType="booking">
-		INSERT INTO BOOKING (BOOK_NO,USER_NO)
-		VALUES (SEQ_BNO.NEXTVAL, #{userNo})
-		
-		<selectKey keyProperty="bookNo" resultType="int" order="AFTER"> <!-- insert 하고, insert된 값 반환 -->
-			SELECT SEQ_BNO.CURRVAL FROM DUAL
-		</selectKey>
-	</insert>
-	
 	<!-- 데이터 삭제  -->
 	<delete id="deleteBookNo" parameterType="map">
 		DELETE FROM BOOKING
@@ -300,7 +290,7 @@
 		    AND BOOK_NO = #{bookNo}	
 	</delete>
 	
-	
+	<!--  
  	<insert id="insertBookingSeats" parameterType="map">
 		INSERT INTO BOOKING_SEAT VALUES
 		           (SEQ_BSNO.NEXTVAL,
@@ -315,6 +305,7 @@
 		            #{playingNo},
 		            NULL)
 	</insert>
+	-->
 	
 	<update id="updateBookingSeatDone" parameterType="map">
 		UPDATE BOOKING_SEAT
@@ -326,18 +317,9 @@
 		 	</foreach>
 	</update>
 	
-	<update id="updateBookingDone" parameterType="booking">
-		UPDATE BOOKING
-		   SET BOOK_DATE=SYSDATE,
-		       BOOK_TOTAL_COST=#{bookTotalCost},
-		       BOOK_COST=#{bookCost},
-		       COST_PROCESS=#{costProcess},
-		       COST_TID=#{costTid},
-		       STATUS='Y'
-		 WHERE BOOK_NO=#{bookNo}
-		   AND USER_NO=#{userNo}
-	</update>
 	
+	
+
 	
 	<delete id="deleteBookingSeats" parameterType="list">
 		DELETE FROM BOOKING_SEAT
@@ -352,12 +334,6 @@
 		 WHERE BOOK_NO = #{bookNo}
 		   AND USER_NO = #{userNo}
 	</delete>
-	
-	<select id="selectBooking" parameterType="int" resultMap="bookingResultSet">
-		SELECT *
-		  FROM BOOKING
-		 WHERE BOOK_NO = #{bookNo}
-	</select>
 	
 	<update id="cancelUpdateBooking" parameterType="map">
 		UPDATE BOOKING
@@ -383,7 +359,44 @@
 		DELETE FROM BOOKING_SEAT
 	 	 WHERE BOOK_NO = #{bookNo}
 	</delete>
+			
+	<insert id="insertSelectBooking" parameterType="booking">
+	    <selectKey keyProperty="bookNo" resultType="int" order="BEFORE">
+	        SELECT SEQ_BNO.NEXTVAL FROM DUAL
+	    </selectKey>
+	    INSERT INTO BOOKING (BOOK_NO,
+	                         BOOK_TOTAL_COST,
+	                         BOOK_COST,
+	                         COST_PROCESS,
+	                         COST_TID,
+	                         STATUS,
+	                         USER_NO)
+	    VALUES (#{bookNo},
+	            #{bookTotalCost},
+	            #{bookCost},
+	            #{costProcess},
+	            #{costTid},
+	            'Y',
+	            #{userNo})
+	</insert>
 	
+	<select id="selectBooking" parameterType="int" resultMap="bookingResultSet">
+		SELECT *
+		  FROM BOOKING
+		 WHERE BOOK_NO = #{bookNo}
+	</select>
+	
+	<select id="selectBookingSeatList" parameterType="list" resultMap="bookingSeatResultSet">
+		SELECT BOOKING_SEAT_NO,
+ 			   SEAT_NO
+		  FROM BOOKING_SEAT BS
+		  JOIN SCREEN_SEAT SS ON (BS.SSEAT_NO  = SS.SSEAT_NO)
+		 <where>
+		 	<foreach item="item" collection="list" open="BOOKING_SEAT_NO IN (" separator="," close=")">
+		 		#{item}
+		 	</foreach>
+		 </where>
+	</select>
 	
 	
 	<!-- 관리자 -->
@@ -429,6 +442,7 @@
 			 WHERE RNUM > #{startNum}
 			 AND #{endNum} >= RNUM
 		</select>
+
 		
 </mapper>
 

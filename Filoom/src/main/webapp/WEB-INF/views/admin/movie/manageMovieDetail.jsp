@@ -218,7 +218,7 @@
                              → 해당 페이지를 하나 더 제작해야 함
                              (불필요하거나 시간 부족할 경우 삭제) -->
                             <div id="manageBar" align="right" style="width:100%;">
-                                <button id="button_sample">이미지 관리</button>
+                                <!-- <button id="button_sample">이미지 관리</button> -->
                                 <button id="button_sample" onclick="location.href='admin.managereview.mo?movieNo=${requestScope.target.movieNo}&cpage=1';">리뷰 관리</button>
                                 <button id="button_sample" onclick="location.href='modifymovie.mo?movieNo=${requestScope.target.movieNo}';">수정</button>
                                 <button id="button_sample" class="unready" style="background-color:red;">삭제</button>
@@ -542,7 +542,7 @@
         		
         		success:function(result) {
         			if(result == "success") {    				
-    	    			alert("added successfully");
+    	    			alert("상영정보가 추가되었습니다.");
     					$("#addPlaying").find("input").val("");
     					$("#addPlaying").hide();
     					viewPlayList();
@@ -550,7 +550,7 @@
         				alert("선택한 상영관을 먼저 추가해주세요.");
         			} else {
         				// result == "failure"
-        				alert("failed to add playing information");
+        				alert("상영정보가 추가되지 않았습니다.");
         			}
         		},
         		error:function(){
