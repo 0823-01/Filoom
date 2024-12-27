@@ -194,14 +194,16 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.5);
+    background-color: rgba(0, 0, 0, 0.5); /* 더 진한 배경 */
+    backdrop-filter: blur(1px); /* 흐림 효과 추가 */
     justify-content: center;
     align-items: center;
     z-index: 1000;
 }
 
 .modal-content {
-    background: #fff;
+	background-color: #1e1e1e; /* 짙은 회색 배경 */
+	color: #fff; /* 흰색 글자 */
     padding: 20px;
     text-align: center;
     border-radius: 8px;
