@@ -224,6 +224,7 @@
 
    
 	<br><br>
+	
 	<div style = "width:1400px; height:950px;margin:auto; border:1px solid #E4E0E1;">
 	
 	<div id = "map_title" style="margin:auto; margin-top:60px; text-align:center;" ><h1 style="color:white;">찾아오시는 길</h1></div>
