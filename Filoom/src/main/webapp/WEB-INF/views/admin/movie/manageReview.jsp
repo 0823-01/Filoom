@@ -206,7 +206,7 @@
     		success:function(result) {
     			if(result == "success") {
     				alert("리뷰가 삭제되었습니다.");
-    				location.href="admin.managereivew.mo?mno="+mno;
+    				location.href="admin.managereview.mo?mno="+mno;
     			} else {
     				alert("리뷰가 삭제되지 않았습니다.");
     			}

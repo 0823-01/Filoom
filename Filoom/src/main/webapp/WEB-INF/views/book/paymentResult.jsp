@@ -223,7 +223,7 @@ body{
             <div id="message"> "${sessionScope.loginUser.userName}" 회원님, 결제가 성공적으로 완료되었습니다.  </div>
             <div id="bookInfoArea">
                 <div id="imgArea">
-                     <img src="${requestScope.movie.imagePath}/${requestScope.movie.fileCodename}" alt="영화이미지" width="100%" />
+                     <img src="${pageContext.request.contextPath}/resources/images/posters/${requestScope.movie.fileCodename}" alt="영화이미지" width="100%" />
                 </div>
                 <div id="bookArea">
                     <div id="movieName">

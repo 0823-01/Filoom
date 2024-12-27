@@ -370,7 +370,7 @@ function nicepayClose(){
                     <div class="infoTitle">예매정보</div>
                     <div id="bookInfo">
                         <div id="imgDiv">
-                            <img src="${requestScope.movie.imagePath}/${requestScope.movie.fileCodename}" alt="영화이미지" width="100%" />
+                            <img src="${pageContext.request.contextPath}/resources/images/posters/${requestScope.movie.fileCodename}" alt="영화이미지" width="100%" />
                             
                         </div>
                         <div id="movieInfo">
