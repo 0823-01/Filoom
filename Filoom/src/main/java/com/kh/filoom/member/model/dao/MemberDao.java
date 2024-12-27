@@ -15,6 +15,7 @@ import com.kh.filoom.member.model.vo.Favorite;
 import com.kh.filoom.member.model.vo.History;
 import com.kh.filoom.member.model.vo.Member;
 import com.kh.filoom.member.model.vo.Reserve;
+import com.kh.filoom.member.model.vo.Review;
 
 @Repository
 public class MemberDao {
@@ -141,7 +142,10 @@ public class MemberDao {
 		return sqlSession.selectList("memberMapper.couponList", userNo);
 	}
 	
-	
+	public List<Review> reviewList(SqlSessionTemplate sqlSession, int userNo) {
+
+		return sqlSession.selectList("memberMapper.reviewList", userNo);
+	}
 	
 	
 	
@@ -197,6 +201,8 @@ public class MemberDao {
 	    params.put("status", status);
 	    return sqlSession.update("memberMapper.updateMemberStatus", params);
 	}
+
+	
 
 	
 

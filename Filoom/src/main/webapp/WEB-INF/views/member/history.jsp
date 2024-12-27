@@ -401,36 +401,32 @@
          });
     	 
     	 $(document).on("click", ".history-delete-btn", function () {
-    	        const bookNo = $(this).data("book-no");
-    	        const userNo = $("#userNo").val(); // 사용자 번호를 숨겨진 input 필드에서 가져오기
+   	        const bookNo = $(this).data("book-no");
+   	        const userNo = $("#userNo").val(); // 사용자 번호를 숨겨진 input 필드에서 가져오기
 
 
-    	        if (confirm("해당 영화를 내가 본 영화에서 삭제하시겠습니까?")) {
-    	            $.ajax({
-    	                url: "deleteHistory.me",
-    	                type: "POST",
-    	                data: { 
-    	                    userNo: userNo, 
-    	                    bookNo: bookNo 
-    	                },
-    	                success: function (response) {
-    	                    alert(response);
-    	                    if (response.trim() === "내가 본 영화 기록에서 삭제되었습니다.") {
-    	                        location.reload(); // 성공 시 페이지 새로고침
-    	                    }
-    	                },
-    	                error: function () {
-    	                    alert("삭제 중 오류가 발생했습니다. 다시 시도해주세요.");
-    	                }
-    	            });
-    	        }
-    	    });
+   	        if (confirm("해당 영화를 내가 본 영화에서 삭제하시겠습니까?")) {
+   	            $.ajax({
+   	                url: "deleteHistory.me",
+   	                type: "POST",
+   	                data: { 
+   	                    userNo: userNo, 
+   	                    bookNo: bookNo 
+   	                },
+   	                success: function (response) {
+   	                    alert(response);
+   	                    if (response.trim() === "내가 본 영화 기록에서 삭제되었습니다.") {
+   	                        location.reload(); // 성공 시 페이지 새로고침
+   	                    }
+   	                },
+   	                error: function () {
+   	                    alert("삭제 중 오류가 발생했습니다. 다시 시도해주세요.");
+   	                }
+   	            });
+   	        }
+   	    });
     	 
-    	 $("input[name='movieDetailNo']").val(mainMovie.movieNo);
-         const movieNo = mainMovie.movieNo;
-         if (movieNo) {
-         	$("#detailViewButton").attr("onClick", "location.href='detail.mo?movieno=" + movieNo + "'");
-         }
+    	
     	
 
     	

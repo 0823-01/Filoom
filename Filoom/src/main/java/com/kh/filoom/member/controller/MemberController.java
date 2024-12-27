@@ -33,6 +33,7 @@ import com.kh.filoom.member.model.vo.Favorite;
 import com.kh.filoom.member.model.vo.History;
 import com.kh.filoom.member.model.vo.Member;
 import com.kh.filoom.member.model.vo.Reserve;
+import com.kh.filoom.member.model.vo.Review;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -425,16 +426,16 @@ public class MemberController {
 //		return "member/favorite";
 //	}
 	
-	/**
-	 * 2024.12.13 김다훈
-	 * 마이페이지(내가 쓴 리뷰 조회) 접속 요청
-	 * @return
-	 */
-	@GetMapping("review.me")
-	public String review() {
-		
-		return "member/review";
-	}
+//	/**
+//	 * 2024.12.13 김다훈
+//	 * 마이페이지(내가 쓴 리뷰 조회) 접속 요청
+//	 * @return
+//	 */
+//	@GetMapping("review.me")
+//	public String review() {
+//		
+//		return "member/review";
+//	}
 	
 	/**
 	 * 2024.12.13 김다훈
@@ -958,8 +959,18 @@ public class MemberController {
         return "member/coupon"; // JSP 파일로 포워딩
     }
     
-    
-    
+    @GetMapping("review.me")
+    public String review(HttpSession session, Model model) {
+        // 로그인된 사용자 정보 가져오기
+        Member loginUser = (Member) session.getAttribute("loginUser");
+        int userNo = loginUser.getUserNo();
+        
+        List<Review> reviewList = memberService.reviewList(userNo);
+        
+        model.addAttribute("reviewList", reviewList);
+
+        return "member/review";
+    }
     
     
     

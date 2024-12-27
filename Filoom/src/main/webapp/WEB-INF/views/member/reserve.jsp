@@ -102,7 +102,7 @@
 	}
 
 	.reserve-list {
-	    padding: 20px;
+	    padding: 10px 20px;
 	}
 	
 	.reserve-item {
@@ -132,6 +132,7 @@
 	    width: 100%;
 	    display: flex;
 	    flex-direction: column; /* 상하 배치 */
+	    margin-top: 15px;
 	}
 	
 	.title-price {

@@ -63,11 +63,23 @@
 	    <result column="IMAGE_PATH" property="imagePath" />
 	</resultMap>
 	
-	<resultMap id="couponResultSet" type="mycoupon">
+	<resultMap id="couponResultSet" type="myCoupon">
 		<result column="COUPON_NO" property="couponNo" />
 	    <result column="COUPON_NAME" property="couponName" />
 	    <result column="COUPON_EXP_DATE" property="couponExpDate" />
-	    <result column="COUPON_LEVEL" property="couponLevel" />
+	</resultMap>
+	
+	<resultMap id="reviewResultSet" type="myReview">
+		<result column="REVIEW_ID" property="reviewId" />
+	    <result column="USER_NO" property="userNo" />
+	    <result column="MOVIE_NO" property="movieNo" />
+	    <result column="REVIEW_TITLE" property="reviewTitle" />
+	    <result column="REVIEW_CONTENT" property="reviewContent" />
+	    <result column="REVIEW_DATE" property="reviewDate" />
+	    <result column="SCORE" property="score" />
+	    <result column="MOVIE_TITLE" property="movieTitle" />
+	    <result column="FILE_CODENAME" property="fileCodename" />
+	    <result column="IMAGE_PATH" property="imagePath" />
 	</resultMap>
 	
 	<select id="loginMember" 
@@ -330,8 +342,7 @@
 	<select id="couponList" parameterType="int" resultMap="couponResultSet">
 		SELECT CU.COUPON_NO AS COUPON_NO,
 		       C.COUPON_NAME AS COUPON_NAME,
-		       TO_CHAR(C.COUPON_EXP_DATE, 'YY/MM/DD HH24:MI:SS') AS COUPON_EXP_DATE,
-		       C.COUPON_LEVEL AS COUPON_LEVEL
+		       TO_CHAR(C.COUPON_EXP_DATE, 'YY/MM/DD HH24:MI:SS') AS COUPON_EXP_DATE
 		  FROM COUPON_USER CU
 		  JOIN COUPON C ON CU.COUPON_NO = C.COUPON_NO
 		 WHERE CU.USER_NO = #{userNo}
@@ -340,7 +351,25 @@
 		 ORDER BY C.COUPON_EXP_DATE ASC
 	</select>
 	
-	
+	<select id="reviewList" parameterType="int" resultMap="reviewResultSet">
+		SELECT R.REVIEW_ID AS REVIEW_ID,
+		       R.USER_NO AS USER_NO,
+		       R.MOVIE_NO AS MOVIE_NO,
+		       R.REVIEW_TITLE AS REVIEW_TITLE,
+		       R.REVIEW_CONTENT AS REVIEW_CONTENT,
+		       R.REVIEW_DATE AS REVIEW_DATE,
+		       R.SCORE AS SCORE,
+		       M.MOVIE_TITLE AS MOVIE_TITLE,
+		       P.FILE_CODENAME AS FILE_CODENAME,
+		       P.IMAGE_PATH AS IMAGE_PATH
+		  FROM REVIEW R
+		  JOIN MOVIE M ON R.MOVIE_NO = M.MOVIE_NO
+		  LEFT JOIN POSTER P ON M.MOVIE_NO = P.MOVIE_NO
+		 WHERE R.IS_DELETED = 'N'
+		   AND R.USER_NO = #{userNo}
+		   AND P.FILE_LEVEL = '1'
+		 ORDER BY R.REVIEW_DATE DESC
+	</select>
 	
 	
 	

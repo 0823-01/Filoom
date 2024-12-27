@@ -77,7 +77,7 @@
 	
 	/* 콘텐츠 영역 */
 	.mypage-content {
-	    width: 70%;
+	    width: 80%;
 	    padding: 10px;
 	}
 	
@@ -87,6 +87,116 @@
 	    margin-bottom: 30px;
 	    border-bottom: 1px solid #333;
 	    padding-bottom: 10px;
+	}
+	
+	.review-list {
+	    padding: 10px 20px;
+	}
+	
+	.review-item {
+	    border: 1px solid #444;
+	    border-radius: 10px;
+	    margin-bottom: 30px;
+	    padding: 20px;
+	}
+	
+	.box-info {
+	    display: flex;
+	    gap: 10px; /* 좌우 박스 간 간격 */
+	}
+	
+	.poster {
+	    width: 110px;
+	    height: 158px;
+	    margin-right: 20px;
+	}
+	
+	.review-info,
+	.title-delete,
+	.review-content ul {
+	    overflow: hidden;
+	}
+	
+	.review-info {
+	    width: 100%;
+	    display: flex;
+	    flex-direction: column; /* 상하 배치 */
+	}
+	
+	.title-delete {
+	    width: 100%;
+	    display: flex;
+	    justify-content: space-between;
+	    border-bottom: 1px solid #444;
+	    padding-bottom: 5px;
+	    margin-bottom: 10px;
+	}
+	
+	.movie-title {
+	    text-decoration: none;
+	    color: #fff;
+	    font-size: 22px;
+	    font-weight: bold;
+		overflow: hidden; /* 넘치는 텍스트 숨기기 */
+	    text-overflow: ellipsis; /* ... 표시 */
+		white-space: nowrap; /* 한 줄로 유지 */
+		max-width: 440px;
+		display: block;
+	}
+	
+	.review-delete-btn, .review-plz {
+	    background-color: #49362800;
+	    color: #aaa;
+	    border: none;
+	    cursor: pointer;
+	    font-size: 12px;
+	    text-decoration: none;
+	    transition: color 0.3s ease;
+	}
+	
+	.review-delete-btn:hover, .review-plz:hover {
+		color: #fff;
+	    font-weight: bold;
+	}
+	
+	/* 전체 예약 내용 컨테이너 */
+	.review-content {
+	    font-size: 14px;
+	}
+	
+	.review-content p {
+	    margin-bottom: 10px;
+	}
+	
+	select:focus {
+	  	outline: none;
+	}
+	
+	#btn-more {
+		background-color: #493628;
+        margin-top: 50px;
+		width: 30%;
+        padding: 10px;
+        border: none;
+        font-size: 16px;
+        font-weight: bold;
+        color: #ffffff;
+        border-radius: 60px;
+        cursor: pointer;
+        transition: background-color 0.3s ease, color 0.3s ease; /* 배경색과 글씨 색 변화를 위한 트랜지션 */
+	}
+	
+	#btn-more:hover {
+		background-color: #fff; /* 배경을 흰색으로 변경 */
+        color: #000; /* 글씨 색을 검정색으로 변경 */
+	}
+
+	.no-review {
+		padding: 10px 0 100px 0;
+		text-align: center;
+		font-size: 20px;
+		/* font-weight: bold; */
+    	color: #aaa;
 	}
 	
 	
@@ -110,14 +220,94 @@
         </div>
         <div class="mypage-content">
             <h1 class="review-header">내가 쓴 리뷰</h1>
-            <div class="info-list">
 
-                
+            <div class="review-body">
+            
+	            <div class="review-list">
+	
+					<c:choose>
+	                   	<c:when test="${empty reviewList}">
+						    <div class="no-review">
+						        작성한 리뷰가 존재하지 않습니다.
+						    </div>
+						</c:when>
+							
+	                    <c:otherwise>
+							<c:forEach var="review" items="${reviewList}" varStatus="status">
+			                    <!-- 예매 내역 하나의 div -->
+			                    <div class="review-item" id="review-item" style="display: ${status.index < 15 ? 'block' : 'none'};">
+			                        <div class="box-info">
+			                            <div class="box-image">
+			                                <a href="detail.mo?movieNo=${review.movieNo}"><img src="${ pageContext.request.contextPath }/resources/images/posters/${ review.fileCodename }" class="poster"></a>
+			                            </div>
+			                            <div class="review-info">
+			                                <div class="title-delete">
+			                                    <div>
+			                                        <a href="detail.mo?movieNo=${review.movieNo}" class="movie-title">${ review.movieTitle }</a>
+			                                    </div>
+			                                    <div><button class="review-delete-btn">리뷰 삭제</button></div>
+			                                    <input type="hidden" id="userNo" value="${loginUser.userNo}">
+			                                </div>
+			                                <div class="review-content">
+			                                	<p><strong>내가 준 평점 : </strong>${ review.score }</p>
+			                                    <p><strong>제목 : </strong>${ review.reviewTitle }</p>
+			                                    <p><strong>내용 : </strong>${ review.reviewContent }</p>
+			                                </div>
+			                            </div>
+			                        </div>
+			                    </div>
+		                    </c:forEach>
+	                    </c:otherwise>
+					</c:choose>
+	                
+	            </div>
+	            
+	            <div align="center">
+		            <button id="btn-more" onclick="more();">더보기</button>
+		        </div>
+		        
             </div>
         </div>
     </div>
     
     <jsp:include page="../common/footer.jsp" />
+    
+    <script>
+	    let visibleCount = 15; // 현재 표시된 리스트 수 
+		
+	    // 페이지 로드 시 더보기 버튼 처리
+	    document.addEventListener("DOMContentLoaded", () => {
+	        const items = document.querySelectorAll(".review-item"); // 모든 카드 선택
+	        const btnMore = document.getElementById("btn-more"); // 더보기 버튼 선택
+	
+	        // 목록이 10개 미만이면 버튼 숨김
+	        if (items.length <= visibleCount) {
+	            btnMore.style.display = "none"; // 버튼 숨김
+	        }
+	    });
+	
+	    /* 더보기 버튼 클릭 시 발생하는 함수 */
+	    function more() {
+	        const items = document.querySelectorAll(".review-item"); // 모든 카드 선택 
+	        let count = 0;
+	
+	        // 숨겨진 카드 중 10개를 보여줌
+	        for (let i = visibleCount; i < items.length; i++) {
+	            items[i].style.display = "block";
+	            count++;
+	
+	            if (count === 15) break; // 10개까지만 표시
+	        }
+	
+	        visibleCount += count; // 표시된 카드 수 증가
+	
+	        // 더 이상 숨겨진 카드가 없으면 버튼 제거
+	        if (visibleCount >= items.length) {
+	            const btnMore = document.getElementById("btn-more"); // 버튼 선택
+	            btnMore.parentNode.removeChild(btnMore); // 버튼 삭제
+	        }
+	    }
+    </script>
     
 </body>
 </html>

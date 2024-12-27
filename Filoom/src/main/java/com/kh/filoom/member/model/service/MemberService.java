@@ -10,6 +10,7 @@ import com.kh.filoom.member.model.vo.Favorite;
 import com.kh.filoom.member.model.vo.History;
 import com.kh.filoom.member.model.vo.Member;
 import com.kh.filoom.member.model.vo.Reserve;
+import com.kh.filoom.member.model.vo.Review;
 
 public interface MemberService {
 	
@@ -78,7 +79,7 @@ public interface MemberService {
 
 	List<Coupon> couponList(int userNo);
 	
-	
+	List<Review> reviewList(int userNo);
 	
 	
 	
@@ -97,6 +98,8 @@ public interface MemberService {
 	ArrayList<Member> selectStatusMemberList(PageInfo pi, String status);
 
 	int updateMemberStatus(int userNo, String status);
+
+	
 
 	
 

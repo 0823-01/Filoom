@@ -123,7 +123,7 @@
 	
 	/* 쿠폰 리스트 */
 	.coupon-list {
-		padding: 20px;
+		padding: 10px 20px;
 	}
 	
 	.coupon-item {
@@ -322,8 +322,8 @@
 						<c:forEach var="coupon" items="${couponList}">
 			                <div class="coupon-item" data-coupon-no="${coupon.couponNo}">
 			                    <div class="coupon-body">
-			                        <h3 class="coupon-title"></h3>
-			                        <p class="coupon-detail"></p>
+			                        <h3 class="coupon-title">${coupon.couponName}</h3>
+			                        <p class="coupon-detail">무료 영화 관람권</p>
 			                        <li class="coupon-caution">쿠폰 1매당 1인 적용 가능</li>
 			                        <li class="coupon-caution">평일/주말/공휴일 모두 가능</li>
 			                        <li class="coupon-caution">일부 상영관 제외</li>
@@ -345,54 +345,6 @@
     <jsp:include page="../common/footer.jsp" />
     
     <script>
-	    $(document).ready(function () {
-	        $(".coupon-item").each(function () {
-	            const couponNo = parseInt($(this).data("coupon-no")); // 쿠폰 번호를 가져옴
-	
-	            // 쿠폰 번호에 따른 제목과 상세 정보 설정
-	            let title = "";
-	            let detail = "";
-	
-	            switch (couponNo) {
-	                case 1:
-	                    title = "[Filoom] 회원가입 기념 쿠폰";
-	                    detail = "회원가입 기념 무료 영화 관람권";
-	                    break;
-	                case 2:
-	                    title = "[Filoom] 이벤트 당첨 축하 쿠폰";
-	                    detail = "이벤트 당첨 무료 영화 관람권";
-	                    break;
-	                case 3:
-	                    title = "[Filoom] 댓글 이벤트 당첨 축하 쿠폰";
-	                    detail = "댓글 이벤트 당첨 무료 영화 관람권";
-	                    break;
-	                case 4:
-	                    title = "[Filoom] 깜짝! 쿠폰";
-	                    detail = "깜짝! 이벤트 무료 영화 관람권";
-	                    break;
-	                case 5:
-	                    title = "[Filoom] VIP 전용 쿠폰";
-	                    detail = "VIP 전용 무료 영화 관람권";
-	                    break;
-	                case 6:
-	                    title = "[Filoom] 1주년 기념 쿠폰";
-	                    detail = "1주년 기념 무료 영화 관람권";
-	                    break;
-	                case 7:
-	                    title = "[Filoom] 1000만 고객 달성 감사 쿠폰";
-	                    detail = "1000만 고객 달성 기념 무료 영화 관람권";
-	                    break;
-	                default:
-	                    title = "[Filoom] 알 수 없는 쿠폰";
-	                    detail = "쿠폰 정보가 없습니다.";
-	            }
-	
-	            // 제목과 상세 정보 업데이트
-	            $(this).find(".coupon-title").text(title);
-	            $(this).find(".coupon-detail").text(detail);
-	        });
-	    });
-	    
 	    $(document).ready(function() {
 	        function calculateDaysLeft(expDateStr) {
 	            // DB에서 제공된 만료일 문자열 형식: YY/MM/DD HH24:MI:SS

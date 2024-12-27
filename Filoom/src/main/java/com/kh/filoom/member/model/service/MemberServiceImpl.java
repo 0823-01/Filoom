@@ -17,6 +17,7 @@ import com.kh.filoom.member.model.vo.Favorite;
 import com.kh.filoom.member.model.vo.History;
 import com.kh.filoom.member.model.vo.Member;
 import com.kh.filoom.member.model.vo.Reserve;
+import com.kh.filoom.member.model.vo.Review;
 
 @Service
 public class MemberServiceImpl implements MemberService{
@@ -172,7 +173,11 @@ public class MemberServiceImpl implements MemberService{
 		return memberDao.couponList(sqlSession, userNo);
 	}
 	
-	
+	@Override
+	public List<Review> reviewList(int userNo) {
+
+		return memberDao.reviewList(sqlSession, userNo);
+	}
 	
 
 	
@@ -214,6 +219,8 @@ public class MemberServiceImpl implements MemberService{
 	public int updateMemberStatus(int userNo, String status) {
 	    return memberDao.updateMemberStatus(sqlSession, userNo, status);
 	}
+
+	
 
 	
 

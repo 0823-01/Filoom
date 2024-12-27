@@ -15,7 +15,8 @@
 		<typeAlias type = "com.kh.filoom.member.model.vo.Reserve" alias="reserve"/>
 		<typeAlias type = "com.kh.filoom.member.model.vo.History" alias="history"/>
 		<typeAlias type = "com.kh.filoom.member.model.vo.Favorite" alias="favorite"/>
-		<typeAlias type = "com.kh.filoom.member.model.vo.Coupon" alias="mycoupon"/>
+		<typeAlias type = "com.kh.filoom.member.model.vo.Coupon" alias="myCoupon"/>
+		<typeAlias type = "com.kh.filoom.member.model.vo.Review" alias="myReview"/>
 		
 		<typeAlias type = "com.kh.filoom.book.model.vo.Booking" alias="booking"/>
 		<typeAlias type = "com.kh.filoom.book.model.vo.BookingSeat" alias="bookingseat"/>

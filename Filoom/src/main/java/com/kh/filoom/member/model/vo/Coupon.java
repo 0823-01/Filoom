@@ -14,6 +14,5 @@ public class Coupon {
 	private int couponNo;
     private String couponName;
     private String couponExpDate;
-    private int couponLevel;
 
 }
