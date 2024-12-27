@@ -160,14 +160,6 @@ public class BookServiceImple implements BookService {
 	}
 
 
-	//4. 영화예매번호 생성 + 반환
-	@Override
-	@Transactional
-	public int setBookNo(int userNo) {
-		return bookDao.setAndGetBookNo(sqlSession,userNo);
-	}
-
-	
 	//5. 사용가능한 쿠폰리스트조회
 	@Override
 	public ArrayList<CouponUser> selectListCouponUser(int userNo) {
@@ -201,11 +193,6 @@ public class BookServiceImple implements BookService {
 
 
 
-	//영화 예매 처리
-	@Override
-	public int updateBookingDone(Booking booking) {
-		return bookDao.updateBookingDone(sqlSession,booking);
-	}
 
 	//예매된 좌석 처리
 	@Override
@@ -239,11 +226,7 @@ public class BookServiceImple implements BookService {
 		return bookDao.selectListCouponUserList(sqlSession,bookNo);
 	}
 
-	//예약 정보 조회
-	@Override
-	public Booking selectBooking(int bookNo) {
-		return bookDao.selectBooking(sqlSession,bookNo);
-	}
+
 
 	//결제 취소 요청 (BOOKING, BOOKING_SEAT, COUPON_USER)
 	@Transactional
@@ -265,17 +248,48 @@ public class BookServiceImple implements BookService {
 		return bookDao.checkCancelBooking(sqlSession,bookNo,userNo);
 	}
 
+
+	//영화 예매 booking insert
+	@Override
+	public int insertSelectBooking(Booking booking) {
+		return bookDao.insertSelectBooking(sqlSession,booking); 
+	}
+	
+	//예매정보 조회 
+	@Override 
+	public Booking selectBooking(int bookNo) {
+		
+		return bookDao.selectBooking(sqlSession, bookNo);
+	}
+
+	//조건 없는 북킹시트 조회용
+	@Override
+	public ArrayList<BookingSeat> selectBookingSeatList(ArrayList<String> bookingSeatNos) {
+		
+		return bookDao.selectBookingSeatList(sqlSession,bookingSeatNos);
+	}
+	
+	
+	
+	//관리자 
+	
+	
+	
 	@Override
 	public int selectBookingCount(String bookNo, String userId) {
 		return bookDao.selectBookingCount(sqlSession,bookNo,userId);
 	}
-
-	
 	
 	@Override
 	public ArrayList<Booking> selectBookingListAdmin(PageInfo pi, String sorting, String bookNo, String userId) {
 		return bookDao.selectBookingListAdmin(sqlSession,pi,sorting,bookNo,userId);
 	}
+
+
+
+
+
+
 
 
 

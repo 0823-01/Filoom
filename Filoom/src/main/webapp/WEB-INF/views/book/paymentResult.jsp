@@ -12,16 +12,15 @@
 
 body{
     background-color: black;
-    color:white;
+    color:gray;
     
 }
 
 #outer{
     width:60%;
     background-color: #222222;
-    border:1px dashed #696868;
+    /* border:1px dashed #696868; */
     margin: auto;
-    margin: 3%;
     padding: 5%;
     
 }
@@ -37,7 +36,7 @@ body{
     
     font-size: 40px;
     text-align: center;
-    border-bottom: 1px solid white;
+    border-bottom: 1px solid gray;
     padding-bottom: 3%;
 
 }
@@ -73,7 +72,7 @@ body{
 /* 영화이름 */
 #movieName{
     font-size: 50px;
-    border-bottom: 1px solid white;
+    border-bottom: 1px solid gray;
     padding-bottom: 1%;
 }
 /* 영화상영정보 */
@@ -201,17 +200,18 @@ body{
 #comment{
     
     margin:5%;
-    /* padding:3%; */
+    padding:3%;
     color:gray;
 }
 #comment>div{
     width:70%;
     border: 1px solid gray;
     margin: auto;
-    padding: 3%;
+    padding: 7%;
     
     
 }
+
 
 </style>
 <body>
@@ -251,11 +251,16 @@ body{
                                 </td>
                             </tr>
                             <tr>
-                                <td>관람일시</td>
+                                <td>관람일</td>
                                 <td colspan="3">
-                                	<div>${requestScope.movie.playTime}</div>
-                                	<div>${requestScope.movie.runtime}</div>
+                                	<div id="playDate">${requestScope.movie.playTime}</div>
+                                	<%-- <div>${requestScope.movie.runtime}</div> --%>
                                 </td>
+                            </tr>
+                            <tr>
+                            	<td>상영시간</td>
+                            	<td colspan="3">
+                            		<div id="playTime"></div>
                             </tr>
                         </table>
 
@@ -286,7 +291,7 @@ body{
                                         </c:if>
                                         <tr>
                                             <td>결제일시</td>
-                                            <td>${requestScope.booking.bookDate}</td>
+                                            <td id="payTime">${requestScope.booking.bookDate}</td>
                                         </tr>
                                         <tr>
                                             <td>결제방식 </td>
@@ -328,26 +333,26 @@ body{
         </div>
         <!-- 안내글 영역 -->
         <div id="comment">
-            
-            <div>
-                    <!-- if 문 19 영화-->
-                    관람 전 반드시 확인 하세요!
+             <!-- if 문 19 영화-->
+            <div id="comment2">
+                   
+                    
                         
-                        <ul>
+ <!--                        <ul>
                             <li>본 영화는 만 19세 이상 관람 가능한 영화입니다.</li>
-                            <li></li>연령 확인 불가 시 입장이 제한될 수 있습니다.</li>
+                            <li>연령 확인 불가 시 입장이 제한될 수 있습니다.</li>
                             <li>※ 연령 확인 수단 (사진,캡쳐본 불가) : 학생증, 모바일 학생증, 청소년증, 여권</li>
                         </ul>
-                    <!-- if 문 -->
+                    if 문
                     관람 전 반드시 확인 하세요! 
                         <ul>
                             <li>본 영화는 만 (12)세 이상 관람 가능한 영화입니다.</li>
                             <li>만 (12)세 미만 고객은 만 19세 이상 성인 보호자 동반 시 관람이 가능합니다. 연령 확인 불가 시 입장이 제한될 수 있습니다.</li>
                             <li>※ 연령 확인 수단 (사진,캡쳐본 불가) : 학생증, 모바일 학생증, 청소년증, 여권</li>
-                        </ul>
+                        </ul> -->
 
 
-                    상영안내
+                   
                         <ul>
                             <li>쾌적한 관람 환경을 위해 상영시간 이전에 입장 부탁드립니다.</li>
                             <li>입장 지연에 따른 관람 불편을 최소화하기 위해 본 영화는 10분 후 상영이 시작됩니다.</li>
@@ -355,7 +360,7 @@ body{
                         
                         취소 및 환불 규정
                         <ul>
-                            <li>상영시간 20분전까지 취소 가능하며, 캡쳐화면으로는 입장하실 수 없습니다.</li>
+                            <li>상영시간 전까지 취소 가능하며, 캡쳐화면으로는 입장하실 수 없습니다.</li>
                             <li>현장에서 직접 방문하실 경우 상영시간 전까지 취소하실 수 있습니다.</li>
                             <li>상영시간 이후 취소/환불/결제수단 변경은 불가합니다.</li>
 
@@ -373,6 +378,9 @@ body{
 </body>
 
 <script>
+
+
+
 	let bookingUserList = "${requestScope.couponUserList}";
 	let bookNo = "${requestScope.bookNo}";
 	let booking = "${requestScope.booking}";
@@ -380,6 +388,13 @@ body{
 	console.log(bookingUserList);
 	console.log(booking);
 	
+	const playTime = "${requestScope.movie.playTime}";
+	const runTime = "${requestScope.movie.runtime}";
+	$(function(){	
+		showMovieDate(playTime);
+		showPlayTime(playTime,runTime);
+		showPayTime()
+	});
 	
 	
 	function canelRequest(bookNo){
@@ -408,5 +423,71 @@ body{
 			});
 		}
 	}
+	
+	/* <td id="payTime">${requestScope.booking.bookDate}</td> */
+	
+	function showPayTime(){
+	
+		let bookDate = "${requestScope.booking.bookDate}";
+		bookDate2 = bookDate.substring(0,16);
+		$("#payTime").text(bookDate2);
+	}
+	
+	
+	// 영화상영날짜 뿌려주기 
+	function showMovieDate(playTime){
+		
+		let date = dateTimeToDate(playTime);
+	
+		$("#playDate").text(date);
+	}
+	
+	
+	//날짜시간(문자열) -> 년,월,일, 요일 
+	function dateTimeToDate(dateString){
+		
+		let playTimeObj = new Date(dateString);
+		let yyyy = playTimeObj.getFullYear();
+		
+        let mm = String(playTimeObj.getMonth()+1).padStart(2,'0');
+        let dd = String(playTimeObj.getDate()).padStart(2,'0');
+        
+        const daysOfWeek = ["일요일","월요일","화요일","수요일","목요일","금요일","토요일"];
+        let dayOfWeek = daysOfWeek[playTimeObj.getDay()];
+        
+        let date =yyyy + "년 " + mm + "월 "+dd+"일 "+ dayOfWeek;
+		
+        return date;
+		
+	};
+	
+	
+	//날짜시간+러닝타임 -> 시작시간~종료시간
+	function showPlayTime(playTime, runTime){
+		
+		let startTime = playTime.substring(11,16);
+		console.log(startTime);
+		let [hours, minutes] = startTime.split(":").map(Number);
+
+		minutes += +runTime; //숫자로써 계산 문자열앞에+			
+	
+		hours += Math.floor(minutes/60);	
+		
+		minutes %=60;
+		
+		hours %= 24
+		
+		let endTime = String(hours).padStart(2,"0")+":"+String(minutes).padStart(2,"0");
+		
+		let moviePlayTime = startTime + " ~ " + endTime;
+		
+		$("#playTime").text(moviePlayTime);
+			
+		
+	}
+
+	
+	
+	
 </script>
 </html>

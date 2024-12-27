@@ -14,7 +14,7 @@
 <body>
 	
 	<c:choose>
-	    <c:when test="${!empty sessionScope.loginUser && sessionScope.loginUser == 'admin'}">
+	    <c:when test="${!empty sessionScope.loginUser && sessionScope.loginUser.userId == 'admin'}">
 	        <!-- 로그인한 사용자가 admin일 경우 -->
 	        <a href="/filoom/ad.li" style="font-size:100px; color:white; background-color: #000000">관리자 메인페이지</a>
 	        <pre>관리자 페이지는 이곳으로 통해 들어갈 수 있게 해주세요 ~~</pre>

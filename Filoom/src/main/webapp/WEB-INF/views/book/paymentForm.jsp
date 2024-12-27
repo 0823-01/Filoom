@@ -355,9 +355,7 @@ function nicepayClose(){
 </head>
 <body> 
 	<jsp:include page="../common/header.jsp" />	
-	
-    <button onclick="deleteSeatAndBook()">좌석삭제 메소드</button>
-    
+	    
     <form id="payForm" name="payForm" method="post" action="/filoom/payResult.pm">
         <div id="outer"> <!-- 바깥테두리-->
 
@@ -415,11 +413,12 @@ function nicepayClose(){
                     <div class="infoTitle">결제수단</div>
                     <div id="payMethods">
                         <div>
-
-                            <input type="radio" name="PayMethod" id="pay1" value="CARD" checked><label for="pay1">카드결제</label>
+							
+                            <input type="radio" name="PayMethod" id="pay1" value="CARD"  checked><label for="pay1" class="selectedPayMethod">카드결제</label>
                             <input type="radio" name="PayMethod" id="pay2" value="BANK" ><label for="pay2">계좌이체</label>
                             <input type="radio" name="PayMethod" id="pay3" value="CELLPHONE"><label for="pay3">휴대폰결제</label>
-
+							<input type="radio" name="PayMethod" id="pay4" value="NONE" >
+							
                             
                         </div>
                     </div>
@@ -498,14 +497,12 @@ function nicepayClose(){
 		<input type="text" name= "totalCost" value=""> 토탈 코스트(o)
 		<input type="text" name="Amt" value="">결제 상품금액(o)
 		<input type="text" name="MID" value="nictest00m">상점 아이디(o)
-		<input type="text" name="Moid" value="${requestScope.booking.bookNo }">상품 주문번호 (o)
+		<input type="text" name="Moid" value="${requestScope.bookingSeatList[0].bookingSeatNo}">상품 주문번호 (o)
 		<input type="text" name="BuyerName" value="${sessionScope.loginUser.userName }">구매자명 (o)
 		<input type="text" name="BuyerEmail" value=${sessionScope.loginUser.email }>구매자명 이메일 (o)
 		<!-- 변경 불가능 -->
 		<input type="text" name="EdiDate" value="<%-- <%=ediDate%> --%>"/>전문 생성일시 (o)
 		<input type="text" name="SignData" value="<%-- <%=hashString%> --%>"/>해쉬값(o) 
-
-		<input type="text" name="bookNo" value=""> 예약번호 (o)
 		<input type="text" name="playingNo" value="${requestScope.movie.playingNo }"> playingNo (o)
 		 쿠폰 번호(o)  
 		<c:forEach var="seat" items="${requestScope.bookingSeatList}">
@@ -552,12 +549,14 @@ function nicepayClose(){
 		
 		//좌석삭제 요청 ajax 요청 메소드
 		function deleteSeatAndBook(){
+	
 			console.log("deleteSeatAndBook()실행");
 			let seatNos = [];
 			$("#submitData>input[name='bookingSeatNos']").each(function(index,item){
 				seatNos.push($(item).val());
 			});
 			console.log(seatNos);
+			location.href = "book.do";
 			$.ajax({
 				url:"deleteSB.pm",
 				type:"post",
@@ -570,51 +569,18 @@ function nicepayClose(){
 					console.log("ajax-deleteSeatAndBook 통신 실패");
 				}
 			});
-		
 		}
 		
 		// beforeunload 이벤트
 		$(window).on("beforeunload",deleteSeatAndBook);
 		
-		
-		
-		/*
-			    // 화면 벗어남(페이지 종료 또는 탭 이동) 이벤트 처리
-			    function handlePageExit() {
-			        const seatId = $("#movieSeat").val();
-			        const playingNo = $("#time input[name='playingNo']:checked").val();
-			
-			        // console.log("화면 벗어남 - seatId:", seatId, "playingNo:", playingNo);
-			
-			        sendAjaxForSeat(seatId, playingNo);
-			    }
-			
-			   
-				
-			    // visibilitychange 이벤트
-			    function handleVisibilityChange() {
-			        if (document.visibilityState === "hidden") {
-			            handlePageExit();
-			        }
-			    }
-			    
-			    // 이벤트 리스너 등록
-			    document.addEventListener("visibilitychange", handleVisibilityChange);
-			    
-		
-		*/
-		
-		
-		
-		
-
 
 		//카운트다운
 		
 		let seconds = 1;
 		function countDown(){
 					
-			--seconds;
+			++seconds;
 			
 			let differenceTime = timeLimit - seconds; 
 			if(differenceTime==0){
@@ -711,10 +677,10 @@ function nicepayClose(){
 			$("#payMethod").text(selectedPayMethod);
 		});
 
+    	
 		/* 
 			선택된 결제수단 스타일 주기  .selectedPayMethod 
 			클릭할때마다, 전체 클래스 제거, 클릭된 요소에만 클래스속성추가
-			
 		*/
 		let labelTags = $("#payMethods label"); 
 		
@@ -733,7 +699,6 @@ function nicepayClose(){
 		
     	//조회 클릭시 : 쿠폰리스트
     	function selectCoupon(){
-    		
     		$.ajax({
     			url:"couponList.co",
     			type:"post",
@@ -741,7 +706,6 @@ function nicepayClose(){
     				userNo:${sessionScope.loginUser.userNo} /* 세션의 userNo로 수정 */
     			},
     			success:function(result) {
-					
     				let couponList ="";
     				if(result.length===0){ //객체배열의 값이 없는값.. 비었는지로 조건걸기
     					couponList += "<span>사용 가능한 쿠폰이 없습니다</span> ";
@@ -758,6 +722,8 @@ function nicepayClose(){
 	    				
     				}
     				$("#couponList").html(couponList);
+    				//한번조회후 비활성화
+    				$("selectCouponBtn").prop("disabled",true);
 
     			},
     			error:function(){
@@ -813,51 +779,53 @@ function nicepayClose(){
 			//console.log("최종 결제금액 = " +Amt );
 			
 		}  
-		//$("#submitData>input[name=totalCost]").val(totalPrice);
 		
-		
-		
+
 		//nicepaystart  전
 		function beforePay(){
-			//쿠폰
 			
-			let couponNos=getCouponNos();
-			
-			//console.log(couponNos);
-			//console.log(Amt);
+			let seatNos = [];
+			$("#submitData>input[name='bookingSeatNos']").each(function(index,item){
+				seatNos.push($(item).val());
+			});
 			
 			
 			$.ajax({
 				url:"beforePay.pm",
 				type:"post",
 				contentType:"application/json",
-				data: JSON.stringify({ couponNos: couponNos,
-										price:Amt }),
+				data: JSON.stringify({price:Amt,
+									  seatNos:seatNos,
+									  playingNo:playingNo}),
 				success:function(payInfo){
+					
+					if(payInfo.result=="fail"){
+						console.log("좌석 유효성 검사 실패")
+						location.reload();
+					}
+					
 					let bookNo=payInfo.bookNo; //
 					let merchantKey=payInfo.merchantKey; 
 					let merchantId=payInfo.merchantId; //
 					let ediDate = payInfo.ediDate;//
 					let hashString = payInfo.hashString;
 					
-					$("#submitData>input[name=Moid]").val(bookNo);
-					$("#submitData>input[name=bookNo]").val(bookNo);
 					$("#submitData>input[name=MID]").val(merchantId);
 					$("#submitData>input[name=EdiDate]").val(ediDate);
 					$("#submitData>input[name=SignData]").val(hashString);
-				
-					$()
-					
-					
-					
+	
 					if(Amt===0){ //결제할 금액이 0원인경우
-						 /* <form name="payForm" method="post" action="/payResult.pm"> */
 						
 						// beforeunload 이벤트 제거 
 						$(window).off("beforeunload");
+						 
+						//결제금액 없을경우 결제수단 none
+						$("#pay4").prop("checked", true);
+						
 						$("#payForm").submit();
 						
-
+						
+						
 						
 					}else{
 					
