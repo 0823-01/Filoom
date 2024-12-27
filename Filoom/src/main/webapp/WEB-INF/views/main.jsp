@@ -228,6 +228,8 @@
 	
 	<div id = "map_title" style="margin:auto; margin-top:60px; text-align:center;" ><h1 style="color:white;">찾아오시는 길</h1></div>
 		<br>
+		<br>
+        
 		<div id="map" style="width:800px;height:600px; margin:auto;"></div><br>
 		<div id = "map_title" style="margin:auto; margin-top:60px; text-align:center;" ><h1 style="color:white;">
 			서울특별시 영등포구 선유동2로 57 이레빌딩(구관) 19F, 20F (T: 1544-0000 / F: 02-2000-0000)
