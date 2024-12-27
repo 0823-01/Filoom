@@ -69,7 +69,7 @@
 			            <c:otherwise>    
 			                <!-- 로그인 후 -->
 			                <ul>
-		                    	<li><a href="${ pageContext.request.contextPath }/myPage.me">마이페이지</a></li> &nbsp;&nbsp;&nbsp;&nbsp;
+		                    	<li><a href="${ pageContext.request.contextPath }/profile.me">마이페이지</a></li> &nbsp;&nbsp;&nbsp;&nbsp;
 		                    	<li><a href="${ pageContext.request.contextPath }/logout.me">로그아웃</a></li>
 		                    </ul>
 			            </c:otherwise>
@@ -179,28 +179,21 @@
     <div id = "service">
         <div id ="service1">
             <div id = "service1_img">
-                <img src ="images/고객센터.png">
+                <img src ="resources/images/posters/notification.png">
             </div>
             <div id = "service1_detail">
-                고객센터
+                <a href="${ pageContext.request.contextPath }/list.no" style="text-decoration:none; color:black;">공지사항</a>
             </div>
         </div>
         <div id = "service1">
             <div id = "service1_img">
-                <img src ="images/call.png">
+                <img src ="resources/images/posters/question.png">
             </div>
             <div id = "service1_detail">
-                고객센터
+                <a href="${ pageContext.request.contextPath }/list.fa" style="text-decoration:none; color:black;">자주 묻는 질문</a>
             </div>
         </div>
-        <div id = "service1">
-            <div id = "service1_img">
-                <img src ="images/1_1.png">
-            </div>
-            <div id = "service1_detail">
-                고객센터
-            </div>
-        </div>
+   
 
     </div>
 
@@ -222,7 +215,7 @@
             </div>
         
             <div id="content2_booking">
-                <button>더보기</button>
+                <button onclick="location.href=boxoffice.mo;">더보기</button>
             </div>
         </div>
     </div>

@@ -542,7 +542,7 @@
         		
         		success:function(result) {
         			if(result == "success") {    				
-    	    			alert("added successfully");
+    	    			alert("상영정보가 추가되었습니다.");
     					$("#addPlaying").find("input").val("");
     					$("#addPlaying").hide();
     					viewPlayList();
@@ -550,7 +550,7 @@
         				alert("선택한 상영관을 먼저 추가해주세요.");
         			} else {
         				// result == "failure"
-        				alert("failed to add playing information");
+        				alert("상영정보가 추가되지 않았습니다.");
         			}
         		},
         		error:function(){
