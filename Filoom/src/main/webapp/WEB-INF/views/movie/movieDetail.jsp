@@ -7,7 +7,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>꿈을 돌리는 영사기, Filoom</title>
+    <title>꿈을 담는 공간, Filoom</title>
 
     <!-- 'Poppins' 폰트 추가용 -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -617,7 +617,7 @@
 						        </table>
 						        
 						        <br>
-						        <a href="javascript:newReview();" id="submit" style="color:white;">작성</button>
+						        <a href="javascript:submitReview();" id="submit" style="color:white;">작성</button>
 						
 						        <br><br>
                             
@@ -626,45 +626,45 @@
                 </c:if>
                 <br><br>
                 
-                <div id="editModal" class="modal">
-                	<div class="modal-content" style="background-color:#6f6464;">
-						<span class="close-btn" style="color:white;">&times;</span><br>
+<!--                 <div id="editModal" class="modal"> -->
+<!--                 	<div class="modal-content" style="background-color:#6f6464;"> -->
+<!-- 						<span class="close-btn" style="color:white;">&times;</span><br> -->
 
-						<!-- 실제 MEMBER 테이블은 닉네임이 없어 이름으로만 부를 예정 -->
-					    <h2>${sessionScope.loginUser.userName} 님, 리뷰를 수정하시겠어요?</h1>
-				        <p style="font-size:16px;">
-							영화가 어땠는지 감상평을 남겨주세요!<br>
-						    수정된 리뷰로는 영화관람권을 받을 수 없어요! 이 점 유의해주세요.
-						</p>
+<!-- 						실제 MEMBER 테이블은 닉네임이 없어 이름으로만 부를 예정 -->
+<%-- 					    <h2>${sessionScope.loginUser.userName} 님, 리뷰를 수정하시겠어요?</h1> --%>
+<!-- 				        <p style="font-size:16px;"> -->
+<!-- 							영화가 어땠는지 감상평을 남겨주세요!<br> -->
+<!-- 						    수정된 리뷰로는 영화관람권을 받을 수 없어요! 이 점 유의해주세요. -->
+<!-- 						</p> -->
 						
-				        <div>
-				        	
-				        	<!-- 빈 별의 색상 : #141414 (20,20,20) -->
-				            <c:forEach var="s" begin="1" end="5">
-				            	<input type="radio" name="editScore" id="${s}" value="${s}">
-				            	<label for="${s}"><img id="star" src="resources/images/icons/star_vectoricon.png"></label>
-			            	</c:forEach>
-				        </div>
-				        <br><br>
+<!-- 				        <div> -->
+<!-- 				        	<input type="hidden" id="rid"> -->
+<!-- 				        	빈 별의 색상 : #141414 (20,20,20) -->
+<%-- 				            <c:forEach var="s" begin="1" end="5"> --%>
+<%-- 				            	<input type="radio" name="editScore" id="${s}" value="${s}"> --%>
+<%-- 				            	<label for="${s}"><img id="star" src="resources/images/icons/star_vectoricon.png"></label> --%>
+<%-- 			            	</c:forEach> --%>
+<!-- 				        </div> -->
+<!-- 				        <br><br> -->
 				        
-				        <table>
-				        	<tr>
-				        		<td><input id="editReviewTitle" placeholder="제목을 입력해주세요.">
-				            <tr>
-				                <td>
-				                    <textarea style="width:360px; resize:none;"
-				                    id="editReviewContent" placeholder="규정에 어긋나는 감상평은 경고 없이 삭제되며, 반복 적발시 향후 리뷰 작성 및 VIP 승급이 제한될 수 있습니다."></textarea>
-				                </td>
-				            </tr>
-				        </table>
+<!-- 				        <table> -->
+<!-- 				        	<tr> -->
+<!-- 				        		<td><input id="editReviewTitle" placeholder="제목을 입력해주세요."> -->
+<!-- 				            <tr> -->
+<!-- 				                <td> -->
+<!-- 				                    <textarea style="width:360px; resize:none;" -->
+<!-- 				                    id="editReviewContent" placeholder="규정에 어긋나는 감상평은 경고 없이 삭제되며, 반복 적발시 향후 리뷰 작성 및 VIP 승급이 제한될 수 있습니다."></textarea> -->
+<!-- 				                </td> -->
+<!-- 				            </tr> -->
+<!-- 				        </table> -->
 				        
-				        <br>
-				        <a href="javascript:updateReview(rid);" id="submit" style="color:white;">수정</button>
+<!-- 				        <br> -->
+<!-- 				        <a href="javascript:updateReview(rid);" id="submit" style="color:white;">수정</button> -->
 				
-				        <br><br>
+<!-- 				        <br><br> -->
                             
-                        </div>
-                    </div>
+<!--                         </div> -->
+<!--                     </div> -->
                 
                 <script>
                 const mno = $("#mno").val();
@@ -685,21 +685,7 @@
     	                $(targetModal).fadeIn(200); // 모달을 서서히 나타냄
     	            });
                 	
-    	            // 수정용 모달 열기
-    	            $(".edit-modal-btn").click(function () {
-    	                const targetModal = "#" + $(this).data("target");
-
-    	                // 버튼에서 데이터를 가져옴
-    	                const reviewId = $(this).data("review-id");
-    	                const reviewScore = $(this).data("review-score");
-
-    	                // 모달 창에 데이터 설정
-    	                $("input[name=editScore][value=" + reviewScore + "]").prop('checked', true);
-    	                $("#editReviewId").val(reviewId); // 숨겨진 필드 (Ajax 요청 시 사용)
-
-    	                // 모달 열기
-    	                $(targetModal).fadeIn(200);
-    	            });
+    	           
 
     	            // 모달 닫기
     	            $(".close-btn").click(function () {
@@ -902,14 +888,6 @@
                 }
                 
                 function submitReview() {
-                	let sw = $("#isReviewed").val(); // sw 결과값 : 리뷰 있으면 해당되는 ID
-                	if(sw > 0)
-                		updateReview(sw);
-                	else
-                		newReview();
-                }
-                
-                function newReview() {
                 	let score = $('input[name=score]:checked').val();
                 	let reviewTitle = $("#reviewTitle").val();
                 	let reviewContent = $("#reviewContent").val();
@@ -942,37 +920,37 @@
             		});	
                 }
                 
-                function updateReview(rid) {
-                	let score = $('input[name=score]:checked').val();
-                	let reviewTitle = $("#reviewTitle").val();
-                	let reviewContent = $("#reviewContent").val();
-                	// let isWatched = 'Y'; // 기본값, 설정 가능하면 따로 적용
+//                 function updateReview(rid) {
+//                 	let score = $('input[name=score]:checked').val();
+//                 	let reviewTitle = $("#reviewTitle").val();
+//                 	let reviewContent = $("#reviewContent").val();
+//                 	// let isWatched = 'Y'; // 기본값, 설정 가능하면 따로 적용
                 	
-                	$.ajax({
-            			url:"updatereview.mo?userNo="+uid+"&movieNo="+mno,
-            			type:"post",
-            			data:{
-							"userNo" : uid,
-            				"movieNo" : mno,
-							"reviewTitle" : editReviewTitle,
-							"score" : editScore,
-							"reviewContent" : editReviewContent
-            			},
+//                 	$.ajax({
+//             			url:"updatereview.mo?userNo="+uid+"&movieNo="+mno,
+//             			type:"post",
+//             			data:{
+// 							"userNo" : uid,
+//             				"movieNo" : mno,
+// 							"reviewTitle" : editReviewTitle,
+// 							"score" : editScore,
+// 							"reviewContent" : editReviewContent
+//             			},
             			
-            			success:function(result) {
-            				if(result == "success") {
-            					alert("리뷰가 수정되었습니다.");
-            					selectReviewList(mno, 1);
-            					$(".close-btn").click();
-            				} else {
-            					alert("리뷰가 수정되지 않았습니다.");
-            				}
-            			},
-            			error:function() {
-            				alert("오류가 발생했습니다.");
-            			}
-            		});	
-                }
+//             			success:function(result) {
+//             				if(result == "success") {
+//             					alert("리뷰가 수정되었습니다.");
+//             					selectReviewList(mno, 1);
+//             					$(".close-btn").click();
+//             				} else {
+//             					alert("리뷰가 수정되지 않았습니다.");
+//             				}
+//             			},
+//             			error:function() {
+//             				alert("오류가 발생했습니다.");
+//             			}
+//             		});	
+//                 }
                 
                 function deleteReview(rid) {
                 	$.ajax({

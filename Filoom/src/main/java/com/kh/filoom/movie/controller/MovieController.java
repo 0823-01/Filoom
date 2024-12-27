@@ -30,9 +30,9 @@ import com.kh.filoom.movie.model.vo.Review;
 
 /**
  * @author 정원섭
- * === MovieController v 0.9.1 ===
+ * === MovieController v 0.9.2 ===
  * 작업 착수일 : 2024-12-13
- * 최종 수정일 : 2024-12-26
+ * 최종 수정일 : 2024-12-27
  */
 
 /* 작업 내역
@@ -56,6 +56,7 @@ import com.kh.filoom.movie.model.vo.Review;
  * 	v 0.8.1 - 좋아요 버튼이 좋아요 수를 반영함. (실시간은 안 되고 새로고침해야 반영됨)
  * v 0.9 - 리뷰 작성 / 삭제 (사용자, 관리자 공통) 완료
  * 	└ v 0.9.1 - 메인 하드 코딩 부분 완료
+ *  └ v 0.9.2 - 구현 중이던 리뷰 수정 부분 삭제 (사유 : 구현 실패)
  * */
 @Controller
 public class MovieController {
@@ -161,7 +162,7 @@ public class MovieController {
 		return "movie/list_using_taglib";
 	}
 	
-	/*
+	
 	
 	// 평점순 정렬 (상영작만)
 	@GetMapping("criticchoice.mo")
@@ -175,7 +176,7 @@ public class MovieController {
 		model.addAttribute("pi", pi);
 		return "movie/list_using_taglib";
 	}
-	*/
+	
 	
 	
 	// 상영 예정작만 보기 - 페이지 띄우기
@@ -366,18 +367,18 @@ public class MovieController {
 		return (result > 0) ? "success" : "failure";
 	}
 	
-	// 수정
-	@ResponseBody
-	@GetMapping("modifyreview.mo")
-	public String updateReview(Review r) {
-		int reviewId = msi.checkRid(r.getUserNo(), r.getMovieNo());
-		System.out.println(reviewId);
-		r.setReviewId(reviewId);
-		
-		System.out.println(r);
-		int result = msi.updateReview(r);
-		return (result > 0) ? "success" : "failure";
-	}
+	// 수정 - Ctrl-Serv-DAO-Mapper는 구현되어 있으나 모달창이 연결되지 않는 문제가 있어 기능 삭제함
+//	@ResponseBody
+//	@GetMapping("modifyreview.mo")
+//	public String updateReview(Review r) {
+//		int reviewId = msi.checkRid(r.getUserNo(), r.getMovieNo());
+//		System.out.println(reviewId);
+//		r.setReviewId(reviewId);
+//		
+//		System.out.println(r);
+//		int result = msi.updateReview(r);
+//		return (result > 0) ? "success" : "failure";
+//	}
 	
 	// 삭제
 	@ResponseBody
