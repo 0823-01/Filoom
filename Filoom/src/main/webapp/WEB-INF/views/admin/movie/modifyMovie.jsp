@@ -363,23 +363,31 @@
 		// 포스터를 첨부하지 않은 경우
     	if($("#posterInput").val() === '') {
     		// 혹시나 삭제 과정에서 포스터만 지워지고 영화 정보는 남았는데 거기서 수정을 누를 경우를 대비하여..
-    		if($("#prevpath").val() === '') {
+    		let prevpath = $("#prevpath").val();
+    		if(prevpath === '') {
     			alert('포스터가 없습니다.');
     			return false;
     		}
     		
     		// confirm : 확인 누르면 true, 취소 누르면 false
-    		else if(!confirm("포스터가 변경되지 않았습니다. 그래도 변경하시겠습니까?")) {
-    			console.log(false);
-    			return false;
+    		else {
+    			let recheck = confirm("포스터가 변경되지 않았습니다. 그래도 변경하시겠습니까?");
+    			if(recheck == false) {
+    				console.log(false);
+    				return false;
+    			}/* else {
+    				console.log("Modifying without poster anyway...");
+    				console.log("prevpath = "+prevpath);
+    			}*/
     		}
     	} else {
     		// 기존 이미지 경로 추가
-			formData.append("prevpath", $("#prevpath").val());
+			//formData.append("prevpath", $("#prevpath").val());
+    		formData.append("prevpath", prevpath);
 	    	
     		// 이미지 추가
 	    	formData.append("img", $("#posterInput")[0].files[0]);
-	    	let prevpath = $("#prevpath").val();
+	    	// let prevpath = $("#prevpath").val();
 	   	}
 		
     	$.ajax({

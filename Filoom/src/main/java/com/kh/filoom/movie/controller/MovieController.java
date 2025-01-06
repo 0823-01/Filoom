@@ -57,6 +57,11 @@ import com.kh.filoom.movie.model.vo.Review;
  * v 0.9 - 리뷰 작성 / 삭제 (사용자, 관리자 공통) 완료
  * 	└ v 0.9.1 - 메인 하드 코딩 부분 완료
  *  └ v 0.9.2 - 구현 중이던 리뷰 수정 부분 삭제 (사유 : 구현 실패)
+ *  
+ *  v.1.0 (2024-12-27) - 발표 직전 커밋 (Final Official Release)
+ *  
+ *  === ↓ 비공식 사후 지원 ===
+ *  v.1.01 (2025-01-06) - 메인 페이지 포스터 안 뜨던 오류, 영화 수정시 포스터 안 바꾸고 수정 시도하면 나오는 오류 수정
  * */
 @Controller
 public class MovieController {
@@ -528,8 +533,8 @@ public class MovieController {
 	// 영화 수정
 	@ResponseBody
 	@PostMapping("admin.updatemovie.mo")
-	public String updateMovie(HttpServletRequest request, @RequestParam(value="img")MultipartFile img,
-			@RequestParam(value="prevpath")String prevpath,
+	public String updateMovie(HttpServletRequest request, @RequestParam(value="img", required=false)MultipartFile img,
+			@RequestParam(value="prevpath", required=false)String prevpath,
 			Movie m, Model model, HttpSession session) {
 		
 		// System.out.println(m);
