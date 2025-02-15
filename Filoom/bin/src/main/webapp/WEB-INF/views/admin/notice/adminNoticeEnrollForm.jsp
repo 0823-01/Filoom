@@ -5,7 +5,7 @@
 <head>
 <meta charset="UTF-8">
 <title>관리자 공지사항 글작성</title>
-<!--  link rel="stylesheet" href="../main/admin.css" />-->
+<link rel="stylesheet" href="resources/css/admin.css" />
 <style>
 body{
     width: 100%;
@@ -179,10 +179,10 @@ body{
 
 /*내거 영역*/
     #title {
-        font-size: 30px;
+        font-size: 25px;
         font-weight: bold;
         color : #493628;
-        padding : 20px; 
+        padding : 27px 20px; 
         margin-bottom: 10px;
     }
 
@@ -278,23 +278,7 @@ body{
 <body>
 
     <div id = "admin_content">
-        <div id = "navbar">
-            
-            <div id = "logo">
-                <img src="../main/Filoom.png">
-            </div>
-           
-            <div id = "nav">
-                <ul>
-                    <li><a>회원 관리</a></li>
-                    <li><a>회원 관리</a></li>
-                    <li><a>회원 관리</a></li>
-                    <li><a>회원 관리</a></li>
-                    <li><a>회원 관리</a></li>
-                </ul>
-    
-            </div>
-        </div>
+        <jsp:include page="../../common/adminHeader.jsp" />
         <div id = "admin_right">
             <div id ="admin_title">
 
@@ -311,24 +295,24 @@ body{
                         <!--이건 버튼 이랑 text 샘플
                         <input type ="text" id ="text_sample">
                         <input type="button" id ="button_sample" value="샘플">-->
-                        <form id="enroll-form" action="" method="post">
+                        <form id="enroll-form" action="insert.no" method="post">
                             <!--제목-->
                             <div class="title_date_count">
                                 <div id="nTitlearea">
-                                    제목<b style="color : red;">*</b> <input type="text" id="ntitle">
+                                    <label for="title">제목<b style="color : red;">*</b></label> <input type="text" id="ntitle" name="noticeTitle">
                                 </div>
                             </div>
 
                             <!-- 내용 -->
                             <div class="content">
                                 <div id="nContentarea">
-                                    내용<b style="color : red;">*</b><textarea id="ncontent"></textarea>
+                                    <label for="content">내용<b style="color : red;">*</b></label><textarea id="ncontent"  name="noticeContent"></textarea>
                                 </div>
                             </div>
 
                             <!--등록, 취소 버튼-->
                             <div class="btn" style="font-size: 20px; font-weight: bold;">
-                                게시물 상단 고정 <input id="check" type="checkbox">
+                                <!--게시물 상단 고정 <input id="check" type="checkbox">-->
                                 <button id="cancle" style="width : 100px; margin-right : 5px;">취소</button>
                                 <button type="submit" id="submit" style="width : 130px;">등록</button>
                             </div> 

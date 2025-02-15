@@ -1,5 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -15,25 +18,20 @@
 	}
 	
 	body {
-	    font-family: Arial, sans-serif;
 	    background-color: #121212;
 	    color: #ffffff;
-	    display: flex;
-	    justify-content: center;
-	    align-items: center;
-	    height: auto;
 	}
 	
 	/* 마이페이지 컨테이너 */
 	.mypage-container {
 	    display: flex;
-	    width: 100%;
-	    max-width: 1100px;
+	    width: 1100px;
 	    background-color: #1e1e1e;
 	    border-radius: 10px;
 	    padding: 50px;
 	    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
 	    overflow: hidden;
+	    margin: 50px auto;
 	}
 	
 	/* 사이드바 */
@@ -44,8 +42,8 @@
 	
 	.mypage-sidebar h2 a {
 	    color: #fff; /* 흰 글씨 */
-	    font-size: 20px; /* 큰 폰트 크기 */
-	    font-weight: bold; /* 굵은 폰트 */
+	    font-size: 24px; /* 큰 폰트 크기 */
+	    font-weight: 500; /* 굵은 폰트 */
 	    text-decoration: none; /* 밑줄 제거 */
 	    display: block;
 	    margin-bottom: 30px; /* 아래 간격 */
@@ -89,7 +87,7 @@
 	    justify-content: space-between;
 	    align-items: center;
 	    border-bottom: 1px solid #333;
-	    margin-bottom: 10px;
+	    margin-bottom: 30px;
 	    padding-bottom: 10px;
 	}
 	
@@ -137,13 +135,16 @@
 	    font-weight: bold;
 	}
 	
-	.history-item {
-	    border-bottom: 1px solid #aaa;
-	    margin-top: 20px;
-	    padding-bottom: 20px;
+	#year-btn:hover {
+		background-color: #8b5a2b;
 	}
 	
-	
+	.history-item {
+	    border: 1px solid #444;
+	    border-radius: 10px;
+	    margin-bottom: 30px;
+	    padding: 20px;
+	}
 	
 	.box-info {
 	    display: flex;
@@ -174,7 +175,7 @@
 	    display: flex;
 	    justify-content: space-between;
 	    border-bottom: 1px solid #444;
-	    padding-bottom: 13px;
+	    padding-bottom: 5px;
 	    margin-bottom: 20px;
 	}
 	
@@ -183,45 +184,84 @@
 	    color: #fff;
 	    font-size: 22px;
 	    font-weight: bold;
+		overflow: hidden; /* 넘치는 텍스트 숨기기 */
+	    text-overflow: ellipsis; /* ... 표시 */
+		white-space: nowrap; /* 한 줄로 유지 */
+		max-width: 440px;
+		display: block;
 	}
 	
-	.history-delete-btn {
-	    padding: 5px 10px;
+	.history-delete-btn, .review-plz {
 	    background-color: #49362800;
 	    color: #aaa;
 	    border: none;
-	    border-radius: 5px;
 	    cursor: pointer;
 	    font-size: 12px;
-	    font-weight: 600;
+	    text-decoration: none;
+	    transition: color 0.3s ease;
+	}
+	
+	.history-delete-btn:hover, .review-plz:hover {
+		color: #fff;
+	    font-weight: bold;
 	}
 	
 	/* 전체 예약 내용 컨테이너 */
 	.history-content {
-	    font-size: 13px;
+	    font-size: 14px;
 	}
 	
 	.history-content p {
 	    margin-bottom: 10px;
 	}
 	
-	.history-content a {
-	    text-decoration: none;
-	    color: #fff;
+	select:focus {
+	  	outline: none;
 	}
+	
+	#btn-more {
+		background-color: #493628;
+        margin-top: 50px;
+		width: 30%;
+        padding: 10px;
+        border: none;
+        font-size: 16px;
+        font-weight: bold;
+        color: #ffffff;
+        border-radius: 60px;
+        cursor: pointer;
+        transition: background-color 0.3s ease, color 0.3s ease; /* 배경색과 글씨 색 변화를 위한 트랜지션 */
+	}
+	
+	#btn-more:hover {
+		background-color: #fff; /* 배경을 흰색으로 변경 */
+        color: #000; /* 글씨 색을 검정색으로 변경 */
+	}
+
+	.no-history {
+		padding: 10px 0 100px 0;
+		text-align: center;
+		font-size: 20px;
+		/* font-weight: bold; */
+    	color: #aaa;
+	}
+	
 </style>
 </head>
 <body>
+
+	<jsp:include page="../common/header.jsp" />
+
     <div class="mypage-container">
         <div class="mypage-sidebar">
-            <h2><a href="myPage.me">마이 페이지</a></h2>
+            <h2><a href="#">마이 페이지</a></h2>
             <ul class="menu-list">
-                <li><a href="myPage-profile.html">내 정보</a></li>
-                <li><a href="myPage-coupon.html">쿠폰 조회</a></li>
-                <li><a href="myPage-reserve.html">예매 내역 조회</a></li>
-                <li class="active"><a href="myPage-history.html">내가 본 영화 조회</a></li>
-                <li><a href="myPage-favorite.html">보고 싶은 영화 조회</a></li>
-                <li><a href="myPage-review.html">내가 쓴 리뷰 조회</a></li>
+                <li><a href="profile.me">내 정보</a></li>
+                <li><a href="coupon.me">쿠폰 조회</a></li>
+                <li><a href="reserve.me">예매 내역 조회</a></li>
+                <li class="active"><a href="history.me">내가 본 영화 조회</a></li>
+                <li><a href="favorite.me">보고 싶은 영화 조회</a></li>
+                <li><a href="review.me">내가 쓴 리뷰 조회</a></li>
             </ul>
         </div>
         <div class="mypage-content">
@@ -229,19 +269,23 @@
                 
                 <div class="history-num">
                     <h1>내가 본 영화</h1>
-                    <span>25건</span>
+                    <span>${fn:length(historyList)}건</span>
                 </div>
 
-                <div class="year-search">
-                    <select name="year" id="year-select">
-                        <option value="all">전체</option>
-                        <option value="2021">2021</option>
-                        <option value="2022">2022</option>
-                        <option value="2023">2023</option>
-                        <option value="2024">2024</option>
-                    </select>
-                    <button type="button" id="year-btn">검색</button>
-                </div>
+				<form method="GET" action="/history.me">
+	                <div class="year-search">
+					    <select name="year" id="year-select">
+						    <option value="all" ${selectedYear == 'all' ? 'selected' : ''}>전체</option>
+						    <option value="2022" ${selectedYear == '2022' ? 'selected' : ''}>2022</option>
+						    <option value="2023" ${selectedYear == '2023' ? 'selected' : ''}>2023</option>
+						    <option value="2024" ${selectedYear == '2024' ? 'selected' : ''}>2024</option>
+						    <option value="2025" ${selectedYear == '2025' ? 'selected' : ''}>2025</option>
+						</select>
+
+					    <button type="button" id="year-btn">검색</button>
+					</div>
+				</form>
+
             </div>
             <!-- 예매 내역과 취소 내역을 합친 div -->
             <div class="history-body">
@@ -249,151 +293,142 @@
                 <!-- 예매 내역들만 묶은 div -->
                 <div class="history-list">
 
+                    <c:choose>
+                    	<c:when test="${empty historyList}">
+						    <div class="no-history">
+						        관람 내역이 존재하지 않습니다.
+						    </div>
+						</c:when>
+							
+	                    <c:otherwise>
+							<c:forEach var="history" items="${historyList}" varStatus="status">
+			                    <!-- 예매 내역 하나의 div -->
+			                    <div class="history-item" id="history-item" style="display: ${status.index < 10 ? 'block' : 'none'};">
+			                        <div class="box-info">
+			                            <div class="box-image">
+			                                <a href="detail.mo?movieNo=${history.movieNo}"><img src="${ pageContext.request.contextPath }/resources/images/posters/${ history.fileCodename }" class="poster"></a>
+			                            </div>
+			                            <div class="history-info">
+			                                <div class="title-delete">
+			                                    <div>
+			                                        <a href="detail.mo?movieNo=${history.movieNo}" class="movie-title">${ history.movieTitle }</a>
+			                                    </div>
+			                                    <div><button class="history-delete-btn" data-book-no="${history.bookNo}">기록에서 삭제</button></div>
+			                                    <input type="hidden" id="userNo" value="${loginUser.userNo}">
+			                                </div>
+			                                <div class="history-content">
+			                                    <p>${ history.playtime }</p>
+			                                    <p>${ history.screenName }관 / ${ history.totalTickets }명</p>
+			                                    <a class="review-plz" id="detailViewButton" onClick="location.href='detail.mo?movieNo=${history.movieNo}'">이 영화를 평가해주세요</a>
+			                                </div>
+			                            </div>
+			                        </div>
+			                    </div>
+		                    </c:forEach>
+	                    </c:otherwise>
+					</c:choose>
                     
-
-                    <!-- 예매 내역 하나의 div -->
-                    <div class="history-item">
-                        <div class="box-info">
-                            <div class="box-image">
-                                <a href="#"><img src="https://img.cgv.co.kr/Movie/Thumbnail/Poster/000088/88920/88920_185.jpg" class="poster"></a>
-                            </div>
-                            <div class="history-info">
-                                <div class="title-delete">
-                                    <div>
-                                        <a href="#" class="movie-title">히든페이스</a>
-                                    </div>
-                                    <div><button class="history-delete-btn">기록에서 삭제</button></div>
-                                </div>
-                                <div class="history-content">
-                                    <p>2024.12.02 (월) 20:10 ~ 22:15</p>
-                                    <p>3관 4층 / 2명</p>
-                                    <a href="#">이 영화를 평가해주세요</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="history-item">
-                        <div class="box-info">
-                            <div class="box-image">
-                                <a href="#"><img src="https://img.cgv.co.kr/Movie/Thumbnail/Poster/000088/88526/88526_185.jpg" class="poster"></a>
-                            </div>
-                            <div class="history-info">
-                                <div class="title-delete">
-                                    <div>
-                                        <a href="#" class="movie-title">베놈-라스트 댄스</a>
-                                    </div>
-                                    <div><button class="history-delete-btn">기록에서 삭제</button></div>
-                                </div>
-                                <div class="history-content">
-                                    <p>2024.10.27 (일) 22:40 ~ 24:39</p>
-                                    <p>IMAX관 7층 / 2명</p>
-                                    <a href="#">이 영화를 평가해주세요</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="history-item">
-                        <div class="box-info">
-                            <div class="box-image">
-                                <a href="#"><img src="https://img.cgv.co.kr/Movie/Thumbnail/Poster/000088/88920/88920_185.jpg" class="poster"></a>
-                            </div>
-                            <div class="history-info">
-                                <div class="title-delete">
-                                    <div>
-                                        <a href="#" class="movie-title">히든페이스</a>
-                                    </div>
-                                    <div><button class="history-delete-btn">기록에서 삭제</button></div>
-                                </div>
-                                <div class="history-content">
-                                    <p>2024.12.02 (월) 20:10 ~ 22:15</p>
-                                    <p>3관 4층 / 2명</p>
-                                    <a href="#">이 영화를 평가해주세요</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="history-item">
-                        <div class="box-info">
-                            <div class="box-image">
-                                <a href="#"><img src="https://img.cgv.co.kr/Movie/Thumbnail/Poster/000088/88526/88526_185.jpg" class="poster"></a>
-                            </div>
-                            <div class="history-info">
-                                <div class="title-delete">
-                                    <div>
-                                        <a href="#" class="movie-title">베놈-라스트 댄스</a>
-                                    </div>
-                                    <div><button class="history-delete-btn">기록에서 삭제</button></div>
-                                </div>
-                                <div class="history-content">
-                                    <p>2024.10.27 (일) 22:40 ~ 24:39</p>
-                                    <p>IMAX관 7층 / 2명</p>
-                                    <a href="#">이 영화를 평가해주세요</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="history-item">
-                        <div class="box-info">
-                            <div class="box-image">
-                                <a href="#"><img src="https://img.cgv.co.kr/Movie/Thumbnail/Poster/000088/88920/88920_185.jpg" class="poster"></a>
-                            </div>
-                            <div class="history-info">
-                                <div class="title-delete">
-                                    <div>
-                                        <a href="#" class="movie-title">히든페이스</a>
-                                    </div>
-                                    <div><button class="history-delete-btn">기록에서 삭제</button></div>
-                                </div>
-                                <div class="history-content">
-                                    <p>2024.12.02 (월) 20:10 ~ 22:15</p>
-                                    <p>3관 4층 / 2명</p>
-                                    <a href="#">이 영화를 평가해주세요</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="history-item">
-                        <div class="box-info">
-                            <div class="box-image">
-                                <a href="#"><img src="https://img.cgv.co.kr/Movie/Thumbnail/Poster/000088/88526/88526_185.jpg" class="poster"></a>
-                            </div>
-                            <div class="history-info">
-                                <div class="title-delete">
-                                    <div>
-                                        <a href="#" class="movie-title">베놈-라스트 댄스</a>
-                                    </div>
-                                    <div><button class="history-delete-btn">기록에서 삭제</button></div>
-                                </div>
-                                <div class="history-content">
-                                    <p>2024.10.27 (일) 22:40 ~ 24:39</p>
-                                    <p>IMAX관 7층 / 2명</p>
-                                    <a href="#">이 영화를 평가해주세요</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
                 </div>
+                
+                <div align="center">
+		            <button id="btn-more" onclick="more();">더보기</button>
+		        </div>
+                
             </div>
         </div>
     </div>
+    
+    <jsp:include page="../common/footer.jsp" />
 
     <script>
-        $(function () {
-            $("#year-btn").click(function () {
-                const selectedYear = $("#year-select").val();
-                if (selectedYear !== "all") {
-                    console.log(selectedYear);
-                    window.location.href = `/myPage-history?year=${selectedYear}`; // 원하는 URL로 이동
-                } else {
-                    alert("전체를 선택했습니다.");
-                }
-            });
-        });
+        
+	    let visibleCount = 10; // 현재 표시된 리스트 수 
+	
+	    // 페이지 로드 시 더보기 버튼 처리
+	    document.addEventListener("DOMContentLoaded", () => {
+	        const items = document.querySelectorAll(".history-item"); // 모든 카드 선택
+	        const btnMore = document.getElementById("btn-more"); // 더보기 버튼 선택
+	
+	        // 목록이 10개 미만이면 버튼 숨김
+	        if (items.length <= visibleCount) {
+	            btnMore.style.display = "none"; // 버튼 숨김
+	        }
+	    });
+	
+	    /* 더보기 버튼 클릭 시 발생하는 함수 */
+	    function more() {
+	        const items = document.querySelectorAll(".history-item"); // 모든 카드 선택 
+	        let count = 0;
+	
+	        // 숨겨진 카드 중 10개를 보여줌
+	        for (let i = visibleCount; i < items.length; i++) {
+	            items[i].style.display = "block";
+	            count++;
+	
+	            if (count === 10) break; // 10개까지만 표시
+	        }
+	
+	        visibleCount += count; // 표시된 카드 수 증가
+	
+	        // 더 이상 숨겨진 카드가 없으면 버튼 제거
+	        if (visibleCount >= items.length) {
+	            const btnMore = document.getElementById("btn-more"); // 버튼 선택
+	            btnMore.parentNode.removeChild(btnMore); // 버튼 삭제
+	        }
+	    }
+    	
+    	var contextPath = '<%= request.getContextPath() %>';
+        
+    	 $(function () {
+             $("#year-btn").click(function () {
+                 console.log("클릭됨");
+                 
+                 const selectedYear = $("#year-select").val(); // 선택된 연도를 가져옴
+                 const contextPath = '${pageContext.request.contextPath}'; // 컨텍스트 경로 가져오기
+     	        
+     	        console.log(selectedYear);
+     	        console.log(contextPath);
+     	        
+     	       if (selectedYear) {
+     	            // 선택된 연도로 URL 생성
+     	            window.location.href = contextPath + "/history.me?year=" + selectedYear;
+     	        } else {
+     	            alert("연도를 선택하세요.");
+     	        }
+     	     
+             });
+         });
+    	 
+    	 $(document).on("click", ".history-delete-btn", function () {
+   	        const bookNo = $(this).data("book-no");
+   	        const userNo = $("#userNo").val(); // 사용자 번호를 숨겨진 input 필드에서 가져오기
+
+
+   	        if (confirm("해당 영화를 내가 본 영화에서 삭제하시겠습니까?")) {
+   	            $.ajax({
+   	                url: "deleteHistory.me",
+   	                type: "POST",
+   	                data: { 
+   	                    userNo: userNo, 
+   	                    bookNo: bookNo 
+   	                },
+   	                success: function (response) {
+   	                    alert(response);
+   	                    if (response.trim() === "내가 본 영화 기록에서 삭제되었습니다.") {
+   	                        location.reload(); // 성공 시 페이지 새로고침
+   	                    }
+   	                },
+   	                error: function () {
+   	                    alert("삭제 중 오류가 발생했습니다. 다시 시도해주세요.");
+   	                }
+   	            });
+   	        }
+   	    });
+    	 
+    	
+    	
+
+    	
     </script>
 
 </body>

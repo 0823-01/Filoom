@@ -46,8 +46,8 @@
         font-size: 20px;
     }
 
-    #eventing {
-        margin-left: 1185px;
+    #winner {
+        margin-left: 1185px; 
     }
 
     #eventing>a, #winner>a, #evented>a {
@@ -63,7 +63,7 @@
     .recommendEventArea {
         display: flex;
         justify-content : center;
-        gap : 50px;
+        gap : 30px;
         padding: 20px;
         border : 2px solid #F3F3F3;
         border-radius: 4px;
@@ -76,6 +76,7 @@
         border-radius: 4px;
         box-shadow: 3px 3px 4px;
         transition-duration: 0.3s; /*0.3초만에 돌아옴*/
+        overflow : hidden; /*이미지 넘침 방지*/
      
     }
 
@@ -118,7 +119,7 @@
         border-bottom: 2px solid #F3F3F3;
     }
 
-    #eventTitle {
+    #statusTitle {
         font-size: 23px;
         color : #F3F3F3;
         font-weight: bold;
@@ -137,12 +138,17 @@
 
     .card {
         display: flex;
-        justify-content : space-between;
+        flex-wrap : wrap; /*줄바꿈 허용*/
+        gap : 26px; 
+        justify-content : flex-start; /*항상 왼쪽 정렬*/
+        align-items : flex-start; /*카드가 왼쪽부터 순차적으로 채워짐*/
         padding: 20px;
     }
 
     .event-card {
-        width : 23%;
+        width : calc(25% - 20px); /*한줄에 4개씩 : 25% 너비에서 간격 계산*/
+        box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* 카드 그림자 */
+        overflow : hidden; /*이미지 넘침 방지*/
         height : 100%;
     }
 
@@ -173,20 +179,25 @@
 
     /*더보기 버튼*/
     #btn-more {
-        /*background-color: #E4E0E1; */
         border-radius: 4px;
-        color :/* #493628*/ #313131;
+        color : #D2CECF;
         font-size: 18px;
         font-weight: bold;
         width : 98%;
         margin-top : 15px;
-        background-color: none;
-        border : 1px solid #F3F3F3;
+        border : none;
         height: 40px;
+        box-shadow: 3px 3px 3px rgb(0, 0, 0, 0.2);
+        background-color: #493628;
+        cursor : pointer;
     }
-    #btn-more:hover, #btn-more:active {
+    #btn-more:hover {
+    	transform: scale(1.1em); !important;
+    }
+    
+    #btn-more:active {
         background-color: #AB886D;
-        color : #F3F3F3;
+        color : #493628;
         font-size: 18px;
         font-weight: bold;
         width : 98%;
@@ -209,192 +220,112 @@
         <!--메뉴영역-->
         <div class="menu">
             <div id="title">전체 이벤트</div>
-            <div id="eventing"><a href="#">진행중인 이벤트&emsp;</a>|</div>
-            <div id="winner"><a href="#">당첨자 발표&emsp;</a>|</div>
-            <div id="evented"><a href="#">지난 이벤트&emsp;</a></div>
+            
+            <!-- 필터링 영역 -->
+            <div id="winner"><a href="${pageContext.request.contextPath}/list.ev">전체 이벤트&emsp;</a>|</div>
+            <div id="eventing"><a href="${pageContext.request.contextPath}/list.ev?eventStatus=N">진행중인 이벤트&emsp;</a>|</div>
+            <div id="evented"><a href="${pageContext.request.contextPath}/list.ev?eventStatus=Y">지난 이벤트&emsp;</a></div>
+            <!--
+            <div id="winner"><a href="#">당첨자 발표&emsp;</a>|</div> -->
+           
         </div>
 
         <!-- 추천 이벤트 영역 -->
         <h2 style="color : #F3F3F3; padding: 10px;">✨추천이벤트✨</h2>
         <div class="recommendEventArea">
-            <div class="recommendCard">
-                <a href="#" style="text-decoration: none;">
-                    <img src="${pageContext.request.contextPath}/resources/eventUploadFiles/2024121214211983175.png" alt="추천이미지" style="width : 100%; height : 200px;">
-                    <div class="recommend-card-info" >
-                        <div id="recommend-card-title">[필룸] 수험생 특별 할인 이벤트!</div>
-                        <div id="recommend-card-date">2024.12.12 ~ 2024.12.31</div>
-                    </div>
-                </a>
-            </div>
-
-            <div class="recommendCard">
-                <a href="#" style="text-decoration: none;">
-                    <img src="${pageContext.request.contextPath}/resources/eventUploadFiles/2024121214211983175.png" alt="추천이미지" style="width : 100%; height : 200px;">
-                    <div class="recommend-card-info">
-                        <div id="recommend-card-title">[필룸] 수험생 특별 할인 이벤트!</div>
-                        <div id="recommend-card-date">항시 진행</div>
-                    </div>
-                </a>
-            </div>
-
-            <div class="recommendCard">
-                <a href="#" style="text-decoration: none;">
-                    <!--  <img src="${pageContext.request.contextPath}/resources/event_images/itmd.jpg" alt="추천 이벤트2"  style="width : 100%; height : 200px;">-->
-                    <img src="${pageContext.request.contextPath}/resources/eventUploadFiles/2024121214211983175.png" alt="추천이미지" style="width : 100%; height : 200px;">
-                    <div class="recommend-card-info" >
-                        <div id="recommend-card-title">[필룸] 수험생 특별 할인 이벤트!</div>
-                        <div id="recommend-card-date">~ 2024.12.31</div>
-                    </div>
-                </a>
-            </div>
+        	<c:forEach var="event" items="${hotList}" varStatus="status">
+        		<c:if test="${status.index < 3 }">
+        			<div class="recommendCard">
+	                <a href="${pageContext.request.contextPath}/detail.ev?eno=${event.eventNo}" style="text-decoration: none;">
+	                    <img src="${pageContext.request.contextPath}${event.contentImg1}" alt="추천이미지" style="width : 100%; height : 300px;">
+	                    <div class="recommend-card-info" >
+	                        <div id="recommend-card-title">${event.eventTitle }</div>
+	                        <div id="recommend-card-date">
+	                        	<c:choose>
+	                       			<c:when test="${ empty event.startDate and empty event.endDate  }">
+	                       				상시진행
+	                       			</c:when>
+	                       			<c:otherwise>
+	                       				${event.startDate }~${event.endDate }
+	                       			</c:otherwise>
+	                        	</c:choose>
+                        	</div>
+	                    </div>
+	                </a>
+	            </div>
+        		</c:if>
+        	</c:forEach>
         </div>
 
         <!--이벤트 목록 리스트-->
-        <!--진행중인이벤트-->
         <div class="eventTitle-more">
-            <div id="eventTitle">진행중인 이벤트</div>
-            <!--div id="more"><a href="#" style="text-decoration: none;">더보기 ></a></!--div-->
+        
+        	<!-- 필터링에 따라 제목도 바뀌도록 / 진행중인 이벤트, 전체이벤트, 지난이벤트 -->
+            <div id="statusTitle">${statusTitle}</div>
+            <c:if test="${sessionScope.loginUser.userNo eq 1 }">
+            	<div id="more"><a href="${pageContext.request.contextPath}/enrollForm.ev" style="text-decoration: none;">글작성</a></div>
+           	</c:if>
         </div>
+        
         <div class="card">
-	        <c:forEach var="event" items="${requestScope.list}">
-	            <div class="event-card">
-	            	<a href="#" style="text-decoration: none;">
-	                    <img src="${pageContext.request.contextPath}/resources/eventUploadFiles/2024121214211983175.png" alt="추천이미지" style="width : 100%; height : 350px;">
+	        <c:forEach var="event" items="${requestScope.list}" varStatus="status">
+	            <div class="event-card" id="event-list" style="display: ${status.index < 12 ? 'block' : 'none'};">
+	            	<a href="${pageContext.request.contextPath}/detail.ev?eno=${event.eventNo}" style="text-decoration: none;">
+	                    <img src="${pageContext.request.contextPath}${event.contentImg1}" alt="이벤트게시글" style="width : 100%; height : 350px;">
 	                    <div class="event-card-info" >
-	                        <div id="event-card-title">${event.eventTitle }</div>
-	                        <div id="event-card-date">${event.startDate }~${event.endDate } <b style="color : red;">D-2</b></div>
+	                        <div id="event-card-title">${event.eventTitle}</div>
+	                        <div id="event-card-date">
+	                       		<c:choose>
+	                       			<c:when test="${ empty event.startDate and empty event.endDate  }">
+	                       				상시진행
+	                       			</c:when>
+	                       			<c:otherwise>
+	                       				${event.startDate }~${event.endDate } <!--<b class="event-days-remaining" style="color : red;">D-2</b> -->
+	                       			</c:otherwise>
+	                        	</c:choose>
+                        	</div>
 	                    </div>
                    </a>
 	            </div>
             </c:forEach>
-            
-<!-- 
-            <div class="event-card">
-                <a href="#" style="text-decoration: none;">
-                    <img src="../../resources/event_images/dnlzlem.jpg" style="width : 100%; height : 350px;">
-                    <div class="event-card-info" >
-                        <div id="event-card-title">[1승] 1승 시사회</div>
-                        <div id="event-card-date">2024.12.07~2024.12.15.</div>
-                    </div>
-                </a>
-            </div>
-
-            <div class="event-card"> 
-                <a href="#" style="text-decoration: none;">
-                    <img src="../../resources/event_images/fire_thum.jpg" style="width : 100%; height : 350px;">
-                    <div class="event-card-info" >
-                        <div id="event-card-title">[소방관] 소방관 시사회</div>
-                        <div id="event-card-date">2024.12.08~2023.12.09. <b style="color : red;">D-2</b></div>
-                    </div>
-                </a>
-            </div>
-
-            <div class="event-card">
-                <a href="#" style="text-decoration: none;">
-                    <img src="../../resources/event_images/모아나.jpg" style="width : 100%; height : 350px;">
-                    <div class="event-card-info" >
-                        <div id="event-card-title">[모아나] 모아나 키링 증정 이벤트</div>
-                        <div id="event-card-date">~ 2024.12.31. <b style="color : red;">D-2</b></div>
-                    </div>
-                </a>
-            </div>
-        </div>
-
-        <div class="card">
-            <div class="event-card">
-                <a href="#" style="text-decoration: none;">
-                    <img src="../../resources/event_images/1tmd.jpg" style="width : 100%; height : 350px;">
-                    <div class="event-card-info" >
-                        <div id="event-card-title">[위키드] 위키드 무대인사</div>
-                        <div id="event-card-date">2024.12.03~2024.12.09. <b style="color : red;">D-2</b></div>
-                    </div>
-                </a>
-            </div>
-
-            <div class="event-card">
-                <a href="#" style="text-decoration: none;">
-                    <img src="../../resources/event_images/dnlzlem.jpg" style="width : 100%; height : 350px;">
-                    <div class="event-card-info" >
-                        <div id="event-card-title">[1승] 1승 시사회</div>
-                        <div id="event-card-date">2024.12.07~2024.12.15.</div>
-                    </div>
-                </a>
-            </div>
-
-            <div class="event-card"> 
-                <a href="#" style="text-decoration: none;">
-                    <img src="../../resources/event_images/fire_thum.jpg" style="width : 100%; height : 350px;">
-                    <div class="event-card-info" >
-                        <div id="event-card-title">[소방관] 소방관 시사회</div>
-                        <div id="event-card-date">2024.12.08~2023.12.09. <b style="color : red;">D-2</b></div>
-                    </div>
-                </a>
-            </div>
-
-            <div class="event-card">
-                <a href="#" style="text-decoration: none;">
-                    <img src="../../resources/event_images/모아나.jpg" style="width : 100%; height : 350px;">
-                    <div class="event-card-info" >
-                        <div id="event-card-title">[모아나] 모아나 키링 증정 이벤트</div>
-                        <div id="event-card-date">~ 2024.12.31. <b style="color : red;">D-2</b></div>
-                    </div>
-                </a>
-            </div>
-        </div>
-
-        <div class="card">
-            <div class="event-card">
-                <a href="#" style="text-decoration: none;">
-                    <img src="../../resources/event_images/1tmd.jpg" style="width : 100%; height : 350px;">
-                    <div class="event-card-info" >
-                        <div id="event-card-title">[위키드] 위키드 무대인사</div>
-                        <div id="event-card-date">2024.12.03~2024.12.09. <b style="color : red;">D-2</b></div>
-                    </div>
-                </a>
-            </div>
-
-            <div class="event-card">
-                <a href="#" style="text-decoration: none;">
-                    <img src="../../resources/event_images/dnlzlem.jpg" style="width : 100%; height : 350px;">
-                    <div class="event-card-info" >
-                        <div id="event-card-title">[1승] 1승 시사회</div>
-                        <div id="event-card-date">2024.12.07~2024.12.15.</div>
-                    </div>
-                </a>
-            </div>
-
-            <div class="event-card"> 
-                <a href="#" style="text-decoration: none;">
-                    <img src="../../resources/event_images/fire_thum.jpg" style="width : 100%; height : 350px;">
-                    <div class="event-card-info">
-                        <div id="event-card-title">[소방관] 소방관 시사회</div>
-                        <div id="event-card-date">2024.12.08~2023.12.09. <b style="color : red;">D-2</b></div>
-                    </div>
-                </a>
-            </div>
-
-            <div class="event-card">
-                <a href="#" style="text-decoration: none;">
-                    <img src="../../resources/event_images/모아나.jpg" style="width : 100%; height : 350px;">
-                    <div class="event-card-info" >
-                        <div id="event-card-title">[모아나] 모아나 키링 증정 이벤트</div>
-                        <div id="event-card-date">~ 2024.12.31. <b style="color : red;">D-2</b></div>
-                    </div>
-                </a>
-            </div> -->
         </div>
 
         <!--더보기 버튼 -->
         <div align="center">
-            <button id="btn-more">더보기</button>
+            <button id="btn-more" onclick="more();">더보기</button>
         </div>
 
     </div>
+    
+    <script>
+ 
+    	/* 더보기 버튼 클릭시 발생하는 함수 */
+    	let visibleCount = 12; //현재 표시된 리스트 수 
+    	
+    	function more() {
+    		const cards = document.querySelectorAll(".event-card"); // 모든 카드 선택 
+    		let count = 0; 
+    		
+    		// 숨겨진 카드 중 12개를 보여줍니다. 
+    		for(let i = visibleCount; i<cards.length; i++) {
+    			cards[i].style.display = "block";
+    			count++;
+    			
+    			if(count === 12) break; // 12개까지만 표시
+    		}
+    		
+	   		 visibleCount += count; // 표시된 카드 수 증가
+	   		    
+	   		// 더 이상 숨겨진 카드가 없으면 버튼 제거
+	   	    if (visibleCount >= cards.length) {
+	   	        const btnMore = document.getElementById("btn-more"); // 버튼 선택
+	   	        btnMore.parentNode.removeChild(btnMore); // 버튼 삭제
+	   	    }
+    	}
+    
+    
+    </script>
 
 	<jsp:include page="../common/footer.jsp"/>
-<title>Insert title here</title>
-</head>
-<body>
-
 </body>
 </html>

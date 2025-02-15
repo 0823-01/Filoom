@@ -13,15 +13,6 @@
 	<resources mapping="/resources/**" location="/resources/" />
 	
 
-	<!-- DispatcherServlet Context: defines this servlet's request-processing infrastructure -->
-	
-	<!-- Enables the Spring MVC @Controller programming model -->
-	<annotation-driven />
-
-	<!-- Handles HTTP GET requests for /resources/** by efficiently serving up static resources in the ${webappRoot}/resources directory -->
-	<resources mapping="/resources/**" location="/resources/" />
-
-	<!-- Resolves views selected for rendering by @Controllers to .jsp resources in the /WEB-INF/views directory -->
 	<beans:bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
 		<beans:property name="prefix" value="/WEB-INF/views/" />
 		<beans:property name="suffix" value=".jsp" />
@@ -34,13 +25,24 @@
 	<interceptors>
 		<interceptor>
 			<mapping path="/myPage.me" />
+			<mapping path="/profile.me" />
+			<mapping path="/coupon.me" />
+			<mapping path="/reserve.me" />
+			<mapping path="/history.me" />
+			<mapping path="/favorite.me" />
+			<mapping path="/review.me" />
+			<mapping path="/withdrawal.me" />
+			
+			<mapping path="/ad.li"/>
+			<mapping path="/memberList_ad.me"/>
+			<mapping path="/movielist_ad.mo"/>
+			<mapping path="/adminBooking.ad"/>
+			<mapping path="/alist.ev"/>
+			
+			
 			<beans:bean class="com.kh.filoom.common.interceptor.LoginInterceptor" 
 						id="loginInterceptor" />
 		</interceptor>
 	</interceptors>
 
-	<context:component-scan base-package="com.kh.filoom" />
-	
-	
-	
 </beans:beans>

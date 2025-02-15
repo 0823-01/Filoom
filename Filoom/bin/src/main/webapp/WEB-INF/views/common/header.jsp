@@ -1,53 +1,62 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>FILOOM</title>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <style>
+
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100;200;300;400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@100;200;300;400;500;600;700;800;900&display=swap');
+@import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
+@import url('https://fonts.googleapis.com/css2?family=Play:wght@400;700&display=swap');
+	
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Pretendard', 'Noto Sans KR', 'Apple SD Gothic Neo', 'Malgun Gothic','Nanum Gothic', 'sans-serif';
+}
+body {
+    font-family: 'Pretendard';
+    background-color: #121212;
+    color: #ffffff;
+}
         
 #header {
    
    margin: auto;
    z-index: 1000;
-   width: 1900px;
-   height: 200px;
+   width: 100%;
    opacity: 90%;
    /*background-color: aqua;*/
 }
 
-#header>hr{
-   height: 3px; 
-   width: 1900px;
-   background-color: #E4E0E1; 
-   border: none;
-   border-radius: 5px;
-}
 
 #header_top {
+
    width: 100%;
-   height: 40%;
    display: flex; 
    align-items: center;
    justify-content: space-between; 
    padding: 0 20px;
+   border-bottom: 3px solid #E4E0E1;
 }
 
 
 .logo {
 
-   margin-right: 80px;
-   margin-top: 60px;
-   vertical-align : bottom;
+   margin: 0;
    font-size: 50px; 
    font-weight: bold; 
    color: #E4E0E1; 
    text-decoration: none; 
-   font-family: 'Arial', sans-serif;
-
+	pointer: cursor;
 }
 
 
@@ -57,13 +66,13 @@
    display: flex;
    margin: 0;
    padding: 0;
+   align-items: center;
   
 }
 
 #header_top ul li {
    
-   margin-top: 60px;
-   margin-right: 50px;
+   margin: 0 15px;
    width: auto;
    font-size: 25px;
    color: #E4E0E1;
@@ -79,6 +88,11 @@
 	transition: color 0.3s ease;
 }
 
+#header_top li>a {
+	text-decoration: none; 
+   	color: #8B8B8B;
+}
+
 
 #header_top ul li:hover, #header_top ul li a:hover {
    color: #493628; 
@@ -89,12 +103,12 @@
 
 #header_bottom {
    margin: auto;
-   width: 95%;
+   width: 100%;
    height: 70px;
    display: flex; 
    align-items: center; 
    justify-content: center;
-   border-radius: 10px;
+   border-bottom: 3px solid #E4E0E1;
 }
 
 #header_bottom ul {
@@ -115,144 +129,65 @@
    
 }
 
+#header_bottom li>a {
+	text-decoration: none; 
+   	color: #8B8B8B;
+}
+
 
 #header_bottom li:hover {
    color: #493628; 
    transform: scale(1.1); 
 }
 
+#header_bottom li>a:hover {
+	text-decoration: none; 
+   	color: #493628;
+   	transform: scale(1.1); 
+}
+
 
 
     </style>
-
-<style>
-        
-	#header {
-	   
-	   margin: auto;
-	   z-index: 1000;
-	   width: 1900px;
-	   height: 200px;
-	   opacity: 90%;
-	   /*background-color: aqua;*/
-	}
-	
-	#header>hr{
-	   height: 3px; 
-	   width: 1900px;
-	   background-color: #E4E0E1; 
-	   border: none;
-	   border-radius: 5px;
-	}
-	
-	#header_top {
-	   width: 100%;
-	   height: 40%;
-	   display: flex; 
-	   align-items: center;
-	   justify-content: space-between; 
-	   padding: 0 20px;
-	}
-	
-	
-	#header_top a {
-	
-	   margin-right: 80px;
-	   margin-top: 60px;
-	   vertical-align : bottom;
-	   font-size: 50px; 
-	   font-weight: bold; 
-	   color: #E4E0E1; 
-	   text-decoration: none; 
-	   font-family: 'Arial', sans-serif;
-	
-	}
-	
-	
-	#header_top ul {
-	  
-	   list-style: none;
-	   display: flex;
-	   margin: 0;
-	   padding: 0;
-	  
-	}
-	
-	#header_top ul li {
-	   
-	   margin-top: 60px;
-	   margin-right: 50px;
-	   width: auto;
-	   font-size: 25px;
-	   color: #E4E0E1;
-	   cursor: pointer;
-	   transition: color 0.3s ease;
-	   font-weight: bolder;
-	  
-	}
-	
-	
-	#header_top ul li:hover {
-	   color: #493628; 
-	}
-	
-	
-	/* 아래는 하단 네비바 */
-	
-	#header_bottom {
-	   margin: auto;
-	   width: 95%;
-	   height: 70px;
-	   display: flex; 
-	   align-items: center; 
-	   justify-content: center;
-	   border-radius: 10px;
-	}
-	
-	#header_bottom ul {
-	   list-style: none; 
-	   display: flex;
-	   margin: 0;
-	   padding: 0;
-	   cursor: pointer;
-	}
-	
-	#header_bottom li {
-	   margin: 0 60px; 
-	   text-decoration: none; 
-	   color: #8B8B8B; 
-	   font-size: 40px; 
-	   font-weight: bold; 
-	   transition: color 0.3s ease, transform 0.3s ease;
-	   
-	}
-	
-	
-	#header_bottom li:hover {
-	   color: #493628; 
-	   transform: scale(1.1); 
-	}
-	
-	
-
-</style>   
 </head>
 <body>
+
+	<!-- alertMsg 구문 -->
+	<script>
+		if("${sessionScope.alertMsg}" != ""){
+			alert("${sessionScope.alertMsg}");		
+		}
+	</script>
+	<c:remove var="alertMsg" scope="session"/>
+	
+	
+	
 	<div id = "header">
         <div id = "header_top">
 
             <ul>
    
-               <li>공지사항</li> &nbsp;&nbsp;&nbsp;&nbsp;
-               <li>문의</li>
+               <li><a href="${ pageContext.request.contextPath }/list.no">공지사항</a></li> &nbsp;&nbsp;&nbsp;&nbsp;
+               <li><a href="${ pageContext.request.contextPath }/list.fa">문의</a></li>
 
          	</ul>
 
 
-
-            <a class="logo">Filoom</a>
-
-
+			<c:choose>
+				<c:when test="${ empty sessionScope.loginUser }">
+	                <!-- 로그인 전 -->
+	                <ul>
+		                <a class="logo"  href="${ pageContext.request.contextPath }">Filoom</a>
+	                </ul>
+	            </c:when>
+	            <c:otherwise>    
+	                <!-- 로그인 후 -->
+	                <ul>
+	                   	<a class="logo" style="margin-left:30px;" href="${ pageContext.request.contextPath }">Filoom</a>
+	                   </ul>
+	            </c:otherwise>
+        	</c:choose>
+        	
 			<c:choose>
 				<c:when test="${ empty sessionScope.loginUser }">
 	                <!-- 로그인 전 -->
@@ -264,35 +199,40 @@
 	            <c:otherwise>    
 	                <!-- 로그인 후 -->
 	                <ul>
-                    	<li><a href="${ pageContext.request.contextPath }/myPage.me">마이페이지</a></li> &nbsp;&nbsp;&nbsp;&nbsp;
+                    	<li><a href="${ pageContext.request.contextPath }/profile.me">마이페이지</a></li> &nbsp;&nbsp;&nbsp;&nbsp;
                     	<li><a href="${ pageContext.request.contextPath }/logout.me">로그아웃</a></li>
                     </ul>
 	            </c:otherwise>
             </c:choose>
-         </ul>
-
-
-
-            <a>Filoom</a>
-
-            <ul>
- 
-                <li>로그인</li> &nbsp;&nbsp;&nbsp;&nbsp;
-                <li>회원가입</li>
-
-            </ul>
 
         </div>
-        <hr >
+
         <div id = "header_bottom">
             <ul>
-                <li>영화</li>
-                <li>예매</li>
-                <li>이벤트</li>
+                <li><a href="${ pageContext.request.contextPath }/movies.mo">영화</a></li>
+               
+                 <c:choose>
+		            <c:when test="${ empty sessionScope.loginUser }">
+		                <!-- 로그인 전 -->
+		                <li><a href="javascript:void(0);" onclick="requireLoginAlert();">예매</a></li>
+		            </c:when>
+		            <c:otherwise>
+		                <!-- 로그인 후 -->
+		                <li><a href="${ pageContext.request.contextPath }/book.do">예매</a></li>
+		            </c:otherwise>
+		        </c:choose>
+                
+                <li><a href="${ pageContext.request.contextPath }/list.ev">이벤트</a></li>
 
             </ul>
         </div>
-        <hr>
+
     </div>
+    
+    <script>
+    	function requireLoginAlert() {
+		    alert("로그인이 필요한 기능입니다!");
+		}
+    </script>
 </body>
 </html>

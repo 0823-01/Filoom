@@ -14,24 +14,19 @@
         padding: 0;
         box-sizing: border-box;
     }
-
-    body {
-        font-family: Arial, sans-serif;
-        background-color: #121212;
-        color: #ffffff;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: auto; /* 이거 나중에 손바야대 */
-    }
+	
+	body {
+	    background-color: #121212;
+	    color: #ffffff;
+	}
 
     .login-container {
-        width: 100%;
-        max-width: 600px;
+        width: 600px;
         background-color: #1e1e1e;
         border-radius: 10px;
         padding: 50px;
         box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+        margin: 100px auto;
     }
 
     .login-Header {
@@ -67,8 +62,13 @@
         color: #777;
     } 
 
+	input:focus {
+	  outline: none;
+	}
+
     .saveId {
         cursor: pointer;
+        transition: color 0.3s ease;
     }
 
     .options {
@@ -83,9 +83,10 @@
     .options a {
         color: #aaaaaa;
         text-decoration: none;
+        transition: color 0.3s ease;
     }
 
-    .options a:hover {
+    .options a:hover, .saveId:hover {
         color: #ffffff;
     }
 
@@ -148,6 +149,9 @@
 </style>
 </head>
 <body>
+
+	<jsp:include page="../common/header.jsp" />
+
     <div class="login-container">
         <div class="login-box">
             <h1 class="login-Header">로그인</h1>
@@ -164,23 +168,23 @@
                 
                 <div class="options">
                 
-                <c:choose>
-                	<c:when test="${ not empty cookie.saveId }">
-	                    <div>
-	                        <input type="checkbox" class="saveId" id="saveId" name="saveId" value="y" checked>
-	                        <label for="saveId" class="saveId">아이디 저장</label>
-	                    </div>
-                    </c:when>
-                    <c:otherwise>
-                    	<div>
-	                        <input type="checkbox" class="saveId" id="saveId" name="saveId" value="y">
-	                        <label for="saveId" class="saveId">아이디 저장</label>
-	                    </div>
-                    </c:otherwise>
-                </c:choose>
+                    <c:choose>
+                        <c:when test="${ not empty cookie.saveId }">
+                            <div>
+                                <input type="checkbox" class="saveId" id="saveId" name="saveId" value="y" checked>
+                                <label for="saveId" class="saveId">아이디 저장</label>
+                            </div>
+                        </c:when>
+                        <c:otherwise>
+                            <div>
+                                <input type="checkbox" class="saveId" id="saveId" name="saveId" value="y">
+                                <label for="saveId" class="saveId">아이디 저장</label>
+                            </div>
+                        </c:otherwise>
+                    </c:choose>
                 
                     <div>
-                        <a href="findIdForm.html">아이디 찾기</a> | <a href="findPwdForm.html">비밀번호 찾기</a>
+                        <a href="findIdForm.me">아이디 찾기</a> | <a href="findPwdForm.me">비밀번호 찾기</a>
                     </div>
                 </div>
                 <button type="submit" class="login-btn">로그인</button>
@@ -193,5 +197,55 @@
             </div>
         </div>
     </div>
+    
+    <jsp:include page="../common/footer.jsp" />
+    
+    <script>
+    
+	    $(function () {
+	        $("form").on("submit", function (e) {
+	            e.preventDefault(); // 기본 폼 제출 동작 방지
+	
+	            // 클라이언트 유효성 검사
+	            const userId = $("#userId").val().trim();
+	            const userPwd = $("#userPwd").val().trim();
+	
+	            if (!userId) {
+	                alert("아이디를 입력해주세요");
+	                $("#userId").focus(); // 아이디 입력창 포커스
+	                return false; // 더 이상 진행하지 않음
+	            }
+	
+	            if (!userPwd) {
+	                alert("비밀번호를 입력해주세요");
+	                $("#userPwd").focus(); // 비밀번호 입력창 포커스
+	                return false; // 더 이상 진행하지 않음
+	            }
+	
+	            // 클라이언트 유효성 검사를 통과하면 AJAX 요청
+	            const formData = $(this).serialize(); // 폼 데이터 직렬화
+	
+	            $.ajax({
+	                url: "login.me",
+	                method: "POST",
+	                data: formData,
+	                success: function (response) {
+	                    if (response === "로그인 성공") {
+	                        // alert(response);
+	                        location.href = "${pageContext.request.contextPath}/"; // 홈으로 이동
+	                    } else {
+	                        alert(response); // 실패 메시지 출력
+	                    }
+	                },
+	                error: function () {
+	                    alert("로그인 처리 중 문제가 발생했습니다. 다시 시도해주세요.");
+	                }
+	            });
+	        });
+	    });
+
+    
+    </script>
+    
 </body>
 </html>

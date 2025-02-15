@@ -5,7 +5,7 @@
 <head>
 <meta charset="UTF-8">
 <title>관리자용 이벤트 글작성</title>
-<!--link rel="stylesheet" href="../main/admin.css" /> -->
+<link rel="stylesheet" href="resources/css/admin.css" />
 <style>
 body{
     width: 100%;
@@ -371,23 +371,7 @@ body{
 </head>
 <body>
     <div id = "admin_content">
-        <div id = "navbar">
-            
-            <div id = "logo">
-                <!-- img src="..admin/main/Filoom.png">-->
-            </div>
-           
-            <div id = "nav">
-                <ul>
-                    <li><a>회원 관리</a></li>
-                    <li><a>회원 관리</a></li>
-                    <li><a>회원 관리</a></li>
-                    <li><a>회원 관리</a></li>
-                    <li><a>회원 관리</a></li>
-                </ul>
-    
-            </div>
-        </div>
+    <jsp:include page="../../common/adminHeader.jsp" />   
         <div id = "admin_right">
             <div id ="admin_title">
 
@@ -408,20 +392,51 @@ body{
                     
                     
                     <form id="enrollForm" action="insert.ev" method="post" enctype="multipart/form-data">
+                    	<!-- 쿠폰 정보 넘기기 -->
+                    	<input type="hidden" id="couponNo" name="couponNo" value="${couponNo != null ? couponNo : 0}">
+                    	<input type="hidden" id="refEno" name="refEno" value="${eventNo != null ? eventNo : 0}">
+                    	<input type="hidden" id="couponName" name="coupoName" value="${requestScope.e.eventTitle }">
+                    	<input type="hidden" id="couponLevel" name="couponLevel" value="${requestScope.e.eventType }">
+                    	<input type="hidden" id="couponExpDate" name="couponExpDate" value="${couponExpDate != null ? couponExpDate.toString('yyyy-MM-dd') : ''}">
+                    	<input type="hidden" id="couponStatus" name="couponStatus" value="${requestScope.c.couponStatus }">
+                    
                         <!--제목, 작성일, 조회수-->
                         <div class="title_date_count">
                             <div class="title">
-                                <label for="title">제목<b style="color : red;">*</b></label><input type="text" id="title" name="eventTitle" requried></input>
+                                <label for="title">제목<b style="color : red;">*</b></label><input type="text" id="title" name="eventTitle"></input>
                             </div>
 
                             <div class="startDate">
-                                <label for="startDate">이벤트 시작일<b style="color : red;">*</b></label> <input type="date" id="startDate" name="startDate"></input>
+                                <label for="startDate">이벤트 시작일<b style="color : red;">*</b></label> <input type="date" id="startDate" min="" name="startDate"></input>
                             </div>
 
                             <div class="endDate">
-                                <label for="endDate">이벤트 종료일<b style="color : red;">*</b></label><input type="date" id="endDate" name="endDate"></input>
+                                <label for="endDate">이벤트 종료일<b style="color : red;">*</b></label><input type="date" id="endDate" min="" name="endDate"></input>
                             </div>
                         </div>
+                        
+                        <!-- 날짜 관련 스크립트 -->
+                        <script>
+						    document.addEventListener("DOMContentLoaded", function() {
+						        const startDateInput = document.getElementById("startDate");
+						        const endDateInput = document.getElementById("endDate");
+						
+						        // 오늘 날짜 (yyyy-mm-dd 형식) 계산
+						        const today = new Date().toISOString().split('T')[0];
+						
+						        // 시작일을 오늘 날짜 이상으로 제한
+						        startDateInput.setAttribute("min", today);
+						
+						        // 종료일의 최소 날짜를 오늘 날짜로 설정
+						        endDateInput.setAttribute("min", today);
+						
+						        // 시작일이 변경될 때, 종료일의 min 속성도 시작일 이후로 업데이트
+						        startDateInput.addEventListener("change", function() {
+						            const startDate = startDateInput.value;
+						            endDateInput.setAttribute("min", startDate); // 종료일은 시작일 이후로만 선택 가능
+						        });
+						    });
+						</script>
 
                         <!-- 내용 -->
                         <div class="contentArea">
@@ -472,24 +487,24 @@ body{
                             <div class="type">
                                 <div style="margin-top: 2px;">이벤트 참여 방법<b style="color : red;">*</b></div>
                                 <div id="type-method">
-                                    댓글<input type="radio" name="eventType" value="1">
-                                    응모버튼<input type="radio" name="eventType" value="2">
-                                    오프라인<input type="radio" name="eventType" value="3">
+                                    댓글<input type="radio" name="eventType" value="1" required>
+                                    응모버튼<input type="radio" name="eventType" value="2" required>
+                                    오프라인<input type="radio" name="eventType" value="3" required>
                                 </div>
                             </div>
 
                             <div class="status">
                                 <div style="margin-top: 2px;">이벤트 종료 여부<b style="color : red;">*</b></div>
                                 <div id="eventStatus">
-                                    진행중인 이벤트<input type="radio" name="eventStatus" value="Y">
-                                    종료된 이벤트<input type="radio" name="eventStatus" value="N" disabled>
+                                    진행중인 이벤트<input type="radio" name="eventStatus" value="N" required> <!-- N 으로 변경 -->
+                                    종료된 이벤트<input type="radio" name="eventStatus" value="Y" disabled>  <!-- Y 으로 변경 -->
                                 </div>
                             </div>
                         
                             <!--등록, 취소 버튼-->
                             <div class="btn">
                                 <button id="cancle" style="width : 100px; margin-right : 5px;" onclick="history.back()">취소</button>
-                                <button type="submit" id="submit" style="width : 130px;">등록</button>
+                                <button type="submit" id="submit" style="width : 130px;" onclick="setCouponData()">등록</button>
                             </div>
                         </div>
 
@@ -516,56 +531,66 @@ body{
         });
     });
     
-    document.addEventListener("DOMContentLoaded", function() {
-	    	const images = document.querySelectorAll("img[data-target]");
-	
-	        images.forEach(img => {
-	            img.addEventListener("click", function() {
-	                const fileInputId = img.getAttribute("data-target");
-	                const fileInput = document.getElementById(fileInputId);
-	                if (fileInput) fileInput.click();  // 파일 입력창 열기
-	            });
-	        });
+ 	// 이미지 첨부 스크립트 (중복 방지 적용)
+    document.addEventListener("DOMContentLoaded", function () {
+        const images = document.querySelectorAll("img[data-target]");
+        const fileInputs = document.querySelectorAll('input[name="upfiles"]');
+
+        // 이미지 클릭 시 파일 입력창 열기
+        images.forEach((img) => {
+            const boundClickEvent = img.getAttribute("data-bound-click");
+
+            // 중복 클릭 방지를 위한 속성 확인
+            if (!boundClickEvent) {
+                img.addEventListener("click", function () {
+                    const fileInputId = img.getAttribute("data-target");
+                    const fileInput = document.getElementById(fileInputId);
+                    if (fileInput) fileInput.click(); // 파일 입력창 열기
+                });
+                img.setAttribute("data-bound-click", "true"); // 이벤트 등록 표기
+            }
         });
 
-        // 이미지 파일 선택 후 미리보기 업데이트
-        function loadImg(input) {
-        	// index를 data-index 속성에서 가져옵니다. 
-        	const index = input.dataset.index; 
-            const previewImg = document.getElementById(`contentImg\${index}`);
-            
-	         	// previewImg가 null인지 확인
-	            if (!previewImg) {
-	                console.error(`Image element with id 'contentImg\${index}' not found.`);
-	                return;  // 요소가 없다면 함수 종료
-	            }
-            
-            
-            
-            const file = input.files[0];
+        // 파일 입력 변화 시 미리보기 업데이트
+        fileInputs.forEach((input) => {
+            const boundChangeEvent = input.getAttribute("data-bound-change");
 
-            console.log(previewImg, file);  // 미리보기 이미지 요소와 파일 확인
-            
-            if (file) {
-            	
-            	if(file.type.startsWith('image/')) {  // 이미지 파일인지 체크
-	                const reader = new FileReader();
-	                reader.onload = function(e) {
-	                	// console.log("파일 읽기 성공:", e.target.result); // 읽은 데이터 URL을 출력
-	                	
-	                    previewImg.src = e.target.result;  // 파일 읽기 후 미리보기 이미지에 설정
-	                    
-	                    // previesImg.style.display = 'block'; // 미리보기 이미지 표시
-	                    // console.log("미리보기 설정 완료");
-	                };
-                
-                	reader.readAsDataURL(file); // 파일을 DataURL 로 읽기
-                
-            	} else {
-	                alert('이미지 파일만 선택 가능합니다.');
-	            }
-        	}
-      	}
+            // 중복 체인지 방지를 위한 속성 확인
+            if (!boundChangeEvent) {
+                input.addEventListener("change", function () {
+                    loadImg(input); // 이미지 처리
+                });
+                input.setAttribute("data-bound-change", "true"); // 이벤트 등록 표기
+            }
+        });
+    });
+
+    // 파일을 선택하면 미리보기 이미지에 표시
+    function loadImg(input) {
+        const index = input.dataset.index;
+        const previewImg = document.getElementById("contentImg" + index);
+        const file = input.files[0];
+        
+        previewImg.addEventListener('click', () => {
+            // console.log(`contentImg${index} clicked`);
+        });
+
+        if (!previewImg) {
+            console.error(`Image element with id 'contentImg${index}' not found.`);
+            return;
+        }
+
+        if (file && file.type.startsWith("image/")) {
+            // console.log("Selected File:", file); // 단일 로그
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                previewImg.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        } else {
+            alert("이미지 파일만 선택 가능합니다.");
+        }
+    }
 
         document.addEventListener('DOMContentLoaded', function() {
             const fileInputs = document.querySelectorAll('input[name="upfiles"]');
@@ -575,6 +600,33 @@ body{
                 });
             });
         });
+        
+        // 쿠폰 데이터 넘기는 스크립트 
+        function setCouponData() {
+	    // 서버에서 받은 값을 JavaScript 변수에 할당
+	    var couponNo = "${requestScope.c.couponNo}"; // 쿠폰 번호 (서버에서 전달받은 값)
+	    var refEno = "${requestScope.e.eventNo}"; // 이벤트 번호 (서버에서 전달받은 값)
+	    var couponName = "${requestScope.e.eventTitle}"; // 이벤트 제목 (쿠폰 이름)
+	    var couponLevel = "${requestScope.c.couponLevel}"; // 쿠폰 레벨 (서버에서 전달받은 값)
+	    var couponExpDate = "${requestScope.c.couponExpDate}"; // 만료일 (서버에서 전달받은 값)
+	    var couponStatus = "${requestScope.c.couponStatus}"; // 쿠폰 상태 (서버에서 전달받은 값)
+	
+	    
+	    
+	    console.log("couponExpDate : " + couponExpDate);
+	    
+	    
+	    // hidden input에 쿠폰 정보 설정
+	    document.getElementById("couponNo").value = couponNo;
+	    document.getElementById("refEno").value = refEno;
+	    document.getElementById("couponName").value = couponName;
+	    document.getElementById("couponLevel").value = couponLevel;
+	    document.getElementById("couponExpDate").value = couponExpDate;
+	    document.getElementById("couponStatus").value = couponStatus;
+	
+	    // 폼 제출
+	    document.getElementById("eventForm").submit(); // 폼 ID가 "eventForm"이면 이를 사용하여 제출
+	}
     </script>
 </body>
 </html>

@@ -6,7 +6,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>꿈을 돌리는 영사기, Filoom</title>
+    <title>꿈을 담는 공간, Filoom</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -17,7 +17,7 @@
      혹시 다른 분들 자리에서도 검색 아이콘 뜨는지 확인바람
      참고로 이거 무료는 한 달에 1만 번 로드 횟수 제한 있으니까 테스트할 때는 비활성화 필요함
      Ctrl+Q,S로 여는 프리뷰 창도 카운트 되는 것으로 알고 있음 -->
-     <!-- <script src="https://kit.fontawesome.com/4c4be5559b.js" crossorigin="anonymous"></script> -->
+     <script src="https://kit.fontawesome.com/4c4be5559b.js" crossorigin="anonymous"></script>
     
     <style>
         /* === Overall Font === */
@@ -47,12 +47,6 @@
             padding-left:40px;
             margin-top:20px;
         }
-
-        /* #showMore {
-            text-align:right;
-            padding-right:120px;
-            font-size:30px;
-        } */
 
         /* === 영화 목록 바로 위 설정란 === */
         /* === Toggle Switch === */
@@ -131,10 +125,11 @@
 
         .poster {
             width:240px;
-            /* height:480px; */
-            /*  */
             border-radius:5px;
             margin-bottom:5px;
+        }
+        .poster:hover {
+        	cursor:pointer;
         }
 
         #filmrate {
@@ -204,255 +199,140 @@
                 <div class="middle" style="padding-left:30px;">
                     <!-- <p>정렬 기준 |</p> -->
                     정렬 기준 |
-                    <a href="#">개봉순</a>
-                    <a href="#">이름순</a>
+                    <a href="javascript:listbyOpenOrder(1);">개봉순</a>
+                    <a href="javascript:listbyName(1);">이름순</a>
                 </div>
                 <div class="right" style="padding-right:30px;">
-                    <input type="search" class="search-bar" placeholder="제목으로 검색...">
-                    <!-- <i class="fa-solid fa-magnifying-glass" onclick="window.alert('검색 기능은 준비중입니다.')"></i> -->
+                    <input type="search" class="search-bar" placeholder="제목으로 검색..."
+                    	name="keyword" value=${requestScope.keyword }>
+                    <i class="fa-solid fa-magnifying-glass" onclick="searchMovie();"></i>
                 </div>
             </div>
-    
-    
             <br>
-            <!-- 실제 jsp 파일에서는 반복문 돌려서 구현할 계획
-                <.filmrate> <b>MovieName</b><br>
-                <open_date> <if_premiere ? '개봉' : '개봉예정'>
-            -->
+
+			<div class="movie-list">
+	            <!--  -->
+			</div>
             
-            <!-- 나중에 DB에 영화 목록 넣을 때 별일 없으면 이 아래 목록 그대로 넣을 생각임 -->
-    
-            <!-- 초안은 width 360px + 4x4에 margin 45px 0px 였는데
-             (피드백 받고 세로 margin 10px로 바꾸긴 했음)
-             이렇게 하면 화면 크기 100% 기준으로 화면이 꽉 차는 문제가 있음
-             당장 한 줄에 영화 4개 들어가면 margin 포함 1800px인데
-             뒷판떼기의 width 초안이 1900px이고 이 마저도 꽉차 보인단 피드백 있었음
-             (2/3 정도로 줄이는 게 적합하다는 의견)
-             전체적으로 2/3으로 width 240px에 margin 30px 10px가 나을 듯
-              -->
-            
-            <div class="movie">
-                <img src="sauce/harbin.jpg" class="poster">
-                <table class="movie-info">
-                    <tr>
-                        <td id="filmrate"><img src="sauce/15.svg" class="filmrate"></td>
-                        <td><b>하얼빈</b><br></td>
-                    </tr>
-                    <tr>
-                        <td colspan="2">2024.12.24 개봉예정</td>
-                    </tr>
-                </table>
-            </div>
-            <!-- 300 x 400, column margin 25px로 5x3으로 조정
-            row margin은 확인해보고 결정
-            참고로 현재 column margin은 45px -->
-
-            <!-- 극장판 짱구는 못말려 : 우리들의 공룡일기 -->
-            <div class="movie" onclick="location.href='movie_specific.html';">
-                <img src="sauce/dinosinzzang.jpg" class="poster"><br>
-                <table class="movie-info">
-                    <tr>
-                        <td id="filmrate"><img src="sauce/3.svg" class="filmrate"></td>
-                        <td><b>극장판 짱구는 못말..</b><br></td>
-                    </tr>
-                    <tr>
-                        <td colspan="2">2024.12.18 개봉예정</td>
-                    </tr>
-                </table>
-            </div>
-
-            <div class="movie">
-                <img src="sauce/mufasa.jpg" class="poster"><br>
-                <table class="movie-info">
-                        <tr>
-                            <td id="filmrate"><img src="sauce/3.svg" class="filmrate"></td>
-                            <td><b>무파사: 라이온 킹</b><br></td>
-                        </tr>
-                        <tr>
-                            <td colspan="2">2024.12.18 개봉예정</td>
-                        </tr>
-                </table>
-            </div>
-
-            <div class="movie">
-                <img src="sauce/civilwar.jpg" class="poster"><br>
-                <table class="movie-info">
-                    <tr>
-                        <td id="filmrate"><img src="sauce/15.svg" class="filmrate"></td>
-                        <td><b>시빌 워: 분열의 시대</b><br></td>
-                    </tr>
-                    <tr>
-                        <td colspan="2">2024.12.31 개봉</td>
-                    </tr>
-                </table>
-            </div>
-
-            
-            <div class="movie">
-                <img src="sauce/houria.jpg" class="poster"><br>
-                <table class="movie-info">
-                    <tr>
-                        <td id="filmrate"><img src="sauce/12.svg" class="filmrate"></td>
-                        <td><b>호리아</b><br></td>
-                    </tr>
-                    <tr>
-                        <td colspan="2">2024.12.26 개봉예정</td>
-                    </tr>
-                </table>
-            </div>
-
-            <div class="movie">
-                <img src="sauce/sonic3.jpg" class="poster"><br>
-                <table class="movie-info">
-                    <tr>
-                        <td id="filmrate"><img src="sauce/3.svg" class="filmrate"></td>
-                        <td><b>수퍼 소닉3</b><br></td>
-                    </tr>
-                    <tr>
-                        <td colspan="2">2025.1.1 개봉예정</td>
-                    </tr>
-                </table>
-            </div>
-
-            <div class="movie">
-                <img src="sauce/him.jpg" class="poster"><br>
-                <table class="movie-info">
-                    <tr>
-                        <td id="filmrate"><img src="sauce/12.svg" class="filmrate"></td>
-                        <td><b>힘을 낼 시간</b></td>
-                    </tr>
-                    <tr>
-                        <td colspan="2">2024.12.18 개봉예정</td>
-                    </tr>
-                </table>
-            </div>
-
-            <div class="movie">
-                <img src="sauce/bogota.jpg" class="poster"><br>
-                <table class="movie-info">
-                    <tr>
-                        <td id="filmrate"><img src="sauce/15.svg" class="filmrate"></td>
-                        <td><b>보고타</b></td>
-                    </tr>
-                    <tr>
-                        <td colspan="2">2024.12.31 개봉예정</td>
-                    </tr>
-                </table>
-            </div>
-
-            <div class="movie">
-                <img src="sauce/bigfamily.jpg" class="poster"><br>
-                <table class="movie-info">
-                    <tr>
-                        <td id="filmrate"><img src="sauce/12.svg" class="filmrate"></td>
-                        <td><b>대가족</b></td>
-                    </tr>
-                    <tr>
-                        <td colspan="2">2024.11.27 개봉</td>
-                    </tr>
-                </table>
-            </div>
-
-            <div class="movie">
-                <img src="sauce/morningseagull.jpg" class="poster"><br>
-                <table class="movie-info">
-                    <tr>
-                        <td id="filmrate"><img src="sauce/12.svg" class="filmrate"></td>
-                        <td><b>아침바다 갈매기는</b></td>
-                    </tr>
-                    <tr>
-                        <td colspan="2">2024.11.27 개봉</td>
-                    </tr>
-                </table>
-            </div>
-
-            <div class="movie">
-                <img src="sauce/lemongrass.jpg" class="poster"><br>
-                <table class="movie-info">
-                    <tr>
-                        <td id="filmrate"><img src="sauce/12.svg" class="filmrate"></td>
-                        <td><b>여름날의 레몬그...</b></td>
-                    </tr>
-                    <tr>
-                        <td colspan="2">2024.11.27 개봉</td>
-                    </tr>
-                </table>
-            </div>
-
-            <div class="movie">
-                <img src="sauce/gladiator2.jpg" class="poster"><br>
-                <table class="movie-info">
-                    <tr>
-                        <td id="filmrate"><img src="sauce/19.svg" class="filmrate"></td>
-                        <td><b>글레디에이터 II</b></td>
-                    </tr>
-                    <tr>
-                        <td colspan="2">2024.12.13 개봉</td>
-                    </tr>
-                </table>
-            </div>
-
-            <div class="movie">
-                <img src="sauce/knivesout.jpg" class="poster"><br>
-                <table class="movie-info">
-                    <tr>
-                        <td id="filmrate"><img src="sauce/15.svg" class="filmrate"></td>
-                        <td><b>나이브스 아웃</b></td>
-                    </tr>
-                    <tr>
-                        <td colspan="2">2019.12.4 개봉</td>
-                        <!-- ※ 재개봉일 : 2024-12-04 -->
-                    </tr>
-                </table>
-            </div>
-
-            <div class="movie">
-                <img src="sauce/thecrow.jpg" class="poster"><br>
-                <table class="movie-info">
-                    <tr>
-                        <td id="filmrate"><img src="sauce/19.svg" class="filmrate"></td>
-                        <td><b>더 크로우</b></td>
-                    </tr>
-                    <tr>
-                        <td colspan="2">2024.12.11 개봉예정</td>
-                    </tr>
-                </table>
-            </div>
-
-            <div class="movie">
-                <img src="sauce/carol.jpg" class="poster"><br>
-                <table class="movie-info">
-                    <tr>
-                        <td id="filmrate"><img src="sauce/19.svg" class="filmrate"></td>
-                        <td><b>캐롤</b></td>
-                    </tr>
-                    <tr>
-                        <td colspan="2">2016.2.4 개봉</td>
-                        <!-- ※ 재개봉일 = 2024-11-20 -->
-                    </tr>
-                </table>
-            </div>
-
-            <div class="movie">
-                <img src="sauce/joker.jpg" class="poster"><br>
-                <table class="movie-info">
-                    <tr>
-                        <td id="filmrate"><img src="sauce/15.svg" class="filmrate"></td>
-                        <td><b>조커</b>
-                    </tr>
-                    <tr>
-                        <td colspan="2">2019.10.2 개봉</td>
-                        <!-- ※ 재개봉일 = 2023-11-01 -->
-                    </tr>
-                </table>
-            </div>
 
         </div>
+        
+        <script>
+	        $(function() {
+	    		listbyOpenOrder(1);
+	    	});
+	    	
+	    	function listbyOpenOrder(cpage) {
+	    		$.ajax({
+    				url: "openorderpre.mo?cpage="+cpage,
+    				type: "get",
+    				dataType:"html",
+    				
+    				success: function(result) {
+    					$(".movie-list").empty();
+    					$(".movie-list").append(result);
+    					refreshPagingBar('order',cpage);
+    				},
+    				error: function() {
+    					alert("Mission Failure");
+    				}
+    			});	
+	    	}
+	    	
+	    	function listbyName(cpage) {
+	    		$.ajax({
+    				url: "nameorderpre.mo?cpage="+cpage,
+    				type: "get",
+    				dataType:"html",
+    				
+    				success: function(result) {
+    					$(".movie-list").empty();
+    					$(".movie-list").append(result);
+    					refreshPagingBar('name',cpage);
+    				},
+    				error: function() {
+    					alert("Mission Failure");
+    				}
+    			});	
+	    	}
+	    	
+	    	function searchMovie() {
+        		let keyword = $("input[name=keyword]").val();
+        		if(keyword != "") {
+        			$.ajax({
+	        			url: "searchMovie.mo",
+	        			type: "get",
+	        			data: {"keyword" : keyword, "status" : 2},
+	        			dataType:"html",
+	        			
+	        			success: function(result) {
+	    					$(".movie-list").empty();
+	    					$(".movie-list").append(result);
+	    					$(".pagingbar").empty();
+	    				},
+	    				error: function() {
+	    					alert("Mission Failure");
+	    				}
+        			});
+        		}
+        	}
+	    	
+	    	function refreshPagingBar(sort, cpage) {
+        		$(".pagingbar").empty();
+        		let link = '';
+        		let pgbar = '';
+
+        		switch(sort) {
+        			case 'order' : link = "listbyOpenOrder("; break;
+        			case 'name' : link = "listbyNamePre("; break;
+        			// default : alert('오류가 발생했습니다.'); return;
+        		}
+
+        		// EL 태그를 function 안에 쓸 수 없어서 다른 방법을 연구하는 중
+        		// 여기만 해결하면 진짜 끝남
+     
+        		let start = $("#first").val();
+        		let end = $("#last").val();
+        		let max = $("#MX").val();
+        		
+        		console.log("start = " + start + ", end = " + end + ", max = " + max);
+        				
+    			// '<<', '<' 처리
+        		if(cpage > 1) {
+        			// add &lt;&lt;
+        			// add &lt;
+        			pgbar += "<button onclick= '" + link + "1);'>&lt;&lt;</button> <!-- to Page1 -->"
+        				+ "<button onclick= '" + link + (cpage-1) + ");'>&lt;</button> <!-- Prev -->";
+        		}
+
+        		for(let i = start; i <= Math.min(end,max); i++) {
+
+        			if(i == cpage) {
+        				// font-weight:normal 넣는 이유 : 나머지는 lighter로 해놨음
+        				pgbar += "<button disabled style='font-weight: normal;' onclick= '" + link + i + ");'>"
+        					+ i + "</button>";
+        			}
+        			else {
+        				pgbar += "<button onclick= '" + link + i + ");'>" + i + "</button>";
+        			}
+        		}
+
+        		if (cpage < max) {
+        			// add &gt;
+        			// add &gt;&gt;
+        			pgbar += "<button onclick= '" + link
+        					+ (cpage+1) + ")';>&gt;</button> <!-- Next -->"
+        				+ "<button onclick= '" + link + max + ")';>&gt;&gt;</button> <!-- to LastPage -->";
+        		}
+
+        		$(".pagingbar").html(pgbar);
+        		
+        	}
+        </script>
         <br><br>
 
         <!-- Paging Bar -->
         <div class="pagingbar" align="center">
-            <!-- 나중에 currentPage에 대해서만 볼드 & btn disabled 적용할 예정 -->
             <!-- if i > 1 -->
             <c:if test="${ requestScope.pi.currentPage gt 1 }">
                 <button onclick="location.href = 'boxoffice.mo?page=1';">&lt;&lt;</button> <!-- to Page1 -->
@@ -483,6 +363,6 @@
 
     <br><br>
 
-    <jsp:include page="../common/footer.jsp" />
+    <jsp:include page="../common/footer.jsp"/>
 </body>
 </html>

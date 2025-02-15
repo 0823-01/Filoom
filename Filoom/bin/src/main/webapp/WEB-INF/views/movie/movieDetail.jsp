@@ -1,12 +1,13 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
     <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+    <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>꿈을 돌리는 영사기, Filoom</title>
+    <title>꿈을 담는 공간, Filoom</title>
 
     <!-- 'Poppins' 폰트 추가용 -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -53,12 +54,14 @@
             padding-top:10px;
             /* background-image: 컴퓨터 내부에서 가져오더라도 url() 써야 함 */
             /* background-size: cover; */
-            /* background-image: url('sauce/news_1732052776_1431040_m_1.jpeg'); */
+            /* background-image: url('resources/images/posters/news_1732052776_1431040_m_1.jpeg'); */
         }
 
         #description>* {
             display:inline-block;
         }
+        
+/*         #description * { border : 1px solid red;} */
 
         #description *:not(hr) {
             /* border:1px solid rgba(255, 0, 0, 0.4); */
@@ -67,7 +70,7 @@
         #thumbnail {
             /* width:300px; */
             height:500px;
-            margin-right:4px;
+            margin-right:6px;
         }
 
         .filmrate {
@@ -76,6 +79,9 @@
         #movieTitle {
             font-weight:bold;
             font-size:24px;
+        }
+        #specific * {
+/*         	text-align:left; */
         }
 
 
@@ -100,6 +106,7 @@
 
         a:hover {
             filter:invert(100%);
+            cursor:pointer;
         }
 
         /* .screenType>* {
@@ -109,13 +116,6 @@
             float:right;
             margin-right:10px;
         } */
-
-        /* 원전이 되는 CGV에서 개발자도구로 screenType 이미지를 긁어온 경우
-            background position은 다음과 같음
-            IMAX : 0
-            4DX : 0 -112px
-            SCREENX : 0 -940px
-        */
 
         /* === 스틸컷 - float 무시 */
         #steelcut {
@@ -133,8 +133,18 @@
         }
 
         /* === 리뷰 === */
-        #reviewTop * {
+        #part-header * {
             /* border:1px solid red; */
+        }
+
+        #part-header {
+            height:50px;
+            display:flex;
+            justify-content: space-between;
+        }
+        #part-header>div>* {
+            display:inline-block;
+            vertical-align: middle;
         }
 
         /* === 실제 관람평 여부 체크용 스위치 === */
@@ -202,9 +212,24 @@
         /* === 토글 스위치 END === */
 
 
-        .statistic td {
-            /* padding: 0; */
+        /* 평점 개요 */
+        #evalOverview {
+            display:flex;
+            /*border: 1px solid red;*/
         }
+
+        .evalSummary {
+            width:130px;
+            display:flex;
+            flex-direction: column;
+            justify-content: center;
+            /* border: 1px solid orange; */
+        }
+        .statistic {
+            width:1030px;
+            display:inline-block;
+        }
+        
         .graph-back {
             width:1000px;
             height:10px;
@@ -214,15 +239,16 @@
         }
 
         #evalOverview .graph {
-            /* color:black; */
             /* width:50%; */
             height:10px;
             border-radius:20px;
             margin:2px 0px;
             background-color: green;
         }
+        
+        /* 상세 리뷰 */
 
-        #reviewList {
+        #review-pool {
             padding: 0px 45px;
         }
         #review {
@@ -263,72 +289,128 @@
             font-weight: normal;
         }
         
+        /* === 리뷰 모달창 === */
+	        /* 모달 스타일 */
+	    .modal {
+	        display: none; /* 기본적으로 숨김 */
+	        position: fixed;
+	        z-index: 1000;
+	        left:50%;
+	        top: 50%;
+	        width: 100%;
+	        height: 100%;
+	        transform: translate(-50%, -50%);
+	        background-color: rgba(0, 0, 0, 0.6);
+	        max-width: 800px;
+	    }
+	
+	    /* 모달 내용 */
+	    .modal-content {
+	        background-color: #fff;
+	        color: #000;
+	        margin: 15% auto;
+	        padding: 20px;
+	        border-radius: 10px;
+	        width: 60%;
+	        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+	        position: relative;
+	    }
+	
+	    /* 닫기 버튼 */
+	    .close-btn {
+	        color: #aaa;
+	        float: right;
+	        font-size: 28px;
+	        font-weight: bold;
+	        cursor: pointer;
+	    }
+	
+	    .close-btn:hover {
+	        color: #000;
+	    }
+        
+        
+        
+        input[type='radio'] { display:none; }
+        #star {
+            width:80px;
+            transition: filter 0.2s ease;
+        }
+
+        /* filter code generated on https://codepen.io/sosuke/pen/Pjoqqp */
+        #star:hover, #star.filled {
+            filter: invert(95%) sepia(62%) saturate(1957%) hue-rotate(357deg) brightness(101%) contrast(102%);           
+        }
+        input[name=evaluation]:checked+label {
+            filter: invert(95%) sepia(62%) saturate(1957%) hue-rotate(357deg) brightness(101%) contrast(102%);
+        }
+        
+        td>input {
+        	width:100%;
+        	box-sizing:border-box;
+        }
+        input::placeholder, textarea::placeholder {
+        	font-style:italic;
+        }
     </style>
 </head>
 <body>
     
     <jsp:include page="../common/header.jsp" />
     
-    <!-- 예시 : 위키드 -->
     <div class="backStage" align="center">
         <div class="inner">
             <!-- 아직 내부 div를 안 넣어서 이 위치에 끼워넣어야 하는데
             양끝 마진 약 67px(~=100 * (2/3)) 정도 주면 됨
             계산의 편의를 위해 최대 70px 까지는 줄 수 있을 듯
             -->
+            
+            <!--  예시 : <위키드> -->
             <div id="description" align="left">
+            	<input type="hidden" id="mno" value="${requestScope.list.movieNo }">
                 <!-- 이미지 넣는 곳 -->
                 <div>
-                    <img src="sauce/wicked2.jpg" alt="위키드" id="thumbnail">
+                	<img src="${pageContext.request.contextPath}/resources/images/posters/${requestScope.list.fileCodename}" alt="${requestScope.list.movieTitle}" id="thumbnail">
+                    <!-- <img src="resources/images/posters/wicked2.jpg" alt="위키드" id="thumbnail"> -->
                 </div>
 
                 <!-- 제목과 설명을 넣는 곳 -->
-                <div style="flex-grow: 1;">
-                    <!-- <div>
-                        <img src="sauce/3.svg" class="filmrate">
-                        <b>위키드</b>
-                    </div> -->
+                <div id="specific" style="flex-grow: 1;">
                     <table>
                         <tr>
-                            <td><img src="sauce/3.svg" class="filmrate"></td>
-                            <td id="movieTitle">위키드</td>
+                            <td style="padding-right:5px;"><img src="resources/images/posters/${requestScope.list.filmRate}.svg" class="filmrate"></td>
+                            <td id="movieTitle">${requestScope.list.movieTitle}</td>
                         </tr>
                     </table>
                     <div>
                         <!-- [여기에 여러모로 입력] -->
                         <table style="width:100%;">
                             <tr>
-                                <th>감독</th>
-                                <td>존 추</td>
+                                <th width=150>감독</th>
+                                <td>${ requestScope.list.director }</td>
                             </tr>
                             <tr>
                                 <th>배우</th>
-                                <td>아리아나 그란데, 신시아 에리보, 조나단 베일리, 에단 슬레이터, 양자경, 제프 골드브럼</td>
+                                <td>${ requestScope.list.starring }</td>
                             </tr>
                             <tr>
                                 <th>장르</th>
-                                <td>판타지, 뮤지컬</td>
+                                <td>${ requestScope.list.genre }</td>
                             </tr>
                             <tr>
                                 <th>상영시간</th>
-                                <td>160분</td>
+                                <td>${requestScope.list.runtime}분</td>
                             </tr>
                             <tr>
                                 <th>개봉</th>
-                                <td>2024.11.20</td>
+                                <td>${requestScope.list.openDate}</td>
                             </tr>
                         </table>
 
                         <hr>
                         <!-- ↓ 이거 길어지면 내부 스크롤 넣는 게 미관상으로도 좋아보임 -->
-                        <pre>                
-    자신의 진정한 힘을 미처 발견하지 못한 '엘파바'(신시아 에리보)
-    자신의 진정한 본성을 아직 발견하지 못한 ‘글린다'(아리아나 그란데)
-    전혀 다른 두 사람은 마법 같은 우정을 쌓아간다.
-    그러던 어느 날, '마법사'의 초대를 받아 에메랄드 시티로 가게 되고
-    운명은 예상치 못한 위기와 모험으로 두 사람을 이끄는데…
-    
-    마법 같은 운명의 시작, 누구나 세상을 날아오를 수 있어
+                        <pre style="padding-left:10px;">                
+    ${requestScope.list.description}
                         </pre>
                     </div>
                 </div>
@@ -341,25 +423,37 @@
                 <!-- 평점은 소수 셋째 자리에서 반올림 (= 소수 둘째 자리까지 표기) -->
 
                 <!-- display가 inline이 아닌데도 display:inline이라면서 width가 무시되는 현상 있음 -->
-                <a href="#reviewList" id="evalTotal">평점 4.55</a>
+                <a href="#reviewList" id="evalTotal">평점 로딩 중</a>
                 <!-- script를 통해 버튼이 왼쪽부터 평점/5 만큼만 밝은 색으로 나오게 할 계획  -->
-                <a href="" id="toBook">예매하기</a>
-                <a href="" id="like">♡ 1234</a>
-                <!-- 로그인 후 클릭시 ♥ 1235 으로 바뀌도록. 비로그인시 로그인하라고 얼럿함 -->
+                <input type="hidden" id="uid" value="${not empty sessionScope.loginUser ? sessionScope.loginUser.userNo : 0}"> 
+                <c:if test="${requestScope.list.premiere eq 'Y' }">
+                	<a href="book.do" id="toBook">예매하기</a>
+                </c:if>
+                <c:choose>
+                	<c:when test="${not empty sessionScope.loginUser}">
+                	<a href="javascript:favToggle(uid);" id="like"></a>
+               		</c:when>
+               		<c:otherwise>
+                		<a href="javascript:alert('영화를 찜하려면 로그인해야 합니다.');" id="like">♡ ${requestScope.favCount}</a>
+               		</c:otherwise>
+               	</c:choose>
+
             </div>
 
 
             <!-- 순서대로 IMAX, 4DX, screenX이며, 필요한 것만 우측부터 배치 -->
-             <!-- 나중에 size = 80x56으로 넣을 예정 -->
             <div class="screenType" style="float:right; margin-right:10px;">
                 <!-- float로 별개로 배치 -->
-                 <!-- CGV가 이 로고들을 넣는데, 클릭 시 사이트 내 설명 페이지로 이동 -->
-                <!-- <div><img src="sauce/IMAX.svg">대충 IMAX 로고</div>
-                <div>대충 4DX 로고</div>
-                <div>대충 ScreenX 로고</div>-->
-                <a href="" id="imax">IMAX</a>
-                <a href="" id="4dx">4DX</a>
-                <a href="" id="screenx">SCREENX</a>
+                 <!-- 클릭 시 각각의 소개 영상(외부 링크)로 이동 -->
+                <c:if test="${fn:contains(requestScope.list.screenType,'IMAX')}">
+                	<a href="https://www.youtube.com/watch?v=n5HbQ7vCvDY" id="imax">IMAX</a>
+                </c:if>
+                <c:if test="${fn:contains(requestScope.list.screenType,'4DX')}">
+	                <a href="https://www.youtube.com/watch?v=-Wm2y5028ds" id="4dx">4DX</a>
+                </c:if>
+                <c:if test="${fn:contains(requestScope.list.screenType,'SCREENX')}">
+	                <a href="https://www.youtube.com/watch?v=lkqm7quc-ME" id="screenx">SCREENX</a>
+                </c:if>
             </div>
 
             <br><br>
@@ -367,11 +461,11 @@
 
             <br><br><hr style="display:none;">
             <div id="steelcut" align="left">
-                <p class="category"><b>스틸컷</b> <b>01</b> / 35건</p>
+                <p class="category"><b>스틸컷</b> <!-- <b>01</b> / 35건--></p>
                 <hr><br>
                 <!-- <div align="center">
                     // 왼쪽 끝에 '<' 이미지
-                    <img src="sauce/wicked1.jpg">
+                    <img src="resources/images/posters/wicked1.jpg">
                     // 오른쪽 끝에 '>' 이미지
                 </div> -->
 
@@ -379,8 +473,9 @@
                 <div id="container">
                     <div class="swiper">
                         <div class="swiper-wrapper" align="center">
-                            <div class="swiper-slide"><img src="sauce/wicked1.jpg"></div>
-                            <div class="swiper-slide"><img src="sauce/wicked2.jpg"></div>
+                        	<c:forEach var="pic" items="${album}">
+                        		<div class="swiper-slide"><img src="resources/images/posters/${pic.fileCodename}"></div>                            
+                            </c:forEach>
                         </div>
 
                         <div class="swiper-button-prev"></div>
@@ -405,101 +500,65 @@
             <br><br><hr>
 
             <div id="reviewTop">
-                <!-- 여기 어그러지는 거 아는데 이 페이지에 시간을 너무 많이 써서 일단 보류 -->
-                <div style="height:80px;">
-                    <p style="float:left;" class="category"><b>리뷰</b></p>
-                    <!-- ↓ 얘도 흰색으로 바꿔야 함 -->
-                    <label class="switch" style="float:right;">
-                        <input type="checkbox">
-                        <span class="slider round"></span>
-                    </label>
-                    <p style="float:right;">실제 관람평만 보기</p>
+                <div id="part-header">
+                    <p class="category"><b>리뷰</b></p>
+                    <div>
+	                    <p>실제 관람평만 보기</p>
+	                    <!-- ↓ 얘도 흰색으로 바꿔야 함 -->
+	                    <label class="switch">
+	                        <input type="checkbox">
+	                        <span class="slider round"></span>
+	                    </label>
+                    </div>
                 </div>
                 <br>
 
-                <div id="evalOverview" style="display:inline-block;">
+                <div id="evalOverview">
                     <!-- 특수문자는 꽉찬 별과 빈 별만 있고 반 개짜리 별은 없기 때문에
                     다른 방법으로 구현해야 함
                     일례로 Google Play의 경우 서로 다른 opacity 값을 절반씩 적용했음
                     -->
-                    <!-- 점수랑 별 개수 가운데로 올리고 싶은데 안 올라가서 보류 -->
-                    <div style="display:inline-block;">
+                    <!-- 이렇게 하니까 border 없으면 허전해보이는데 -->
+                    <div class="evalSummary">
                         <!-- <b style="font-size:20px;">4.55</b><br>
                         ★★★★★ -->
-                        <div style="font-size:20px;">
-                            4.55
+                        <div id="moviescore" style="font-size:30px;">
+                            3.97
                         </div>
+                        <!-- 아래 별 부분은 별 이미지 x5를 평점에 맞게 채우는 걸로 대체 예정 -->
                         <div>★★★★★</div>
-                        <div>리뷰 180개</div>
+                        <div id="listcount">리뷰 ${requestScope.reviewNo}개</div>
                     </div>
-                    <div class="statistic" style="display:inline-block;">
+                    <div class="statistic">
                         <table>
-                            <tr>
-                                <td>5</td>
-                                <td>
-                                    <div class="graph-back">
-                                        <div class="graph" style="width:65%;"></div>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>4</td>
-                                <td>
-                                    <div class="graph-back">
-                                        <div class="graph" style="width:17%;"></div>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>3</td>
-                                <td>
-                                    <div class="graph-back">
-                                        <div class="graph" style="width:10%;"></div>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>2</td>
-                                <td>
-                                    <div class="graph-back">
-                                        <div class="graph" style="width:1%;"></div>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>1</td>
-                                <td>
-                                    <div class="graph-back">
-                                        <div class="graph" style="width:7%;"></div>
-                                    </div>
-                                </td>
-                            </tr>
+                        	<c:forEach var="s" begin="1" end="5" step="1">
+                        		<tr>
+	                                <td>${6-s}</td>
+	                                <td>
+	                                    <div class="graph-back">
+	                                        <div class="graph" value="${6-s}" style="width:0%;"></div>
+	                                    </div>
+	                                </td>
+	                            </tr>
+                        	</c:forEach>
+                        	<!-- dummy percentage : 5점부터 순서대로 65% 17% 10% 1% 7% -->
                         </table>
                     </div>
                 </div>
             </div>
 
             <br><br>
-            <div id="reviewList">
+            <div id="review-pool">
                 
-                <!-- #review에 의도적으로 가로마진 45px를 줬는데.
-                이로 인해 일부 예시가 2줄을 아슬아슬하게 넘어가는 화면크기 67%에
-                한하여 해당 div의 테이블이 어그러지는 현상이 있음
-                별일 없으면 실전에서 가로마진 뺄 예정 -->
-
-                <!-- SAMPLE (기본형)
-                <div id="review">
-                    열글자한줄넘김기절함<br>
-                    2024-11-29<br>
-                    제목 &emsp; 원작을 봤다면 여러 번 볼 수밖에 없는 영화<br>
-                    평점 &emsp; ★★★★★<br>
-                    내용 &emsp; 동명의 소설을 N번, 동명의 뮤지컬을 1N번 본 사람으로써, 원작 팬으로써의 엄격한 잣대를 가지고 영화를 보러 갔다. 조금이라도 맘에 안 들면 바로 1점 때릴 생각으로.  그런데 이 영화는, 맘에 안 드는 구석을 전혀 찾을 수 없었다...<br>
-                </div>
-                -->
+                <div id="reviewList">
+                
+                <!-- 그리고 여기도 AJAX로 넣어야 함 -->
 
                 <!-- SAMPLE (table) -->
-                <div id="review">
-                    <div id="reviewerName" style="float:left;">열글자한줄넘김기절함</div>
+                <!-- <div id="review">
+                	닉네임 개념이 없는 관계로 아이디로 받아야 함
+                	full id = 'tenletterstunman'
+                    <div id="reviewerName" style="float:left;">tenl****</div>
                     <div id="writtenDate" style="float:right;">2024-11-29</div><br>
 
                     <table>
@@ -516,130 +575,410 @@
                             <td>동명의 소설을 N번, 동명의 뮤지컬을 1N번 본 사람으로써, 원작 팬으로써의 엄격한 잣대를 가지고 영화를 보러 갔다. 조금이라도 맘에 안 들면 바로 1점 때릴 생각으로.  그런데 이 영화는, 맘에 안 드는 구석을 전혀 찾을 수 없었다...</td>
                         </tr>
                     </table>
-                </div>
+                </div> -->
 
-                <div id="review">
-                    <div id="reviewerName" style="float:left;">상하이의무신</div>
-                    <div id="writtenDate" style="float:right;">2024-11-29</div><br>
-                    
-                    <table>
-                        <tr>
-                            <td width="50">제목</td>
-                            <td>명작임에도 별점을 반 밖에 줄 수 없는 이유</td>
-                        </tr>
-                        <tr>
-                            <td>평점</td>
-                            <td>★★★☆☆</td>
-                        </tr>
-                        <tr>
-                            <td>내용</td>
-                            <td>영화가 너무 늘어진다고 생각했다. 클라이막스는 아직 멀었다고 생각할 때쯤 파트2로 이어진다면서 엔딩 크레딧이 올라오더라. 절반만 보여줬으니까 나도 점수 반절만 주련다</td>
-                        </tr>
-                    </table>
-                </div>
-
-                <div id="review">
-                    <div id="reviewerName" style="float:left;">장례식부활맨</div>
-                    <div id="writtenDate" style="float:right;">2024-11-29</div><br>
-
-                    <table>
-                        <tr>
-                            <td width="50">제목</td>
-                            <td>이 영화가 재미없을 정도로 낭만이 없는 당신은 불쌍해요</td>
-                        </tr>
-                        <tr>
-                            <td>평점</td>
-                            <td>★★★★★</td>
-                        </tr>
-                        <tr>
-                            <td>내용</td>
-                            <td>현실 속에서 잊고 살았던 낭만을 이 영화로 채울 수 있었다. 어린 시절 마법과 환상으로 가득한 세계를 꿈꿔보지 않은 사람은 적어도 이 리뷰를 보고 있는 사람 중엔 없을 거라고 장담하지만, 설마 있어도 이 영화가 그 대체제가 될 수 있을 것 같다.</td>
-                        </tr>
-                    </table>
-                    
-                </div>
-
-                <!-- 닉네임 없이 아이디만 쓰는 경우 - 앞 4글자만 남기고 "****"로 처리 -->
-                <!-- full id = 'banryeseeker' -->
-                <div id="review">
-                    <div id="reviewerName" style="float:left;">banr****</div>
-                    <div id="writtenDate" style="float:right;">2024-11-29</div><br>
-
-                    <table>
-                        <tr>
-                            <td width="50">제목</td>
-                            <td>알고 보는 거지만, 아쉬움이 남는다.</td>
-                        </tr>
-                        <tr>
-                            <td>평점</td>
-                            <td>★★★★☆</td>
-                        </tr>
-                        <tr>
-                            <td>내용</td>
-                            <td>영화 보러 갔다가 뮤지컬의 넘버만 듣고 온 것 같다. 워낙 유명한 곡들이라 후회는 없지만 거기까지 가는 과정이 너무 늘어짐.</td>
-                        </tr>
-                    </table>
-                </div>
-
-                <!-- full id = 'tenletterstunman' -->
-                <div id="review">
-                    <div id="reviewerName" style="float:left;">tenl****</div>
-                    <div id="writtenDate" style="float:right;">2024-11-29</div><br>
-
-                    <table>
-                        <tr>
-                            <td width="50">제목</td>
-                            <td>토네이도와도 같은 영화</td>
-                        </tr>
-                        <tr>
-                            <td>평점</td>
-                            <td>★★★★★</td>
-                        </tr>
-                        <tr>
-                            <td>내용</td>
-                            <td>모티브가 된 오즈의 마법사는 캔자스시티의 토네이도가 도로시를 오즈로 휩쓸어가는 것으로 시작한다. 이 영화는 한 마디로 바로 그 토네이도와도 같다. 160분 내내 관객을 황홀하게 만드는 토네이도. 그래서 파트2는 언제 나옴?</td>
-                        </tr>
-                    </table>
                 </div>
 
                 <!-- if user is logged in -->
-                <!-- <c:if test="${ne sessionScope.loginUser}"> -->
-                    <!-- <button style="float:right;">작성</button> -->
-                    <a href="" id="newReview">작성</a>
-                    <!-- link to 'give_a_star.html' -->
-                <!-- </c:if> -->
-                <br><br>
+                <c:if test="${not empty sessionScope.loginUser && requestScope.list.premiere eq 'Y'}">
+                	<input type="hidden" id="isReviewed">
+                    <a class="open-modal-btn" data-target="reviewModal" id="newReview">작성</a>
+                    
+                    <!-- 'give_a_star.html' -->
+                    <div id="reviewModal" class="modal">
+                        <div class="modal-content" style="background-color:#6f6464;">
+                            <span class="close-btn" style="color:white;">&times;</span><br>
 
+					        <!-- 실제 MEMBER 테이블은 닉네임이 없어 이름으로만 부를 예정 -->
+					        <h2>${sessionScope.loginUser.userName} 님, 영화는 재미있었나요?</h1>
+						        <p style="font-size:16px;">
+						            영화가 어땠는지 감상평을 남겨주세요!<br>
+						            우수 리뷰로 선정되면 영화관람권을 선물로 드립니다.
+						        </p>
+						
+						        <div>
+						            <!-- 빈 별의 색상 : #141414 (20,20,20) -->
+						            <c:forEach var="s" begin="1" end="5">
+						            	<input type="radio" name="score" id="${s}" value="${s}">
+						            	<label for="${s}"><img id="star" src="resources/images/icons/star_vectoricon.png"></label>
+					            	</c:forEach>
+						        </div>
+						        <br><br>
+						        
+						        <table>
+						        	<tr>
+						        		<td><input id="reviewTitle" placeholder="제목을 입력해주세요.">
+						            <tr>
+						                <td>
+						                    <textarea style="width:360px; resize:none;"
+						                    id="reviewContent" placeholder="규정에 어긋나는 감상평은 경고 없이 삭제되며, 반복 적발시 향후 리뷰 작성 및 VIP 승급이 제한될 수 있습니다."></textarea>
+						                </td>
+						            </tr>
+						        </table>
+						        
+						        <br>
+						        <a href="javascript:submitReview();" id="submit" style="color:white;">작성</button>
+						
+						        <br><br>
+                            
+                        </div>
+                    </div>
+                </c:if>
+                <br><br>
+                
+<!--                 <div id="editModal" class="modal"> -->
+<!--                 	<div class="modal-content" style="background-color:#6f6464;"> -->
+<!-- 						<span class="close-btn" style="color:white;">&times;</span><br> -->
+
+<!-- 						실제 MEMBER 테이블은 닉네임이 없어 이름으로만 부를 예정 -->
+<%-- 					    <h2>${sessionScope.loginUser.userName} 님, 리뷰를 수정하시겠어요?</h1> --%>
+<!-- 				        <p style="font-size:16px;"> -->
+<!-- 							영화가 어땠는지 감상평을 남겨주세요!<br> -->
+<!-- 						    수정된 리뷰로는 영화관람권을 받을 수 없어요! 이 점 유의해주세요. -->
+<!-- 						</p> -->
+						
+<!-- 				        <div> -->
+<!-- 				        	<input type="hidden" id="rid"> -->
+<!-- 				        	빈 별의 색상 : #141414 (20,20,20) -->
+<%-- 				            <c:forEach var="s" begin="1" end="5"> --%>
+<%-- 				            	<input type="radio" name="editScore" id="${s}" value="${s}"> --%>
+<%-- 				            	<label for="${s}"><img id="star" src="resources/images/icons/star_vectoricon.png"></label> --%>
+<%-- 			            	</c:forEach> --%>
+<!-- 				        </div> -->
+<!-- 				        <br><br> -->
+				        
+<!-- 				        <table> -->
+<!-- 				        	<tr> -->
+<!-- 				        		<td><input id="editReviewTitle" placeholder="제목을 입력해주세요."> -->
+<!-- 				            <tr> -->
+<!-- 				                <td> -->
+<!-- 				                    <textarea style="width:360px; resize:none;" -->
+<!-- 				                    id="editReviewContent" placeholder="규정에 어긋나는 감상평은 경고 없이 삭제되며, 반복 적발시 향후 리뷰 작성 및 VIP 승급이 제한될 수 있습니다."></textarea> -->
+<!-- 				                </td> -->
+<!-- 				            </tr> -->
+<!-- 				        </table> -->
+				        
+<!-- 				        <br> -->
+<!-- 				        <a href="javascript:updateReview(rid);" id="submit" style="color:white;">수정</button> -->
+				
+<!-- 				        <br><br> -->
+                            
+<!--                         </div> -->
+<!--                     </div> -->
+                
+                <script>
+                const mno = $("#mno").val();
+                let uid = $("#uid").val();
+                let count = $("#listcount");
+                $(function() {
+                	
+                	if(uid > 0) {
+                		favCheck(uid);
+                		checkUserReview(uid);
+                	}
+                	selectReviewList(mno,1);
+                	getAverage(mno);
+                	
+                	// 모달 열기
+    	            $(".open-modal-btn").click(function () {
+    	                const targetModal = "#" + $(this).data("target");
+    	                $(targetModal).fadeIn(200); // 모달을 서서히 나타냄
+    	            });
+                	
+    	           
+
+    	            // 모달 닫기
+    	            $(".close-btn").click(function () {
+    	                $(this).closest(".modal").fadeOut(100); // 모달을 서서히 사라지게 함
+    	            });
+
+    	            // 모달 외부 클릭 시 닫기
+    	            $(window).click(function (event) {
+    	                if ($(event.target).hasClass("modal")) {
+    	                    $(event.target).fadeOut(100);
+    	                }
+    	            });
+    	            
+    	            $("input[name=score]+label").click(function() {
+    	                // removeColor
+    	                $(this).parent().children('label').children().removeClass('filled');
+    	                
+    	                // addColor
+    	                $(this).children().addClass('filled'); // to this
+    	                $(this).addClass('filled').prevAll('label').children('#star').addClass('filled'); // to prev
+    	            });
+                });
+                
+                function refreshPagingBar(cpage) {
+            		$(".pagingbar").empty();
+            		let link = 'detail.mo?movieNo=';
+            		let pgbar = '';
+
+            		// EL 태그를 function 안에 쓸 수 없어서 다른 방법을 연구하는 중
+            		let start = $("#first").val();
+            		let end = $("#last").val();
+            		let max = $("#MX").val();
+            		
+        			// '<<', '<' 처리
+            		if(cpage > 1) {
+            			// add &lt;&lt;
+            			// add &lt;
+            			pgbar += "<button onclick= '" + link + "1);'>&lt;&lt;</button> <!-- to Page1 -->"
+            				+ "<button onclick= '" + link + (cpage-1) + ");'>&lt;</button> <!-- Prev -->";
+            		}
+
+            		for(let i = start; i <= Math.min(end,max); i++) {
+
+            			if(i == cpage) {
+            				// font-weight:normal 넣는 이유 : 나머지는 lighter로 해놨음
+            				pgbar += "<button disabled style='font-weight: normal;' onclick= '" + link + i + ");'>"
+            					+ i + "</button>";
+            			}
+            			else {
+            				pgbar += "<button onclick= '" + link + i + ");'>" + i + "</button>";
+            			}
+            		}
+
+            		if (cpage < max) {
+            			// add &gt;
+            			// add &gt;&gt;
+            			pgbar += "<button onclick= '" + link
+            					+ (cpage+1) + ");'>&gt;</button> <!-- Next -->"
+            				+ "<button onclick= '" + link + max + ")';>&gt;&gt;</button> <!-- to LastPage -->";
+            		}
+
+            		$(".pagingbar").html(pgbar);
+            		
+            	}
+                
+                function selectReviewList(mno, cpage) {
+                	$.ajax({
+                		url:'reviewlist.mo?mno='+mno +'&cpage='+cpage,
+                		type:'get',
+                		data:{
+                			'mno' : mno,
+                			'cpage' : cpage
+                		},
+                		
+                		success: function(result) {
+                			$("#reviewList").empty();
+                			$("#reviewList").append(result);
+                			
+                			// 페이징바 갱신
+                			refreshPagingBar(cpage);
+                			
+                			// 평점 갱신
+                			getAverage(mno);
+
+                		},
+        	    		error: function() {
+        	    			alert('DAMN!');
+        	    		}	
+        	    	});
+                }
+                
+                function getAverage(mno) {
+                	$.ajax({
+                		url:'review_ovr.mo?mno='+mno,
+                		type:'post',
+                		data:{
+                			'mno' : mno,
+                		},
+                		
+                		success: function(result) {
+                			// 리뷰 수 갱신
+                			let rvno = result.listcount;
+                			$("#listcount").text("리뷰 "+result.listcount+"개");
+                			
+                			if(rvno <= 0) {
+                				$("#evalTotal").text("평점 없음");
+                				$("#moviescore").html("N/A");
+                			} else {
+                				// 평점 갱신
+	                			// 혹시 몰라서 .empty() 넣었는데 사실 빼도 되서 비활성화함
+	                			// $("#evalTotal").empty();
+	                			$("#evalTotal").text("평점 " + result.ave);
+	                			// $("#moviescore").empty();
+	                			$("#moviescore").html(result.ave);
+								
+	    						//그래프 갱신
+	    						$(".graph[value=1]").css("width", result.one+"%");
+	    						$(".graph[value=2]").css("width", result.two+"%");
+	    						$(".graph[value=3]").css("width", result.three+"%");
+	    						$(".graph[value=4]").css("width", result.four+"%");
+	    						$(".graph[value=5]").css("width", result.five+"%");
+                			}
+                			
+                		},
+        	    		error: function() {
+        	    			alert('DAMN!');
+        	    		}
+                	});
+                }
+                
+                function favCheck(uid) {
+                	let sw = '';
+                	$.ajax({
+                			url:"favcheck.mo?userNo="+uid+"&movieNo="+mno,
+                			type:"post",
+                			data:{"userNo" : uid, "movieNo" : mno},
+                			
+                			success:function(result) {
+                				if(result == 1) {
+                					sw = '♥ ${requestScope.favCount}';
+                				} else {
+                					sw = '♡ ${requestScope.favCount}';
+                				}
+                				//sw += $("#like").val();
+                				$("#like").html(sw);
+                			},
+                			error:function() {
+                				sw = '♨ERROR';
+                				$("#like").text(sw);
+                			}
+                		});
+                }
+                
+                function favToggle(uid) {
+                	
+                	// 비로그인일 땐 애초에 가지도 않지만 혹시 몰라서..
+                	if(uid == 0) {
+                		alert('영화를 찜하려면 로그인해야 합니다.');
+                		return false;
+                	} else {
+                		$.ajax({
+                			url:"likethis.mo?userNo="+uid+"&movieNo="+mno,
+                			type:"post",
+                			data:{"userNo" : uid, "movieNo" : mno},
+                			
+                			success:function(result) {
+                				if(result == "success") {
+                					favCheck(uid);
+                				} else {
+                					alert("좋아요가 반영되지 않았습니다.");
+                				}
+                			},
+                			error:function() {
+                				alert("오류가 발생했습니다.");
+                			}
+                		});	
+                	}
+                }
+                
+                function checkUserReview(uid) {
+                	$.ajax({
+                		url:"checkreview.mo?uid="+uid,
+                		type:"post",
+                		data: {"userNo" : uid},
+                		
+                		success:function(result) {
+                			$("#isReviewed").val(result);
+                			console.log($("#isReviewed").val());
+                			// 있으면 1 없으면 0
+                			
+//                 			if(result == 1) {
+//                 				// change button into "수정"
+//                 			}
+                		},
+                		error: function(result) {
+                			alert("오류가 발생했습니다.");
+                			$("#newReview").hide(); // 로그인 상태에서 hide
+                		}
+                	});
+                }
+                
+                function submitReview() {
+                	let score = $('input[name=score]:checked').val();
+                	let reviewTitle = $("#reviewTitle").val();
+                	let reviewContent = $("#reviewContent").val();
+                	// let isWatched = 'Y'; // 기본값, 설정 가능하면 따로 적용
+                	
+                	$.ajax({
+            			url:"newreview.mo?userNo="+uid+"&movieNo="+mno,
+            			type:"post",
+            			data:{
+							"userNo" : uid,
+            				"movieNo" : mno,
+							"reviewTitle" : reviewTitle,
+							"score" : score,
+							"isWatched" : 'Y',
+							"reviewContent" : reviewContent
+            			},
+            			
+            			success:function(result) {
+            				if(result == "success") {
+            					alert("리뷰가 작성되었습니다.");
+            					selectReviewList(mno, 1);
+            					$(".close-btn").click();
+            				} else {
+            					alert("리뷰 작성에 실패하였습니다.");
+            				}
+            			},
+            			error:function() {
+            				alert("오류가 발생했습니다.");
+            			}
+            		});	
+                }
+                
+//                 function updateReview(rid) {
+//                 	let score = $('input[name=score]:checked').val();
+//                 	let reviewTitle = $("#reviewTitle").val();
+//                 	let reviewContent = $("#reviewContent").val();
+//                 	// let isWatched = 'Y'; // 기본값, 설정 가능하면 따로 적용
+                	
+//                 	$.ajax({
+//             			url:"updatereview.mo?userNo="+uid+"&movieNo="+mno,
+//             			type:"post",
+//             			data:{
+// 							"userNo" : uid,
+//             				"movieNo" : mno,
+// 							"reviewTitle" : editReviewTitle,
+// 							"score" : editScore,
+// 							"reviewContent" : editReviewContent
+//             			},
+            			
+//             			success:function(result) {
+//             				if(result == "success") {
+//             					alert("리뷰가 수정되었습니다.");
+//             					selectReviewList(mno, 1);
+//             					$(".close-btn").click();
+//             				} else {
+//             					alert("리뷰가 수정되지 않았습니다.");
+//             				}
+//             			},
+//             			error:function() {
+//             				alert("오류가 발생했습니다.");
+//             			}
+//             		});	
+//                 }
+                
+                function deleteReview(rid) {
+                	$.ajax({
+                		url:'deletereview.mo?rid='+rid,
+                		type:"post",
+                		data:{"rid" : rid, "mno" : mno, "uid" : uid},
+                		// 셋을 받는 이유 : 그래야 남이 함부로 못 지울 거 아냐
+                		
+                		success:function(result) {
+                			if(result == "success") {
+                				alert("리뷰가 삭제되었습니다.");
+                				location.href="detail.mo?movieNo="+mno;
+                			} else {
+                				alert("리뷰가 삭제되지 않았습니다.");
+                			}
+                		},
+                		error:function() {
+                			alert("An error has occurred.");
+                		}
+                	});
+                }
+
+                </script>
 
                 <!-- Paging Bar -->
 				<div class="pagingbar" align="center">
-		            <!-- 나중에 currentPage에 대해서만 볼드 & btn disabled 적용할 예정 -->
-		            <!-- if i > 1 -->
-		            <c:if test="${ requestScope.pi.currentPage gt 1 }">
-		                <button onclick="location.href = 'boxoffice.mo?page=1';">&lt;&lt;</button> <!-- to Page1 -->
-		                <button onclick="location.href = 'boxoffice.mo?page=${p-1}';">&lt;</button> <!-- prev -->
-		            </c:if>
-		            
-		            <!-- if 3 ≤ i ≤ maxPage-2, for i in range (currentPage -2 ~ +2) -->
-		            <c:forEach var="p" begin="${requestScope.pi.startPage }" end="${requestScope.pi.endPage }" step="1">
-		            	<c:choose>
-		            		<c:when test=""> <!-- button refers to currentPage -->
-		            			<button class="currentPage" disabled>${p}</button>
-		            		</c:when>
-		            		<c:otherwise>
-		            			<button onclick="location.href = 'boxoffice.mo?page=${p}';">${p}</button>
-		            		</c:otherwise>
-		            	</c:choose>
-		            </c:forEach>
-		
-		            <!--  if i < maxPage -->
-		            <c:if test="${ requestScope.pi.currentPage lt requestScope.pi.maxPage }">
-		                <button onclick="location.href = 'boxoffice.mo?page=${p+1}';">&gt;</button> <!-- next -->    
-		                <button onclick="location.href = 'boxoffice.mo?page=${requestScope.pi.maxPage}';">&gt;&gt;</button> <!-- to LastPage -->
-					</c:if>
-		        </div>
-                
-                
+					<!--  -->
+                </div>
             </div>
         </div>
     </div>

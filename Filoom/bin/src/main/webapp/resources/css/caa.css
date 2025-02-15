@@ -276,16 +276,34 @@ body{
     font-size: 30px;
     font-weight: 600;
     margin:30px auto;
+    padding-top:2px;
 }
 
-#time>div:hover{
-    transform: scale(1.1);
-    background-color: #493628;  
-}
+ #time {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* 수평 중앙 정렬 */
+    justify-content: center; /* 수직 중앙 정렬 */
+  }
 
+  #time div {
+    text-align: center; /* 텍스트 중앙 정렬 */
+    margin-bottom: 10px; /* 요소 간 간격 */
+  }
+
+	#time>div:hover{
+	    transform: scale(1.1);
+	    background-color: #808080;  
+	}
+
+ #time label {
+    display: block;
+    width: 100%; 
+  }
 
 #selectTime{
-    background-color: green;
+    background-color: #151515;
     transform: scale(1.1);
+    border : 1px solid #CFCCCD;
 } 
 

@@ -7,14 +7,9 @@
 <title>Insert title here</title>
 </head>
 <body>
-	
-<<<<<<< Updated upstream
-	
-	
+
+	<jsp:forward page="/WEB-INF/views/main.jsp"/>
+
 </body>
 </html>
 <!-- 이거 book용 -->
-=======
-</body>
-</html>
->>>>>>> Stashed changes

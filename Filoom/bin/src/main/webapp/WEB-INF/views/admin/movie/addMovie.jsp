@@ -5,8 +5,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link rel="stylesheet" href="admin.css" />
+    <title>영화 추가:: Filoom</title>
+    <link rel="stylesheet" href="resources/css/admin.css" />
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -82,8 +82,48 @@
         textarea {max-height:300px;}
         
         #basicInfo .filmrate {
+        	/* padding:5px; */
             width:60px; height:60px;
         }
+
+        /* input[type=radio]:checked + label>img {
+            border: 3px solid black;
+            // background-origin: padding-box;
+            // background-color: blueviolet;
+        } */
+
+/* 		.screentype label { */
+/* 	        display:block; */
+/* 	        width:80px; */
+/* 	        height:80px; */
+/* 	    } */
+
+		.screentype {
+			display:none;
+		}
+		
+		.screentype+label {
+		    display:inline-block;
+	        width:120px;
+	        height:80px;
+	        margin: 0px 30px;
+	        filter:contrast(0%);
+	    }
+	    .screentype:checked+label {
+	        filter:contrast(100%);
+	    }
+	    .screentype#imax+label {
+	        background: no-repeat;
+	        background-image:url('resources/images/icons/IMAX_small.svg');
+	    }
+	    .screentype#fdx+label {
+	        background: no-repeat;
+	        background-image:url('resources/images/icons/4DX_small.svg');
+	    }
+	    .screentype#screenx+label {
+	        background: no-repeat;
+	        background-image:url('resources/images/icons/SCREENX_small.svg');
+	    }
 
         /* 나중에 admin.css 손볼 때 #movie_submit로 변경 예정 */
         #button_sample {
@@ -98,23 +138,8 @@
 </head>
 <body>
     <div id = "admin_content">
-        <div id = "navbar">
-            
-            <div id = "logo">
-                <img src="./Filoom.png">
-            </div>
-           
-            <div id = "nav">
-                <ul>
-                    <li><a>회원 관리</a></li>
-                    <li><a>영화 관리</a></li>
-                    <li><a>예약 관리</a></li>
-                    <li><a>공지사항 관리</a></li>
-                    <li><a>이벤트 관리</a></li>
-                </ul>
-    
-            </div>
-        </div>
+        <jsp:include page="../../common/adminHeader.jsp" />
+        
         <div id = "admin_right">
             <div id ="admin_title">
 
@@ -123,7 +148,7 @@
                 -->
                 <div id = "admin_title_content">
                     <p id="fnName" style="padding-left:33px; font-weight:bold;">영화 추가</p>
-                    <p id="goBack" style="padding-right:33px;" onclick="location.href='admin.movielist.mo';">
+                    <p id="goBack" style="padding-right:33px;" onclick="location.href='movielist_ad.mo';">
                     	← 목록으로 돌아가기</p>
                 </div>
 
@@ -138,68 +163,71 @@
                     <div id="innerAdmin">
                         <div id="newPoster">
                             <img id="posterDisplay" src="https://placehold.co/480x716">
-                            <input type="file" id="posterInput" style="display:none;" onclick="loadImg(this);">
+                            <input type="file" id="posterInput" style="display:none;" onchange="loadImg(this);">
                         </div>
-
 
 
                         <div id="basicInfo">
                             <table>
                                 <tr>
                                     <th>영화 제목</th>
-                                    <td colspan="4"><input type="text" id="title" value="모아나 2"></td>
-                                </tr>
-                                <tr>
-                                    <th>상영 등급</th>
-                                    <td width="160">
-                                        <label for="rateA"><img class="filmrate" src="../sauce/3.svg" alt="ALL"></label>
-                                    </td>
-                                    <td width="160">
-                                        <label for="rate12"><img class="filmrate" src="../sauce/12.svg" alt="12"></label>
-                                    </td>
-                                    <td width="160">
-                                        <label for="rate15"><img class="filmrate" src="../sauce/15.svg" alt="15"></label>
-                                    </td>
-                                    <td width="60">
-                                        <label for="rate19"><img class="filmrate" src="../sauce/19.svg" alt="19"></label>
-                                    </td>
+                                    <td colspan="4"><input type="text" id="title" value=""></td>
                                 </tr>
                                 <tr style="display:none;">
                                     <th>확인용</th>
-                                    <td><input type="radio" name="filmrate" value="3"id="rateA"></td>
+                                    <td><input type="radio" name="filmrate" value="3" id="rate3"></td>
                                     <td><input type="radio" name="filmrate" value="12" id="rate12"></td>
                                     <td><input type="radio" name="filmrate" value="15" id="rate15"></td>
                                     <td><input type="radio" name="filmrate" value="19" id="rate19"></td>
                                 </tr>
                                 <tr>
+                                    <th>상영 등급</th>
+                                    <td colspan="4" width=540>
+                                    	<div style="display:flex; justify-content: space-between;">
+	                                    	<label for="rate3"><img class="filmrate" src="resources/images/posters/3.svg" onclick="rateFilm(3);" alt="ALL"></label>
+	                                    	<label for="rate12"><img class="filmrate" src="resources/images/posters/12.svg" onclick="rateFilm(12);" alt="12"></label>
+	                                    	<label for="rate15"><img class="filmrate" src="resources/images/posters/15.svg" onclick="rateFilm(15);" alt="15"></label>
+	                                    	<label for="rate19"><img class="filmrate" src="resources/images/posters/19.svg" onclick="rateFilm(19);" alt="19"></label>
+                                    	</div>
+                                    </td>
+                                </tr>
+                                <tr>
                                     <th>감독</th>
-                                    <td colspan="4"><input type="text" id="director" value="데이비드 데릭 주니어"></td>
+                                    <td colspan="4"><input type="text" id="director" value=""></td>
                                 </tr>
                                 <tr>
                                     <th>주요 배우</th>
-                                    <td colspan="4"><input type="text" id="cast" value="아우이 크라발호, 드웨인 존슨"></td>
+                                    <td colspan="4"><input type="text" id="cast" value=""></td>
                                 </tr>
                                 <tr>
                                     <th>장르</th>
-                                    <td colspan="4"><input type="text" id="genre" value="애니메이션"></td>
+                                    <td colspan="4"><input type="text" id="genre" value=""></td>
                                 </tr>
+                                
                                 <!-- ↓ 년월일까지 표기라 'date'가 맞음 -->
                                 <tr>
                                     <th>개봉일자</th>
-                                    <td colspan="4"><input type="date" id="premiere" value="2024-11-27"></td>
+                                    <td colspan="4"><input type="date" id="open_date" value=""></td>
                                 </tr>
                                 <tr>
                                     <th>상영시간</th>
-                                    <td><input type="number" id="runtime" value="100"></td>
+                                    <td><input type="number" id="runtime" value=""></td>
                                     <td colspan="3">분</td>
                                 </tr>
-                                <!-- 이 행만 width 구성을 달리할 방법이 없어 일단 보류
+                                
+                                <!-- 로고별 이미지가 외관상 정렬이 안 되어 있는데 내부적으로는 정렬한 거 맞음
+                                	원본 이미지들의 width만 120px로 통일한 거고 원본의 비율 차이 때문에 이건 어쩔 수 없음 -->
                                 <tr>
-                                    <th colspan="2" width="">추가 상영 방식</th>
-                                    <td><img src="../sauce/IMAX_blue_logo.svg" alt="IMAX"></td>
-                                    <td><img src="../sauce/4DX_2019_logo.svg" alt="4DX"></td>
-                                    <td><img src="../sauce/ScreenX_Logo_(2019).svg" alt="SCREENX"></td>
-                                </tr> -->
+                                    <th>추가 상영 타입</th>
+                                    <td colspan="4"><div id="screentype">
+                                    	<input type="checkbox" class="screentype" id="imax" value="IMAX">
+								        <label for="imax" value="IMAX"></label>
+									<input type="checkbox" class="screentype" id="fdx" value="4DX">
+								        <label for="fdx"></label>
+									<input type="checkbox" class="screentype" id="screenx" value="SCREENX">
+								        <label for="screenx"></label>
+                                   	</div></td>
+                                </tr>
                                 <tr>
                                     <th>트레일러 링크</th>
                                     <td colspan="4"><input type="url" id="trailer_link"></td>
@@ -215,14 +243,14 @@
                     <!-- <button>1234</button> -->
 
                     <input type="button" id ="button_sample"
-                     name="movie_submit" value="추가 완료">
-
+                     name="movie_submit" value="추가 완료" onclick="submitMovie();">
                 </div>
 
             </div>
         </div>
     </div>
     <script>
+    // navigator 쪽 메뉴 호버시의 script
     document.addEventListener("DOMContentLoaded", function () {
         const navItems = document.querySelectorAll("#nav > ul > li");
     
@@ -259,7 +287,7 @@
 
                 $("#posterDisplay").attr("src",e.target.result);
                 var photo = document.getElementById("posterDisplay").innerHTML;
-                console.log(photo);
+                //console.log(e.target.result);
             };
         }
         // if not
@@ -268,6 +296,83 @@
             $("#posterDisplay").attr("src","https://placehold.co/480x716");
         }
     }
+    
+    function rateFilm(num) {
+        // console.log(num);
+        let target = $("label[for$="+num+"]");
+        $("label *").removeAttr("border");
+        // screenType도 label을 쓰긴 하는데 얘네는 border를 안 쓰니까 괜찮음
+        target.children().first().attr({
+            "border":"3px solid red"
+        });
+        // 현재 border-style과 border-color가 적용되지 않는 이슈 있음
+        // 즉, 현재 버튼 선택시 3px만 적용됨
+    }
+    
+    function submitMovie() {
+		console.log($("#posterInput").val());
+		// 포스터를 첨부하지 않은 경우
+    	if($("#posterInput").val() === '') {
+    		alert('포스터를 첨부해주세요.');
+    		return false;
+    	} else {
+	    	/* ↓ 이걸 해야 form 태그없이도 current request is not a multipart request
+	    		안 띄우고 이미지를 넣을 수 있다고 함 */
+			let formData = new FormData();
+	    	
+			// adding checkbox selection of 'screenType'
+			let screenType = [];
+	    	$(".screentype").each(function() {
+	    		if($(this).is(":checked")) {
+	    			screenType.push($(this).val());
+	    		}
+	    	});
+	    	
+			formData.append("movieTitle", $("#title").val());
+			formData.append("filmRate", parseInt($('input[name=filmrate]:checked').val(), 10));
+			// 10진수로 parseInt
+			formData.append("director", $("#director").val());
+			formData.append("starring", $("#cast").val());
+			formData.append("genre", $("#genre").val());
+			formData.append("openDate", $("#open_date").val());
+			formData.append("screenType", screenType.join(","));
+			formData.append("runtime", $("#runtime").val());
+			// ↑ number로 받고 있어서 굳이 parseInt 안 해도 됨
+			formData.append("trailer", $("#trailer_link").val());
+			formData.append("description",$("#synopsis").val());
+			formData.append("img", $("#posterInput")[0].files[0]);
+	
+	    	$.ajax({
+	    		url:"admin.insertmovie.mo",
+	    		type:"post",
+	    		data: formData,
+	    		
+	    		// 아래 두 줄을 안 넣으면 'illegal invocation' 오류가 남
+	    		// 사유 : https://repacat.tistory.com/38
+	    		contentType: false,
+	    		processData: false,
+	
+	    		success: function(result) {
+	    			if (result == "success") {
+	    				alert('영화가 추가되었습니다.');
+	    				
+						location.href = 'movielist_ad.mo';
+	    				// return redirect는 여기가 아니라 Controller에서 쓰는 거임
+	    			} else if (result == "half_failure") {
+	    				alert('포스터 추가 과정의 오류로 인해 영화 추가에 실패했습니다.');
+	    			}
+	    				else {
+	    				// if result = "failure"
+	    				alert('영화가 추가되지 않았습니다.');
+	    			}
+	    		},
+	    		error: function(result) {
+	    			alert('DAMN!');
+	    		}	
+	    	});
+    	}
+
+   	}
     </script>
     
 </body>
