@@ -15,7 +15,6 @@
 	}
 	
 	body {
-	    font-family: Arial, sans-serif;
 	    background-color: #121212;
 	    color: #ffffff;
 	}
@@ -40,8 +39,8 @@
 	
 	.mypage-sidebar h2 a {
 	    color: #fff; /* 흰 글씨 */
-	    font-size: 20px; /* 큰 폰트 크기 */
-	    font-weight: bold; /* 굵은 폰트 */
+	    font-size: 24px; /* 큰 폰트 크기 */
+	    font-weight: 500; /* 굵은 폰트 */
 	    text-decoration: none; /* 밑줄 제거 */
 	    display: block;
 	    margin-bottom: 30px; /* 아래 간격 */
@@ -82,7 +81,7 @@
 	
 	.withdrawal-header {
 	    font-size: 24px;
-	    font-weight: bold;
+	    font-weight: 600;
 	    margin-bottom: 30px;
 	    border-bottom: 1px solid #333;
 	    padding-bottom: 10px;
@@ -90,6 +89,7 @@
 	
 	.withdrawal-title {
 	    font-size: 18px;
+	    font-weight: 300;
 	}
 	
 	.withdrawal-content {
@@ -104,7 +104,7 @@
 	
 	.label {
 	    font-size: 16px;
-	    font-weight: 600;
+	    font-weight: 500;
 	    margin-bottom: 16px;
 	    display: flex;
 	    align-items: center;
@@ -120,7 +120,7 @@
 	}
 	
 	label {
-	    margin: 0 0 3px 0;
+	    /* margin: 0 0 2px 0; */
 	    cursor: pointer;
 	}
 	
@@ -142,8 +142,8 @@
 	}
 	
 	h6 {
-	    font-size: 14px;
-	    font-weight: bold;
+	    font-size: 15px;
+	    font-weight: 300;
 	}
 	
 	.withdrawal-footer {
@@ -157,7 +157,7 @@
 	    padding-top: 40px;
 	}
 	
-	.withdrawal-btn, .cancel-btn {
+	.withdrawal-btn, .cancel-btn, #confirmPwdBtn, #cancelPwdBtn, #cancelWithdrawBtn, #confirmWithdrawBtn {
 	    width: 120px;
 	    padding: 10px;
 	    border: none;
@@ -166,17 +166,45 @@
 	    color: #ffffff;
 	    border-radius: 60px;
 	    cursor: pointer;
+	    transition: background-color 0.3s ease, color 0.3s ease; /* 배경색과 글씨 색 변화를 위한 트랜지션 */
 	}
 	
-	.withdrawal-btn {
+	.withdrawal-btn:hover, 
+	.cancel-btn:hover, 
+	#confirmPwdBtn:hover, 
+	#cancelPwdBtn:hover, 
+	#cancelWithdrawBtn:hover, 
+	#confirmWithdrawBtn:hover, 
+	#doneConfirmBtn:hover {
+		background-color: #fff; /* 배경을 흰색으로 변경 */
+	    color: #000; /* 글씨 색을 검정색으로 변경 */
+	}
+	
+	#confirmPwdBtn, #cancelPwdBtn {
+		width: 100px;
+	}
+	
+	.withdrawal-btn, #confirmPwdBtn, #confirmWithdrawBtn {
 	    background-color: #555555;
 	}
 	
-	.cancel-btn {
+	.cancel-btn, #cancelPwdBtn, #cancelWithdrawBtn {
 	    background-color: #493628;
 	    margin-left: 8px;
 	}
 	
+	#confirmWithdrawBtn {
+		margin-left: 8px;
+		padding: 5px;
+		width: 80px;
+		font-size: 12px;
+	}
+	
+	#cancelWithdrawBtn {
+		padding: 10px;
+		width: 140px;
+		font-size: 16px;
+	}
 	
 	input[type=checkbox] {
 	    cursor: pointer;
@@ -188,50 +216,94 @@
 	
 	
 	.modal {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5); /* 더 진한 배경 */
-    backdrop-filter: blur(1px); /* 흐림 효과 추가 */
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
-}
+	    display: none;
+	    position: fixed;
+	    top: 0;
+	    left: 0;
+	    width: 100%;
+	    height: 100%;
+	    background-color: rgba(0, 0, 0, 0.5); /* 더 진한 배경 */
+	    backdrop-filter: blur(1px); /* 흐림 효과 추가 */
+	    z-index: 1000;
+	    justify-content: center;
+	    align-items: center;
+	}
+	
+	.modal-content {
+	    background-color: #1e1e1e; /* 짙은 회색 배경 */
+	    color: #fff; /* 흰색 글자 */
+	    width: 90%;
+	    max-width: 500px; /* 최대 너비 */
+	    border-radius: 15px;
+	    padding: 30px;
+	    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5); /* 부드러운 그림자 */
+	    animation: fadeIn 0.3s ease-out; /* 부드러운 나타남 효과 */
+	    text-align: center;
+	}
+	
+	.modal-content h2 {
+	    font-size: 22px;
+	    font-weight: bold;
+	    margin-bottom: 30px;
+	}
+	
+	#currentPwd {
+		width: 100%;
+	    padding: 10px;
+	    margin: 10px 0 20px 0;
+	    font-size: 16px;
+	    border: 1px solid #cccccc;
+	    border-radius: 5px;
+	    transition: border-color 0.3s ease;
+	    background-color: #2b2b2b;
+	    color: #ffffff;
+	}
+	
+	#currentPwd:focus {
+		border-color: #007bff; /* 포커스 시 파란 테두리 */
+	    outline: none;
+	}
+	
+	.modal-btns button {
+	    margin-top: 10px;
+	    padding: 10px 20px;
+	    cursor: pointer;
+	}
+	
+	.big-btn {
+	    font-size: 16px;
+	    padding: 12px 24px;
+	}
+	
+	.small-btn {
+	    font-size: 14px;
+	    padding: 8px 16px;
+	}
+	
+	#doneConfirmBtn {
+		background-color: #000000;
+		margin-top: 30px;
+		width: 200px;
+	    padding: 10px;
+	    border: none;
+	    font-size: 16px;
+	    font-weight: bold;
+	    color: #ffffff;
+	    border-radius: 60px;
+	    cursor: pointer;
+	    transition: background-color 0.3s ease, color 0.3s ease; /* 배경색과 글씨 색 변화를 위한 트랜지션 */
+	}
+	
+	#doneConfirmBtn:hover {
+		background-color: #fff; /* 배경을 흰색으로 변경 */
+	    color: #000; /* 글씨 색을 검정색으로 변경 */
+	}
+	
+	.byebye-btn {
+		display: flex;
+    	justify-content: center;
+	}
 
-.modal-content {
-	background-color: #1e1e1e; /* 짙은 회색 배경 */
-	color: #fff; /* 흰색 글자 */
-    padding: 20px;
-    text-align: center;
-    border-radius: 8px;
-}
-
-.modal-btns button {
-    margin: 10px;
-    padding: 10px 20px;
-    cursor: pointer;
-}
-
-.big-btn {
-    font-size: 16px;
-    padding: 12px 24px;
-}
-
-.small-btn {
-    font-size: 14px;
-    padding: 8px 16px;
-}
-	
-	
-	
-	
-	
-	
-	
-	
 </style>
 </head>
 <body>
@@ -326,7 +398,6 @@
         </div>
     </div>
     
-    
     <!-- 비밀번호 입력 모달 -->
 	<div id="pwdModal" class="modal">
 	    <div class="modal-content">
@@ -343,9 +414,14 @@
 	<div id="finalModal" class="modal">
 	    <div class="modal-content">
 	        <h2>정말 탈퇴하시겠습니까?</h2>
-	        <p>탈퇴하기 클릭 시 바로 탈퇴 처리됩니다.<br>
-	           탈퇴 후 14일 이내 재가입할 수 없으며, 동일 이메일을 사용할 수 없습니다.</p>
-	        <label><input type="checkbox" id="agreeWithdraw"> Filoom 회원을 탈퇴하겠습니다.</label>
+	        <div>
+	        	<p style="margin: 20px 0 30px 0;">탈퇴하기 클릭 시 바로 탈퇴 처리됩니다.<br>
+	           	탈퇴 후 14일 이내 재가입할 수 없으며, 동일 이메일을<br>사용할 수 없습니다.</p>
+	           	<div class="final-label" style="justify-content: center; margin: 20px 0 20px 0;">
+        			<input type="checkbox" id="agreeWithdraw">
+        			<label for="agreeWithdraw" style="font-weight: bold;"> Filoom 회원을 탈퇴하겠습니다.</label>
+        		</div>
+	        </div>
 	        <div class="modal-btns">
 	            <button id="cancelWithdrawBtn" class="big-btn">탈퇴 안 할래요</button>
 	            <button id="confirmWithdrawBtn" class="small-btn">탈퇴하기</button>
@@ -359,7 +435,9 @@
 	        <h2>회원 탈퇴가 완료되었습니다.</h2>
 	        <p>그동안 서비스를 이용해 주셔서 감사합니다.<br>
 	           14일 후 Filoom을 다시 이용할 수 있습니다.</p>
-	        <button id="doneConfirmBtn">확인</button>
+	        <div class="byebye-btn">
+	        	<button id="doneConfirmBtn">확인</button>
+	        </div>
 	    </div>
 	</div>
     
@@ -378,8 +456,9 @@
 	                alert("회원탈퇴 내용을 모두 동의해 주셔야 탈퇴가 가능합니다.");
 	                return;
 	            }
-	            $("#currentPwd").val("");
-	            $("#pwdModal").show(); // 비밀번호 입력 모달 띄우기
+	            $("#pwdModal").css("display", "flex"); // 비밀번호 입력 모달 띄우기
+	            $("#currentPwd").val("").css("border-color", "");
+	            $("body").css("overflow", "hidden"); // 스크롤 막기
 	        });
 	
 	        // 비밀번호 확인 로직
@@ -395,11 +474,12 @@
 	                type: "POST",
 	                data: { currentPwd: currentPwd },
 	                success: function (response) {
-	                    if (response === "비밀번호 일치") {
-	                        $("#pwdModal").hide();
-	                        $("#finalModal").show(); // 최종 확인 모달 열기
+	                    if (response === "matching") {
+	                        $("#pwdModal").css("display", "none");
+	                        $("#finalModal").css("display", "flex"); // 최종 확인 모달 열기
 	                    } else {
 	                        alert("비밀번호가 일치하지 않습니다.");
+	                        $("#currentPwd").focus().css("border-color", "red");
 	                    }
 	                },
 	                error: function () {
@@ -410,7 +490,8 @@
 	
 	        // 비밀번호 모달 취소 버튼
 	        $("#cancelPwdBtn").click(function () {
-	            $("#pwdModal").hide();
+	            $("#pwdModal").css("display", "none");
+	            $("body").css("overflow", "auto"); // 스크롤 다시 활성화
 	        });
 	
 	        // 최종 확인 모달
@@ -424,9 +505,9 @@
 	                url: "withdraw.me",
 	                type: "POST",
 	                success: function (response) {
-	                    if (response === "탈퇴 성공") {
-	                        $("#finalModal").hide();
-	                        $("#doneModal").show();
+	                    if (response === "success") {
+	                        $("#finalModal").css("display", "none");
+	                        $("#doneModal").css("display", "flex");
 	                    } else {
 	                        alert("탈퇴 처리 중 오류가 발생했습니다.");
 	                    }
@@ -444,7 +525,8 @@
 	
 	        // 최종 확인 모달에서 '탈퇴 안 할래요' 버튼
 	        $("#cancelWithdrawBtn").click(function () {
-	            $("#finalModal").hide();
+            	$("#finalModal").css("display", "none");
+            	$("body").css("overflow", "auto"); // 스크롤 다시 활성화
 	        });
 	    });
 	</script>

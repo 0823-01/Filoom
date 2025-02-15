@@ -10,10 +10,22 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <style>
 
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100;200;300;400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@100;200;300;400;500;600;700;800;900&display=swap');
+@import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
+@import url('https://fonts.googleapis.com/css2?family=Play:wght@400;700&display=swap');
+	
 * {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
+    font-family: 'Pretendard', 'Noto Sans KR', 'Apple SD Gothic Neo', 'Malgun Gothic','Nanum Gothic', 'sans-serif';
+}
+body {
+    font-family: 'Pretendard';
+    background-color: #121212;
+    color: #ffffff;
 }
         
 #header {
@@ -21,7 +33,6 @@
    margin: auto;
    z-index: 1000;
    width: 100%;
-   margin: 30px 0 50px 0;
    opacity: 90%;
    /*background-color: aqua;*/
 }
@@ -45,7 +56,6 @@
    font-weight: bold; 
    color: #E4E0E1; 
    text-decoration: none; 
-   font-family: 'Arial', sans-serif;
 	pointer: cursor;
 }
 

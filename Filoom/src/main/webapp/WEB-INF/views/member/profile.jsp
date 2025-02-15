@@ -16,7 +16,6 @@
 	}
 	
 	body {
-	    font-family: Arial, sans-serif;
 	    background-color: #121212;
 	    color: #ffffff;
 	}
@@ -41,8 +40,8 @@
 	
 	.mypage-sidebar h2 a {
 	    color: #fff; /* 흰 글씨 */
-	    font-size: 20px; /* 큰 폰트 크기 */
-	    font-weight: bold; /* 굵은 폰트 */
+	    font-size: 24px; /* 큰 폰트 크기 */
+	    font-weight: 500; /* 굵은 폰트 */
 	    text-decoration: none; /* 밑줄 제거 */
 	    display: block;
 	    margin-bottom: 30px; /* 아래 간격 */
@@ -104,8 +103,8 @@
 	}
 	
 	.label {
-	    font-size: 14px;
-	    font-weight: bold;
+	    font-size: 16px;
+	    font-weight: 100;
 	    color: #fff;
 	    border-left: 2px solid #666;
 	    padding-left: 10px;
@@ -133,7 +132,6 @@
 	.value-notChange {
 	    color: #888;
 	}
-
 
 	.btn-change {
 	    padding: 5px 10px;
@@ -272,8 +270,6 @@
 	    border-radius: 50%;
 	}
 
-	
-
 	.changes-btn:hover {
         background-color: #fff; /* 배경을 흰색으로 변경 */
         color: #000; /* 글씨 색을 검정색으로 변경 */
@@ -282,109 +278,195 @@
 /* ----------------------------- */
 	
 	/* 모달 배경 */
-.modal {
-    display: none; /* 기본적으로 숨김 */
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.6); /* 어두운 반투명 배경 */
-    z-index: 1000;
-    justify-content: center;
-    align-items: center; /* 세로 중앙 정렬 */
-}
-
-/* 모달 콘텐츠 박스 */
-.modal-content {
-    background-color: #ffffff;
-    width: 90%;
-    max-width: 500px; /* 최대 너비 */
-    border-radius: 10px;
-    padding: 20px 30px;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3); /* 그림자 */
-    animation: fadeIn 0.3s ease-in-out;
-}
-
-/* 모달 닫기 버튼 */
-.modal .close {
-    float: right;
-    font-size: 20px;
-    font-weight: bold;
-    color: #888888;
-    cursor: pointer;
-    transition: color 0.3s ease;
-}
-
-.modal .close:hover {
-    color: #ff5555; /* 닫기 버튼 호버 색상 */
-}
-
-/* 폼 내 요소들 */
-.modal-content h2 {
-    font-size: 24px;
-    font-weight: bold;
-    text-align: center;
-    margin-bottom: 20px;
-    color: #333333;
-}
-
-.modal-content .form-group {
-    margin-bottom: 20px;
-}
-
-.modal-content label {
-    display: block;
-    font-weight: bold;
-    margin-bottom: 5px;
-    color: #555555;
-}
-
-.modal-content .changeInput {
-    width: 100%;
-    padding: 10px;
-    font-size: 16px;
-    border: 1px solid #cccccc;
-    border-radius: 5px;
-    transition: border-color 0.3s ease;
-}
-
-.modal-content .changeInput:focus {
-    border-color: #007bff; /* 포커스 시 파란 테두리 */
-    outline: none;
-}
-
-.modal-content button[type="submit"] {
-    width: 100%;
-    padding: 12px 20px;
-    font-size: 18px;
-    font-weight: bold;
-    color: #ffffff;
-    background-color: #007bff; /* 파란색 */
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
-
-.modal-content button[type="submit"]:hover {
-    background-color: #0056b3; /* 호버 시 색상 변경 */
-}
-
-/* 페이드 인 애니메이션 */
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: scale(0.95);
-    }
-    to {
-        opacity: 1;
-        transform: scale(1);
-    }
-}
-
+	.modal {
+	    display: none; /* 기본적으로 숨김 */
+	    position: fixed;
+	    top: 0;
+	    left: 0;
+	    width: 100%;
+	    height: 100%;
+	    background-color: rgba(0, 0, 0, 0.5); /* 더 진한 배경 */
+	    backdrop-filter: blur(1px); /* 흐림 효과 추가 */
+	    z-index: 1000;
+	    justify-content: center;
+	    align-items: center; /* 세로 중앙 정렬 */
+	}
 	
-
+	/* 모달 콘텐츠 박스 */
+	.modal-content {
+	    background-color: #1e1e1e; /* 짙은 회색 배경 */
+	    color: #fff; /* 흰색 글자 */
+	    width: 90%;
+	    max-width: 500px; /* 최대 너비 */
+	    border-radius: 15px;
+	    padding: 30px;
+	    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5); /* 부드러운 그림자 */
+	    animation: fadeIn 0.3s ease-out; /* 부드러운 나타남 효과 */
+	}
+	
+	/* 모달 닫기 버튼 */
+	.modal .close {
+	    float: right;
+	    font-size: 20px;
+	    font-weight: bold;
+	    color: #888888;
+	    cursor: pointer;
+	    transition: color 0.3s ease;
+	}
+	
+	.modal .close:hover {
+	    color: #ff5555; /* 닫기 버튼 호버 색상 */
+	}
+	
+	/* 폼 내 요소들 */
+	.modal-content h2 {
+	    font-size: 24px;
+	    font-weight: bold;
+	    margin-bottom: 20px;
+	    padding-bottom: 10px;
+	    border-bottom: 1px solid #333;
+	}
+	
+	.modal-content .form-group {
+	    margin-bottom: 20px;
+	}
+	
+	.modal-content label {
+	    display: block;
+	    font-size: 14px;
+	    font-weight: 300;
+	    margin-bottom: 5px;
+	}
+	
+	.modal-content .changeInput {
+	    width: 100%;
+	    padding: 10px;
+	    font-size: 16px;
+	    border: 1px solid #cccccc;
+	    border-radius: 5px;
+	    transition: border-color 0.3s ease;
+	}
+	
+	.modal-content .changeInput:focus {
+	    border-color: #007bff; /* 포커스 시 파란 테두리 */
+	    outline: none;
+	}
+	
+	/* 마케팅 약관 모달 스타일 */
+	.marketingCaption, .marketingCaption1 {
+		font-size: 14px;
+	}
+	
+	.marketingCaption1 {
+		color: #999;
+	}
+	
+	.marketing-table {
+	    width: 100%;
+	    border-collapse: collapse;
+	    margin: 15px 0;
+	    font-size: 14px;
+	}
+	
+	.marketing-table th, .marketing-table td {
+	    border: 1px solid #333;
+	    padding: 10px;
+	}
+	
+	.marketing-table th {
+	    background-color: #1e1e1e;
+	    color: white;
+	}
+	
+	.marketing-table tr:nth-child(even) {
+	    background-color: #1e1e1e;
+	}
+	
+	.marketing-table tr:nth-child(odd) {
+	    background-color: #1e1e1e;
+	}
+	
+	.marketingModalModal-buttons {
+		display: flex;
+	    gap: 10px;
+	}
+	
+	/* 공통 입력 필드 스타일 */
+    input[type="text"],
+    input[type="password"],
+    input[type="email"],
+    input[type="tel"] {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #333;
+        border-radius: 5px;
+        background-color: #2b2b2b;
+        color: #ffffff;
+        font-size: 14px;
+        flex: 1;
+    }
+	
+	.modal-content button[type="submit"] {
+	    width: 200px;
+	    margin-top: 10px;
+	    padding: 10px;
+	    font-size: 18px;
+	    /* font-weight: bold; */
+	    color: #ffffff;
+	    background-color: #493628;
+	    border: none;
+	    border-radius: 60px;
+	    cursor: pointer;
+	    transition: background-color 0.3s ease, color 0.3s ease;
+	}
+	
+	.modal-content button[type="submit"]:hover {
+	    background-color: #fff; /* 배경을 흰색으로 변경 */
+	    color: #000; /* 글씨 색을 검정색으로 변경 */
+	}
+	
+	/* 페이드 인 애니메이션 */
+	@keyframes fadeIn {
+	    from {
+	        opacity: 0;
+	        transform: scale(0.95);
+	    }
+	    to {
+	        opacity: 1;
+	        transform: scale(1);
+	    }
+	}
+	
+	.cancel-btn {
+	    background-color: #493628;
+	}
+	
+	.confirm-btn {
+	    background-color: #555555;
+	}
+	
+	.cancel-btn, .confirm-btn {
+	    width: 100%;
+	    padding: 10px;
+	    margin-top: 10px;
+	    border: none;
+	    font-size: 16px;
+	    /* font-weight: bold; */
+	    color: #ffffff;
+	    border-radius: 60px;
+	    cursor: pointer;
+	    transition: background-color 0.3s ease, color 0.3s ease; /* 배경색과 글씨 색 변화를 위한 트랜지션 */
+	}
+	
+	.cancel-btn:hover, .confirm-btn:hover {
+	    background-color: #fff; /* 배경을 흰색으로 변경 */
+	    color: #000; /* 글씨 색을 검정색으로 변경 */
+	}
+	
+	.submit-btn {
+		display: flex;
+    	justify-content: center;
+	}
 
 </style>
 </head>
@@ -452,7 +534,9 @@
 				                <label for="confirmNewPassword">새 비밀번호 확인</label>
 				                <input type="password" class="changeInput" id="confirmNewPwd" name="confirmNewPwd" placeholder="새 비밀번호를 다시 입력해주세요" required>
 				            </div>
-				            <button type="submit">완료</button>
+				            <div class="submit-btn">
+				            	<button type="submit">완료</button>
+				            </div>
 				        </form>
 				    </div>
 				</div>
@@ -475,11 +559,13 @@
 				        <span class="close" onclick="closeChangeNameModal()">&times;</span>
 				        <h2>이름 변경</h2>
 				        <form id="changeNameForm" action="changeName.me" method="post">
-				            <div class="form-group">
+				            <div class="form-group" style="padding: 10px 0 10px 0;">
 				                <label for="newName">변경할 이름</label>
 				                <input type="text" class="changeInput" id="newName" name="newName" placeholder="${sessionScope.loginUser.userName}" required>
 				            </div>
-				            <button type="submit">완료</button>
+				            <div class="submit-btn">
+				            	<button type="submit">완료</button>
+				            </div>
 				        </form>
 				    </div>
 				</div>
@@ -512,12 +598,14 @@
 				        <span class="close" onclick="closeChangeGenderModal()">&times;</span>
 				        <h2>성별 변경</h2>
 				        <form id="changeGenderForm" action="changeGender.me" method="post">
-				            <div class="form-group">
-								<label><input type="radio" class="changeGender" name="gender" value="">선택안함</label>
-                        		<label><input type="radio" class="changeGender" name="gender" value="M">남성</label>
-                        		<label><input type="radio" class="changeGender" name="gender" value="F">여성</label>
+				            <div class="form-group" style="padding: 20px 0 10px 40px; display: flex; justify-content: left; gap: 80px;">
+								<label style="font-size: 16px;"><input type="radio" class="changeGender" name="gender" value=""> 선택안함</label>
+                        		<label style="font-size: 16px;"><input type="radio" class="changeGender" name="gender" value="M"> 남성</label>
+                        		<label style="font-size: 16px;"><input type="radio" class="changeGender" name="gender" value="F"> 여성</label>
 				            </div>
-				            <button type="submit">완료</button>
+				            <div class="submit-btn">
+				            	<button type="submit">완료</button>
+				            </div>
 				        </form>
 				    </div>
 				</div>
@@ -543,42 +631,42 @@
 				        <span class="close" onclick="closeChangeBirthModal()">&times;</span>
 				        <h2>생년월일 변경</h2>
 				        <form id="changeBirthForm" action="changeBirth.me" method="post">
-						    <div class="form-group">
+						    <div class="form-group" style="padding: 10px 0 10px 0;">
 						        <label for="birthDate">변경할 생년월일</label>
-						        <input type="date" id="birthDate" name="birthDate">
-						        <input type="hidden" id="formattedBirthDate" name="formattedBirthDate"> <!-- 포매팅된 값 전달 -->
+						        <input type="text" class="changeInput" id="birthDate" name="birthDate" placeholder="${sessionScope.loginUser.birth}" required>
 						    </div>
-						    <button type="submit">완료</button>
+						    <div class="submit-btn">
+						    	<button type="submit">완료</button>
+						    </div>
 						</form>
 				    </div>
 				</div>
                 
                 <div class="info-item">
-                    <label class="label">약관동의</label>
-                    <div class="value-btn">
-                        <div class="value">
-                            개인 정보 마케팅 활용 동의
-                            <button class="open-modal-btn" data-target="modal">내용 보기</button>
-                        </div>
-                        <label class="switch">
-                            <input type="checkbox" id="marketingConsent" class="checkbox"
-                            	<c:if test="${sessionScope.loginUser.marketing == 'Y'}">
-				                    checked
-				                </c:if>
-                            >
-                            <span class="slider round"></span>
-                        </label>
-                    </div>
-                </div>
-                
-                <!-- 모달창 -->
+				    <label class="label">약관동의</label>
+				    <div class="value-btn">
+				        <div class="value">
+				            개인 정보 마케팅 활용 동의
+				            <button type="button" class="open-modal-btn">내용 보기</button>
+				        </div>
+				        <label class="switch">
+				            <input type="checkbox" id="marketingContent" class="checkbox"
+				                <c:if test="${sessionScope.loginUser.marketing == 'Y'}">checked</c:if>
+				            >
+				            <span class="slider round"></span>
+				        </label>
+				    </div>
+				</div>
+				
+				<!-- 마케팅 동의 모달 -->
 				<div id="marketingModal" class="modal">
 				    <div class="modal-content">
+				        <span class="close" onclick="closeMarketingModal()">&times;</span>
 				        <h2>개인정보 마케팅 활용 동의 철회</h2>
-				        <p>마케팅 활용에 동의하지 않을 시 <strong>혜택과 다양한 이벤트 소식</strong>을 제공받을 수 없습니다. 계속하시겠습니까?</p>
-				        <div class="modal-buttons">
-				            <button id="confirmUnsubscribe" class="btn">해제</button>
-				            <button id="cancelUnsubscribe" class="btn">유지</button>
+				        <p style="margin-bottom: 20px; padding: 10px 0;">마케팅 활용에 동의하지 않을 시 <strong>다양한 혜택과 이벤트 소식</strong>을 제공받을 수 없습니다. 계속하시겠습니까?</p>
+				        <div class="marketingModalModal-buttons">
+				            <button id="confirmUnsubscribe" class="confirm-btn">해제</button>
+				            <button id="cancelUnsubscribe" class="cancel-btn">유지</button>
 				        </div>
 				    </div>
 				</div>
@@ -586,11 +674,46 @@
 	                <a class="out" href="withdrawal.me">회원탈퇴</a>
 
                 <!-- 약관 내용 모달 -->
-                <div id="agreement-modal" class="agreement-modal">
-                    <div class="agreement-modal-content">
-                        <span class="close-btn">&times;</span>
-                        <h2>마케팅 활용 동의</h2><hr>
-                        <p>마케팅 활용에 대한 설명이 여기에 표시됩니다.</p>
+                <div id="marketingContentModal" class="modal">
+                    <div class="modal-content">
+                        <span class="close">&times;</span>
+                        <h2>마케팅 활용 동의</h2>
+                        <p class="marketingCaption">
+				            (주)필룸은 고객님께 더욱 유용한 혜택과 서비스를 제공하기 위해 다음과 같이 개인 정보를 활용하고자 합니다.
+				            동의하실 경우, 다양한 이벤트 및 프로모션 혜택을 받아보실 수 있습니다.
+				        </p>
+				
+				        <table class="marketing-table">
+				            <thead>
+				                <tr>
+				                    <th>수집 항목</th>
+				                    <th>수집 목적</th>
+				                    <th>보유 기간</th>
+				                </tr>
+				            </thead>
+				            <tbody>
+				                <tr>
+				                    <td>이름, 이메일, 휴대폰 번호</td>
+				                    <td>이벤트, 프로모션 안내 및 맞춤형 광고 제공</td>
+				                    <td>회원 탈퇴 후 1년</td>
+				                </tr>
+				                <tr>
+				                    <td>구매 내역</td>
+				                    <td>개인 맞춤형 혜택 제공</td>
+				                    <td>회원 탈퇴 후 1년</td>
+				                </tr>
+				                <tr>
+				                    <td>서비스 이용 기록</td>
+				                    <td>서비스 개선 및 최적화</td>
+				                    <td>회원 탈퇴 후 6개월</td>
+				                </tr>
+				            </tbody>
+				        </table><br>
+				
+				        <p class="marketingCaption1">
+				            ※ 필룸에서 제공하는 이벤트 및 혜택은 회원님의 동의 여부에 따라 제공됩니다.<br>
+				            ※ 동의를 거부하셔도 필룸의 기본적인 서비스 이용에는 영향이 없습니다.
+				        </p>
                     </div>
                 </div>
             </div>
@@ -604,11 +727,14 @@
      	// 비밀번호 변경 모달 보여주기
         function showChangePwdModal() {
         	$('#changePwdModal').css('display', 'flex');
+        	//$("body").css("overflow", "hidden"); // 스크롤 막기
         }
 
         // 비밀번호 변경 모달 닫기
         function closeChangePwdModal() {
         	$('#changePwdModal').css('display', 'none');
+        	$(".changeInput").val("").css("border-color", ""); // 입력 필드, 테두리 색상 초기화
+        	//$("body").css("overflow", "auto"); // 스크롤 다시 활성화
         }
 
         $(function() {
@@ -680,7 +806,7 @@
 
                         // 성공 메시지일 경우 특정 동작 (예: 페이지 이동)
                         if (result === "비밀번호가 성공적으로 변경되었습니다. 로그인 페이지로 이동합니다.") {
-                            location.href = "${pageContext.request.contextPath}/loginForm.me"; // 마이페이지로 이동
+                            location.href = "${pageContext.request.contextPath}/loginForm.me"; // 로그인페이지로 이동
                         } else {
                         	$("#currentPwd").focus().css("border-color", "red");
                         }
@@ -695,11 +821,14 @@
      	// 이름 변경 모달 보여주기
         function showChangeNameModal() {
         	$('#changeNameModal').css('display', 'flex');
+        	//$("body").css("overflow", "hidden"); // 스크롤 막기
         }
 
         // 이름 변경 모달 닫기
         function closeChangeNameModal() {
         	$('#changeNameModal').css('display', 'none');
+        	$(".changeInput").val("").css("border-color", ""); // 입력 필드, 테두리 색상 초기화
+        	//$("body").css("overflow", "auto"); // 스크롤 다시 활성화
         }
      	
         $(function() {
@@ -755,11 +884,13 @@
      	// 성별 변경 모달 보여주기
         function showChangeGenderModal() {
         	$('#changeGenderModal').css('display', 'flex');
+        	//$("body").css("overflow", "hidden"); // 스크롤 막기
         }
 
         // 성별 변경 모달 닫기
         function closeChangeGenderModal() {
         	$('#changeGenderModal').css('display', 'none');
+        	//$("body").css("overflow", "auto"); // 스크롤 다시 활성화
         }
 
         $(function () {
@@ -800,25 +931,47 @@
      	// 생년월일 변경 모달 보여주기
         function showChangeBirthModal() {
         	$('#changeBirthModal').css('display', 'flex');
+        	//$("body").css("overflow", "hidden"); // 스크롤 막기
         }
 
-        // 성별 변경 모달 닫기
+        // 생년월일 변경 모달 닫기
         function closeChangeBirthModal() {
         	$('#changeBirthModal').css('display', 'none');
+        	$(".changeInput").val("").css("border-color", ""); // 입력 필드, 테두리 색상 초기화
+        	//$("body").css("overflow", "auto"); // 스크롤 다시 활성화
         }
 
         $(function () {
+        	// 생년월일 유효성 검사
+	        $("#birthDate").on("keyup", function () {
+	            const birthDate = $(this).val();
+	            $(this).val(birthDate.replace(/[^0-9]/g, "").slice(0, 8)); // 숫자 외 문자 제거 및 최대 8자리로 제한
+	            if (birthDate.length === 8) {
+	                $(this).css("border-color", "green");
+	            } else {
+	                $(this).css("border-color", "red");
+	            }
+	        });
+        	
             $("#changeBirthForm").on("submit", function (e) {
                 e.preventDefault(); // 기본 폼 제출 동작 방지
 
-                let birthDate = $("#birthDate").val(); // yyyy-mm-dd 형식의 값
+                const birthDate = $("#birthDate").val();
+                
                 if (!birthDate) {
-                    alert("생년월일을 선택해주세요.");
-                    return;
-                }
+	                alert("생년월일을 입력해주세요.");
+	                $("#birthDate").focus().css("border-color", "red");
+	                return;
+	            }
+	
+	            if (birthDate.length !== 8) {
+	                alert("생년월일은 8자리(YYYYMMDD)로 입력해주세요.");
+	                $("#birthDate").focus().css("border-color", "red");
+	                return;
+	            }
 
                 // 생년월일을 YYYYMMDD 형식으로 변환
-                birthDate = birthDate.replaceAll("-", "");
+                // birthDate = birthDate.replaceAll("-", "");
 
                 $.ajax({
                     url: "changeBirth.me",
@@ -837,11 +990,31 @@
             });
         });
         
+     	// 마케팅 모달 열기/닫기
+        function showMarketingModal() {
+            $("#marketingModal").css("display", "flex");
+            //$("body").css("overflow", "hidden"); // 스크롤 막기
+        }
+
+        function closeMarketingModal() {
+            $("#marketingModal").css("display", "none");
+            //$("body").css("overflow", "auto"); // 스크롤 다시 활성화
+        }
         
+     	// 약관 내용 모달 열기/닫기
+        function showMarketingContentModal() {
+            $("#marketingContentModal").css("display", "flex");
+            //$("body").css("overflow", "hidden"); // 스크롤 막기
+        }
+
+        function closeMarketingContentModal() {
+            $("#marketingContentModal").css("display", "none");
+            //$("body").css("overflow", "auto"); // 스크롤 다시 활성화
+        }
         
         $(function () {
             // 마케팅 동의 체크박스 변경 이벤트
-            $("#marketingConsent").change(function () {
+            $("#marketingContent").change(function () {
                 const isChecked = $(this).is(":checked");
 
                 if (isChecked) {
@@ -850,21 +1023,19 @@
                     alert("전송자 : (주)필룸\n일시 : " + currentDate + "\n처리내용 : 개인 정보 마케팅 활용 동의 완료");
                     changeMarketing("Y");
                 } else {
-                    // 비활성화 시 모달만 띄움 (체크박스 상태 변경은 보류)
-                    $("#marketingModal").fadeIn(200);
-
-                    // 체크박스 상태를 다시 원래대로 설정 (임시 유지)
+                    // 비활성화 시 모달 띄우고 체크 유지
+                    showMarketingModal();
                     $(this).prop("checked", true);
                 }
             });
 
             // 모달: 해제 버튼 클릭
             $("#confirmUnsubscribe").click(function () {
-                $("#marketingModal").fadeOut(100);
+                closeMarketingModal();
                 const currentDate = new Date().toLocaleString();
 
-                // 체크박스를 비활성화 (해제)
-                $("#marketingConsent").prop("checked", false);
+                // 체크박스 비활성화
+                $("#marketingContent").prop("checked", false);
 
                 alert("전송자 : (주)필룸\n일시 : " + currentDate + "\n처리내용 : 개인 정보 마케팅 활용 동의 철회");
                 changeMarketing("N"); // AJAX 호출
@@ -872,8 +1043,17 @@
 
             // 모달: 유지 버튼 클릭
             $("#cancelUnsubscribe").click(function () {
-                $("#marketingModal").fadeOut(100);
-                // 체크박스 상태를 그대로 유지 (아무 것도 하지 않음)
+                closeMarketingModal();
+            });
+            
+         	// 약관 내용 보기 버튼 클릭 시 모달 띄우기
+            $(".open-modal-btn").click(function () {
+                showMarketingContentModal();
+            });
+
+            // 약관 모달 닫기 버튼 클릭 이벤트
+            $("#marketingContentModal .close").click(function () {
+                closeMarketingContentModal();
             });
 
             // DB 업데이트 AJAX
@@ -890,38 +1070,6 @@
                     },
                 });
             }
-        });
-
-
-
-
-
-
-        
-
-
-     	
-
-
-     	// 약관모달-------------------------------------------------
-        $(function () {
-            // 모달 열기
-            $('.open-modal-btn').click(function () {
-                const targetModal = '#' + $(this).data('target');
-                $(targetModal).fadeIn(200); // 모달을 서서히 나타냄
-            });
-
-            // 모달 닫기
-            $('.close-btn').click(function () {
-                $(this).closest('.modal').fadeOut(100); // 모달을 서서히 사라지게 함
-            });
-
-            // 모달 외부 클릭 시 닫기
-            $(window).click(function (event) {
-                if ($(event.target).hasClass('modal')) {
-                    $(event.target).fadeOut(100);
-                }
-            });
         });
 
     </script>

@@ -18,7 +18,6 @@
 	}
 	
 	body {
-	    font-family: Arial, sans-serif;
 	    background-color: #121212;
 	    color: #ffffff;
 	}
@@ -43,8 +42,8 @@
 	
 	.mypage-sidebar h2 a {
 	    color: #fff; /* 흰 글씨 */
-	    font-size: 20px; /* 큰 폰트 크기 */
-	    font-weight: bold; /* 굵은 폰트 */
+	    font-size: 24px; /* 큰 폰트 크기 */
+	    font-weight: 500; /* 굵은 폰트 */
 	    text-decoration: none; /* 밑줄 제거 */
 	    display: block;
 	    margin-bottom: 30px; /* 아래 간격 */
@@ -277,10 +276,10 @@
 	                <div class="year-search">
 					    <select name="year" id="year-select">
 						    <option value="all" ${selectedYear == 'all' ? 'selected' : ''}>전체</option>
-						    <option value="2021" ${selectedYear == '2021' ? 'selected' : ''}>2021</option>
 						    <option value="2022" ${selectedYear == '2022' ? 'selected' : ''}>2022</option>
 						    <option value="2023" ${selectedYear == '2023' ? 'selected' : ''}>2023</option>
 						    <option value="2024" ${selectedYear == '2024' ? 'selected' : ''}>2024</option>
+						    <option value="2025" ${selectedYear == '2025' ? 'selected' : ''}>2025</option>
 						</select>
 
 					    <button type="button" id="year-btn">검색</button>

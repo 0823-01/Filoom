@@ -15,7 +15,6 @@
 	}
 	
 	body {
-	    font-family: Arial, sans-serif;
 	    background-color: #121212;
 	    color: #ffffff;
 	}

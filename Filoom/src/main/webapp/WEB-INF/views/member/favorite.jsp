@@ -16,7 +16,6 @@
 	}
 	
 	body {
-	    font-family: Arial, sans-serif;
 	    background-color: #121212;
 	    color: #ffffff;
 	}
@@ -41,8 +40,8 @@
 	
 	.mypage-sidebar h2 a {
 	    color: #fff; /* 흰 글씨 */
-	    font-size: 20px; /* 큰 폰트 크기 */
-	    font-weight: bold; /* 굵은 폰트 */
+	    font-size: 24px; /* 큰 폰트 크기 */
+	    font-weight: 500; /* 굵은 폰트 */
 	    text-decoration: none; /* 밑줄 제거 */
 	    display: block;
 	    margin-bottom: 30px; /* 아래 간격 */
@@ -146,6 +145,11 @@
 	#year-btn:hover, .reserve-btn:hover {
 		background-color: #8b5a2b;
 	}
+	
+	select:focus {
+	  	outline: none;
+	}
+	
 	/* 
 	.favorite-item {
 	    margin-bottom: 30px;
@@ -268,7 +272,7 @@
             <div class="favorite-header">
                 
                 <div class="favorite-num">
-                    <h1>보고싶은 영화</h1>
+                    <h1>보고 싶은 영화</h1>
                     <span>${favoriteList.size()}건</span>
                 </div>
 

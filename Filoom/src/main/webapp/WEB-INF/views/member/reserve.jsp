@@ -8,6 +8,8 @@
 <meta charset="UTF-8">
 <title>예매 내역 조회</title>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment-timezone/0.5.43/moment-timezone-with-data.min.js"></script>
 <style>
 	/* 기본 스타일 초기화 */
 	* {
@@ -17,7 +19,6 @@
 	}
 	
 	body {
-	    font-family: Arial, sans-serif;
 	    background-color: #121212;
 	    color: #ffffff;
 	}
@@ -42,8 +43,8 @@
 	
 	.mypage-sidebar h2 a {
 	    color: #fff; /* 흰 글씨 */
-	    font-size: 20px; /* 큰 폰트 크기 */
-	    font-weight: bold; /* 굵은 폰트 */
+	    font-size: 24px; /* 큰 폰트 크기 */
+	    font-weight: 500; /* 굵은 폰트 */
 	    text-decoration: none; /* 밑줄 제거 */
 	    display: block;
 	    margin-bottom: 30px; /* 아래 간격 */
@@ -457,13 +458,14 @@
 			                            <div class="box-image">
 			                                <a href="detail.mo?movieNo=${reserve.movieNo}"><img src="${ pageContext.request.contextPath }/resources/images/posters/${ reserve.fileCodename }" class="poster"></a>
 			                            </div>
-			                            <input type="hidden" id="hiddenEndTime" value="${reserve.endTime}">
+										<fmt:formatDate value="${reserve.endTime}" pattern="yyyy/MM/dd HH:mm:ss" var="formattedEndTime" />
+										<input type="hidden" class="hiddenEndTime" value="${formattedEndTime}">
 			                            <div class="reserve-info">
 			                                <div class="title-price">
 			                                    <div><a href="detail.mo?movieNo=${reserve.movieNo}" class="movie-title">${reserve.movieTitle}</a></div>
 			                                    <div class="cancel-review">
 			                                    	<button type="button" class="cancel-btn" onclick="canelRequest(${reserve.bookNo})">예매 취소</button>
-			                                    	<button type="button" class="review-btn" onClick="location.href='detail.mo?movieNo=${reserve.movieNo}'">리뷰 남기러 가기</button>
+			                                    	<button type="button" class="review-btn" onClick="location.href='detail.mo?movieNo=${reserve.movieNo}'">리뷰 남기기</button>
 			                                    </div>
 			                                </div>
 			                                <div class="reserve-content">
@@ -692,27 +694,24 @@
 		        $(this).closest('.reserve-item').find('.incomeDeduction-content').slideToggle();
 		    });
 		});
+        
+        
+        
+        
 
         $(function () {
             $(".reserve-item").each(function () {
-                // 각 reserve-item 내에서 작업
-                const endTimeText = $(this).find("#hiddenEndTime").val(); // 해당 예약의 hiddenEndTime 값을 가져옴
+                const endTimeText = $(this).find(".hiddenEndTime").val(); // 숨겨진 값 가져오기
                 const now = new Date(); // 현재 시간
 
-                if (!endTimeText) return; // endTimeText가 없으면 건너뜀
+                if (!endTimeText) return;
 
-                const parts = endTimeText.split(" ");
-                const months = {
-                    Jan: 0, Feb: 1, Mar: 2, Apr: 3, May: 4, Jun: 5,
-                    Jul: 6, Aug: 7, Sep: 8, Oct: 9, Nov: 10, Dec: 11
-                };
+                // "YYYY/MM/DD HH:mm:ss" 형식이므로 직접 Date 객체로 변환
+                const endTime = new Date(endTimeText);
 
-                const year = parseInt(parts[5], 10);
-                const month = months[parts[1]];
-                const day = parseInt(parts[2], 10);
-                const [hours, minutes, seconds] = parts[3].split(":").map(Number);
-
-                const endTime = new Date(year, month, day, hours, minutes, seconds);
+                console.log("Current Time:", now);
+                console.log("End Time:", endTime);
+                console.log("Comparison:", now > endTime);
 
                 if (now > endTime) {
                     // 상영 시간이 지난 경우
@@ -729,6 +728,15 @@
                 }
             });
         });
+
+
+
+
+
+        
+        
+        
+        
         
         //형문 -결제 취소
         function canelRequest(bookNo){

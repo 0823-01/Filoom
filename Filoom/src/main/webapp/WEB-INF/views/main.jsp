@@ -100,8 +100,8 @@
             <div id="video">
                   <iframe 
 				    id="movie-video" 
-				    width="1900" 
-				    height="1080" 
+				    width="100%" 
+				    height="100%" 
 				    src="https://www.youtube.com/embed/4DM8_51bz-c?autoplay=1&mute=1" 
 				    title="YouTube video player" 
 				    frameborder="0" 
@@ -223,7 +223,7 @@
    
 	<br><br>
 	
-	<div style = "width:1400px; height:950px;margin:auto; border:1px solid #E4E0E1;">
+	<div style = "width:80%; height:950px;margin:auto; border:1px solid #E4E0E1;">
 	
 	<div id = "map_title" style="margin:auto; margin-top:60px; text-align:center;" ><h1 style="color:white;">찾아오시는 길</h1></div>
 		<br>

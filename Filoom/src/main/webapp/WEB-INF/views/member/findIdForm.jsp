@@ -15,7 +15,6 @@
 	}
 	
 	body {
-	    font-family: Arial, sans-serif;
 	    background-color: #121212;
 	    color: #ffffff;
 	}
@@ -64,7 +63,7 @@
 	}
 	
 	input:focus {
-	  outline: none;
+		outline: none;
 	}
 	
 	.findId-btn {

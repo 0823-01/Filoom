@@ -30,10 +30,10 @@
 	
 	#footer_a{
 	
-	width: 1900px;
+	width: 100%;
     height: 100%;
 	margin: auto;
-	
+	padding-top: 20px;
 	}
 	
 	#footer_a>ul{
@@ -56,7 +56,6 @@
 <body>
 
    <div id = "footer">
-	<div id = "footer_top"></div>
 	<div id = "footer_a">
 	    <ul>
 	         &nbsp;&nbsp;&nbsp;&nbsp;<li>

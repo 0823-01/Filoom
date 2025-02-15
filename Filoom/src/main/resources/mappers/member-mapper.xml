@@ -203,16 +203,19 @@
 	
 	<select id="cancelList" parameterType="int" resultMap="cancelResultSet">
 		SELECT m.MOVIE_TITLE AS MOVIE_TITLE,
-		       p.PLAYTIME AS PLAYTIME,
-		       b.MODIFY_DATE AS MODIFY_DATE,
-		       b.BOOK_COST AS BOOK_COST
-		  FROM BOOKING b
-		  JOIN PLAYING p ON b.BOOK_NO = p.PLAYING_NO
-		  JOIN MOVIE m ON p.MOVIE_NO = m.MOVIE_NO
-		 WHERE b.STATUS = 'N'
-		   AND b.USER_NO = #{userNo}
-		   AND p.PLAYTIME >= SYSDATE - 7
-		 ORDER BY b.MODIFY_DATE ASC
+	       p.PLAYTIME AS PLAYTIME,
+	       b.MODIFY_DATE AS MODIFY_DATE,
+	       b.BOOK_COST AS BOOK_COST
+	  FROM BOOKING b
+	  JOIN BOOKING_SEAT bs ON b.BOOK_NO = bs.BOOK_NO
+	  JOIN PLAYING p ON bs.PLAYING_NO = p.PLAYING_NO
+	  JOIN MOVIE m ON p.MOVIE_NO = m.MOVIE_NO
+	 WHERE b.STATUS = 'N'
+	   AND b.USER_NO = #{userNo}
+	   AND b.MODIFY_DATE >= SYSDATE - 7
+	 GROUP BY m.MOVIE_TITLE, p.PLAYTIME, b.MODIFY_DATE, b.BOOK_COST
+	 ORDER BY b.MODIFY_DATE ASC
+
 	</select>
 	
 	<select id="useCouponList" parameterType="int" resultMap="useCouponResultSet">

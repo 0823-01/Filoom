@@ -16,7 +16,6 @@
 	}
 	
 	body {
-	    font-family: Arial, sans-serif;
 	    background-color: #121212;
 	    color: #ffffff;
 	}
@@ -41,8 +40,8 @@
 	
 	.mypage-sidebar h2 a {
 	    color: #fff; /* 흰 글씨 */
-	    font-size: 20px; /* 큰 폰트 크기 */
-	    font-weight: bold; /* 굵은 폰트 */
+	    font-size: 24px; /* 큰 폰트 크기 */
+	    font-weight: 500; /* 굵은 폰트 */
 	    text-decoration: none; /* 밑줄 제거 */
 	    display: block;
 	    margin-bottom: 30px; /* 아래 간격 */
@@ -227,7 +226,13 @@
 	    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5); /* 부드러운 그림자 */
 	    position: relative;
 	    text-align: center; /* 내용 가운데 정렬 */
-	    animation: fadeIn 0.3s ease-out; /* 부드러운 나타남 효과 */
+	    animation: fadeIn 0.1s ease-out; /* 부드러운 나타남 효과 */
+	}
+	
+	.modal-content h2 {
+	    font-size: 24px;
+	    font-weight: bold;
+	    margin-bottom: 20px;
 	}
 	
 	/* 닫기 버튼 스타일 */
@@ -259,8 +264,6 @@
 	        transform: scale(1);
 	    }
 	}
-
-
 	
 	.no-coupon {
 		padding: 10px 0 100px 0;

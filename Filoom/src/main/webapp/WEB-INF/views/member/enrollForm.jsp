@@ -14,9 +14,8 @@
         padding: 0;
         box-sizing: border-box;
     }
-
-    body {
-        font-family: Arial, sans-serif;
+	
+	body {
         background-color: #121212;
         color: #ffffff;
     }

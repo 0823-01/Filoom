@@ -78,45 +78,27 @@ public class MemberController {
 	 */
 	@ResponseBody
 	@PostMapping(value="login.me", produces = "text/plain; charset=UTF-8")
-	public String loginMember(Member m,
-								    HttpSession session,
-								    String saveId,
-								    HttpServletResponse response) {
+	public String loginMember(Member m, HttpSession session, String saveId, HttpServletResponse response) {
 		
 		if(saveId != null && saveId.equals("y")) {
-
 			// > 아이디값을 저장하는 Cookie 생성
 			Cookie cookie = new Cookie("saveId", m.getUserId());
-			
-			cookie.setMaxAge(24 * 60 * 60 * 1); 
-			// > 만료시간 1일
-			
+			cookie.setMaxAge(24 * 60 * 60 * 1); // > 만료시간 1일
 			response.addCookie(cookie);
-			
 		} else {
-			
 			// 키값이 중복되면 덮어씌워진다는 점을 이용해서 동일한 키값의 쿠키를 생성
 			Cookie cookie = new Cookie("saveId", m.getUserId());
-			
-			// 만료시간 0초 (즉시제거)
-			cookie.setMaxAge(0);
-			
+			cookie.setMaxAge(0); // 만료시간 0초 (즉시제거)
 			response.addCookie(cookie);
 		}
 		
 		// 암호화 작업
 		Member loginUser = memberService.loginMember(m);
-		
-		if((loginUser != null) && 
-			(bcryptPasswordEncoder.matches(m.getUserPwd(), loginUser.getUserPwd()))) { 
+		if((loginUser != null) && (bcryptPasswordEncoder.matches(m.getUserPwd(), loginUser.getUserPwd()))) { 
 			// 로그인 성공일 경우
-			
 			session.setAttribute("loginUser", loginUser);
-			
 			return "로그인 성공";
-			
 		} else { // 로그인 실패일 경우
-			
 			return "아이디 또는 비밀번호를 잘못 입력했습니다.";
 		}
 	}
@@ -260,7 +242,6 @@ public class MemberController {
 	            response.put("message", "인증번호 전송에 실패했습니다.");
 	        }
 	    }
-
 	    return response;
 	}
 
@@ -648,10 +629,10 @@ public class MemberController {
 	    
 	    if (bcryptPasswordEncoder.matches(currentPwd, loginUser.getUserPwd())) {
 	    	
-	        return "비밀번호 일치";
+	        return "matching";
 	    }
 	    
-	    return "비밀번호 불일치";
+	    return "mismatching";
 	}
 	
 	/**
@@ -672,10 +653,10 @@ public class MemberController {
 	    	
 	        session.invalidate();
 	        
-	        return "탈퇴 성공";
+	        return "success";
 	    }
 	    
-	    return "탈퇴 실패";
+	    return "fail";
 	}
 
 	/**
