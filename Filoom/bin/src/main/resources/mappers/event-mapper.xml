@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd" >
+<mapper namespace="eventMapper">
+
+<!-- Event 테이블로부터 조회된 ResultSet을 Event VO 타입으로 옮겨주는 ResultMap -->
+<resultMap id="eventResultSet" type="event">
+	<id column="EVENT_NO" property="eventNo" />
+	<result column="EVENT_TITLE" property="eventTitle" />
+	<result column="EVENT_CONTETN" property="eventContent" />
+	<result column="START_DATE" property="startDate" />
+	<result column="END_DATE" property="endDate" />
+	<result column="CONTENTIMG1" property="contentImg1" />
+	<result column="EVENT_STATUS" property="eventStatus" />
+	<result column="STATUS" property="status" />
+	<result column="EVENT_TYPE" property="eventType" />
+</resultMap>
+
+
+<!-- 사용자 -->
+<!-- 241212 한혜원, 이벤트 게시글 목록조회 -->
+<select id="selectList" resultMap="eventResultSet">
+	SELECT EVENT_NO
+     , EVENT_TITLE
+     , CHANGE_NAME AS "CONTENTIMG1"
+     , TO_CHAR(START_DATE, 'YYYY-MM-DD') "START_DATE"
+     , TO_CHAR(END_DATE, 'YYYY-MM-DD') "END_DATE"
+     <!--, TRUNC(SYSDATE) - TO_DATE('END_DATE', 'YYYYMMDD') AS "D-DAY"-->
+  FROM EVENT E
+  JOIN EVENT_ATTACHMENT ON (EVENT_NO = REF_ENO)
+ WHERE E.EVENT_STATUS = 'Y'
+   AND E.STATUS = 'Y'
+   AND FILE_LEVEL = 1
+ ORDER BY START_DATE DESC
+
+</select>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 관리자 -->
+<!-- 241211 한혜원, 이벤트 게시글 등록 -->
+<insert id="insertEvent" parameterType="event">
+	INSERT INTO EVENT(EVENT_NO, EVENT_TITLE, START_DATE, END_DATE, EVENT_CONTENT, EVENT_TYPE, EVENT_STATUS)
+	VALUES(SEQ_ENO.NEXTVAL, #{eventTitle}, #{startDate}, #{endDate}, #{eventContent}, #{eventType}, #{eventStatus})
+</insert>
+
+<!-- 241211 한혜원, 이벤트 게시글 첨부파일 등록 -->
+<insert id="insertEventAttachment" parameterType="eventAttachment">
+	INSERT INTO EVENT_ATTACHMENT(EVENT_FILE_NO, REF_ENO, ORIGIN_NAME, CHANGE_NAME, FILE_PATH, FILE_LEVEL)
+	VALUES(SEQ_EFNO.NEXTVAL, SEQ_ENO.CURRVAL, #{originName}, #{changeName}, #{filePath}, #{fileLevel})
+</insert>
+
+</mapper>
