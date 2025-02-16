@@ -118,12 +118,12 @@
 	    max-width: 185px; /* 포스터 가로 크기에 맞춤 */
 	}
 	
-	.year-search {
+	.sort-search {
 	    margin-right: 10px;
 	}
 	
-	#year-select,
-	#year-btn {
+	#sort-select,
+	#sort-btn {
 	    padding: 4px 10px;
 	    border: 1px solid #333;
 	    border-radius: 5px;
@@ -135,14 +135,14 @@
 	    cursor: pointer;
 	}
 	
-	#year-btn {
+	#sort-btn {
 	    cursor: pointer;
 	    padding: 2px 15px;
 	    background-color: #493628;
 	    font-weight: bold;
 	}
 	
-	#year-btn:hover, .reserve-btn:hover {
+	#sort-btn:hover, .reserve-btn:hover {
 		background-color: #8b5a2b;
 	}
 	
@@ -276,12 +276,12 @@
                     <span>${favoriteList.size()}건</span>
                 </div>
 
-                <div class="year-search">
-                    <select name="sort" id="year-select">
+                <div class="sort-search">
+                    <select name="sort" id="sort-select">
                         <option value="asc" ${param.sort == 'asc' ? 'selected' : ''}>개봉일 오름차순</option>
                         <option value="desc" ${param.sort == 'desc' ? 'selected' : ''}>개봉일 내림차순</option>
                     </select>
-                    <button type="button" id="year-btn">검색</button>
+                    <button type="button" id="sort-btn">검색</button>
                 </div>
             </div>
 
@@ -398,11 +398,11 @@
 	        }
 	    });
 	    
-	    $(document).ready(function () {
-	        $('#year-btn').on('click', function () {
-	            const sort = $('#year-select').val();
-
-	            var contextPath = '${pageContext.request.contextPath}';
+	    $(function () {
+	        $('#sort-btn').click(function () {
+	        	
+	            const sort = $('#sort-select').val(); // 선택된 정렬옵션
+	            const contextPath = '${pageContext.request.contextPath}';
 	            
 	            location.href = contextPath + "/favorite.me?sort=" + sort;
 	        });

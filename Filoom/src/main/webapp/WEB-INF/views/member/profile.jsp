@@ -802,12 +802,11 @@
                     method: "POST",
                     data: formData,
                     success: function(result) {
-                        alert(result); // 서버에서 반환된 메시지를 alert로 출력
-
-                        // 성공 메시지일 경우 특정 동작 (예: 페이지 이동)
-                        if (result === "비밀번호가 성공적으로 변경되었습니다. 로그인 페이지로 이동합니다.") {
+                        if (result === "success") {
+                        	alert("비밀번호가 성공적으로 변경되었습니다. 로그인 페이지로 이동합니다."); // 서버에서 반환된 메시지를 alert로 출력
                             location.href = "${pageContext.request.contextPath}/loginForm.me"; // 로그인페이지로 이동
                         } else {
+                        	alert("비밀번호 변경에 실패하였습니다.");
                         	$("#currentPwd").focus().css("border-color", "red");
                         }
                     },

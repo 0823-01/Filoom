@@ -377,25 +377,18 @@
 	        }
 	    }
     	
-    	var contextPath = '<%= request.getContextPath() %>';
-        
     	 $(function () {
              $("#year-btn").click(function () {
-                 console.log("클릭됨");
                  
-                 const selectedYear = $("#year-select").val(); // 선택된 연도를 가져옴
-                 const contextPath = '${pageContext.request.contextPath}'; // 컨텍스트 경로 가져오기
+				const selectedYear = $("#year-select").val(); // 선택된 연도를 가져옴
+				const contextPath = '${pageContext.request.contextPath}'; // 컨텍스트 경로 가져오기
      	        
-     	        console.log(selectedYear);
-     	        console.log(contextPath);
-     	        
-     	       if (selectedYear) {
-     	            // 선택된 연도로 URL 생성
-     	            window.location.href = contextPath + "/history.me?year=" + selectedYear;
-     	        } else {
-     	            alert("연도를 선택하세요.");
-     	        }
-     	     
+				if (selectedYear) {
+					// 선택된 연도로 URL 생성
+					window.location.href = contextPath + "/history.me?year=" + selectedYear;
+				} else {
+					alert("연도를 선택하세요.");
+				}
              });
          });
     	 

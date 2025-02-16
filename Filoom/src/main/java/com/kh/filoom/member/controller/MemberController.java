@@ -70,38 +70,39 @@ public class MemberController {
 	 * 2024.12.10 김다훈
 	 * 로그인 컨트롤러 메소드
 	 * @param m
-	 * @param mv
 	 * @param session
 	 * @param saveId
 	 * @param response
 	 * @return
 	 */
 	@ResponseBody
-	@PostMapping(value="login.me", produces = "text/plain; charset=UTF-8")
+	@PostMapping(value = "login.me", produces = "text/plain; charset=UTF-8")
 	public String loginMember(Member m, HttpSession session, String saveId, HttpServletResponse response) {
-		
-		if(saveId != null && saveId.equals("y")) {
-			// > 아이디값을 저장하는 Cookie 생성
-			Cookie cookie = new Cookie("saveId", m.getUserId());
-			cookie.setMaxAge(24 * 60 * 60 * 1); // > 만료시간 1일
-			response.addCookie(cookie);
-		} else {
-			// 키값이 중복되면 덮어씌워진다는 점을 이용해서 동일한 키값의 쿠키를 생성
-			Cookie cookie = new Cookie("saveId", m.getUserId());
-			cookie.setMaxAge(0); // 만료시간 0초 (즉시제거)
-			response.addCookie(cookie);
-		}
-		
-		// 암호화 작업
-		Member loginUser = memberService.loginMember(m);
-		if((loginUser != null) && (bcryptPasswordEncoder.matches(m.getUserPwd(), loginUser.getUserPwd()))) { 
-			// 로그인 성공일 경우
-			session.setAttribute("loginUser", loginUser);
-			return "로그인 성공";
-		} else { // 로그인 실패일 경우
-			return "아이디 또는 비밀번호를 잘못 입력했습니다.";
-		}
+
+	    if (saveId != null && saveId.equals("y")) {
+	        // 아이디값을 저장하는 Cookie 생성 (1일 동안 유지)
+	        Cookie cookie = new Cookie("saveId", m.getUserId());
+	        cookie.setMaxAge(24 * 60 * 60 * 1);
+	        response.addCookie(cookie);
+	    } else {
+	        // 동일한 키값의 쿠키를 생성하여 기존 값 덮어쓰기 (즉시 제거)
+	        Cookie cookie = new Cookie("saveId", m.getUserId());
+	        cookie.setMaxAge(0);
+	        response.addCookie(cookie);
+	    }
+
+	    // 암호화된 비밀번호 검증
+	    Member loginUser = memberService.loginMember(m);
+	    if ((loginUser != null) && (bcryptPasswordEncoder.matches(m.getUserPwd(), loginUser.getUserPwd()))) {
+	        // 로그인 성공 시 세션 저장
+	        session.setAttribute("loginUser", loginUser);
+	        return "success";
+	    } else {
+	        // 로그인 실패
+	        return "fail";
+	    }
 	}
+
 	
 	/**
 	 * 2024.12.10 김다훈
@@ -341,17 +342,6 @@ public class MemberController {
 		return result;
 	}
 	
-//	/**
-//	 * 2024.12.15 김다훈
-//	 * 마이페이지 접속 요청
-//	 * @return
-//	 */
-//	@GetMapping("myPage.me")
-//	public String myPage() {
-//		
-//		return "member/myPage";
-//	}
-
 	/**
 	 * 2024.12.13 김다훈
 	 * 마이페이지(내 정보 조회) 접속 요청
@@ -362,61 +352,6 @@ public class MemberController {
 		
 		return "member/profile";
 	}
-	
-//	/**
-//	 * 2024.12.13 김다훈
-//	 * 마이페이지(내 쿠폰 조회) 접속 요청
-//	 * @return
-//	 */
-//	@GetMapping("coupon.me")
-//	public String coupon() {
-//		
-//		return "member/coupon";
-//	}
-	
-//	/**
-//	 * 2024.12.13 김다훈
-//	 * 마이페이지(예매 내역 조회) 접속 요청
-//	 * @return
-//	 */
-//	@GetMapping("reserve.me")
-//	public String reserve() {
-//		
-//		return "member/reserve";
-//	}
-	
-//	/**
-//	 * 2024.12.13 김다훈
-//	 * 마이페이지(내가 본 영화 조회) 접속 요청
-//	 * @return
-//	 */
-//	@GetMapping("history.me")
-//	public String history() {
-//		
-//		return "member/history";
-//	}
-	
-//	/**
-//	 * 2024.12.13 김다훈
-//	 * 마이페이지(보고싶은 영화 조회) 접속 요청
-//	 * @return
-//	 */
-//	@GetMapping("favorite.me")
-//	public String favorite() {
-//		
-//		return "member/favorite";
-//	}
-	
-//	/**
-//	 * 2024.12.13 김다훈
-//	 * 마이페이지(내가 쓴 리뷰 조회) 접속 요청
-//	 * @return
-//	 */
-//	@GetMapping("review.me")
-//	public String review() {
-//		
-//		return "member/review";
-//	}
 	
 	/**
 	 * 2024.12.13 김다훈
@@ -466,11 +401,11 @@ public class MemberController {
 	    	
 	    	session.removeAttribute("loginUser");
 	    	
-	        return "비밀번호가 성공적으로 변경되었습니다. 로그인 페이지로 이동합니다.";
+	        return "success";
 	        
 	    } else {
 	    	
-			return "비밀번호 변경에 실패하였습니다.";
+			return "fail";
 	    }
 	}
 
@@ -703,19 +638,23 @@ public class MemberController {
 	        @RequestParam(value = "year", required = false, defaultValue = "all") String year,
 	        HttpSession session, 
 	        Model model) {
-	    
+
 	    // 로그인된 사용자 정보 가져오기
 	    Member loginUser = (Member) session.getAttribute("loginUser");
 	    int userNo = loginUser.getUserNo();
-	    
-	    // 연도별 영화 기록 조회
-	    List<History> historyList = year.equals("all") 
-	        ? memberService.historyList(userNo) 
-	        : memberService.historyListByYear(userNo, year);
-	    
+
+	    // 조회 조건 설정 (전체 조회 시 year 값을 null로 처리)
+	    Map<String, Object> params = new HashMap<>();
+	    params.put("userNo", userNo);
+	    params.put("year", "all".equals(year) ? null : year);
+
+	    // 영화 기록 조회
+	    List<History> historyList = memberService.historyList(params);
+
+	    // 모델에 데이터 추가
 	    model.addAttribute("historyList", historyList);
 	    model.addAttribute("selectedYear", year);
-	    
+
 	    return "member/history";
 	}
 
@@ -845,29 +784,35 @@ public class MemberController {
 	}
 	
 	/**
-     * 2024.12.23 김다훈
-     * 12.26 정렬기능 추가
-     * 좋아요(보고싶은 영화) 목록 조회 메소드
-     * @param session
-     * @param model
-     * @return
-     */
+	 * 2024.12.23 김다훈
+	 * 12.26 정렬 기능 추가
+	 * 좋아요(보고싶은 영화) 목록 조회 메소드
+	 * @param session
+	 * @param model
+	 * @param sort
+	 * @return
+	 */
 	@GetMapping("favorite.me")
 	public String favoriteList(@RequestParam(value = "sort", defaultValue = "asc") String sort,
-	        				   HttpSession session, 
-	        				   Model model) {
-	    
-	    // 로그인된 사용자 정보를 가져오기
+	                           HttpSession session, 
+	                           Model model) {
+
+	    // 로그인된 사용자 정보 가져오기
 	    Member loginUser = (Member) session.getAttribute("loginUser");
 
+	    // 정렬 옵션 설정
+	    Map<String, Object> params = new HashMap<>();
+	    params.put("userNo", loginUser.getUserNo());
+	    params.put("sort", "desc".equals(sort) ? "DESC" : "ASC"); // SQL 정렬 값 변환
+
 	    // 좋아요 영화 목록 조회
-	    List<Favorite> favoriteList = memberService.favoriteList(loginUser.getUserNo(), sort);
+	    List<Favorite> favoriteList = memberService.favoriteList(params);
 
 	    // 모델에 데이터 추가
 	    model.addAttribute("favoriteList", favoriteList);
 	    model.addAttribute("sort", sort); // 현재 정렬 옵션 유지
 
-	    return "member/favorite"; // 좋아요 목록 JSP로 이동
+	    return "member/favorite";
 	}
 	
     /**

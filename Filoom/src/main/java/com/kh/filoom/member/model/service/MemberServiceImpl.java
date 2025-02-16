@@ -105,15 +105,9 @@ public class MemberServiceImpl implements MemberService{
 	}
 
 	@Override
-	public List<History> historyList(int userNo) {
-
-		return memberDao.historyList(sqlSession, userNo);
-	}
-	
-	@Override
-	public List<History> historyListByYear(int userNo, String year) {
+	public List<History> historyList(Map<String, Object> params) {
 		
-	    return memberDao.historyListByYear(sqlSession, userNo, year);
+	    return memberDao.historyList(sqlSession, params);
 	}
 
 	@Override
@@ -136,9 +130,9 @@ public class MemberServiceImpl implements MemberService{
 	}
 
 	@Override
-	public List<Favorite> favoriteList(int userNo, String sort) {
+	public List<Favorite> favoriteList(Map<String, Object> params) {
 		
-	    return memberDao.favoriteList(sqlSession, userNo, sort);
+	    return memberDao.favoriteList(sqlSession, params);
 	}
 
 	@Override

@@ -80,19 +80,10 @@ public class MemberDao {
 		return sqlSession.selectList("memberMapper.useCouponList", userNo);
 	}
 
-	public List<History> historyList(SqlSessionTemplate sqlSession, int userNo) {
-
-		return sqlSession.selectList("memberMapper.historyList", userNo);
-	}
-	
-	public List<History> historyListByYear(SqlSessionTemplate sqlSession, int userNo, String year) {
+	public List<History> historyList(SqlSessionTemplate sqlSession, Map<String, Object> params) {
 		
-	    Map<String, Object> params = new HashMap<>();
-	    params.put("userNo", userNo);
-	    params.put("year", year);
-	    return sqlSession.selectList("memberMapper.historyListByYear", params);
+	    return sqlSession.selectList("memberMapper.historyList", params);
 	}
-
 
 	public String findUserId(SqlSessionTemplate sqlSession, Map<String, Object> paramMap) {
 
@@ -109,10 +100,7 @@ public class MemberDao {
 		return sqlSession.update("memberMapper.updateUserPwd", paramMap);
 	}
 
-	public List<Favorite> favoriteList(SqlSessionTemplate sqlSession, int userNo, String sort) {
-	    Map<String, Object> params = new HashMap<>();
-	    params.put("userNo", userNo);
-	    params.put("sort", sort);
+	public List<Favorite> favoriteList(SqlSessionTemplate sqlSession, Map<String, Object> params) {
 
 	    return sqlSession.selectList("memberMapper.favoriteList", params);
 	}

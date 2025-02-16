@@ -213,13 +213,13 @@
 	            if (!userId) {
 	                alert("아이디를 입력해주세요");
 	                $("#userId").focus(); // 아이디 입력창 포커스
-	                return false; // 더 이상 진행하지 않음
+	                return false;
 	            }
 	
 	            if (!userPwd) {
 	                alert("비밀번호를 입력해주세요");
 	                $("#userPwd").focus(); // 비밀번호 입력창 포커스
-	                return false; // 더 이상 진행하지 않음
+	                return false;
 	            }
 	
 	            // 클라이언트 유효성 검사를 통과하면 AJAX 요청
@@ -230,11 +230,10 @@
 	                method: "POST",
 	                data: formData,
 	                success: function (response) {
-	                    if (response === "로그인 성공") {
-	                        // alert(response);
+	                    if (response === "success") {
 	                        location.href = "${pageContext.request.contextPath}/"; // 홈으로 이동
 	                    } else {
-	                        alert(response); // 실패 메시지 출력
+	                        alert("아이디 또는 비밀번호를 잘못 입력하였습니다."); // 실패 메시지 출력
 	                    }
 	                },
 	                error: function () {

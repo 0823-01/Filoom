@@ -50,11 +50,8 @@ public interface MemberService {
 	// 쿠폰으로 예매 했는데 그게 무슨 쿠폰이냐? 조회용 서비스 (select)
 	List<Reserve> useCouponList(int userNo);
 
-	// 내가 본 영화 목록 조회용 서비스 (select)
-	List<History> historyList(int userNo);
-	
-	// 연도별 영화 목록 조회용 서비스
-	List<History> historyListByYear(int userNo, String year);
+	// 내가 본 영화 목록 조회용 서비스 (연도별 조회도 포함)
+	List<History> historyList(Map<String, Object> params);
 
 	// 아이디 찾기 서비스 (select)
 	String findUserId(Map<String, Object> paramMap);
@@ -66,7 +63,7 @@ public interface MemberService {
 	int updateUserPwd(Map<String, String> paramMap);
 
 	// 보고싶은 영화 목록 조회 서비스 (select)
-	List<Favorite> favoriteList(int userNo, String sort);
+	List<Favorite> favoriteList(Map<String, Object> params);
 
 	// 보고싶은 영화 목록 삭제 서비스 (delete)
 	int deleteFavorite(Map<String, Object> paramMap);
