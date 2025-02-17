@@ -142,3 +142,4 @@ $RECYCLE.BIN/
 
 Servers/
 *.properties
+root-context.xml
